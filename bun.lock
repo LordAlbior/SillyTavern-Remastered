@@ -135,6 +135,69 @@
         "typescript": "^5.9.3",
       },
     },
+    "app": {
+      "name": "@sillytavern/app",
+      "version": "1.18.0",
+      "bin": {
+        "sillytavern": "./src/server-global.js",
+      },
+    },
+    "extensions/assets": {
+      "name": "@sillytavern/ext-assets",
+      "version": "1.18.0",
+    },
+    "extensions/attachments": {
+      "name": "@sillytavern/ext-attachments",
+      "version": "1.18.0",
+    },
+    "extensions/caption": {
+      "name": "@sillytavern/ext-caption",
+      "version": "1.18.0",
+    },
+    "extensions/connection-manager": {
+      "name": "@sillytavern/ext-connection-manager",
+      "version": "1.18.0",
+    },
+    "extensions/expressions": {
+      "name": "@sillytavern/ext-expressions",
+      "version": "1.18.0",
+    },
+    "extensions/gallery": {
+      "name": "@sillytavern/ext-gallery",
+      "version": "1.18.0",
+    },
+    "extensions/memory": {
+      "name": "@sillytavern/ext-memory",
+      "version": "1.18.0",
+    },
+    "extensions/quick-reply": {
+      "name": "@sillytavern/ext-quick-reply",
+      "version": "1.18.0",
+    },
+    "extensions/regex": {
+      "name": "@sillytavern/ext-regex",
+      "version": "1.18.0",
+    },
+    "extensions/stable-diffusion": {
+      "name": "@sillytavern/ext-stable-diffusion",
+      "version": "1.18.0",
+    },
+    "extensions/token-counter": {
+      "name": "@sillytavern/ext-token-counter",
+      "version": "1.18.0",
+    },
+    "extensions/translate": {
+      "name": "@sillytavern/ext-translate",
+      "version": "1.18.0",
+    },
+    "extensions/tts": {
+      "name": "@sillytavern/ext-tts",
+      "version": "1.18.0",
+    },
+    "extensions/vectors": {
+      "name": "@sillytavern/ext-vectors",
+      "version": "1.18.0",
+    },
   },
   "packages": {
     "@adobe/css-tools": ["@adobe/css-tools@4.4.4", "", {}, "sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg=="],
@@ -314,6 +377,36 @@
     "@protobufjs/pool": ["@protobufjs/pool@1.1.0", "", {}, "sha512-0kELaGSIDBKvcgS4zkjz1PeddatrjYcmMWOlAuAPwAeccUrPHdUqo/J6LiymHHEiJT5NrF1UVwxY14f+fy4WQw=="],
 
     "@protobufjs/utf8": ["@protobufjs/utf8@1.1.2", "", {}, "sha512-b1UQwcEZ4yCnMCD8DAL1VlbvBJE9/IX4FTIp7BG1xYpf29SLazLSrqUkj4w7Y5y7cCVP6E5tcqqcI0xemPkHug=="],
+
+    "@sillytavern/app": ["@sillytavern/app@workspace:app"],
+
+    "@sillytavern/ext-assets": ["@sillytavern/ext-assets@workspace:extensions/assets"],
+
+    "@sillytavern/ext-attachments": ["@sillytavern/ext-attachments@workspace:extensions/attachments"],
+
+    "@sillytavern/ext-caption": ["@sillytavern/ext-caption@workspace:extensions/caption"],
+
+    "@sillytavern/ext-connection-manager": ["@sillytavern/ext-connection-manager@workspace:extensions/connection-manager"],
+
+    "@sillytavern/ext-expressions": ["@sillytavern/ext-expressions@workspace:extensions/expressions"],
+
+    "@sillytavern/ext-gallery": ["@sillytavern/ext-gallery@workspace:extensions/gallery"],
+
+    "@sillytavern/ext-memory": ["@sillytavern/ext-memory@workspace:extensions/memory"],
+
+    "@sillytavern/ext-quick-reply": ["@sillytavern/ext-quick-reply@workspace:extensions/quick-reply"],
+
+    "@sillytavern/ext-regex": ["@sillytavern/ext-regex@workspace:extensions/regex"],
+
+    "@sillytavern/ext-stable-diffusion": ["@sillytavern/ext-stable-diffusion@workspace:extensions/stable-diffusion"],
+
+    "@sillytavern/ext-token-counter": ["@sillytavern/ext-token-counter@workspace:extensions/token-counter"],
+
+    "@sillytavern/ext-translate": ["@sillytavern/ext-translate@workspace:extensions/translate"],
+
+    "@sillytavern/ext-tts": ["@sillytavern/ext-tts@workspace:extensions/tts"],
+
+    "@sillytavern/ext-vectors": ["@sillytavern/ext-vectors@workspace:extensions/vectors"],
 
     "@simple-git/args-pathspec": ["@simple-git/args-pathspec@1.0.3", "", {}, "sha512-ngJMaHlsWDTfjyq9F3VIQ8b7NXbBLq5j9i5bJ6XLYtD6qlDXT7fdKY2KscWWUF8t18xx052Y/PUO1K1TRc9yKA=="],
 

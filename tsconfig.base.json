@@ -16,5 +16,5 @@
     "allowSyntheticDefaultImports": true,
     "types": ["node"]
   },
-  "include": ["index.d.ts"]
+  "include": ["app/index.d.ts"]
 }
