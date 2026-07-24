@@ -111,7 +111,8 @@
   "name": "sillytavern-remastered",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "app",
+    "extensions/*"
   ],
   "license": "AGPL-3.0",
   "repository": {
@@ -121,31 +122,31 @@
   "version": "1.18.0",
   "scripts": {
     "init": "bun",
-    "start": "bun server.js",
-    "start:node": "node server.js",
-    "debug": "bun --inspect server.js",
-    "start:global": "bun server.js --global",
-    "start:global:node": "node server.js --global",
-    "start:electron": "cd ./src/electron && bun run start",
-    "start:deno": "deno run --allow-run --allow-net --allow-read --allow-write --allow-sys --allow-env server.js",
-    "start:bun": "bun server.js",
-    "start:no-csrf": "bun server.js --disableCsrf",
+    "start": "bun --cwd app server.js",
+    "start:node": "node --cwd app server.js",
+    "debug": "bun --cwd app --inspect server.js",
+    "start:global": "bun --cwd app server.js --global",
+    "start:global:node": "node --cwd app server.js --global",
+    "start:electron": "cd ./app/src/electron && bun run start",
+    "start:deno": "deno run --allow-run --allow-net --allow-read --allow-write --allow-sys --allow-env app/server.js",
+    "start:bun": "bun --cwd app server.js",
+    "start:no-csrf": "bun --cwd app server.js --disableCsrf",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
     "typecheck": "tsc -p tsconfig.base.json --noEmit",
-    "plugins:update": "node plugins update",
-    "plugins:install": "node plugins install"
+    "plugins:update": "bun --cwd app plugins update",
+    "plugins:install": "bun --cwd app plugins install"
   },
   "bin": {
-    "sillytavern": "./src/server-global.js"
+    "sillytavern": "./app/src/server-global.js"
   },
   "rules": {
     "no-path-concat": "off",
     "no-var": "off"
   },
-  "main": "server.js",
+  "main": "app/server.js",
   "devDependencies": {
     "@biomejs/biome": "^2.5.5",
     "@chevrotain/types": "^11.2.0",

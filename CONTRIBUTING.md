@@ -13,10 +13,11 @@
 3. Clone the fork onto your machine.
 4. Open the cloned repository in the code editor.
 5. Create a git branch (recommended), review the [git book](https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control) if you haven't.
-6. Run `bun install` to install tooling and generate `bun.lock`.
-7. Make your changes and test them locally.
-8. Commit the changes and push the branch to the remote repo.
-9. Go to GitHub, and open a pull request, targeting the appropriate upstream branch.
+6. Run `bun install` to install tooling and generate `bun.lock`. This links the Bun workspace members (`app/` and `extensions/*`) from the repo root.
+7. Source lives under `app/`; built-in UI extensions are under `extensions/<name>/` (served at `/scripts/extensions/<name>/`). Runtime user data (`data/`, `backups/`, `plugins/`) stays at the repo root.
+8. Make your changes and test them locally.
+9. Commit the changes and push the branch to the remote repo.
+10. Go to GitHub, and open a pull request, targeting the appropriate upstream branch.
 
 ## Maintaining code quality
 
