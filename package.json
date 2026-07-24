@@ -176,7 +176,7 @@
     "@types/write-file-atomic": "^4.0.3",
     "@types/yargs": "^17.0.33",
     "@types/yauzl": "^2.10.3",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0",
     "@types/bun": "latest"
   },
   "private": true
