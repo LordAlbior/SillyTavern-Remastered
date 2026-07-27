@@ -11,8 +11,7 @@ import { filterValidIpPatterns } from './express-common.js';
 
 const LOG_HEADER = '[Private Request Filter]';
 
-/** @type {import('ip-matching').IPMatch[]} */
-const privateIpRanges = [
+const privateIpRanges: import('ip-matching').IPMatch[] = [
     // Loopback (IPv4)
     ipMatch.getMatch('127.0.0.0/8'),
     // Class A private network
@@ -31,6 +30,14 @@ const privateIpRanges = [
     ipMatch.getMatch('fe80::/10'),
 ];
 
+interface PrivateRequestAgentOptions {
+    privateAddressWhitelist?: string[];
+    logBlocked?: boolean;
+    logAllowed?: boolean;
+    allowUnresolvedHosts?: boolean;
+    enableKeepAlive?: boolean;
+}
+
 /**
  * Custom HTTP/HTTPS agent that blocks requests to private IP addresses unless they are explicitly allowed in the private address whitelist.
  * This is used to prevent Server-Side Request Forgery (SSRF) attacks by ensuring that the server cannot make requests to internal services or resources that are not intended to be exposed.
@@ -40,79 +47,61 @@ const privateIpRanges = [
 class PrivateRequestAgent extends Agent {
     /**
      * List of private IP addresses or CIDR ranges to allow
-     * @type {Readonly<import('ip-matching').IPMatch[]>}
      */
-    privateAddressWhitelist = [];
+    privateAddressWhitelist: readonly import('ip-matching').IPMatch[] = [];
 
     /**
      * Whether to log blocked requests to the console
-     * @type {boolean}
      */
     logBlocked = true;
 
     /**
      * Whether to log allowed requests to the console
-     * @type {boolean}
      */
     logAllowed = false;
 
     /**
      * Whether to allow requests to hosts that cannot be resolved
-     * @type {boolean}
      */
     allowUnresolvedHosts = false;
 
     /**
      * Create a new PrivateRequestAgent instance.
-     * @param {object} options
-     * @param {string[]} options.privateAddressWhitelist List of private IP addresses or CIDR ranges to allow.
-     * @param {boolean} options.logBlocked Whether to log blocked requests to the console.
-     * @param {boolean} options.logAllowed Whether to log allowed requests to the console.
-     * @param {boolean} options.allowUnresolvedHosts Whether to allow requests to hosts that cannot be resolved.
-     * @param {boolean} options.enableKeepAlive Whether to enable HTTP/HTTPS keep-alive.
      */
-    constructor(options = { privateAddressWhitelist: [], logBlocked: true, logAllowed: false, allowUnresolvedHosts: false, enableKeepAlive: false }) {
+    constructor(options: PrivateRequestAgentOptions = { privateAddressWhitelist: [], logBlocked: true, logAllowed: false, allowUnresolvedHosts: false, enableKeepAlive: false }) {
         super({ keepAlive: options.enableKeepAlive });
 
-        const logEntryWarning = (entry, message) => `${color.red('Warning')}: Ignoring invalid private whitelist entry ${color.yellow(entry)} - ${message}`;
+        const logEntryWarning = (entry: string, message: string) => `${color.red('Warning')}: Ignoring invalid private whitelist entry ${color.yellow(entry)} - ${message}`;
         const whitelistArray = Array.isArray(options.privateAddressWhitelist) ? options.privateAddressWhitelist : [];
         this.privateAddressWhitelist = Object.freeze(filterValidIpPatterns(whitelistArray, logEntryWarning).map(pattern => ipMatch.getMatch(pattern)));
-        this.allowUnresolvedHosts = options.allowUnresolvedHosts;
-        this.logBlocked = options.logBlocked;
-        this.logAllowed = options.logAllowed;
+        this.allowUnresolvedHosts = options.allowUnresolvedHosts ?? false;
+        this.logBlocked = options.logBlocked ?? true;
+        this.logAllowed = options.logAllowed ?? false;
     }
 
     /**
      * Check if the given address is a private IP address.
-     * @param {string} address The IP address to check.
-     * @returns {boolean} Whether the given address is a private IP address.
      */
-    #isPrivateIp(address) {
+    #isPrivateIp(address: string): boolean {
         return privateIpRanges.some(range => range.matches(address));
     }
 
     /**
      * Check if the given address is allowed based on the private address whitelist.
-     * @param {string} address The IP address to check.
-     * @returns {boolean} Whether the given address is allowed based on the private address whitelist.
      */
-    #isAllowedPrivateAddress(address) {
+    #isAllowedPrivateAddress(address: string): boolean {
         // Permit the request if the private IP address is in the whitelist
         return this.privateAddressWhitelist.some(match => match.matches(address));
     }
 
     /**
      * Connect method that checks if the target host resolves to a private IP address and blocks the request if it does.
-     * @param {http.ClientRequest} _req HTTP request object.
-     * @param {import('agent-base').AgentConnectOpts} options Agent connection options.
      */
-    async connect(_req, options) {
+    async connect(_req: http.ClientRequest, options: import('agent-base').AgentConnectOpts): Promise<net.Socket | tls.TLSSocket> {
         /**
          * Raise an error and log it if necessary.
-         * @param {string} message The error message.
-         * @param {boolean} [log=true] Whether to log the error to the console.
          */
-        const raiseError = (message, log = true) => {
+        const raiseError = (message: string, log = true): never => {
             if (log) {
                 console.error(color.red(LOG_HEADER), message);
             }
@@ -121,10 +110,8 @@ class PrivateRequestAgent extends Agent {
 
         /**
          * Establish a connection to the target host using either TLS or a regular socket based on the options provided.
-         * @param {string|null} [hostOverride] Pass a host to override the one in options when connecting.
-         * @returns {net.Socket|tls.TLSSocket} A socket connected to the target host.
          */
-        const connect = (hostOverride = null) => {
+        const connect = (hostOverride: string | null = null): net.Socket | tls.TLSSocket => {
             if (hostOverride) {
                 options.host = hostOverride;
             }
@@ -137,10 +124,8 @@ class PrivateRequestAgent extends Agent {
 
         /**
          * Validate the given IP address against the private address whitelist and connect if it's allowed.
-         * @param {string} ip The IP address to validate.
-         * @returns {net.Socket|tls.TLSSocket} A socket connected to the target IP address if it's allowed, otherwise an error is raised.
          */
-        const validateIpAddress = (ip) => {
+        const validateIpAddress = (ip: string): net.Socket | tls.TLSSocket => {
             // Not a private IP address, allow the request
             if (!this.#isPrivateIp(ip)) {
                 return connect(ip);
@@ -160,10 +145,8 @@ class PrivateRequestAgent extends Agent {
 
         /**
          * Resolve the given host to an IP address using DNS lookup.
-         * @param {string} host The host to resolve to an IP address.
-         * @returns {Promise<string>} The resolved IP address for the given host, or an empty string if the host cannot be resolved.
          */
-        const lookupHost = async (host) => {
+        const lookupHost = async (host: string): Promise<string> => {
             try {
                 return (await dns.promises.lookup(host)).address;
             } catch {
@@ -196,18 +179,20 @@ class PrivateRequestAgent extends Agent {
     }
 }
 
+interface InitPrivateRequestFilterOptions {
+    listen: boolean;
+    enabled: boolean;
+    privateAddressWhitelist: string[];
+    logBlocked: boolean;
+    logAllowed: boolean;
+    allowUnresolvedHosts: boolean;
+    enableKeepAlive: boolean;
+}
+
 /**
  * Initialize the private request filter by replacing the global HTTP and HTTPS agents with an instance of PrivateRequestAgent.
- * @param {object} options Options for initializing the private request filter.
- * @param {boolean} options.listen Whether the server is listening for incoming requests. This is used to determine whether to log a warning if the private request filter is not enabled.
- * @param {boolean} options.enabled Whether the private request filter is enabled.
- * @param {string[]} options.privateAddressWhitelist List of private IP addresses or CIDR ranges to allow.
- * @param {boolean} options.logBlocked Whether to log blocked requests to the console.
- * @param {boolean} options.logAllowed Whether to log allowed requests to the console.
- * @param {boolean} options.allowUnresolvedHosts Whether to allow requests to hosts that cannot be resolved.
- * @param {boolean} options.enableKeepAlive Whether to enable HTTP/HTTPS keep-alive.
  */
-export default function initPrivateRequestFilter({ listen, enabled, privateAddressWhitelist, logBlocked, logAllowed, allowUnresolvedHosts, enableKeepAlive }) {
+export default function initPrivateRequestFilter({ listen, enabled, privateAddressWhitelist, logBlocked, logAllowed, allowUnresolvedHosts, enableKeepAlive }: InitPrivateRequestFilterOptions): void {
     if (!enabled) {
         if (listen) {
             console.warn();

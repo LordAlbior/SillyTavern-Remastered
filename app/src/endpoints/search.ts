@@ -26,13 +26,15 @@ const visitHeaders = {
     'Sec-Fetch-User': '?1',
 };
 
+interface CaptionTrack {
+    languageCode: string;
+    baseUrl: string;
+}
+
 /**
  * Extract the transcript of a YouTube video
- * @param {string} videoPageBody HTML of the video page
- * @param {string} lang Language code
- * @returns {Promise<string>} Transcript text
  */
-async function extractTranscript(videoPageBody, lang) {
+async function extractTranscript(videoPageBody: string, lang: string | null): Promise<string> {
     const RE_XML_TRANSCRIPT = /<text start="([^"]*)" dur="([^"]*)">([^<]*)<\/text>/g;
     const splittedHTML = videoPageBody.split('"captions":');
 
@@ -49,7 +51,7 @@ async function extractTranscript(videoPageBody, lang) {
     const captions = (() => {
         try {
             return JSON.parse(splittedHTML[1].split(',"videoDetails')[0].replace('\n', ''));
-        } catch (e) {
+        } catch {
             return undefined;
         }
     })()?.playerCaptionsTracklistRenderer;
@@ -62,11 +64,11 @@ async function extractTranscript(videoPageBody, lang) {
         throw new Error('Transcript not available');
     }
 
-    if (lang && !captions.captionTracks.some(track => track.languageCode === lang)) {
+    if (lang && !captions.captionTracks.some((track: CaptionTrack) => track.languageCode === lang)) {
         throw new Error('Transcript not available in this language');
     }
 
-    const transcriptURL = (lang ? captions.captionTracks.find(track => track.languageCode === lang) : captions.captionTracks[0]).baseUrl;
+    const transcriptURL = (lang ? captions.captionTracks.find((track: CaptionTrack) => track.languageCode === lang) : captions.captionTracks[0]).baseUrl;
     const transcriptResponse = await fetch(transcriptURL, {
         headers: {
             ...(lang && { 'Accept-Language': lang }),
