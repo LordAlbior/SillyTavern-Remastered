@@ -418,7 +418,7 @@ export async function migrateUserData() {
                 fs.rmSync(migration.old, { recursive: true, force: true });
             }
         } catch (error) {
-            console.error(color.red(`Error migrating ${migration.old} to ${migration.new}:`), error.message);
+            console.error(color.red(`Error migrating ${migration.old} to ${migration.new}:`), error instanceof Error ? error.message : String(error));
             errors.push(migration.old);
         }
     }
@@ -688,9 +688,9 @@ export function getUserDirectories(handle) {
         }
     }
 
-    const directories = structuredClone(USER_DIRECTORY_TEMPLATE);
+    const directories = /** @type {any} */ (structuredClone(USER_DIRECTORY_TEMPLATE));
     for (const key in directories) {
-        directories[key] = path.join(globalThis.DATA_ROOT, handle, USER_DIRECTORY_TEMPLATE[key]);
+        directories[key] = path.join(globalThis.DATA_ROOT, handle, /** @type {any} */ (USER_DIRECTORY_TEMPLATE)[key]);
     }
     DIRECTORIES_CACHE.set(handle, directories);
     return directories;
