@@ -8,11 +8,12 @@ import PNGtext from 'png-chunk-text';
 /**
  * Writes Character metadata to a PNG image buffer.
  * Writes only 'chara', 'ccv3' is not supported and removed not to create a mismatch.
- * @param {Buffer} image PNG image buffer
- * @param {string} data Character data to write
- * @returns {Buffer} PNG image buffer with metadata
+ *
+ * @param image - PNG image buffer
+ * @param data - Character data to write
+ * @returns PNG image buffer with metadata
  */
-export const write = (image, data) => {
+export const write = (image: Buffer, data: string): Buffer => {
     const chunks = extract(new Uint8Array(image));
     const tEXtChunks = chunks.filter(chunk => chunk.name === 'tEXt');
 
@@ -31,27 +32,27 @@ export const write = (image, data) => {
     // Try adding v3 chunk before the IEND chunk
     try {
         //change v2 format to v3
-        const v3Data = JSON.parse(data);
+        const v3Data = JSON.parse(data) as { spec: string; spec_version: string };
         v3Data.spec = 'chara_card_v3';
         v3Data.spec_version = '3.0';
 
         const base64EncodedData = Buffer.from(JSON.stringify(v3Data), 'utf8').toString('base64');
         chunks.splice(-1, 0, PNGtext.encode('ccv3', base64EncodedData));
-    } catch (error) {
+    } catch {
         // Ignore errors when adding v3 chunk
     }
 
-    const newBuffer = Buffer.from(encode(chunks));
-    return newBuffer;
+    return Buffer.from(encode(chunks));
 };
 
 /**
  * Reads Character metadata from a PNG image buffer.
  * Supports both V2 (chara) and V3 (ccv3). V3 (ccv3) takes precedence.
- * @param {Buffer} image PNG image buffer
- * @returns {string} Character data
+ *
+ * @param image - PNG image buffer
+ * @returns Character data
  */
-export const read = (image) => {
+export const read = (image: Buffer): string => {
     const chunks = extract(new Uint8Array(image));
 
     const textChunks = chunks.filter((chunk) => chunk.name === 'tEXt').map((chunk) => PNGtext.decode(chunk.data));
@@ -79,12 +80,13 @@ export const read = (image) => {
 
 /**
  * Parses a card image and returns the character metadata.
- * @param {string} cardUrl Path to the card image
- * @param {string} format File format
- * @returns {Promise<string>} Character data
+ *
+ * @param cardUrl - Path to the card image
+ * @param format - File format
+ * @returns Character data
  */
-export const parse = async (cardUrl, format) => {
-    let fileFormat = format === undefined ? 'png' : format;
+export const parse = async (cardUrl: string, format?: string): Promise<string> => {
+    const fileFormat = format === undefined ? 'png' : format;
 
     switch (fileFormat) {
         case 'png': {
@@ -95,4 +97,3 @@ export const parse = async (cardUrl, format) => {
 
     throw new Error('Unsupported format');
 };
-
