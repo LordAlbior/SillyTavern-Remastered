@@ -211,6 +211,12 @@ function isSimpleType(jsdocType: string): boolean {
   if (jsdocType.includes("=>")) return false;
   if (jsdocType.includes("{") && jsdocType.includes(":")) return false;
   
+  // Skip import types - these need manual handling
+  if (jsdocType.includes("import(")) return false;
+  
+  // Skip types with dots (e.g., import('./path').Type)
+  if (jsdocType.includes(".")) return false;
+  
   return true;
 }
 
@@ -218,9 +224,12 @@ function isSimpleType(jsdocType: string): boolean {
  * Convert JSDoc type syntax to TypeScript type syntax
  */
 function convertJSDocTypeToTS(jsdocType: string): string {
-  // Handle nullable types: ?Type -> Type | null
+  // Handle nullable types: Type? or ?Type -> Type | undefined
+  if (jsdocType.endsWith("?")) {
+    return `${convertJSDocTypeToTS(jsdocType.slice(0, -1))} | undefined`;
+  }
   if (jsdocType.startsWith("?")) {
-    return `${convertJSDocTypeToTS(jsdocType.slice(1))} | null`;
+    return `${convertJSDocTypeToTS(jsdocType.slice(1))} | undefined`;
   }
 
   // Handle optional types: Type= -> Type | undefined
