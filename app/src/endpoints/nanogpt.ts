@@ -7,20 +7,23 @@ const API_NANOGPT = 'https://nano-gpt.com/api';
 
 /**
  * Parses a numeric API value, returning 0 for missing or invalid values.
- * @param {unknown} value Value to parse.
- * @returns {number}
  */
-function parseNumber(value) {
+function parseNumber(value: unknown): number {
     const number = Number(value);
     return Number.isFinite(number) ? number : 0;
 }
 
+interface NanoGPTUsage {
+    used?: unknown;
+    remaining?: unknown;
+    percentUsed?: unknown;
+    resetAt?: unknown;
+}
+
 /**
  * Normalizes a NanoGPT usage bucket.
- * @param {any} usage Usage bucket from NanoGPT.
- * @returns {{ used: number, remaining: number, percentUsed: number, resetAt: number } | null}
  */
-function normalizeUsage(usage) {
+function normalizeUsage(usage: NanoGPTUsage | null | undefined): { used: number; remaining: number; percentUsed: number; resetAt: number } | null {
     if (!usage || typeof usage !== 'object') {
         return null;
     }
@@ -58,18 +61,15 @@ router.post('/credits', async (req, res) => {
             return res.sendStatus(500);
         }
 
-        /** @type {any} */
-        const balanceData = await balanceReq.value.json();
-        /** @type {any} */
-        const result = {
+        const balanceData = await balanceReq.value.json() as any;
+        const result: any = {
             usd_balance: parseNumber(balanceData.usd_balance),
             nano_balance: parseNumber(balanceData.nano_balance),
             subscription: null,
         };
 
         if (subReq.status === 'fulfilled' && subReq.value.ok) {
-            /** @type {any} */
-            const subData = await subReq.value.json();
+            const subData = await subReq.value.json() as any;
             if (subData.active) {
                 result.subscription = {
                     active: true,
@@ -121,10 +121,9 @@ router.post('/models/providers', async (req, res) => {
             return res.json({ supportsProviderSelection: false, providers: [] });
         }
 
-        /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
         const providers = Array.isArray(data?.providers)
-            ? data.providers.filter(p => p?.available !== false).map(p => p.provider).filter(Boolean)
+            ? data.providers.filter((p: any) => p?.available !== false).map((p: any) => p.provider).filter(Boolean)
             : [];
 
         return res.json({

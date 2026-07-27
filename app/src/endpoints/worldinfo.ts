@@ -6,15 +6,12 @@ import sanitize from 'sanitize-filename';
 import _ from 'lodash';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 import { tryParse } from '../util.js';
+import type { UserDirectoryList } from '../users.js';
 
 /**
  * Reads a World Info file and returns its contents
- * @param {import('../users.js').UserDirectoryList} directories User directories
- * @param {string} worldInfoName Name of the World Info file
- * @param {boolean} allowDummy If true, returns an empty object if the file doesn't exist
- * @returns {object} World Info file contents
  */
-export function readWorldInfoFile(directories, worldInfoName, allowDummy) {
+export function readWorldInfoFile(directories: UserDirectoryList, worldInfoName: string, allowDummy: boolean): object | null {
     const dummyObject = allowDummy ? { entries: {} } : null;
 
     if (!worldInfoName) {

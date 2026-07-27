@@ -6,14 +6,17 @@ import sanitize from 'sanitize-filename';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 
 import { getDefaultPresetFile, getDefaultPresets } from './content-manager.js';
+import type { UserDirectoryList } from '../users.js';
+
+interface PresetSettings {
+    folder: string | null;
+    extension: string | null;
+}
 
 /**
  * Gets the folder and extension for the preset settings based on the API source ID.
- * @param {string} apiId API source ID
- * @param {import('../users.js').UserDirectoryList} directories User directories
- * @returns {{folder: string?, extension: string?}} Object containing the folder and extension for the preset settings
  */
-function getPresetSettingsByAPI(apiId, directories) {
+function getPresetSettingsByAPI(apiId: string, directories: UserDirectoryList): PresetSettings {
     switch (apiId) {
         case 'kobold':
         case 'koboldhorde':
@@ -80,11 +83,17 @@ router.post('/delete', function (request, response) {
     }
 });
 
+interface DefaultPreset {
+    name: string;
+    folder: string | null;
+    filename: string;
+}
+
 router.post('/restore', function (request, response) {
     try {
         const settings = getPresetSettingsByAPI(request.body.apiId, request.user.directories);
         const name = sanitize(request.body.name);
-        const defaultPresets = getDefaultPresets(request.user.directories);
+        const defaultPresets = getDefaultPresets(request.user.directories) as DefaultPreset[];
 
         const defaultPreset = defaultPresets.find(p => p.name === name && p.folder === settings.folder);
 

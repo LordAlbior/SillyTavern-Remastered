@@ -7,9 +7,9 @@ const TASK = 'text-classification';
 export const router = express.Router();
 
 /**
- * @type {Map<string, object>} Cache for classification results
+ * Cache for classification results
  */
-const cacheObject = new Map();
+const cacheObject = new Map<string, object>();
 
 router.post('/labels', async (req, res) => {
     try {
@@ -28,15 +28,13 @@ router.post('/', async (req, res) => {
 
         /**
          * Get classification result for a given text
-         * @param {string} text Text to classify
-         * @returns {Promise<object>} Classification result
          */
-        async function getResult(text) {
+        async function getResult(text: string): Promise<object> {
             if (cacheObject.has(text)) {
-                return cacheObject.get(text);
+                return cacheObject.get(text)!;
             } else {
                 const pipe = await getPipeline(TASK);
-                const result = await pipe(text, { topk: 5 });
+                const result = await pipe(text, { topk: 5 }) as Array<{ score: number; [key: string]: unknown }>;
                 result.sort((a, b) => b.score - a.score);
                 cacheObject.set(text, result);
                 return result;
