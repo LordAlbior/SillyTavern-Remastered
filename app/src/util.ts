@@ -85,7 +85,7 @@ export function getConfig() {
  * @param {'number'|'boolean'|null} typeConverter - Type to convert the value to
  * @returns {any} Value for the given key
  */
-export function getConfigValue(key: string, defaultValue: unknown = null, typeConverter: unknown = null): unknown {
+export function getConfigValue(key: string, defaultValue: unknown = null, typeConverter: unknown = null): any {
     function _getValue() {
         const envKey = keyToEnv(key);
         if (envKey in process.env) {

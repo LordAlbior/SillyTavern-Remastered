@@ -6,6 +6,7 @@
     "moduleDetection": "force",
     "noImplicitAny": false,
     "noImplicitThis": false,
+    "strictNullChecks": false,
     "useUnknownInCatchVariables": false,
     "types": ["node", "jquery", "toastr"]
   },

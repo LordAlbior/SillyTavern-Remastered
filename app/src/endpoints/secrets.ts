@@ -449,7 +449,7 @@ export function deleteSecret(directories, key) {
  * @param {string?} id Secret ID (optional)
  * @returns {string} Secret value
  */
-export function readSecret(directories: import('../users.js').UserDirectoryList, key: string, id: string | null | undefined = null): string | undefined {
+export function readSecret(directories: import('../users.js').UserDirectoryList, key: string, id: string | null | undefined = null): string | null | undefined {
     return new SecretManager(directories).readSecret(key, id);
 }
 

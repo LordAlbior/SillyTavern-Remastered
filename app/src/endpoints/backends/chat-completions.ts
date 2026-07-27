@@ -136,7 +136,7 @@ async function isOpenRouterModelCacheable(modelId) {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
 
         if (!Array.isArray(data?.data)) {
             console.warn('OpenRouter API response format unexpected');
@@ -245,8 +245,8 @@ async function sendClaudeRequest(request, response) {
             stopSequences.push(...request.body.stop);
         }
 
-        const requestBody = {
-            /** @type {any} */ system: [],
+        const requestBody: Record<string, any> = {
+            system: [],
             messages: convertedPrompt.messages,
             model: request.body.model,
             max_tokens: request.body.max_tokens,
@@ -396,7 +396,7 @@ async function sendClaudeRequest(request, response) {
             }
 
             /** @type {any} */
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             const responseText = generateResponseJson?.content?.[0]?.text || '';
             console.debug('Claude response:', generateResponseJson);
 
@@ -713,7 +713,7 @@ async function sendMakerSuiteRequest(request, response) {
             }
 
             /** @type {any} */
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
 
             const candidates = generateResponseJson?.candidates;
             if (!candidates || candidates.length === 0) {
@@ -816,7 +816,7 @@ async function sendAI21Request(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('AI21 response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -906,7 +906,7 @@ async function sendMistralAIRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('MistralAI response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1006,7 +1006,7 @@ async function sendCohereRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('Cohere response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1118,7 +1118,7 @@ async function sendDeepSeekRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('DeepSeek response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1224,7 +1224,7 @@ async function sendXaiRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('xAI response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1329,7 +1329,7 @@ async function sendAimlapiRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('AI/ML API response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1441,7 +1441,7 @@ async function sendElectronHubRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('Electron Hub response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1542,7 +1542,7 @@ async function sendChutesRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('Chutes response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1623,7 +1623,7 @@ async function sendMinimaxRequest(request, response) {
                 const errorJson = tryParse(errorText) ?? { error: true };
                 return response.status(500).send(errorJson);
             }
-            const generateResponseJson = await generateResponse.json();
+            const generateResponseJson = await generateResponse.json() as any;
             console.debug('MiniMax response:', generateResponseJson);
             return response.send(generateResponseJson);
         }
@@ -1714,7 +1714,7 @@ async function sendAzureOpenAIRequest(request, response) {
 
         if (fetchResponse.ok) {
             /** @type {any} */
-            const json = await fetchResponse.json();
+            const json = await fetchResponse.json() as any;
             console.debug('Azure OpenAI response:', json);
             return response.send(json);
         }
@@ -1737,7 +1737,7 @@ router.post('/status', async function (request, statusResponse) {
         if (!request.body) return statusResponse.sendStatus(400);
 
         let apiUrl = '';
-        let apiKey = '';
+        let apiKey: string | null | undefined = '';
         let headers = {};
         let queryParams = {};
 
@@ -1827,7 +1827,7 @@ router.post('/status', async function (request, statusResponse) {
 
                 if (response.ok) {
                     /** @type {any} */
-                    const data = await response.json();
+                    const data = await response.json() as any;
                     // Transform Google AI Studio models to OpenAI format
                     const models = data.models
                         ?.filter(model => model.supportedGenerationMethods?.includes('generateContent'))
@@ -1904,7 +1904,7 @@ router.post('/status', async function (request, statusResponse) {
 
                 let modelResponse;
                 try {
-                    modelResponse = await modelRequest.json();
+                    modelResponse = await modelRequest.json() as any;
                 } catch {
                     modelResponse = { raw: 'Failed to parse JSON response from chat completions probe.' };
                 }
@@ -1959,7 +1959,7 @@ router.post('/status', async function (request, statusResponse) {
 
                 if (response.ok) {
                     /** @type {any} */
-                    const data = await response.json();
+                    const data = await response.json() as any;
                     const models = Array.isArray(data?.result)
                         ? data.result.map(model => ({ ...model, id: model.name }))
                         : [];
@@ -1998,7 +1998,7 @@ router.post('/status', async function (request, statusResponse) {
 
         if (response.ok) {
             /** @type {any} */
-            let data = await response.json();
+            let data = await response.json() as any;
 
             if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.POLLINATIONS && Array.isArray(data)) {
                 data = { data: data.map(model => ({ id: model.name, ...model })) };
@@ -2596,7 +2596,7 @@ router.post('/generate', async function (request, response) {
 
         if (fetchResponse.ok) {
             /** @type {any} */
-            const json = await fetchResponse.json();
+            const json = await fetchResponse.json() as any;
             console.debug('Chat Completion response:', json);
             return response.send(json);
         } else {
@@ -2640,7 +2640,7 @@ multimodalModels.post('/pollinations', async (_req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
 
         if (!Array.isArray(data)) {
             return res.json([]);
@@ -2666,7 +2666,7 @@ multimodalModels.post('/aimlapi', async (_req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
 
         if (!Array.isArray(data?.data)) {
             return res.json([]);
@@ -2689,7 +2689,7 @@ multimodalModels.post('/nanogpt', async (_req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
 
         if (!Array.isArray(data?.data)) {
             return res.json([]);
@@ -2712,7 +2712,7 @@ multimodalModels.post('/electronhub', async (_req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
         const multimodalModels = data.data.filter(m => m.metadata?.vision).map(m => m.id);
         return res.json(multimodalModels);
     } catch (error) {
@@ -2739,7 +2739,7 @@ multimodalModels.post('/chutes', async (req, res) => {
             return res.json([]);
         }
 
-        const data = await response.json();
+        const data = await response.json() as any;
 
         const modelsData = /** @type {{object: string, data: Array<{id: string, input_modalities?: string[]}>}} */ (data);
         const multimodalModels = modelsData.data
@@ -2771,7 +2771,7 @@ multimodalModels.post('/mistral', async (req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
         const multimodalModels = data.data.filter(m => m.capabilities?.vision).map(m => m.id);
         return res.json(multimodalModels);
     } catch (error) {
@@ -2800,7 +2800,7 @@ multimodalModels.post('/xai', async (req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
         const multimodalModels = data.models.filter(m => m.input_modalities?.includes('image')).map(m => m.id);
         if (!multimodalModels.includes('grok-4-0709')) {
             // The endpoint says it doesn't support images, but it does
@@ -2832,7 +2832,7 @@ multimodalModels.post('/moonshot', async (req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
 
         const multimodalModels = data.data.filter(m => m.supports_image_in).map(m => m.id);
         return res.json(multimodalModels);
@@ -2862,7 +2862,7 @@ multimodalModels.post('/workers_ai', async (req, res) => {
         }
 
         /** @type {any} */
-        const data = await response.json();
+        const data = await response.json() as any;
         const models = Array.isArray(data?.result)
             ? data.result
                 .filter(m => Array.isArray(m.properties) && m.properties.some(p => p.property_id === 'vision' && p.value === 'true'))
