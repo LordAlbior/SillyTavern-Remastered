@@ -7,12 +7,12 @@ import {
     getPasswordHash,
     toKey,
 } from './users.js';
+import type { User } from './users.js';
 
 /**
  * Initializes the storage with the data root specified in the config file.
- * @param {string} configPath - The path to the config file.
  */
-async function initStorage(configPath) {
+async function initStorage(configPath: string): Promise<void> {
     const config = yaml.parse(fs.readFileSync(configPath, 'utf8'));
     const dataRoot = config.dataRoot;
 
@@ -26,17 +26,11 @@ async function initStorage(configPath) {
 
 /**
  * Recovers a user account by enabling it and optionally setting a new password.
- * @param {string} configPath - The path to the config file.
- * @param {string} userAccount - The username of the account to recover.
- * @param {string} [userPassword] - The new password for the account. If not provided, sets an empty password.
  */
-export async function recoverPassword(configPath, userAccount, userPassword) {
+export async function recoverPassword(configPath: string, userAccount: string, userPassword?: string): Promise<void> {
     await initStorage(configPath);
 
-    /**
-     * @type {import('./users').User}
-     */
-    const user = await storage.get(toKey(userAccount));
+    const user = await storage.get(toKey(userAccount)) as User | undefined;
 
     if (!user) {
         console.error(`User "${userAccount}" not found.`);

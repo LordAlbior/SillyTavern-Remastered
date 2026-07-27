@@ -35,6 +35,6 @@ try {
 
     process.exit(0);
 } catch (err) {
-    console.error('Healthcheck error:', err.message);
+    console.error('Healthcheck error:', err instanceof Error ? err.message : String(err));
     process.exit(1);
 }

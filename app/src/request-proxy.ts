@@ -6,17 +6,23 @@ import { isValidUrl, color } from './util.js';
 
 const LOG_HEADER = '[Request Proxy]';
 
+export interface ProxySettings {
+    /** Whether proxy is enabled. */
+    enabled: boolean;
+    /** Proxy URL. */
+    url: string;
+    /** List of URLs to bypass proxy. */
+    bypass: string[];
+    /** Enable HTTP/HTTPS keep-alive. */
+    enableKeepAlive: boolean;
+    /** Whether the private request filter is enabled. */
+    privateRequestFilterEnabled: boolean;
+}
+
 /**
  * Initialize request proxy.
- * @param {ProxySettings} settings Proxy settings.
- * @typedef {object} ProxySettings
- * @property {boolean} enabled Whether proxy is enabled.
- * @property {string} url Proxy URL.
- * @property {string[]} bypass List of URLs to bypass proxy.
- * @property {boolean} enableKeepAlive Enable HTTP/HTTPS keep-alive.
- * @property {boolean} privateRequestFilterEnabled Whether the private request filter is enabled.
  */
-export default function initRequestProxy({ enabled, url, bypass, enableKeepAlive, privateRequestFilterEnabled }) {
+export default function initRequestProxy({ enabled, url, bypass, enableKeepAlive, privateRequestFilterEnabled }: ProxySettings) {
     try {
         // No proxy is enabled, so return
         if (!enabled) {
