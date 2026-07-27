@@ -1,3 +1,4 @@
+// @ts-expect-error No type declarations for 'electron' installed
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -18,8 +19,8 @@ const cliArguments = yargs(process.argv)
     })
     .parseSync();
 
-/** @type {string} The URL to load in the window. */
-let appUrl;
+/** The URL to load in the window. */
+let appUrl: string | undefined;
 
 function createSillyTavernWindow() {
     if (!appUrl) {
@@ -33,7 +34,7 @@ function createSillyTavernWindow() {
 }
 
 function startServer() {
-    return new Promise((_resolve, _reject) => {
+    return new Promise<void>((_resolve, _reject) => {
         serverEvents.addListener(EVENT_NAMES.SERVER_STARTED, ({ url }) => {
             appUrl = url.toString();
             createSillyTavernWindow();
