@@ -55,7 +55,7 @@ export function importRisuSprites(directories, data) {
             return;
         }
 
-        let images = [];
+        let images: Array<[string, string]> = [];
 
         if (Array.isArray(risuData.additionalAssets)) {
             images = images.concat(risuData.additionalAssets);
@@ -119,7 +119,7 @@ router.get('/get', function (request, response) {
     const name = String(request.query.name);
     const isSubfolder = name.includes('/');
     const spritesPath = getSpritesPath(request.user.directories, name, isSubfolder);
-    let sprites = [];
+    let sprites: Array<[string, Buffer]> = [];
 
     try {
         if (spritesPath && fs.existsSync(spritesPath) && fs.statSync(spritesPath).isDirectory()) {
@@ -211,7 +211,7 @@ router.post('/upload-zip', async (request, response) => {
         }
 
         const spritePackPath = path.join(file.destination, file.filename);
-        const sprites = await getImageBuffers(spritePackPath);
+        const sprites = (await getImageBuffers(spritePackPath)) as Array<[string, Buffer]>;
         const files = fs.readdirSync(spritesPath);
 
         for (const [filename, buffer] of sprites) {

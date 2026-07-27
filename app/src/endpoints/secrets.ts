@@ -111,10 +111,14 @@ export const allowKeysExposure = !!getConfigValue('allowKeysExposure', false, 'b
  * SecretManager class to handle all secret operations
  */
 export class SecretManager {
+    directories: import('../users.js').UserDirectoryList;
+    filePath: string;
+    defaultSecrets: Record<string, never>;
+
     /**
      * @param {import('../users.js').UserDirectoryList} directories
      */
-    constructor(directories) {
+    constructor(directories: import('../users.js').UserDirectoryList) {
         this.directories = directories;
         this.filePath = path.join(directories.root, SECRETS_FILE);
         this.defaultSecrets = {};
@@ -445,7 +449,7 @@ export function deleteSecret(directories, key) {
  * @param {string?} id Secret ID (optional)
  * @returns {string} Secret value
  */
-export function readSecret(directories, key, id = null) {
+export function readSecret(directories: import('../users.js').UserDirectoryList, key: string, id: string | null | undefined = null): string | undefined {
     return new SecretManager(directories).readSecret(key, id);
 }
 

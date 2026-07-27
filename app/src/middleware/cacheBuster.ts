@@ -6,23 +6,9 @@ import { getConfigValue } from '../util.js';
  * Sets the Clear-Site-Data header to bust the browser cache.
  */
 class CacheBuster {
-    /**
-     * Handles/User-Agents that have already been busted.
-     * @type {Set<string>}
-     */
-    #keys = new Set();
-
-    /**
-     * User agent regex to match against requests.
-     * @type {RegExp | null}
-     */
-    #userAgentRegex = null;
-
-    /**
-     * Whether the cache buster is enabled.
-     * @type {boolean | null}
-     */
-    #isEnabled = null;
+    #keys: Set<string> = new Set();
+    #userAgentRegex: RegExp | null = null;
+    #isEnabled: boolean | null = null;
 
     constructor() {
         this.#isEnabled = !!getConfigValue('cacheBuster.enabled', false, 'boolean');

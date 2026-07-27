@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { color, getConfigValue, safeReadFileSync } from '../util.js';
+// @ts-ignore - host-validation-middleware named exports
 import { isHostAllowed, hostValidationMiddleware } from 'host-validation-middleware';
 
 const knownHosts = new Set();
