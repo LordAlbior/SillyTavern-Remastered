@@ -81,7 +81,7 @@ router.post('/verify', async (request, response) => {
             return response.status(400).send('No URLs specified');
         }
 
-        const verified = {};
+        const verified: Record<string, boolean> = {};
 
         for (const url of request.body.urls) {
             const pathToVerify = path.join(request.user.directories.root, url);

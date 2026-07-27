@@ -10,6 +10,7 @@ import { imageSize as sizeOf } from 'image-size';
 import { getConfigValue, invalidateFirefoxCache } from '../util.js';
 import { getThumbnailResolution, isAnimatedWebP, isAnimatedApng, thumbnailDimensions as dimensions } from './image-metadata.js';
 import { ResizeStrategy } from '@jimp/plugin-resize';
+import type { UserDirectoryList } from '../users.js';
 
 export const publicRouter = express.Router();
 export const apiRouter = express.Router();
@@ -21,19 +22,13 @@ const thumbnailsEnabled = !!getConfigValue('thumbnails.enabled', true, 'boolean'
 const quality = Math.min(100, Math.max(1, parseInt(getConfigValue('thumbnails.quality', 95, 'number'))));
 const pngFormat = String(getConfigValue('thumbnails.format', 'jpg')).toLowerCase().trim() === 'png';
 
-/**
- * @typedef {'bg' | 'avatar' | 'persona'} ThumbnailType
- */
-
+type ThumbnailType = 'bg' | 'avatar' | 'persona';
 
 /**
  * Gets a path to thumbnail folder based on the type.
- * @param {import('../users.js').UserDirectoryList} directories User directories
- * @param {ThumbnailType} type Thumbnail type
- * @returns {string} Path to the thumbnails folder
  */
-function getThumbnailFolder(directories, type) {
-    let thumbnailFolder;
+function getThumbnailFolder(directories: UserDirectoryList, type: ThumbnailType): string | undefined {
+    let thumbnailFolder: string | undefined;
 
     switch (type) {
         case 'bg':
@@ -52,12 +47,9 @@ function getThumbnailFolder(directories, type) {
 
 /**
  * Gets a path to the original images folder based on the type.
- * @param {import('../users.js').UserDirectoryList} directories User directories
- * @param {ThumbnailType} type Thumbnail type
- * @returns {string} Path to the original images folder
  */
-function getOriginalFolder(directories, type) {
-    let originalFolder;
+function getOriginalFolder(directories: UserDirectoryList, type: ThumbnailType): string | undefined {
+    let originalFolder: string | undefined;
 
     switch (type) {
         case 'bg':
@@ -76,11 +68,8 @@ function getOriginalFolder(directories, type) {
 
 /**
  * Removes the generated thumbnail from the disk.
- * @param {import('../users.js').UserDirectoryList} directories User directories
- * @param {ThumbnailType} type Type of the thumbnail
- * @param {string} file Name of the file
  */
-export function invalidateThumbnail(directories, type, file) {
+export function invalidateThumbnail(directories: UserDirectoryList, type: ThumbnailType, file: string): void {
     const folder = getThumbnailFolder(directories, type);
     if (folder === undefined) throw new Error('Invalid thumbnail type');
 
@@ -93,14 +82,14 @@ export function invalidateThumbnail(directories, type, file) {
 
 /**
  * Generates or retrieves a thumbnail for a given file.
- * @param {import('../users.js').UserDirectoryList} directories - User's directory configuration.
- * @param {ThumbnailType} type - Type of thumbnail ('bg', 'avatar', 'persona').
- * @param {string} file - The filename of the image.
- * @param {boolean} [forceGenerate=false] - Whether to force generation even if a thumbnail exists.
- * @param {boolean|null} [isKnownAnimated=null] - If true, skips generation. If false, assumes static. If null, checks.
- * @returns {Promise<{path: string|null, aspectRatio: number|null, resolution: number|null}>} Path to thumbnail, its aspect ratio, and resolution.
  */
-export async function generateThumbnail(directories, type, file, forceGenerate = false, isKnownAnimated = null) {
+export async function generateThumbnail(
+    directories: UserDirectoryList,
+    type: ThumbnailType,
+    file: string,
+    forceGenerate: boolean = false,
+    isKnownAnimated: boolean | null = null,
+): Promise<{ path: string | null; aspectRatio: number | null; resolution: number | null }> {
     // If the caller has already determined the file is animated, skip processing.
     if (isKnownAnimated) {
         return { path: null, aspectRatio: null, resolution: null };
@@ -132,7 +121,7 @@ export async function generateThumbnail(directories, type, file, forceGenerate =
                 if (!forceGenerate) {
                     const buffer = fs.readFileSync(pathToCachedFile);
                     const fileDimensions = sizeOf(buffer);
-                    const ratio = (fileDimensions.height > 0) ? (fileDimensions.width / fileDimensions.height) : 1.0;
+                    const ratio = (fileDimensions.height && fileDimensions.height > 0) ? (fileDimensions.width / fileDimensions.height) : 1.0;
                     // When a thumbnail exists, return the current resolution from config so the JSON can be updated.
                     const resolution = getThumbnailResolution(type);
                     return { path: pathToCachedFile, aspectRatio: ratio, resolution };
@@ -189,13 +178,13 @@ export async function generateThumbnail(directories, type, file, forceGenerate =
 
 /**
  * Processes a single image to generate its thumbnail.
- * @param {string} file - The filename of the image.
- * @param {string} originalFolder - Path to the original image folder.
- * @param {string} thumbnailFolder - Path to the thumbnail output folder.
- * @param {ThumbnailType} type - The type of thumbnail to generate.
- * @returns {Promise<{success: boolean, filename?: string, error?: string, aspectRatio?: number, resolution?: number}>} Result of the processing.
  */
-async function processSingleImage(file, originalFolder, thumbnailFolder, type) {
+async function processSingleImage(
+    file: string,
+    originalFolder: string,
+    thumbnailFolder: string,
+    type: ThumbnailType,
+): Promise<{ success: boolean; filename?: string; error?: string; aspectRatio?: number; resolution?: number }> {
     const pathToOriginalFile = path.join(originalFolder, file);
     const pathToCachedFile = path.join(thumbnailFolder, file);
 
@@ -237,14 +226,12 @@ async function processSingleImage(file, originalFolder, thumbnailFolder, type) {
         return { success: true, aspectRatio, resolution: thumbnailResolution };
     } catch (error) {
         console.warn(`[Thumbnails] Failed to process image ${file}:`, error);
-        return { success: false, filename: file, error: error.message };
+        return { success: false, filename: file, error: error instanceof Error ? error.message : String(error) };
     }
 }
 
 /**
  * Public endpoint for serving thumbnails.
- * @param {express.Request} request - The Express request object.
- * @param {express.Response} response - The Express response object.
  */
 publicRouter.get('/', async function (request, response) {
     try {
@@ -259,6 +246,7 @@ publicRouter.get('/', async function (request, response) {
 
         const serveOriginal = () => {
             const folder = getOriginalFolder(request.user.directories, type);
+            if (!folder) return response.sendStatus(404);
             const pathToOriginalFile = path.resolve(path.join(folder, file));
             if (!fs.existsSync(pathToOriginalFile)) return response.sendStatus(404);
             invalidateFirefoxCache(pathToOriginalFile, request, response);
@@ -283,6 +271,7 @@ publicRouter.get('/', async function (request, response) {
         }
 
         const thumbnailFolder = getThumbnailFolder(request.user.directories, type);
+        if (!thumbnailFolder) return response.sendStatus(400);
         const pathToCachedFile = path.join(thumbnailFolder, file);
 
         // Try to generate thumbnail if it doesn't exist
