@@ -109,6 +109,11 @@ function registerPresetManagers() {
 }
 
 class PresetManager {
+    select: any;
+    apiId: string;
+    extensions: Record<string, any>[];
+    sorts: Record<string, any>[];
+
     constructor(select, apiId) {
         this.select = select;
         this.apiId = apiId;
@@ -463,7 +468,7 @@ class PresetManager {
      * @param {object} [options] Options for saving the preset
      * @param {boolean} [options.skipUpdate=false] If true, skips updating the preset list after saving.
      */
-    async savePreset(name, settings, { skipUpdate = false } = {}) {
+    async savePreset(name, settings?, { skipUpdate = false } = {}) {
         if (this.apiId === 'instruct' && settings) {
             await checkForSystemPromptInInstructTemplate(name, settings);
         }
@@ -521,10 +526,10 @@ class PresetManager {
      * @param {string} [api] API ID. If not specified, uses the current API ID.
      * @returns {{presets: any[], preset_names: object, settings: object}}
      */
-    getPresetList(api) {
-        let presets = [];
-        let preset_names = {};
-        let settings = {};
+    getPresetList(api?) {
+        let presets: any[] = [];
+        let preset_names: Record<string, any> = {};
+        let settings: Record<string, any> = {};
 
         // If no API specified, use the current API
         if (api === undefined) {

@@ -113,7 +113,7 @@ export const send_on_enter_options = {
 
 export const persona_description_positions = _persona_description_positions;
 
-export const power_user = {
+export const power_user: Record<string, any> = {
     charListGrid: false,
     tokenizer: tokenizers.BEST_MATCH,
     token_padding: 64,
@@ -1923,7 +1923,7 @@ function switchMaxContextSize() {
 
 // Fetch a compiled object of all preset settings
 export function getContextSettings() {
-    let compiledSettings = {};
+    let compiledSettings: Record<string, any> = {};
 
     contextControls.forEach((control) => {
         let value = control.isGlobalSetting ? power_user[control.property] : power_user.context[control.property];

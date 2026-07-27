@@ -501,7 +501,7 @@ export function getBase64Async(file) {
  * @returns {Promise<any>} A promise that resolves to the parsed JSON object.
  */
 export async function parseJsonFile(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsText(file);
         fileReader.onload = event => resolve(JSON.parse(String(event.target.result)));
