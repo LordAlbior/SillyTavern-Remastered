@@ -312,10 +312,10 @@ class PromptManager {
     error: any;
     tryGenerate: () => Promise<void>;
     saveServiceSettings: () => Promise<void>;
-    handleToggle: () => void;
-    handleInspect: () => void;
-    handleEdit: () => void;
-    handleDetach: () => void;
+    handleToggle: (event?: any) => void;
+    handleInspect: (event?: any) => void;
+    handleEdit: (event?: any) => void;
+    handleDetach: (event?: any) => void;
     renderDebounced?: (...args: any[]) => void;
     handleSavePrompt: (...args: any[]) => void;
     handleResetPrompt: (...args: any[]) => void;
@@ -575,19 +575,19 @@ class PromptManager {
                     break;
             }
 
-            const nameField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name'));
-            const roleField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role'));
-            const promptField = /** @type {HTMLTextAreaElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt'));
-            const injectionPositionField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position'));
-            const injectionDepthField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth'));
-            const injectionOrderField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order'));
-            const injectionTriggerField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger'));
-            const depthBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_depth_block'));
-            const orderBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_order_block'));
-            const forbidOverridesField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides'));
-            const forbidOverridesBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_forbid_overrides_block'));
-            const entrySourceBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source_block'));
-            const entrySource = /** @type {HTMLSpanElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source'));
+            const nameField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name') as HTMLInputElement);
+            const roleField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role') as HTMLSelectElement);
+            const promptField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt') as HTMLTextAreaElement);
+            const injectionPositionField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position') as HTMLSelectElement);
+            const injectionDepthField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth') as HTMLInputElement);
+            const injectionOrderField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order') as HTMLInputElement);
+            const injectionTriggerField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger') as HTMLSelectElement);
+            const depthBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_depth_block') as HTMLDivElement);
+            const orderBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_order_block') as HTMLDivElement);
+            const forbidOverridesField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides') as HTMLInputElement);
+            const forbidOverridesBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_forbid_overrides_block') as HTMLDivElement);
+            const entrySourceBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source_block') as HTMLDivElement);
+            const entrySource = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source') as HTMLSpanElement);
 
             nameField.value = prompt.name;
             roleField.value = 'system';
@@ -614,7 +614,7 @@ class PromptManager {
 
         // Append prompt to selected character
         this.handleAppendPrompt = (event) => {
-            const appendPromptFooter = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_footer_append_prompt'));
+            const appendPromptFooter = (document.getElementById(this.configuration.prefix + 'prompt_manager_footer_append_prompt') as HTMLSelectElement);
             const promptID = appendPromptFooter.value;
             const prompt = this.getPromptById(promptID);
 
@@ -629,7 +629,7 @@ class PromptManager {
         this.handleDeletePrompt = async (event) => {
             Popup.show.confirm(t`Are you sure you want to delete this prompt?`, null).then((userChoice) => {
                 if (!userChoice) return;
-                const appendPromptFooter = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_footer_append_prompt'));
+                const appendPromptFooter = (document.getElementById(this.configuration.prefix + 'prompt_manager_footer_append_prompt') as HTMLSelectElement);
                 const promptID = appendPromptFooter.value;
                 const prompt = this.getPromptById(promptID);
 
@@ -763,7 +763,7 @@ class PromptManager {
 
                 // Update edit form if present
                 // @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetParent
-                const popupEditFormPrompt = /** @type {HTMLTextAreaElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt'));
+                const popupEditFormPrompt = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt') as HTMLTextAreaElement);
                 if (popupEditFormPrompt.offsetParent) {
                     popupEditFormPrompt.value = prompt.content;
                 }
@@ -931,14 +931,14 @@ class PromptManager {
      * @returns {void}
      */
     updatePromptWithPromptEditForm(prompt) {
-        const nameField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name'));
-        const roleField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role'));
-        const promptField = /** @type {HTMLTextAreaElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt'));
-        const injectionPositionField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position'));
-        const injectionDepthField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth'));
-        const injectionOrderField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order'));
-        const injectionTriggerField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger'));
-        const forbidOverridesField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides'));
+        const nameField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name') as HTMLInputElement);
+        const roleField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role') as HTMLSelectElement);
+        const promptField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt') as HTMLTextAreaElement);
+        const injectionPositionField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position') as HTMLSelectElement);
+        const injectionDepthField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth') as HTMLInputElement);
+        const injectionOrderField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order') as HTMLInputElement);
+        const injectionTriggerField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger') as HTMLSelectElement);
+        const forbidOverridesField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides') as HTMLInputElement);
 
         prompt.name = nameField.value;
         prompt.role = roleField.value;
@@ -1342,7 +1342,7 @@ class PromptManager {
 
         const debouncedSaveServiceSettings = debouncePromise(() => this.saveServiceSettings(), 300);
 
-        const textarea = /** @type {HTMLTextAreaElement} */(document.getElementById(textareaIdentifier));
+        const textarea = (document.getElementById(textareaIdentifier) as HTMLTextAreaElement);
         textarea.addEventListener('blur', () => {
             prompt.content = textarea.value;
             this.updatePromptByIdentifier(identifier, prompt);
@@ -1358,7 +1358,7 @@ class PromptManager {
      */
     updateQuickEdit(identifier, prompt) {
         const elementId = `${identifier}_prompt_quick_edit_textarea`;
-        const textarea = /** @type {HTMLTextAreaElement} */(document.getElementById(elementId));
+        const textarea = (document.getElementById(elementId) as HTMLTextAreaElement);
         textarea.value = prompt.content;
 
         return elementId;
@@ -1386,19 +1386,19 @@ class PromptManager {
      * @param {Partial<Prompt>} prompt - Prompt object with properties 'name', 'role', 'content', and 'system_prompt'
      */
     loadPromptIntoEditForm(prompt) {
-        const nameField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name'));
-        const roleField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role'));
-        const promptField = /** @type {HTMLTextAreaElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt'));
-        const injectionPositionField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position'));
-        const injectionDepthField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth'));
-        const injectionOrderField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order'));
-        const injectionTriggerField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger'));
-        const injectionDepthBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_depth_block'));
-        const injectionOrderBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_order_block'));
-        const forbidOverridesField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides'));
-        const forbidOverridesBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_forbid_overrides_block'));
-        const entrySourceBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source_block'));
-        const entrySource = /** @type {HTMLSpanElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source'));
+        const nameField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name') as HTMLInputElement);
+        const roleField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role') as HTMLSelectElement);
+        const promptField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt') as HTMLTextAreaElement);
+        const injectionPositionField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position') as HTMLSelectElement);
+        const injectionDepthField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth') as HTMLInputElement);
+        const injectionOrderField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order') as HTMLInputElement);
+        const injectionTriggerField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger') as HTMLSelectElement);
+        const injectionDepthBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_depth_block') as HTMLDivElement);
+        const injectionOrderBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_order_block') as HTMLDivElement);
+        const forbidOverridesField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides') as HTMLInputElement);
+        const forbidOverridesBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_forbid_overrides_block') as HTMLDivElement);
+        const entrySourceBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source_block') as HTMLDivElement);
+        const entrySource = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source') as HTMLSpanElement);
         const isPulledPrompt = Object.keys(this.promptSources).includes(prompt.identifier);
 
         nameField.value = prompt.name ?? '';
@@ -1499,19 +1499,19 @@ class PromptManager {
         const editArea = document.getElementById(this.configuration.prefix + 'prompt_manager_popup_edit');
         editArea.style.display = 'none';
 
-        const nameField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name'));
-        const roleField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role'));
-        const promptField = /** @type {HTMLTextAreaElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt'));
-        const injectionPositionField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position'));
-        const injectionDepthField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth'));
-        const injectionDepthBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_depth_block'));
-        const injectionOrderBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_order_block'));
-        const injectionOrderField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order'));
-        const injectionTriggerField = /** @type {HTMLSelectElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger'));
-        const forbidOverridesField = /** @type {HTMLInputElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides'));
-        const forbidOverridesBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_forbid_overrides_block'));
-        const entrySourceBlock = /** @type {HTMLDivElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source_block'));
-        const entrySource = /** @type {HTMLSpanElement} */(document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source'));
+        const nameField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_name') as HTMLInputElement);
+        const roleField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_role') as HTMLSelectElement);
+        const promptField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_prompt') as HTMLTextAreaElement);
+        const injectionPositionField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_position') as HTMLSelectElement);
+        const injectionDepthField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_depth') as HTMLInputElement);
+        const injectionDepthBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_depth_block') as HTMLDivElement);
+        const injectionOrderBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_order_block') as HTMLDivElement);
+        const injectionOrderField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_order') as HTMLInputElement);
+        const injectionTriggerField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_injection_trigger') as HTMLSelectElement);
+        const forbidOverridesField = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_form_forbid_overrides') as HTMLInputElement);
+        const forbidOverridesBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_forbid_overrides_block') as HTMLDivElement);
+        const entrySourceBlock = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source_block') as HTMLDivElement);
+        const entrySource = (document.getElementById(this.configuration.prefix + 'prompt_manager_popup_entry_source') as HTMLSpanElement);
 
         nameField.value = '';
         roleField.selectedIndex = 0;
@@ -1797,19 +1797,19 @@ class PromptManager {
         promptManagerList.insertAdjacentHTML('beforeend', listItemHtml);
 
         // Now that the new elements are in the DOM, you can add the event listeners.
-        Array.from(promptManagerList.getElementsByClassName('prompt-manager-detach-action')).forEach(el => {
+        $(promptManagerList).find('.prompt-manager-detach-action').each((_, el) => {
             el.addEventListener('click', this.handleDetach);
         });
 
-        Array.from(promptManagerList.getElementsByClassName('prompt-manager-inspect-action')).forEach(el => {
+        $(promptManagerList).find('.prompt-manager-inspect-action').each((_, el) => {
             el.addEventListener('click', this.handleInspect);
         });
 
-        Array.from(promptManagerList.getElementsByClassName('prompt-manager-edit-action')).forEach(el => {
+        $(promptManagerList).find('.prompt-manager-edit-action').each((_, el) => {
             el.addEventListener('click', this.handleEdit);
         });
 
-        Array.from(promptManagerList.querySelectorAll('.prompt-manager-toggle-action')).forEach(el => {
+        $(promptManagerList).find('.prompt-manager-toggle-action').each((_, el) => {
             el.addEventListener('click', this.handleToggle);
         });
     }

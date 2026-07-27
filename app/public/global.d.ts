@@ -187,6 +187,8 @@ declare global {
         pagination(method: string, options?: any): JQuery;
         pagination(options?: any): JQuery;
         izoomify(options?: any): JQuery;
+        sortable(options?: any): JQuery;
+        sortable(method: string, options?: any): JQuery;
     }
 
     // NPM package doesn't have the 'queue' property in the type definition
