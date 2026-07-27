@@ -1,6 +1,15 @@
 import { formatTime } from './utils.js';
 
 export class AudioPlayer {
+    audio: HTMLAudioElement;
+    container: HTMLElement;
+    options: Record<string, any>;
+    isDragging: boolean;
+    isDestroyed: boolean;
+    boundHandlers: Record<string, any>;
+    observer: MutationObserver | null;
+    elements: Record<string, any>;
+
     /**
      * Creates an audio player instance
      * @param {HTMLElement} audioElement - The audio element to control
