@@ -39,7 +39,7 @@ const isESModule = (file) => path.extname(file) === '.mjs';
  */
 export async function loadPlugins(app, pluginsPath) {
     try {
-        const exitHooks = [];
+        const exitHooks: Array<() => void> = [];
         const emptyFn = () => { };
 
         // Server plugins are disabled.

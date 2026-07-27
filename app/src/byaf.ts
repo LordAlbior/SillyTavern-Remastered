@@ -141,7 +141,7 @@ export class ByafParser {
             throw new Error('Invalid BYAF file: missing character path');
         }
 
-        const characterBuffer = await extractFileFromZipBuffer(this.#data, characterPath);
+        const characterBuffer: Buffer | null = await extractFileFromZipBuffer(this.#data, characterPath) as Buffer | null;
         if (!characterBuffer) {
             throw new Error('Invalid BYAF file: failed to extract character JSON');
         }
@@ -211,7 +211,7 @@ export class ByafParser {
             }
 
             const fullImagePath = urlJoin(path.dirname(characterPath), imagePath);
-            const imageBuffer = await extractFileFromZipBuffer(this.#data, fullImagePath);
+            const imageBuffer: Buffer | null = await extractFileFromZipBuffer(this.#data, fullImagePath) as Buffer | null;
             if (!imageBuffer) {
                 console.warn('Warning: failed to extract BYAF character image');
                 continue;
@@ -264,7 +264,7 @@ export class ByafParser {
         for (const scenario of scenarios) {
             const bgImagePath = scenario?.backgroundImage;
             if (bgImagePath) {
-                const data = await extractFileFromZipBuffer(this.#data, bgImagePath);
+                const data: Buffer = await extractFileFromZipBuffer(this.#data, bgImagePath) as Buffer;
                 if (data) {
                     const existingIndex = backgrounds.findIndex(bg => bg.data.compare(data) === 0);
                     if (existingIndex !== -1) {

@@ -90,7 +90,7 @@ export function isFirefox(req) {
  * @returns {string[]} The list of valid IP patterns
  */
 export function filterValidIpPatterns(entries, formatLog) {
-    const validEntries = [];
+    const validEntries: string[] = [];
 
     if (!Array.isArray(entries)) {
         return validEntries;

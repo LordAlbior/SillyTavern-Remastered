@@ -57,8 +57,8 @@ export default function initRequestProxy({ enabled, url, bypass, enableKeepAlive
 
         const proxyAgent = new ProxyAgent({ httpAgent, httpsAgent, keepAlive: enableKeepAlive });
 
-        http.globalAgent = proxyAgent;
-        https.globalAgent = proxyAgent;
+        http.globalAgent = proxyAgent as any;
+        https.globalAgent = proxyAgent as any;
 
         console.info();
         console.info(color.green(LOG_HEADER), 'Proxy URL is used:', color.blue(url));

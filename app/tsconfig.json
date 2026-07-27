@@ -4,7 +4,10 @@
     "checkJs": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "types": ["node"]
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "useUnknownInCatchVariables": false,
+    "types": ["node", "jquery", "toastr"]
   },
   "include": [
     "src/**/*",
@@ -21,6 +24,7 @@
     "webpack.config.js",
     "public/lib/*.min.js",
     "public/lib/*.min.mjs",
+    "public/lib/structured-clone/**",
     "public/lib/cropper.min.js",
     "public/lib/dialog-polyfill.esm.js",
     "public/lib/epub.min.js",

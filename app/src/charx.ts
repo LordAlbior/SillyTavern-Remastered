@@ -98,7 +98,7 @@ export class CharXParser {
 
         let extractedBuffers = new Map<string, Buffer>();
         if (archivePaths.size > 0) {
-            extractedBuffers = await extractFilesFromZipBuffer(this.#data, [...archivePaths]);
+            extractedBuffers = await extractFilesFromZipBuffer(this.#data, [...archivePaths]) as Map<string, Buffer>;
         }
 
         let avatar: string | Buffer = DEFAULT_AVATAR_PATH;

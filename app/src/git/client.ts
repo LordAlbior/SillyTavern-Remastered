@@ -5,18 +5,17 @@ import git from 'isomorphic-git';
 import http from 'isomorphic-git/http/node';
 import simpleGit from 'simple-git';
 
-/** @type {{ AUTO: 'auto', SYSTEM: 'system', BUILTIN: 'builtin' }} */
 export const GIT_BACKENDS = {
     AUTO: 'auto',
     SYSTEM: 'system',
     BUILTIN: 'builtin',
-};
+} as const;
 
 /**
  * @param {string | undefined | null} preferredBackend
  * @returns {'system' | 'builtin'}
  */
-function resolveBackend(preferredBackend) {
+function resolveBackend(preferredBackend: string | undefined | null): 'system' | 'builtin' {
     const normalized = typeof preferredBackend === 'string' ? preferredBackend.trim().toLowerCase() : GIT_BACKENDS.AUTO;
     const backend = normalized === GIT_BACKENDS.SYSTEM
         ? GIT_BACKENDS.SYSTEM
@@ -36,19 +35,14 @@ function resolveBackend(preferredBackend) {
     return GIT_BACKENDS.BUILTIN;
 }
 
-/**
- * @typedef {object} GitCloneOptions
- * @property {number} [depth]
- * @property {string} [branch]
- */
+interface GitCloneOptions {
+    depth?: number;
+    branch?: string;
+}
 
 const SUPPORTED_CLONE_OPTIONS = new Set(['depth', 'branch']);
 
-/**
- * @param {GitCloneOptions} [options]
- * @returns {{ depth?: number, branch?: string }}
- */
-function normalizeCloneOptions(options = {}) {
+function normalizeCloneOptions(options: GitCloneOptions = {}): { depth?: number; branch?: string } {
     for (const key of Object.keys(options)) {
         if (!SUPPORTED_CLONE_OPTIONS.has(key)) {
             throw new Error(`Unsupported clone option: ${key}`);
@@ -57,17 +51,12 @@ function normalizeCloneOptions(options = {}) {
     return { depth: options.depth, branch: options.branch };
 }
 
-/**
- * @typedef {object} GitClient
- * @property {'system' | 'builtin'} backend
- * @property {(url: string, localPath: string, options?: GitCloneOptions) => Promise<void>} clone
- */
+interface GitClient {
+    backend: 'system' | 'builtin';
+    clone(url: string, localPath: string, options?: GitCloneOptions): Promise<void>;
+}
 
-/**
- * @param {{ backend?: string }} [options]
- * @returns {GitClient}
- */
-export function createGitClient(options = {}) {
+export function createGitClient(options: { backend?: string } = {}): GitClient {
     const backend = resolveBackend(options.backend);
     if (backend === GIT_BACKENDS.SYSTEM) {
         return new SimpleGitClient();
@@ -76,13 +65,11 @@ export function createGitClient(options = {}) {
     return new IsomorphicGitClient();
 }
 
-/**
- * @implements {GitClient}
- */
-class SimpleGitClient {
+class SimpleGitClient implements GitClient {
+    backend = GIT_BACKENDS.SYSTEM;
+    git = simpleGit();
+
     constructor() {
-        this.backend = GIT_BACKENDS.SYSTEM;
-        this.git = simpleGit();
     }
 
     /**
@@ -108,12 +95,10 @@ class SimpleGitClient {
     }
 }
 
-/**
- * @implements {GitClient}
- */
-class IsomorphicGitClient {
+class IsomorphicGitClient implements GitClient {
+    backend = GIT_BACKENDS.BUILTIN;
+
     constructor() {
-        this.backend = GIT_BACKENDS.BUILTIN;
     }
 
     /**
