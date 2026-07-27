@@ -12,7 +12,7 @@ const ALLOWED_EXTENSIONS = [
 ];
 
 // Patched fetch function that handles file URLs
-globalThis.fetch = async (/** @type {string | URL | Request} */ request, /** @type {RequestInit | undefined} */ options) => {
+globalThis.fetch = async (request: string | URL | Request, options?: RequestInit): Promise<Response> => {
     if (!isFileURL(request)) {
         return originalFetch(request, options);
     }
