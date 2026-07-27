@@ -1,44 +1,46 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
-
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
-    "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // and npm install -D @types/node
-
-    // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-
-    // Recommended Options
-    "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    "checkJs": true,
     "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
-  }
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*",
+    "public/**/*",
+    "*.js",
+    "*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "data",
+    "backups",
+    "cache",
+    "src/tokenizers/**",
+    "webpack.config.js",
+    "public/lib/*.min.js",
+    "public/lib/*.min.mjs",
+    "public/lib/cropper.min.js",
+    "public/lib/dialog-polyfill.esm.js",
+    "public/lib/epub.min.js",
+    "public/lib/eventemitter.js",
+    "public/lib/jquery-3.5.1.min.js",
+    "public/lib/jquery-cookie-1.4.1.min.js",
+    "public/lib/jquery-cropper.min.js",
+    "public/lib/jquery-ui.min.js",
+    "public/lib/jquery.izoomify.js",
+    "public/lib/jquery.transit.min.js",
+    "public/lib/jquery.ui.touch-punch.min.js",
+    "public/lib/jszip.min.js",
+    "public/lib/pdf.min.mjs",
+    "public/lib/pdf.worker.min.mjs",
+    "public/lib/polyfill.js",
+    "public/lib/select2-search-placeholder.js",
+    "public/lib/select2.min.js",
+    "public/lib/swiped-events.js",
+    "public/lib/toastr.js.map",
+    "public/lib/toastr.min.js",
+    "public/lib/toolcool-color-picker.js"
+  ]
 }

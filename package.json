@@ -135,7 +135,7 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "typecheck": "tsc -p tsconfig.base.json --noEmit",
+    "typecheck": "tsc -p app/tsconfig.json --noEmit",
     "plugins:update": "bun --cwd app plugins update",
     "plugins:install": "bun --cwd app plugins install"
   },

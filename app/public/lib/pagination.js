@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*
  * pagination.js 2.6.0
  * A jQuery plugin to provide simple yet fully customisable pagination.

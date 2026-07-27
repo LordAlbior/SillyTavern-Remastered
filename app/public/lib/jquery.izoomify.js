@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*!
 *	@name: jquery-izoomify
 *   @version: 1.0

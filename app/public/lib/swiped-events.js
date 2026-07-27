@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*!
  * swiped-events.js - v@version@
  * Pure JavaScript swipe events

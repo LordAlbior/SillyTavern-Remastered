@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* 
 Tool Cool Color Picker
 Version: 1.0.14
