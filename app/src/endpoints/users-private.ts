@@ -6,6 +6,7 @@ import storage from 'node-persist';
 import express from 'express';
 
 import { getUserAvatar, toKey, getPasswordHash, getPasswordSalt, createBackupArchive, ensurePublicDirectoriesExist, toAvatarKey, getAccountVersion } from '../users.js';
+import type { User } from '../users.js';
 import { SETTINGS_FILE } from '../constants.js';
 import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
 import { color, Cache, getConfigValue } from '../util.js';
@@ -73,8 +74,7 @@ router.post('/change-avatar', async (request, response) => {
             return response.status(400).json({ error: 'Invalid data URL' });
         }
 
-        /** @type {import('../users.js').User} */
-        const user = await storage.getItem(toKey(request.body.handle));
+        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
 
         if (!user) {
             console.error('Change avatar failed: User not found');
@@ -102,8 +102,7 @@ router.post('/change-password', async (request, response) => {
             return response.status(403).json({ error: 'Unauthorized' });
         }
 
-        /** @type {import('../users.js').User} */
-        const user = await storage.getItem(toKey(request.body.handle));
+        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
 
         if (!user) {
             console.error('Change password failed: User not found');
@@ -203,8 +202,7 @@ router.post('/change-name', async (request, response) => {
             return response.status(403).json({ error: 'Unauthorized' });
         }
 
-        /** @type {import('../users.js').User} */
-        const user = await storage.getItem(toKey(request.body.handle));
+        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
 
         if (!user) {
             console.warn('Change name failed: User not found');
@@ -227,7 +225,7 @@ router.post('/reset-step1', async (request, response) => {
         console.log();
         console.log(color.magenta(`${request.user.profile.name}, your account reset code is: `) + color.red(resetCode));
         console.log();
-        RESET_CACHE.set(request.user.profile.handle, resetCode);
+        RESET_CACHE.set(request.user.profile.handle, resetCode as unknown as object);
         return response.sendStatus(204);
     } catch (error) {
         console.error('Recover step 1 failed:', error);
