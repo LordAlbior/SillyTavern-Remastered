@@ -6,6 +6,19 @@ type JSOrTS = JS | TS;
 
 /**
  * Converts JSDoc type annotations to TypeScript type annotations
+ * 
+ * This codemod is conservative and only converts simple, well-defined types.
+ * Complex types are left as-is for manual review.
+ * 
+ * Handles:
+ * - @param {Type} name -> name: Type (simple types only)
+ * - @returns {Type} -> : Type (simple types only)
+ * 
+ * Skips:
+ * - Complex union types
+ * - Generic types with multiple parameters
+ * - Callback function types
+ * - Types that reference undefined types
  */
 const codemod: Codemod<JSOrTS> = async (root) => {
   const rootNode = root.root();
@@ -56,7 +69,12 @@ const codemod: Codemod<JSOrTS> = async (root) => {
       
       if (jsdocMatch) {
         const jsdocType = jsdocMatch[1];
+        
+        // Only convert simple types
+        if (!isSimpleType(jsdocType)) continue;
+        
         const tsType = convertJSDocTypeToTS(jsdocType);
+        
         // Insert type annotation after the identifier
         const identEnd = identifier.range().end.index;
         edits.push({
@@ -70,15 +88,20 @@ const codemod: Codemod<JSOrTS> = async (root) => {
     // Extract @returns annotation
     const returnsMatch = commentText.match(/@returns?\s+\{([^}]+)\}/);
     if (returnsMatch) {
-      const returnType = convertJSDocTypeToTS(returnsMatch[1]);
+      const returnType = returnsMatch[1];
       
-      // Insert return type after the closing parenthesis of parameters
-      const paramsEnd = params.range().end.index;
-      edits.push({
-        startPos: paramsEnd,
-        endPos: paramsEnd,
-        insertedText: `: ${returnType}`,
-      });
+      // Only convert simple types
+      if (isSimpleType(returnType)) {
+        const tsReturnType = convertJSDocTypeToTS(returnType);
+        
+        // Insert return type after the closing parenthesis of parameters
+        const paramsEnd = params.range().end.index;
+        edits.push({
+          startPos: paramsEnd,
+          endPos: paramsEnd,
+          insertedText: `: ${tsReturnType}`,
+        });
+      }
     }
   }
 
@@ -134,7 +157,12 @@ const codemod: Codemod<JSOrTS> = async (root) => {
       
       if (jsdocMatch) {
         const jsdocType = jsdocMatch[1];
+        
+        // Only convert simple types
+        if (!isSimpleType(jsdocType)) continue;
+        
         const tsType = convertJSDocTypeToTS(jsdocType);
+        
         // Insert type annotation after the identifier
         const identEnd = identifier.range().end.index;
         edits.push({
@@ -148,15 +176,20 @@ const codemod: Codemod<JSOrTS> = async (root) => {
     // Extract @returns annotation
     const returnsMatch = commentText.match(/@returns?\s+\{([^}]+)\}/);
     if (returnsMatch) {
-      const returnType = convertJSDocTypeToTS(returnsMatch[1]);
+      const returnType = returnsMatch[1];
       
-      // Insert return type after the closing parenthesis of parameters
-      const paramsEnd = params.range().end.index;
-      edits.push({
-        startPos: paramsEnd,
-        endPos: paramsEnd,
-        insertedText: `: ${returnType}`,
-      });
+      // Only convert simple types
+      if (isSimpleType(returnType)) {
+        const tsReturnType = convertJSDocTypeToTS(returnType);
+        
+        // Insert return type after the closing parenthesis of parameters
+        const paramsEnd = params.range().end.index;
+        edits.push({
+          startPos: paramsEnd,
+          endPos: paramsEnd,
+          insertedText: `: ${tsReturnType}`,
+        });
+      }
     }
   }
 
@@ -166,6 +199,20 @@ const codemod: Codemod<JSOrTS> = async (root) => {
 
   return rootNode.commitEdits(edits);
 };
+
+/**
+ * Check if a JSDoc type is simple enough to convert automatically
+ */
+function isSimpleType(jsdocType: string): boolean {
+  // Skip complex types
+  if (jsdocType.includes("|") && jsdocType.split("|").length > 2) return false;
+  if (jsdocType.includes("<") && jsdocType.includes(",") && jsdocType.split(",").length > 2) return false;
+  if (jsdocType.startsWith("function")) return false;
+  if (jsdocType.includes("=>")) return false;
+  if (jsdocType.includes("{") && jsdocType.includes(":")) return false;
+  
+  return true;
+}
 
 /**
  * Convert JSDoc type syntax to TypeScript type syntax
@@ -198,11 +245,6 @@ function convertJSDocTypeToTS(jsdocType: string): string {
   // Handle object types: Object or {key: value}
   if (jsdocType === "Object" || jsdocType === "object") {
     return "Record<string, any>";
-  }
-
-  // Handle function types: function(params): returnType
-  if (jsdocType.startsWith("function")) {
-    return jsdocType.replace("function", "");
   }
 
   // Handle Promise types

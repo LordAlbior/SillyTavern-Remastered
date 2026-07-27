@@ -7,11 +7,11 @@ type JSOrTS = JS | TS;
 /**
  * Adds type guards for catch variables to handle useUnknownInCatchVariables
  * 
- * Transforms:
- * catch (error) { console.error(error.message); }
+ * This codemod is conservative and only transforms simple cases where:
+ * - The catch variable is used with property access (e.g., error.message)
+ * - The catch body doesn't already have an instanceof check
  * 
- * Into:
- * catch (error) { if (error instanceof Error) { console.error(error.message); } else { console.error(String(error)); } }
+ * For complex cases, manual review is recommended.
  */
 const codemod: Codemod<JSOrTS> = async (root) => {
   const rootNode = root.root();
@@ -49,45 +49,48 @@ const codemod: Codemod<JSOrTS> = async (root) => {
 
     if (hasInstanceCheck) continue; // Already has type guard
 
-    // Find all property accesses on the error variable
+    // Find all property accesses on the error variable (e.g., error.message)
     const propertyAccesses = catchBody.findAll({
       rule: {
         pattern: `${errorVar}.$PROPERTY`,
       },
     });
 
-    // Find all method calls on the error variable
-    const methodCalls = catchBody.findAll({
-      rule: {
-        pattern: `${errorVar}.$METHOD($$$ARGS)`,
-      },
-    });
+    // If there are no property accesses, skip this catch block
+    if (propertyAccesses.length === 0) continue;
 
-    // If there are no property accesses or method calls, skip
-    if (propertyAccesses.length === 0 && methodCalls.length === 0) continue;
+    // For each property access, add a type guard
+    for (const propAccess of propertyAccesses) {
+      const parent = propAccess.parent();
+      if (!parent) continue;
 
-    // Wrap the entire catch body in an instanceof check
-    const bodyStart = catchBody.range().start.index;
-    const bodyEnd = catchBody.range().end.index;
-    const bodyText = catchBody.text();
+      // Check if this is inside a statement (not already in a type guard)
+      const statement = parent.find({
+        rule: {
+          any: [
+            { kind: "expression_statement" },
+            { kind: "variable_declaration" },
+            { kind: "return_statement" },
+          ],
+        },
+      });
 
-    // Remove the outer braces from bodyText
-    const innerBody = bodyText.slice(1, -1).trim();
+      if (!statement) continue;
 
-    // Create the wrapped version
-    const wrappedBody = `{
-    if (${errorVar} instanceof Error) {
-      ${innerBody}
-    } else {
-      console.error(String(${errorVar}));
+      // Get the statement text
+      const statementText = statement.text();
+      const statementStart = statement.range().start.index;
+      const statementEnd = statement.range().end.index;
+
+      // Create a type-guarded version
+      const guardedStatement = `if (${errorVar} instanceof Error) { ${statementText} }`;
+
+      edits.push({
+        startPos: statementStart,
+        endPos: statementEnd,
+        insertedText: guardedStatement,
+      });
     }
-  }`;
-
-    edits.push({
-      startPos: bodyStart,
-      endPos: bodyEnd,
-      insertedText: wrappedBody,
-    });
   }
 
   if (edits.length === 0) {

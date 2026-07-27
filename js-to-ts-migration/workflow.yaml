@@ -19,6 +19,8 @@ nodes:
             - "**/*.d.ts"
             - "**/*.config.js"
             - "**/webpack.config.js"
+            - "**/*.min.js"
+            - "**/*.min.ts"
 
   - id: convert-jsdoc
     name: Convert JSDoc to TypeScript Types
@@ -38,6 +40,7 @@ nodes:
             - "**/dist/**"
             - "**/build/**"
             - "**/*.d.ts"
+            - "**/*.min.ts"
 
   - id: fix-catch-variables
     name: Fix Unknown Catch Variables
@@ -56,6 +59,7 @@ nodes:
             - "**/node_modules/**"
             - "**/dist/**"
             - "**/build/**"
+            - "**/*.min.ts"
 
   - id: var-to-const
     name: Convert var to const
@@ -74,3 +78,4 @@ nodes:
             - "**/node_modules/**"
             - "**/dist/**"
             - "**/build/**"
+            - "**/*.min.ts"
