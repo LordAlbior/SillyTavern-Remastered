@@ -1,0 +1,55 @@
+version: "1"
+
+nodes:
+  - id: convert-jsdoc
+    name: Convert JSDoc to TypeScript Types
+    type: automatic
+    steps:
+      - name: "Convert JSDoc annotations to TypeScript type annotations"
+        js-ast-grep:
+          js_file: scripts/convert-jsdoc-to-types.ts
+          base_path: "."
+          language: "typescript"
+          include:
+            - "**/*.ts"
+          exclude:
+            - "**/node_modules/**"
+            - "**/dist/**"
+            - "**/build/**"
+            - "**/*.d.ts"
+
+  - id: fix-catch-variables
+    name: Fix Unknown Catch Variables
+    type: automatic
+    depends_on:
+      - convert-jsdoc
+    steps:
+      - name: "Add type guards for catch variables"
+        js-ast-grep:
+          js_file: scripts/fix-catch-variables.ts
+          base_path: "."
+          language: "typescript"
+          include:
+            - "**/*.ts"
+          exclude:
+            - "**/node_modules/**"
+            - "**/dist/**"
+            - "**/build/**"
+
+  - id: var-to-const
+    name: Convert var to const
+    type: automatic
+    depends_on:
+      - fix-catch-variables
+    steps:
+      - name: "Convert var declarations to const"
+        js-ast-grep:
+          js_file: scripts/var-to-const.ts
+          base_path: "."
+          language: "typescript"
+          include:
+            - "**/*.ts"
+          exclude:
+            - "**/node_modules/**"
+            - "**/dist/**"
+            - "**/build/**"

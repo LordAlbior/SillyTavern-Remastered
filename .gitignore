@@ -60,7 +60,11 @@ yarn.lock
 test-results/
 /.specify
 /.hermes
+/.opencode
 /specs
 IDEA.md
 package-lock.json
 pnpm-lock.yaml
+opencode.json
+opencode.json.openchamber.backup
+AGENTS.md
