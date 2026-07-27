@@ -1,14 +1,16 @@
 # Rename all .js files to .ts in app/src and app/public
-# Excludes: .config.js, webpack.config.js, .d.ts files
+# Excludes: .config.js, webpack.config.js, .d.ts files, .min.js files
 
 $srcFiles = Get-ChildItem -Path "app/src" -Filter *.js -Recurse | Where-Object { 
     $_.Name -notmatch '\.config\.js$|webpack\.config\.js$' -and 
-    $_.Name -notmatch '\.d\.ts$'
+    $_.Name -notmatch '\.d\.ts$' -and
+    $_.Name -notmatch '\.min\.js$'
 }
 
 $publicFiles = Get-ChildItem -Path "app/public" -Filter *.js -Recurse | Where-Object { 
     $_.Name -notmatch '\.config\.js$|webpack\.config\.js$' -and 
-    $_.Name -notmatch '\.d\.ts$'
+    $_.Name -notmatch '\.d\.ts$' -and
+    $_.Name -notmatch '\.min\.js$'
 }
 
 $allFiles = $srcFiles + $publicFiles

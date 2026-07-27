@@ -179,7 +179,7 @@ class Prompt {
      * @param {boolean} [param0.forbid_overrides] - Indicates if the prompt should not be overridden.
      * @param {boolean} [param0.extension] - Prompt is added by an extension.
      */
-    constructor({ identifier, role, content, name, system_prompt, position, injection_depth, injection_position, forbid_overrides, extension, injection_order, injection_trigger } = {}) {
+    constructor({ identifier, role, content, name, system_prompt, position, injection_depth, injection_position, forbid_overrides, extension, injection_order, injection_trigger }: Record<string, any> = {}) {
         this.identifier = identifier;
         this.role = role;
         this.content = content;
@@ -298,6 +298,37 @@ export class PromptCollection {
 }
 
 class PromptManager {
+    systemPrompts: string[];
+    overridablePrompts: string[];
+    overriddenPrompts: string[];
+    configuration: Record<string, any>;
+    serviceSettings: any;
+    containerElement: any;
+    listElement: any;
+    activeCharacter: any;
+    messages: any;
+    tokenHandler: any;
+    tokenUsage: number;
+    error: any;
+    tryGenerate: () => Promise<void>;
+    saveServiceSettings: () => Promise<void>;
+    handleToggle: () => void;
+    handleInspect: () => void;
+    handleEdit: () => void;
+    handleDetach: () => void;
+    renderDebounced?: (...args: any[]) => void;
+    handleSavePrompt: (...args: any[]) => void;
+    handleResetPrompt: (...args: any[]) => void;
+    handleNewPrompt: (...args: any[]) => void;
+    handleDeletePrompt: (...args: any[]) => void;
+    handleImport: (...args: any[]) => void;
+    handleFullExport: (...args: any[]) => void;
+    handleCharacterExport: (...args: any[]) => void;
+    handleCharacterReset: (...args: any[]) => void;
+    handleAppendPrompt: (...args: any[]) => void;
+    options: any;
+    selected: any;
+
     get promptSources() {
         return {
             charDescription: t`Character Description`,

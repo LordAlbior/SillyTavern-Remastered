@@ -138,7 +138,7 @@ export function renderExtensionTemplateAsync(extensionName, templateId, template
     return renderTemplateAsync(`scripts/extensions/${extensionName}/${templateId}.html`, templateData, sanitize, localize, true);
 }
 
-export const extension_settings = {
+export const extension_settings: Record<string, any> = {
     apiUrl: defaultUrl,
     apiKey: '',
     autoConnect: false,

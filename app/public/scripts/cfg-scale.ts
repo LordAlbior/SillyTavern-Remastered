@@ -36,7 +36,7 @@ function setCharCfg(tempValue, setting) {
     const avatarName = getCharaFilename();
 
     // Assign temp object
-    let tempCharaCfg = {
+    let tempCharaCfg: Record<string, any> = {
         name: avatarName,
     };
 
