@@ -15,6 +15,11 @@ import { humanFileSize, timestampToMoment } from './utils.js';
  * Data Maid Dialog class for managing the cleanup dialog interface.
  */
 class DataMaidDialog {
+    token: string | null;
+    container: HTMLElement | null;
+    isScanning: boolean;
+    DATA_MAID_CATEGORIES: Record<string, { name: string; description: string }>;
+
     constructor() {
         this.token = null;
         this.container = null;

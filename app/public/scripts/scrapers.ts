@@ -6,26 +6,24 @@ import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '
 import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
 import { isValidUrl } from './utils.js';
 
-/**
- * @typedef {Object} Scraper
- * @property {string} id
- * @property {string} name
- * @property {string} description
- * @property {string} iconClass
- * @property {boolean} iconAvailable
- * @property {() => Promise<void>} [init=null]
- * @property {() => Promise<boolean>} isAvailable
- * @property {() => Promise<File[]>} scrape
- */
+interface Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+    init?(): Promise<void>;
+    isAvailable(): Promise<boolean>;
+    scrape(): Promise<File[]>;
+}
 
-/**
- * @typedef {Object} ScraperInfo
- * @property {string} id
- * @property {string} name
- * @property {string} description
- * @property {string} iconClass
- * @property {boolean} iconAvailable
- */
+interface ScraperInfo {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+}
 
 export class ScraperManager {
     /**
@@ -91,7 +89,13 @@ export class ScraperManager {
  * Create a text file from a string.
  * @implements {Scraper}
  */
-class Notepad {
+class Notepad implements Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+
     constructor() {
         this.id = 'text';
         this.name = 'Notepad';
@@ -138,7 +142,13 @@ class Notepad {
  * Scrape data from a webpage.
  * @implements {Scraper}
  */
-class WebScraper {
+class WebScraper implements Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+
     constructor() {
         this.id = 'web';
         this.name = 'Web';
@@ -213,7 +223,13 @@ class WebScraper {
  * Scrape data from a file selection.
  * @implements {Scraper}
  */
-class FileScraper {
+class FileScraper implements Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+
     constructor() {
         this.id = 'file';
         this.name = 'File';
@@ -234,19 +250,25 @@ class FileScraper {
      * Scrape file attachments from a file.
      * @returns {Promise<File[]>} File attachments scraped from the files
      */
-    async scrape() {
+    async scrape(): Promise<File[]> {
         return new Promise(resolve => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = '*/*';
             fileInput.multiple = true;
-            fileInput.onchange = () => resolve(Array.from(fileInput.files));
+            fileInput.onchange = () => resolve(Array.from(fileInput.files ?? []));
             fileInput.click();
         });
     }
 }
 
-class MediaWikiScraper {
+class MediaWikiScraper implements Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+
     constructor() {
         this.id = 'mediawiki';
         this.name = 'MediaWiki';
@@ -335,7 +357,13 @@ class MediaWikiScraper {
  * Scrape data from a Fandom wiki.
  * @implements {Scraper}
  */
-class FandomScraper {
+class FandomScraper implements Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+
     constructor() {
         this.id = 'fandom';
         this.name = 'Fandom';
@@ -460,7 +488,13 @@ const iso6391Codes = [
  * Scrape transcript from a YouTube video.
  * @implements {Scraper}
  */
-class YouTubeScraper {
+class YouTubeScraper implements Scraper {
+    id: string;
+    name: string;
+    description: string;
+    iconClass: string;
+    iconAvailable: boolean;
+
     constructor() {
         this.id = 'youtube';
         this.name = 'YouTube';

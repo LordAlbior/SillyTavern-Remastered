@@ -88,15 +88,15 @@ const sha256 = str => crypto.createHash('sha256').update(str).digest('hex');
  * Helps identify orphaned files that are no longer referenced by the application.
  */
 export class DataMaidService {
-    /**
-     * @type {Map<string, DataMaidTokenEntry>} Map clean-up tokens to user IDs
-     */
     static TOKENS = new Map();
+
+    handle: string;
+    directories: import('../users.ts').UserDirectoryList;
 
     /**
      * Creates a new DataMaidService instance for a specific user.
      * @param {string} handle - The user's handle.
-     * @param {import('../users.js').UserDirectoryList} directories - List of user directories to scan for loose data.
+     * @param {import('../users.ts').UserDirectoryList} directories - List of user directories to scan for loose data.
      */
     constructor(handle, directories) {
         this.handle = handle;
@@ -175,7 +175,7 @@ export class DataMaidService {
 
         try {
             const messages = await this.#parseAllChats(x => !!x?.extra?.image || !!x?.extra?.video || Array.isArray(x?.extra?.image_swipes) || Array.isArray(x?.extra?.media));
-            const knownImages = new Set();
+            const knownImages = new Set<string>();
             for (const message of messages) {
                 if (message?.extra?.image) {
                     knownImages.add(message.extra.image);
@@ -206,7 +206,7 @@ export class DataMaidService {
                     }
                 }
             }
-            const knownImageFullPaths = new Set();
+            const knownImageFullPaths = new Set<string>();
             knownImages.forEach(image => {
                 if (image.startsWith('http') || image.startsWith('data:')) {
                     return; // Skip URLs and data URIs
@@ -247,7 +247,7 @@ export class DataMaidService {
 
         try {
             const messages = await this.#parseAllChats(x => !!x?.extra?.file?.url || (Array.isArray(x?.extra?.files) && x.extra.files.length > 0));
-            const knownFiles = new Set();
+            const knownFiles = new Set<string>();
             for (const message of messages) {
                 if (message?.extra?.file?.url) {
                     knownFiles.add(message.extra.file.url);
@@ -298,7 +298,7 @@ export class DataMaidService {
                     console.error('[Data Maid] Error reading settings file:', error);
                 }
             }
-            const knownFileFullPaths = new Set();
+            const knownFileFullPaths = new Set<string>();
             knownFiles.forEach(file => {
                 knownFileFullPaths.add(path.normalize(path.join(this.directories.root, file)));
             });
@@ -325,7 +325,7 @@ export class DataMaidService {
         const result = [];
 
         try {
-            const knownChatFolders = new Set();
+            const knownChatFolders = new Set<string>();
             const characters = await fs.promises.readdir(this.directories.characters, { withFileTypes: true });
             for (const file of characters) {
                 if (file.isFile() && path.parse(file.name).ext === '.png') {
@@ -360,7 +360,7 @@ export class DataMaidService {
 
         try {
             const groups = await fs.promises.readdir(this.directories.groups, { withFileTypes: true });
-            const knownGroupChats = new Set();
+            const knownGroupChats = new Set<string>();
             for (const file of groups) {
                 if (file.isFile() && path.parse(file.name).ext === '.json') {
                     try {
@@ -403,7 +403,7 @@ export class DataMaidService {
         const result = [];
 
         try {
-            const knownAvatars = new Set();
+            const knownAvatars = new Set<string>();
             const avatars = await fs.promises.readdir(this.directories.characters, { withFileTypes: true });
             for (const file of avatars) {
                 if (file.isFile()) {
@@ -431,7 +431,7 @@ export class DataMaidService {
         const result = [];
 
         try {
-            const knownBackgrounds = new Set();
+            const knownBackgrounds = new Set<string>();
             const backgrounds = await fs.promises.readdir(this.directories.backgrounds, { withFileTypes: true });
             for (const file of backgrounds) {
                 if (file.isFile()) {
@@ -459,7 +459,7 @@ export class DataMaidService {
         const result = [];
 
         try {
-            const knownPersonas = new Set();
+            const knownPersonas = new Set<string>();
             const personas = await fs.promises.readdir(this.directories.avatars, { withFileTypes: true });
             for (const file of personas) {
                 if (file.isFile()) {
