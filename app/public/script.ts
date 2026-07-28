@@ -450,7 +450,7 @@ export const chatElement = $('#chat');
 let dialogueResolve = null;
 let dialogueCloseStop = false;
 /** @type {ChatMetadata} */
-export let chat_metadata = {};
+export let chat_metadata: Record<string, any> = {};
 /** @type {StreamingProcessor} */
 export let streamingProcessor = null;
 let crop_data = undefined;
