@@ -1229,7 +1229,7 @@ electronhub.post('/generate', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        let bodyParams = {
+        let bodyParams: Record<string, any> = {
             model: request.body.model,
             prompt: request.body.prompt,
             response_format: 'b64_json',
@@ -1478,7 +1478,7 @@ bfl.post('/generate', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        const requestBody = {
+        const requestBody: Record<string, any> = {
             prompt: request.body.prompt,
             steps: request.body.steps,
             guidance: request.body.guidance,
@@ -1640,7 +1640,7 @@ falai.post('/generate', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        const requestBody = {
+        const requestBody: Record<string, any> = {
             prompt: request.body.prompt,
             image_size: { 'width': request.body.width, 'height': request.body.height },
             num_inference_steps: request.body.steps,
@@ -1737,7 +1737,7 @@ xai.post('/generate', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        const requestBody = {
+        const requestBody: Record<string, any> = {
             prompt: request.body.prompt,
             model: request.body.model,
             aspect_ratio: request.body.aspect_ratio,
@@ -2141,7 +2141,7 @@ workersai.post('/generate', async (request, response) => {
         console.debug('Cloudflare Workers AI request:', model, body);
 
         /** @type {import('node-fetch').RequestInit} */
-        const apiRequest = {
+        const apiRequest: Record<string, any> = {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${key}`,
