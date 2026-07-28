@@ -407,7 +407,7 @@ let default_user_name = 'User';
 export let name1 = default_user_name;
 export let name2 = systemUserName;
 /** @type {ChatMessage[]} */
-export let chat = [];
+export let chat: any[] = [];
 
 /**
  * @type {import('./scripts/constants.js').SWIPE_STATE}
@@ -423,7 +423,7 @@ export let displayVersion = 'SillyTavern';
 
 let generation_started = new Date();
 /** @type {Character[]} */
-export let characters = [];
+export let characters: any[] = [];
 /**
  * Stringified index of a currently chosen entity in the characters array.
  * @type {string|undefined} Yes, we hate it as much as you do.
@@ -3479,14 +3479,33 @@ function hideStopButton() {
 }
 
 class StreamingProcessor {
-    /**
-     * Creates a new streaming processor.
-     * @param {string} type Generation type
-     * @param {boolean} forceName2 If true, force the use of name2
-     * @param {Date} timeStarted Date when generation was started
-     * @param {string} continueMessage Previous message if the type is 'continue'
-     * @param {PromptReasoning} promptReasoning Prompt reasoning instance
-     */
+    result = '';
+    messageId = -1;
+    messageDom: HTMLElement | null = null;
+    messageTextDom: HTMLElement | null = null;
+    messageTimerDom: HTMLElement | null = null;
+    messageTokenCounterDom: HTMLElement | null = null;
+    sendTextarea: HTMLTextAreaElement;
+    type: string;
+    force_name2: boolean;
+    isStopped = false;
+    isFinished = false;
+    generator: any;
+    abortController: AbortController;
+    firstMessageText = '...';
+    timeStarted: Date;
+    timeToFirstToken: number | null = null;
+    createdAt: Date;
+    continueMessage: string;
+    swipes: any[];
+    messageLogprobs: any[];
+    toolCalls: any[];
+    reasoningHandler: any;
+    promptReasoning: any;
+    images: string[];
+    reasoningSignature: string | null = null;
+    stoppingStrings: any;
+
     constructor(type, forceName2, timeStarted, continueMessage, promptReasoning) {
         this.result = '';
         this.messageId = -1;

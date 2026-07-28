@@ -193,6 +193,8 @@ declare global {
         select2(method: string, ...args: any[]): any;
         autocomplete(options?: any): JQuery;
         autocomplete(method: string, ...args: any[]): any;
+        transition(options?: any): JQuery;
+        transition(method: string, ...args: any[]): any;
     }
 
     // NPM package doesn't have the 'queue' property in the type definition
