@@ -2,6 +2,7 @@ import {
     moment,
 } from '../lib.js';
 import { chat, closeMessageEditor, event_types, eventSource, main_api, messageFormatting, saveChatConditional, saveChatDebounced, saveSettingsDebounced, substituteParams, syncMesToSwipe, updateMessageBlock } from '../script.js';
+// @ts-ignore
 import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
 import { getCurrentLocale, t, translate } from './i18n.js';
 import { macros, MacroCategory } from './macros/macro-system.js';
@@ -260,6 +261,24 @@ export class ReasoningHandler {
     #isParsingReasoning = false;
     /** @type {number?} When reasoning is being parsed manually, and the reasoning has ended, this will be the index at which the actual messages starts */
     #parsingReasoningMesStartIndex = null;
+
+    state: string;
+    type: string | null;
+    reasoning: string;
+    reasoningDisplayText: string | null;
+    startTime: Date | null;
+    endTime: Date | null;
+    initialTime: Date | null;
+    messageDom: HTMLElement | null;
+    messageReasoningDetailsDom: HTMLDetailsElement | null;
+    messageReasoningContentDom: HTMLElement | null;
+    messageReasoningHeaderDom: HTMLElement | null;
+    prefixDuration: number | null;
+    prefixLength: number | null;
+    prefixIncomplete: boolean;
+    prefixReasoning: string | null;
+    prefixReasoningFormatted: string | null;
+    counter: number;
 
     /**
      * @param {Date?} [timeStarted=null] - When the generation started
@@ -561,8 +580,7 @@ export class ReasoningHandler {
         }
 
         // Update tooltip for hidden reasoning edit
-        /** @type {HTMLElement} */
-        const button = this.messageDom.querySelector('.mes_edit_add_reasoning');
+        const button = this.messageDom.querySelector('.mes_edit_add_reasoning') as HTMLElement;
         button.title = this.state === ReasoningState.Hidden ? t`Hidden reasoning - Add reasoning block` : t`Add reasoning block`;
 
         // Make sure that hidden reasoning headers are collapsed by default, to not show a useless edit button
@@ -643,16 +661,15 @@ export class ReasoningHandler {
  * Keeps track of the number of reasoning additions.
  */
 export class PromptReasoning {
-    /**
-     * An instance initiated during the latest prompt processing.
-     * @type {PromptReasoning}
-     * */
-    static #LATEST = null;
-    /**
-     * @readonly Zero-width space character used as a placeholder for reasoning.
-     * @type {string}
-    */
-    static REASONING_PLACEHOLDER = '\u200B';
+    static #LATEST: PromptReasoning | null = null;
+    static readonly REASONING_PLACEHOLDER = '\u200B';
+
+    counter: number;
+    prefixLength: number;
+    prefixReasoning: string;
+    prefixReasoningFormatted: string;
+    prefixDuration: number | null;
+    prefixIncomplete: boolean;
 
     /**
      * Returns the latest formatted reasoning prefix if the prefix is incomplete.
@@ -1587,7 +1604,7 @@ function registerReasoningAppEvents() {
             return;
         }
 
-        const sendTextArea = /** @type {HTMLTextAreaElement} */ (document.getElementById('send_textarea'));
+        const sendTextArea = document.getElementById('send_textarea') as HTMLTextAreaElement | null;
 
         if (!sendTextArea) {
             console.warn('[Reasoning] Send textarea not found');
