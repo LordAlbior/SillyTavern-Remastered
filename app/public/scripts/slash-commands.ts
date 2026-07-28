@@ -3849,7 +3849,7 @@ async function listInjectsCallback(args) {
     // Now the actual new return type handling
     const buildTextValue = (injects) => {
         const injectsStr = Object.entries(injects)
-            .map(([id, inject]) => {
+            .map(([id, inject]: [string, any]) => {
                 const position = Object.entries(extension_prompt_types);
                 const positionName = position.find(([_, value]) => value === inject.position)?.[0] ?? t`unknown`;
                 return `* **${id}**: <code>${inject.value}</code> (${positionName}, ${t`depth`}: ${inject.depth}, ${t`scan`}: ${inject.scan ?? false}, ${t`role`}: ${inject.role ?? extension_prompt_roles.SYSTEM})`;
@@ -3874,7 +3874,7 @@ function flushInjectsCallback(_, value) {
 
     const idArgument = value;
 
-    for (const [id, inject] of Object.entries(chat_metadata.script_injects)) {
+    for (const [id, inject] of Object.entries(chat_metadata.script_injects ?? {}) as Array<[string, any]>) {
         if (idArgument && id !== idArgument) {
             continue;
         }

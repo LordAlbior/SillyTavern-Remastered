@@ -314,7 +314,7 @@ export const commonEnumProviders = {
     injects: () => {
         if (!chat_metadata.script_injects || !Object.keys(chat_metadata.script_injects).length) return [];
         return Object.entries(chat_metadata.script_injects)
-            .map(([id, inject]) => {
+            .map(([id, inject]: [string, any]) => {
                 const positionName = (Object.entries(extension_prompt_types)).find(([_, value]) => value === inject.position)?.[0] ?? 'unknown';
                 return new SlashCommandEnumValue(id, `${enumIcons.getRoleIcon(inject.role ?? extension_prompt_roles.SYSTEM)}[Inject](${positionName}, depth: ${inject.depth}, scan: ${inject.scan ?? false}) ${inject.value}`,
                     enumTypes.enum, '💉');

@@ -86,8 +86,7 @@ router.post('/generate-voice', async (request, response) => {
 
             try {
                 // Try to parse JSON error response
-                /** @type {any} */
-                const errorData = await apiResponse.json();
+                const errorData: any = await apiResponse.json();
                 console.error('MiniMax TTS API error (JSON):', errorData);
 
                 // Check for MiniMax specific error format

@@ -177,7 +177,7 @@ class MacroRegistry {
     /** @type {MacroRegistry} */ static get instance() { return MacroRegistry.#instance ?? (MacroRegistry.#instance = new MacroRegistry()); }
 
     /** @type {Map<string, MacroDefinition>} */
-    #macros;
+    #macros: Map<string, any>;
 
     /**
      * @private

@@ -1577,7 +1577,7 @@ function registerWorldInfoSlashCommands() {
             if (!worldInfoCache.has(file)) return [];
             const world = worldInfoCache.get(file);
             if (!world) return [];
-            return Object.entries(world.entries).map(([uid, data]) =>
+            return Object.entries(world.entries).map(([uid, data]: [string, any]) =>
                 new SlashCommandEnumValue(uid, `${data.comment ? `${data.comment}: ` : ''}${data.key.join(', ')}${data.keysecondary?.length ? ` [${Object.entries(world_info_logic).find(([_, value]) => value == data.selectiveLogic)[0]}] ${data.keysecondary.join(', ')}` : ''} [${getWiPositionString(data)}]`,
                     enumTypes.enum, enumIcons.getWiStatusIcon(data)));
         },
@@ -2478,7 +2478,8 @@ async function displayWorldEntries(name, data, navigation = navigation_option.no
 
     $('#world_backfill_memos').off('click').on('click', async () => {
         let counter = 0;
-        for (const entry of Object.values(data.entries)) {
+        const entries = Object.values(data.entries) as any[];
+        for (const entry of entries) {
             if (!entry.comment && Array.isArray(entry.key) && entry.key.length > 0) {
                 entry.comment = entry.key.join(', ').slice(0, MAX_COMMENT_LENGTH);
                 setWIOriginalDataValue(data, entry.uid, 'comment', entry.comment);
