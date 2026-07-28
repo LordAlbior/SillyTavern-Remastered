@@ -20,6 +20,16 @@ class MacroParser extends CstParser {
     /** @type {MacroParser} */ static #instance;
     /** @type {MacroParser} */ static get instance() { return MacroParser.#instance ?? (MacroParser.#instance = new MacroParser()); }
 
+    document: any;
+    macro: any;
+    macroBody: any;
+    variableExpr: any;
+    variableOperator: any;
+    variableValue: any;
+    argument: any;
+    argumentAllowingColons: any;
+    arguments: any;
+
     /** @private */
     constructor() {
         super(MacroLexer.def, {

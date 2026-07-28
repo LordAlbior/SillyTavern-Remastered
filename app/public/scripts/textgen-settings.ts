@@ -1584,7 +1584,7 @@ export function replaceMacrosInList(str) {
  * @param {string} type Request type (impersonate, quiet, continue, etc)
  * @returns {object} Final generation parameters object appropriate for the text completion source
  */
-export function createTextGenGenerationData(settings, model, finalPrompt = null, maxTokens = null, isImpersonate = false, isContinue = false, cfgValues = null, type = 'quiet') {
+export function createTextGenGenerationData(settings, model, finalPrompt = null, maxTokens = null, isImpersonate = false, isContinue = false, cfgValues = null, type = 'quiet'): Record<string, any> {
     settings = settings ?? textgenerationwebui_settings;
     model = model ?? getTextGenModel(settings);
 
@@ -1597,7 +1597,7 @@ export function createTextGenGenerationData(settings, model, finalPrompt = null,
             : Object.keys(settings.json_schema).length > 0 ? settings.json_schema : undefined
         : undefined;
 
-    let params = {
+    let params: Record<string, any> = {
         'prompt': finalPrompt,
         'model': model,
         'max_new_tokens': maxTokens,

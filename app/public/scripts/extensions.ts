@@ -2146,7 +2146,7 @@ export async function writeExtensionFieldBulk(avatars, key, value, { filterPath 
     const isUnset = value === UNSET_VALUE;
 
     // Build the server request
-    const requestBody = {
+    const requestBody: Record<string, any> = {
         avatars: Array.isArray(avatars) && avatars.length > 0 ? avatars : [],
         data: {
             data: {

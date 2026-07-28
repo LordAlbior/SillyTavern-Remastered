@@ -1438,6 +1438,10 @@ export class Stopwatch {
  * Provides an interface for rate limiting function calls.
  */
 export class RateLimiter {
+    interval: number;
+    lastResolveTime: number;
+    pendingResolve: Promise<void>;
+
     /**
      * Creates a new RateLimiter.
      * @param {number} interval The interval in milliseconds.

@@ -107,7 +107,7 @@ export async function clearItemizedPrompts() {
 }
 
 export async function itemizedParams(itemizedPrompts, thisPromptSet, incomingMesId) {
-    const params = {
+    const params: Record<string, any> = {
         charDescriptionTokens: await getTokenCountAsync(itemizedPrompts[thisPromptSet].charDescription),
         charPersonalityTokens: await getTokenCountAsync(itemizedPrompts[thisPromptSet].charPersonality),
         scenarioTextTokens: await getTokenCountAsync(itemizedPrompts[thisPromptSet].scenarioText),

@@ -2739,7 +2739,7 @@ export async function createGenerationParameters(settings, model, type, messages
         logit_bias = undefined;
     }
 
-    const generate_data = {
+    const generate_data: Record<string, any> = {
         'type': type,
         'messages': messages,
         'model': model,
@@ -3323,6 +3323,9 @@ async function calculateLogitBias() {
 }
 
 class TokenHandler {
+    countTokenAsyncFn: any;
+    counts: Record<string, number>;
+
     /**
      * @param {(messages: object[] | object, full?: boolean) => Promise<number>} countTokenAsyncFn Function to count tokens
      */
@@ -3820,6 +3823,11 @@ class MessageCollection {
  *
  */
 export class ChatCompletion {
+    tokenBudget: number;
+    messages: MessageCollection;
+    loggingEnabled: boolean;
+    overriddenPrompts: any[];
+
     /**
      * Combines consecutive system messages into one if they have no name attached.
      * @returns {Promise<void>}

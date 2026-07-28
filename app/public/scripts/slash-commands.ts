@@ -5305,7 +5305,7 @@ async function updateCharacterCallback(args) {
     }
 
     // Build the update object with only provided fields
-    const updateData = {
+    const updateData: Record<string, any> = {
         avatar: character.avatar,
     };
 
