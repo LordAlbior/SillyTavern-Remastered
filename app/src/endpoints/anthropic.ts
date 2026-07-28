@@ -49,8 +49,7 @@ router.post('/caption-image', async (request, response) => {
             return response.status(result.status).send({ error: true });
         }
 
-        /** @type {any} */
-        const generateResponseJson = await result.json();
+                const generateResponseJson: any = await result.json();
         const caption = generateResponseJson.content[0].text;
         console.debug('Claude response:', generateResponseJson);
 

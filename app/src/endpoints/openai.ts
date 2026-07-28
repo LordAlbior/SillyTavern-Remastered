@@ -264,8 +264,7 @@ router.post('/caption-image', async (request, response) => {
             return response.status(500).send(text);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
         console.info('Multimodal captioning response', data);
         const caption = data?.choices?.[0]?.message?.content ?? data?.message?.content?.[0]?.text;
 
@@ -415,8 +414,7 @@ router.post('/electronhub/models', async (request, response) => {
             console.warn('ElectronHub models request failed', result.statusText, text);
             return response.status(500).send(text);
         }
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
         const models = data && Array.isArray(data.data) ? data.data : [];
         return response.json(models);
     } catch (error) {
@@ -490,8 +488,7 @@ router.post('/chutes/models/embedding', async (request, response) => {
             return response.status(500).send(text);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
 
         if (!Array.isArray(data?.items)) {
             console.warn('Chutes embedding models response invalid', data);
@@ -527,8 +524,7 @@ router.post('/nanogpt/models/embedding', async (request, response) => {
             return response.status(500).send(text);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
 
         if (!Array.isArray(data?.data)) {
             console.warn('NanoGPT embedding models response invalid', data);
@@ -567,8 +563,7 @@ router.post('/siliconflow/models/embedding', async (request, response) => {
             return response.status(500).send(text);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
 
         if (!Array.isArray(data?.data)) {
             console.warn('SiliconFlow embedding models response invalid', data);
@@ -611,8 +606,7 @@ router.post('/workers-ai/models/embedding', async (request, response) => {
             return response.status(500).send(text);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
 
         if (!Array.isArray(data?.result)) {
             console.warn('Workers AI embedding models response invalid', data);
@@ -697,8 +691,7 @@ router.post('/generate-video', async (request, response) => {
             return response.status(500).send(text);
         }
 
-        /** @type {any} */
-        const videoJob = await videoJobResponse.json();
+                const videoJob: any = await videoJobResponse.json();
 
         if (!videoJob || !videoJob.id) {
             console.warn('OpenAI video generation returned no job ID', videoJob);
@@ -728,8 +721,7 @@ router.post('/generate-video', async (request, response) => {
                 return response.status(500).send(text);
             }
 
-            /** @type {any} */
-            const pollResult = await pollResponse.json();
+                        const pollResult: any = await pollResponse.json();
             console.debug(`OpenAI video job status: ${pollResult.status}, progress: ${pollResult.progress}`);
 
             if (pollResult.status === 'failed') {

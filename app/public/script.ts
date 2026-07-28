@@ -622,7 +622,7 @@ export let swipesHidden = false;
 export let lastSwipeInfo = { now: performance.now(), direction: SWIPE_DIRECTION.RIGHT };
 export let recentSwipes = 0;
 
-export let extension_prompts = {};
+export let extension_prompts: Record<string, any> = {};
 
 export let main_api;// = "kobold";
 let abortController = new AbortController();
@@ -2711,7 +2711,7 @@ let requestId = null;
  * @param {object} [options] Options
  * @param {boolean} [options.waitForFrame] If true, waits for the animation frame before scrolling
  */
-export function scrollChatToBottom({ waitForFrame } = {}) {
+export function scrollChatToBottom({ waitForFrame }: Record<string, any> = {}) {
     if (!power_user.auto_scroll_chat_to_bottom) {
         return;
     }
@@ -2802,8 +2802,7 @@ export function substituteParamsLegacy(content, _name1, _name2, _original, _grou
         if (feature) void onboardingExperimentalMacroEngine(feature);
     }
 
-    const environment = {};
-
+    const environment: Record<string, any> = {};
     if (typeof _original === 'string') {
         let originalSubstituted = false;
         environment.original = () => {
@@ -3313,8 +3312,8 @@ export function baseChatReplace(value, name1Override = null, name2Override = nul
  * @param {Record<string, () => string|string[]>} resolvers Map of field names to resolver functions
  * @returns {CharacterCardFields} Object with lazy getters
  */
-export function createLazyFields(resolvers) {
-    const result = /** @type {CharacterCardFields} */ ({});
+export function createLazyFields(resolvers: Record<string, () => string | string[]>) {
+    const result: any = {};
     for (const [key, resolver] of Object.entries(resolvers)) {
         let cached;
         let resolved = false;
@@ -3981,8 +3980,7 @@ export async function generateRawData({ prompt = '', api = null, instructOverrid
         if (responseLengthCustomized) {
             TempResponseLength.save(api, responseLength);
         }
-        /** @type {object|any[]} */
-        let generateData = {};
+        let generateData: any = {};
 
         // Allow extensions to modify the prompt before generation
         // 1. for text completion
@@ -4029,8 +4027,7 @@ export async function generateRawData({ prompt = '', api = null, instructOverrid
             } break;
         }
 
-        let data = {};
-
+        let data: Record<string, any> = {};
         if (api === 'koboldhorde') {
             data = await generateHorde(prompt.toString(), generateData, abortController.signal, false);
         } else if (api === 'openai') {
@@ -6280,8 +6277,7 @@ export function extractJsonFromData(data, { mainApi = null, chatCompletionSource
         }
     };
 
-    let result = {};
-
+    let result: any = {};
     switch (mainApi) {
         case 'openai': {
             const text = extractMessageFromData(data, mainApi);
@@ -6700,7 +6696,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
         !fromStreaming && await eventSource.emit(event_types.CHARACTER_MESSAGE_RENDERED, chat_id, type);
     } else {
         console.debug('entering chat update routine for non-swipe post');
-        const newMessage = {};
+        const newMessage: Record<string, any> = {};
         chat.push(newMessage);
         newMessage.extra = {};
         newMessage.name = name2;
@@ -8405,8 +8401,7 @@ async function messageEditDone(div) {
  */
 export async function getChatsFromFiles(data, isGroupChat) {
     const context = getContext();
-    let chat_dict = {};
-    let chat_list = Object.values(data).sort((a, b) => a.file_name.localeCompare(b.file_name)).reverse();
+    let chat_dict: Record<string, any> = {};    let chat_list = Object.values(data).sort((a, b) => a.file_name.localeCompare(b.file_name)).reverse();
 
     let chat_promise = chat_list.map(({ file_name }) => {
         return new Promise(async (res, rej) => {
@@ -9023,7 +9018,7 @@ export async function setCharacterSettingsOverrides() {
  * @returns {Promise<any>} A promise that resolves when the popup is closed.
  * @deprecated Use `callGenericPopup` instead.
  */
-export function callPopup(text, type, inputValue = '', { okButton, rows, wide, wider, large, allowHorizontalScrolling, allowVerticalScrolling, cropAspect } = {}) {
+export function callPopup(text, type, inputValue = '', { okButton, rows, wide, wider, large, allowHorizontalScrolling, allowVerticalScrolling, cropAspect }: Record<string, any> = {}) {
     function getOkButtonText() {
         if (['text', 'char_not_selected'].includes(popup_type)) {
             $dialoguePopupCancel.css('display', 'none');
@@ -10393,7 +10388,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {object} [params.message] The chat message to swipe.
  */
-export async function swipe_left(event, { source, repeated, message } = {}) {
+export async function swipe_left(event, { source, repeated, message }: Record<string, any> = {}) {
     await swipe.call(this, event, SWIPE_DIRECTION.LEFT, { source: source, repeated: repeated, message: message });
 }
 
@@ -10407,7 +10402,7 @@ export async function swipe_left(event, { source, repeated, message } = {}) {
  * @param {object} [params.message] The chat message to swipe.
  */
 //MARK: swipe_right
-export async function swipe_right(event = null, { source, repeated, message } = {}) {
+export async function swipe_right(event = null, { source, repeated, message }: Record<string, any> = {}) {
     await swipe.call(this, event, SWIPE_DIRECTION.RIGHT, { source: source, repeated: repeated, message: message });
 }
 

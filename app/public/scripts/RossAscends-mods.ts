@@ -668,7 +668,7 @@ export async function initMovingUI() {
 }
 
 /**@type {HTMLTextAreaElement} */
-const sendTextArea = document.querySelector('#send_textarea');
+const sendTextArea = document.querySelector('#send_textarea') as HTMLTextAreaElement;
 const chatBlock = document.getElementById('chat');
 const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
@@ -1164,8 +1164,8 @@ export function initRossMods() {
                 $('#character_popup').css('display') === 'none' &&
                 $('#shadow_select_chat_popup').css('display') === 'none'
             ) {
-                const lastMes = document.querySelector('.last_mes');
-                const editMes = lastMes.querySelector('.mes_block .mes_edit');
+                const lastMes = document.querySelector('.last_mes') as HTMLElement;
+                const editMes = lastMes.querySelector('.mes_block .mes_edit') as HTMLElement;
                 if (editMes !== null) {
                     $(editMes).trigger('click');
                     return;

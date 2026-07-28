@@ -30,8 +30,7 @@ export async function getMakerSuiteBatchVector(texts, model, request) {
         throw new Error(`${apiName} batch request failed`);
     }
 
-    /** @type {any} */
-    const data = await response.json();
+        const data: any = await response.json();
     if (!Array.isArray(data?.embeddings)) {
         throw new Error(`${apiName} did not return an array`);
     }
@@ -66,8 +65,7 @@ export async function getVertexBatchVector(texts, model, request) {
         throw new Error(`${apiName} batch request failed`);
     }
 
-    /** @type {any} */
-    const data = await response.json();
+        const data: any = await response.json();
     if (!Array.isArray(data?.predictions)) {
         throw new Error(`${apiName} did not return an array`);
     }

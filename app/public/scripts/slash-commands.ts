@@ -137,8 +137,7 @@ function closureToFilter(closure) {
  * @property {string?} [source] - API source, mostly used by chat completion. (e.g. "openai")
  */
 
-/** @type {Record<string, ConnectAPIMap>} */
-export const CONNECT_API_MAP = {};
+export const CONNECT_API_MAP: Record<string, any> = {};
 
 /** @type {string[]} */
 export const UNIQUE_APIS = [];
@@ -4548,7 +4547,7 @@ async function echoCallback(args, value) {
     const severity = args.severity ? args.severity : 'info';
 
     /** @type {ToastrOptions} */
-    const options = {};
+    const options: Record<string, any> = {};
     if (args.timeout && !isNaN(parseInt(args.timeout))) options.timeOut = parseInt(args.timeout);
     if (args.extendedTimeout && !isNaN(parseInt(args.extendedTimeout))) options.extendedTimeOut = parseInt(args.extendedTimeout);
     if (isTrueBoolean(args.preventDuplicates)) options.preventDuplicates = true;
@@ -6881,8 +6880,8 @@ export async function executeSlashCommandsOnChatInput(text, options = {}) {
     activateScriptButtons();
 
     /** @type {HTMLTextAreaElement} */
-    const ta = document.querySelector('#send_textarea');
-    const fs = document.querySelector('#form_sheld');
+    const ta = document.querySelector('#send_textarea') as HTMLElement;
+    const fs = document.querySelector('#form_sheld') as HTMLElement;
 
     if (options.clearChatInput) {
         ta.value = '';
@@ -7083,7 +7082,7 @@ export async function setSlashCommandAutoComplete(textarea, isFloating = false) 
 }
 
 export async function initSlashCommandAutoComplete() {
-    const sendTextarea = /** @type {HTMLTextAreaElement} */ (document.querySelector('#send_textarea'));
+    const sendTextarea = document.querySelector('#send_textarea') as HTMLTextAreaElement;
     setSlashCommandAutoComplete(sendTextarea);
     sendTextarea.addEventListener('input', () => {
         if (sendTextarea.value && sendTextarea.value[0] == '/') {

@@ -263,8 +263,7 @@ router.post('/embed', async function (request, response) {
             }),
         });
 
-        /** @type {any} */
-        const data = await embeddingsResult.json();
+                const data: any = await embeddingsResult.json();
 
         if (!Array.isArray(data?.data)) {
             console.warn('KoboldCpp API response was not an array');

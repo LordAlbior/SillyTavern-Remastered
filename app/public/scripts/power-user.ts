@@ -2686,7 +2686,7 @@ async function resetMovablePanels(type) {
     /**
      * @type {HTMLElement[]} Zoomed avatars that are currently being resized
      */
-    const zoomedAvatars = Array.from(document.querySelectorAll('.zoomed_avatar'));
+    const zoomedAvatars = Array.from(document.querySelectorAll('.zoomed_avatar')) as HTMLElement[];
     if (zoomedAvatars.length > 0) {
         zoomedAvatars.forEach((avatar) => {
             avatar.classList.add('resizing');
@@ -3975,7 +3975,7 @@ jQuery(() => {
     $('#stscript_autocomplete_width_left').on('input', function () {
         const value = $(this).val();
         power_user.stscript.autocomplete.width.left = Number(value);
-        /**@type {HTMLElement}*/(this.closest('.doubleRangeInputContainer')).style.setProperty('--value', value.toString());
+        (this.closest('.doubleRangeInputContainer') as HTMLElement).style.setProperty('--value', value.toString());
         window.dispatchEvent(new Event('resize', { bubbles: true }));
         saveSettingsDebounced();
     });
@@ -3983,7 +3983,7 @@ jQuery(() => {
     $('#stscript_autocomplete_width_right').on('input', function () {
         const value = $(this).val();
         power_user.stscript.autocomplete.width.right = Number(value);
-        /**@type {HTMLElement}*/(this.closest('.doubleRangeInputContainer')).style.setProperty('--value', value.toString());
+        (this.closest('.doubleRangeInputContainer') as HTMLElement).style.setProperty('--value', value.toString());
         window.dispatchEvent(new Event('resize', { bubbles: true }));
         saveSettingsDebounced();
     });

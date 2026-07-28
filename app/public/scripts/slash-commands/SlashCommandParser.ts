@@ -144,8 +144,7 @@ export class SlashCommandParser {
     constructor() {
         // add dummy commands for help strings / autocomplete
         if (!Object.keys(this.commands).includes('parser-flag')) {
-            const help = {};
-            help[PARSER_FLAG.REPLACE_GETVAR] = 'Replace all {{getvar::}} and {{getglobalvar::}} macros with scoped variables to avoid double macro substitution.';
+            const help: Record<string, any> = {};            help[PARSER_FLAG.REPLACE_GETVAR] = 'Replace all {{getvar::}} and {{getglobalvar::}} macros with scoped variables to avoid double macro substitution.';
             help[PARSER_FLAG.STRICT_ESCAPING] = 'Allows to escape all delimiters with backslash, and allows escaping of backslashes.';
             SlashCommandParser.addCommandObjectUnsafe(SlashCommand.fromProps({ name: 'parser-flag',
                 unnamedArgumentList: [

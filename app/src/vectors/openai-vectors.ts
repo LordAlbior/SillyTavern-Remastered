@@ -126,8 +126,7 @@ export async function getOpenAIBatchVector(texts, source, directories, model = '
         throw new Error('API request failed');
     }
 
-    /** @type {any} */
-    const data = await response.json();
+        const data: any = await response.json();
 
     if (!Array.isArray(data?.data)) {
         console.warn('API response was not an array');

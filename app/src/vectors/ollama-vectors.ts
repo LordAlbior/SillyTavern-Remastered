@@ -37,8 +37,7 @@ export async function getOllamaBatchVector(texts, apiUrl, model, keep, directori
         throw new Error(`Ollama: Failed to get batch vectors: ${response.statusText} ${responseText}`);
     }
 
-    /** @type {any} */
-    const data = await response.json();
+        const data: any = await response.json();
 
     if (!Array.isArray(data?.embeddings)) {
         throw new Error('API response was not an array');

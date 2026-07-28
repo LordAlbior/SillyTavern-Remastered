@@ -287,8 +287,7 @@ router.post('/generate', async function (req, res) {
                 return res.status(500).send({ error: { message } });
             }
 
-            /** @type {any} */
-            const data = await response.json();
+                        const data: any = await response.json();
             console.info('NovelAI Output', data?.output);
             return res.send(data);
         }

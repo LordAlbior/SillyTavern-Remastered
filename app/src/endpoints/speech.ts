@@ -155,8 +155,7 @@ pollinations.post('/generate', async (req, res) => {
             throw new Error(`Failed to generate audio from Pollinations: ${text}`);
         }
 
-        /** @type {any} */
-        const data = await response.json();
+                const data: any = await response.json();
         const audioData = data?.choices?.[0]?.message?.audio?.data;
 
         if (!audioData) {

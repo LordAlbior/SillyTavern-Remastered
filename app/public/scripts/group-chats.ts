@@ -591,8 +591,7 @@ async function getFirstCharacterMessage(character) {
         messageText = eventArgs.output;
     }
 
-    const mes = {};
-    mes.is_user = false;
+    const mes: Record<string, any> = {};    mes.is_user = false;
     mes.is_system = false;
     mes.name = character.name;
     mes.send_date = getMessageTimeStamp();

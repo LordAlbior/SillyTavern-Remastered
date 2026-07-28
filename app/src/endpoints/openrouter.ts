@@ -21,8 +21,7 @@ router.post('/models/providers', async (req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json();
+                const data: any = await response.json();
         const endpoints = data?.data?.endpoints || [];
         const providerNames = endpoints.map(e => e.provider_name);
 
@@ -52,8 +51,7 @@ async function fetchModelsByModality(endpoint, inputModality, outputModality, ma
         return [];
     }
 
-    /** @type {any} */
-    const data = await response.json();
+        const data: any = await response.json();
 
     if (!Array.isArray(data?.data)) {
         console.warn('OpenRouter API response was not an array');
@@ -122,8 +120,7 @@ router.post('/credits', async (req, res) => {
             return res.sendStatus(500);
         }
 
-        /** @type {any} */
-        const data = await response.json();
+                const data: any = await response.json();
         const totalCredits = data.data?.total_credits ?? 0;
         const totalUsage = data.data?.total_usage ?? 0;
         const remaining = totalCredits - totalUsage;
@@ -179,8 +176,7 @@ router.post('/image/generate', async (req, res) => {
             return res.sendStatus(500);
         }
 
-        /** @type {any} */
-        const data = await response.json();
+                const data: any = await response.json();
 
         const imageUrl = data?.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 

@@ -62,7 +62,7 @@ export const scan_state = {
 const WI_ENTRY_HEADER_TEMPLATE = $('#entry_edit_template .world_entry');
 const WI_ENTRY_EDIT_TEMPLATE = $('#entry_edit_template .world_entry_edit');
 
-export let world_info = {};
+export let world_info: Record<string, any> = {};
 export let selected_world_info = [];
 /** @type {string[]} */
 export let world_names;
@@ -5077,8 +5077,7 @@ export async function checkWorldInfo(chat, maxContext, isDryRun, globalScanData 
     const ANTopEntries = [];
     const ANBottomEntries = [];
     const WIDepthEntries = [];
-    /** @type {{[key: string]: string[]}} */
-    const WIOutletEntries = {};
+    const WIOutletEntries: Record<string, string[]> = {};
 
     // Appends from insertion order 999 to 1. Use unshift for this purpose
     // TODO (kingbri): Change to use WI Anchor positioning instead of separate top/bottom arrays

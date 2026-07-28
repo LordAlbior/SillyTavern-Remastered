@@ -62,8 +62,7 @@ router.post('/libre', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        /** @type {any} */
-        const json = await result.json();
+                const json: any = await result.json();
         console.debug('Translated text: ' + json.translatedText);
 
         return response.send(json.translatedText);
@@ -144,8 +143,7 @@ router.post('/yandex', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        /** @type {any} */
-        const json = await result.json();
+                const json: any = await result.json();
         const translated = json.text.join();
         console.debug('Translated text: ' + translated);
 
@@ -190,8 +188,7 @@ router.post('/lingva', async (request, response) => {
             console.warn('Lingva error: ', result.statusText, error);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
         console.debug('Translated text: ' + data.translation);
         return response.send(data.translation);
     } catch (error) {
@@ -251,8 +248,7 @@ router.post('/deepl', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        /** @type {any} */
-        const json = await result.json();
+                const json: any = await result.json();
         console.debug('Translated text: ' + json.translations[0].text);
 
         return response.send(json.translations[0].text);
@@ -308,8 +304,7 @@ router.post('/onering', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        /** @type {any} */
-        const data = await result.json();
+                const data: any = await result.json();
         console.debug('Translated text: ' + data.result);
 
         return response.send(data.result);
@@ -364,8 +359,7 @@ router.post('/deeplx', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        /** @type {any} */
-        const json = await result.json();
+                const json: any = await result.json();
         console.debug('Translated text: ' + json.data);
 
         return response.send(json.data);

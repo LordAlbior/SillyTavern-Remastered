@@ -135,8 +135,7 @@ async function isOpenRouterModelCacheable(modelId) {
             return false;
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
 
         if (!Array.isArray(data?.data)) {
             console.warn('OpenRouter API response format unexpected');
@@ -226,8 +225,7 @@ async function sendClaudeRequest(request, response) {
         request.socket.on('close', function () {
             controller.abort();
         });
-        const additionalHeaders = {};
-        const betaHeaders = ['output-128k-2025-02-19', 'context-1m-2025-08-07'];
+        const additionalHeaders: Record<string, any> = {};        const betaHeaders = ['output-128k-2025-02-19', 'context-1m-2025-08-07'];
         const useTools = Array.isArray(request.body.tools) && request.body.tools.length > 0;
         const useSystemPrompt = Boolean(request.body.use_sysprompt);
         const convertedPrompt = convertClaudeMessages(request.body.messages, request.body.assistant_prefill, useSystemPrompt, useTools, getPromptNames(request));
@@ -395,8 +393,7 @@ async function sendClaudeRequest(request, response) {
                 return response.status(500).send({ error: true });
             }
 
-            /** @type {any} */
-            const generateResponseJson = await generateResponse.json() as any;
+                        const generateResponseJson: any = await generateResponse.json() as any;
             const responseText = generateResponseJson?.content?.[0]?.text || '';
             console.debug('Claude response:', generateResponseJson);
 
@@ -712,8 +709,7 @@ async function sendMakerSuiteRequest(request, response) {
                 return response.status(500).send(errorJson);
             }
 
-            /** @type {any} */
-            const generateResponseJson = await generateResponse.json() as any;
+                        const generateResponseJson: any = await generateResponse.json() as any;
 
             const candidates = generateResponseJson?.candidates;
             if (!candidates || candidates.length === 0) {
@@ -763,8 +759,7 @@ async function sendAI21Request(request, response) {
         return response.status(400).send({ error: true });
     }
 
-    const bodyParams = {};
-    const controller = new AbortController();
+    const bodyParams: Record<string, any> = {};    const controller = new AbortController();
     request.socket.removeAllListeners('close');
     request.socket.on('close', function () {
         controller.abort();
@@ -1041,8 +1036,7 @@ async function sendDeepSeekRequest(request, response) {
     });
 
     try {
-        let bodyParams = {};
-
+        let bodyParams: Record<string, any> = {};
         if (request.body.logprobs > 0) {
             bodyParams['top_logprobs'] = request.body.logprobs;
             bodyParams['logprobs'] = true;
@@ -1153,8 +1147,7 @@ async function sendXaiRequest(request, response) {
     });
 
     try {
-        let bodyParams = {};
-
+        let bodyParams: Record<string, any> = {};
         if (request.body.logprobs > 0) {
             bodyParams['top_logprobs'] = request.body.logprobs;
             bodyParams['logprobs'] = true;
@@ -1259,8 +1252,7 @@ async function sendAimlapiRequest(request, response) {
     });
 
     try {
-        let bodyParams = {};
-
+        let bodyParams: Record<string, any> = {};
         if (request.body.logprobs > 0) {
             bodyParams['top_logprobs'] = request.body.logprobs;
             bodyParams['logprobs'] = true;
@@ -1364,8 +1356,7 @@ async function sendElectronHubRequest(request, response) {
     });
 
     try {
-        let bodyParams = {};
-
+        let bodyParams: Record<string, any> = {};
         if (request.body.enable_web_search) {
             bodyParams['web_search'] = true;
         }
@@ -1476,8 +1467,7 @@ async function sendChutesRequest(request, response) {
     });
 
     try {
-        let bodyParams = {};
-
+        let bodyParams: Record<string, any> = {};
         if (Array.isArray(request.body.tools) && request.body.tools.length > 0) {
             bodyParams['tools'] = request.body.tools;
             bodyParams['tool_choice'] = request.body.tool_choice;
@@ -1582,8 +1572,7 @@ async function sendMinimaxRequest(request, response) {
         // Merge them into a single message to avoid "invalid chat setting (2013)".
         const messages = postProcessPrompt(request.body.messages, PROMPT_PROCESSING_TYPE.MERGE_TOOLS, getPromptNames(request));
 
-        let bodyParams = {};
-
+        let bodyParams: Record<string, any> = {};
         if (Array.isArray(request.body.tools) && request.body.tools.length > 0) {
             bodyParams['tools'] = request.body.tools;
             bodyParams['tool_choice'] = request.body.tool_choice;
@@ -1713,8 +1702,7 @@ async function sendAzureOpenAIRequest(request, response) {
         }
 
         if (fetchResponse.ok) {
-            /** @type {any} */
-            const json = await fetchResponse.json() as any;
+                        const json: any = await fetchResponse.json() as any;
             console.debug('Azure OpenAI response:', json);
             return response.send(json);
         }
@@ -1738,8 +1726,8 @@ router.post('/status', async function (request, statusResponse) {
 
         let apiUrl = '';
         let apiKey: string | null | undefined = '';
-        let headers = {};
-        let queryParams = {};
+    let headers: Record<string, any> = {};
+    let queryParams: Record<string, any> = {};
 
         if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.OPENAI) {
             apiUrl = new URL(request.body.reverse_proxy || API_OPENAI).toString();
@@ -1826,8 +1814,7 @@ router.post('/status', async function (request, statusResponse) {
                 const response = await fetch(modelsUrl);
 
                 if (response.ok) {
-                    /** @type {any} */
-                    const data = await response.json() as any;
+                                        const data: any = await response.json() as any;
                     // Transform Google AI Studio models to OpenAI format
                     const models = data.models
                         ?.filter(model => model.supportedGenerationMethods?.includes('generateContent'))
@@ -1958,8 +1945,7 @@ router.post('/status', async function (request, statusResponse) {
                 });
 
                 if (response.ok) {
-                    /** @type {any} */
-                    const data = await response.json() as any;
+                                        const data: any = await response.json() as any;
                     const models = Array.isArray(data?.result)
                         ? data.result.map(model => ({ ...model, id: model.name }))
                         : [];
@@ -2075,8 +2061,7 @@ router.post('/bias', async function (request, response) {
         return response.sendStatus(400);
 
     try {
-        const result = {};
-        const model = getTokenizerModel(String(request.query.model || ''));
+        const result: Record<string, any> = {};        const model = getTokenizerModel(String(request.query.model || ''));
 
         // no bias for claude
         if (model == 'claude') {
@@ -2595,8 +2580,7 @@ router.post('/generate', async function (request, response) {
         }
 
         if (fetchResponse.ok) {
-            /** @type {any} */
-            const json = await fetchResponse.json() as any;
+                        const json: any = await fetchResponse.json() as any;
             console.debug('Chat Completion response:', json);
             return response.send(json);
         } else {
@@ -2639,8 +2623,7 @@ multimodalModels.post('/pollinations', async (_req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
 
         if (!Array.isArray(data)) {
             return res.json([]);
@@ -2665,8 +2648,7 @@ multimodalModels.post('/aimlapi', async (_req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
 
         if (!Array.isArray(data?.data)) {
             return res.json([]);
@@ -2688,8 +2670,7 @@ multimodalModels.post('/nanogpt', async (_req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
 
         if (!Array.isArray(data?.data)) {
             return res.json([]);
@@ -2711,8 +2692,7 @@ multimodalModels.post('/electronhub', async (_req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
         const multimodalModels = data.data.filter(m => m.metadata?.vision).map(m => m.id);
         return res.json(multimodalModels);
     } catch (error) {
@@ -2770,8 +2750,7 @@ multimodalModels.post('/mistral', async (req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
         const multimodalModels = data.data.filter(m => m.capabilities?.vision).map(m => m.id);
         return res.json(multimodalModels);
     } catch (error) {
@@ -2799,8 +2778,7 @@ multimodalModels.post('/xai', async (req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
         const multimodalModels = data.models.filter(m => m.input_modalities?.includes('image')).map(m => m.id);
         if (!multimodalModels.includes('grok-4-0709')) {
             // The endpoint says it doesn't support images, but it does
@@ -2831,8 +2809,7 @@ multimodalModels.post('/moonshot', async (req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
 
         const multimodalModels = data.data.filter(m => m.supports_image_in).map(m => m.id);
         return res.json(multimodalModels);
@@ -2861,8 +2838,7 @@ multimodalModels.post('/workers_ai', async (req, res) => {
             return res.json([]);
         }
 
-        /** @type {any} */
-        const data = await response.json() as any;
+                const data: any = await response.json() as any;
         const models = Array.isArray(data?.result)
             ? data.result
                 .filter(m => Array.isArray(m.properties) && m.properties.some(p => p.property_id === 'vision' && p.value === 'true'))

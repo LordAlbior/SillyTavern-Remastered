@@ -191,8 +191,7 @@ router.post('/status', async function (request, response) {
                 const modelInfoReply = await fetch(modelInfoUrl, args);
 
                 if (modelInfoReply.ok) {
-                    /** @type {any} */
-                    const modelInfo = await modelInfoReply.json();
+                                        const modelInfo: any = await modelInfoReply.json();
                     console.debug('Ooba model info:', modelInfo);
 
                     const modelName = modelInfo?.model_name;
@@ -208,8 +207,7 @@ router.post('/status', async function (request, response) {
                 const modelInfoReply = await fetch(modelInfoUrl, args);
 
                 if (modelInfoReply.ok) {
-                    /** @type {any} */
-                    const modelInfo = await modelInfoReply.json();
+                                        const modelInfo: any = await modelInfoReply.json();
                     console.debug('Tabby model info:', modelInfo);
 
                     const modelName = modelInfo?.id;
@@ -254,8 +252,7 @@ router.post('/props', async function (request, response) {
             return response.sendStatus(400);
         }
 
-        /** @type {any} */
-        const props = await propsReply.json();
+                const props: any = await propsReply.json();
         // TEMPORARY: llama.cpp's /props endpoint has a bug which replaces the last newline with a \0
         if (apiType === TEXTGEN_TYPES.LLAMACPP && props.chat_template && props.chat_template.endsWith('\u0000')) {
             props.chat_template = props.chat_template.slice(0, -1) + '\n';
@@ -409,8 +406,7 @@ router.post('/generate', async function (request, response) {
             const completionsReply = await fetch(url, args);
 
             if (completionsReply.ok) {
-                /** @type {any} */
-                const data = await completionsReply.json();
+                                const data: any = await completionsReply.json();
                 console.debug('Endpoint response:', data);
 
                 // Map InfermaticAI response to OAI completions format
@@ -498,8 +494,7 @@ ollama.post('/caption-image', async function (request, response) {
             return response.status(500).send({ error: true });
         }
 
-        /** @type {any} */
-        const data = await fetchResponse.json();
+                const data: any = await fetchResponse.json();
         console.debug('Ollama caption response:', data);
 
         const caption = data?.response || '';
@@ -616,8 +611,7 @@ tabby.post('/download', async function (request, response) {
         });
 
         if (permissionResponse.ok) {
-            /** @type {any} */
-            const permissionJson = await permissionResponse.json();
+                        const permissionJson: any = await permissionResponse.json();
 
             if (permissionJson.permission !== 'admin') {
                 return response.status(403).send({ error: true });

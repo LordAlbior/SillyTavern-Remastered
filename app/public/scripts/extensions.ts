@@ -25,7 +25,7 @@ export let extensionNames = [];
  * Don't use this directly, use getExtensionType instead!
  * @type {Record<string, string>}
  */
-export let extensionTypes = {};
+export let extensionTypes: Record<string, string> = {};
 
 /**
  * A list of active modules provided by the Extras API.
@@ -54,7 +54,7 @@ let connectedToApi = false;
  * Holds manifest data for each extension.
  * @type {Record<string, object>}
  */
-let manifests = {};
+let manifests: Record<string, any> = {};
 
 /**
  * Default URL for the Extras API.
@@ -535,7 +535,7 @@ export function getExtensionManifest(name) {
  * @returns {Promise<Record<string, object>>} Object with extension names as keys and their manifests as values
  */
 async function getManifests(names) {
-    const obj = {};
+    const obj: Record<string, any> = {};
     const promises = [];
 
     for (const name of names) {

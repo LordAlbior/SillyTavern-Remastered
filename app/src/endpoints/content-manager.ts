@@ -409,8 +409,7 @@ async function downloadChubLorebook(id) {
         throw new Error('Failed to fetch lorebook metadata');
     }
 
-    /** @type {any} */
-    const metadata = await result.json();
+        const metadata: any = await result.json();
     const projectId = metadata.node?.id;
 
     if (!projectId) {
@@ -450,8 +449,7 @@ async function downloadChubCharacter(id) {
         throw new Error('Failed to fetch character metadata');
     }
 
-    /** @type {any} */
-    const metadata = await result.json();
+        const metadata: any = await result.json();
     const { definition, topics } = metadata.node;
 
     /** @type {TavernCardV2} */
@@ -512,8 +510,7 @@ async function downloadPygmalionCharacter(id) {
         throw new Error('Failed to download character');
     }
 
-    /** @type {any} */
-    const jsonData = await result.json();
+        const jsonData: any = await result.json();
     const characterData = jsonData?.character;
 
     if (!characterData || typeof characterData !== 'object') {
@@ -605,8 +602,7 @@ async function downloadJannyCharacter(uuid) {
     });
 
     if (result.ok) {
-        /** @type {any} */
-        const downloadResult = await result.json();
+                const downloadResult: any = await result.json();
         if (downloadResult.status === 'ok') {
             const imageResult = await fetch(downloadResult.downloadUrl);
             const buffer = Buffer.from(await imageResult.arrayBuffer());

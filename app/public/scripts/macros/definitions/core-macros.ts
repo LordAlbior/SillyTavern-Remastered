@@ -229,7 +229,7 @@ export function registerCoreMacros() {
         category: MacroCategory.UTILITY,
         description: 'Current text from the send textarea.',
         returns: 'Current text from the send textarea.',
-        handler: () => (/** @type {HTMLTextAreaElement} */(document.querySelector('#send_textarea')))?.value ?? '',
+        handler: () => (document.querySelector('#send_textarea') as HTMLTextAreaElement)?.value ?? '',
     });
 
     // {{maxPrompt}} -> max context size (context minus response)

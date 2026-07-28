@@ -38,8 +38,7 @@ export async function getCohereBatchVector(texts, isQuery, directories, model) {
         throw new Error('API request failed');
     }
 
-    /** @type {any} */
-    const data = await response.json();
+        const data: any = await response.json();
     if (!Array.isArray(data?.embeddings?.float)) {
         console.warn('API response was not an array');
         throw new Error('API response was not an array');

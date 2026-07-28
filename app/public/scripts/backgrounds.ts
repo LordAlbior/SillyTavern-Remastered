@@ -623,7 +623,7 @@ const autoBgPrompt = 'Ignore previous instructions and choose a location ONLY fr
 
 async function autoBackgroundCommand() {
     /** @type {HTMLElement[]} */
-    const bgTitles = Array.from(document.querySelectorAll('#bg_menu_content .BGSampleTitle'));
+    const bgTitles = Array.from(document.querySelectorAll('#bg_menu_content .BGSampleTitle')) as HTMLElement[];
     const options = bgTitles.map(x => ({ element: x, text: x.innerText.trim() })).filter(x => x.text.length > 0);
     if (options.length == 0) {
         toastr.warning('No backgrounds to choose from. Please upload some images to the "backgrounds" folder.');

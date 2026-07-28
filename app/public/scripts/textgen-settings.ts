@@ -523,7 +523,7 @@ function calculateLogitBias(settings = null) {
     }
 
     const tokenizer = getTokenizerForTokenIds();
-    const result = {};
+    const result: Record<string, any> = {};
 
     /**
      * Adds bias to the logit bias object.
@@ -1428,7 +1428,7 @@ export function parseTabbyLogprobs(data) {
  * @throws {Error} If the response contains an error message, throws Error with the message.
  */
 function tryParseStreamingError(response, decoded) {
-    let data = {};
+    let data: any = {};
 
     try {
         data = JSON.parse(decoded);
