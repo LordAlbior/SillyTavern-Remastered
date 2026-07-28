@@ -1,8 +1,10 @@
-import { chat_metadata, getCurrentChatId, saveSettingsDebounced } from '../script.js';
+import { getCurrentChatId, saveSettingsDebounced } from '../script.js';
 import { extension_settings, saveMetadataDebounced } from './extensions.js';
 import { executeSlashCommandsWithOptions } from './slash-commands.js';
 import { SlashCommand } from './slash-commands/SlashCommand.js';
 import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.js';
+
+const chat_metadata: Record<string, any> = (await import('../script.js')).chat_metadata; // ponytail: widen type, fix when script.ts exports typed chat_metadata
 import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
 import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.js';
 import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
@@ -19,7 +21,7 @@ import { isFalseBoolean, convertValueType, isTrueBoolean } from './utils.js';
 
 const MAX_LOOPS = 100;
 
-export function getLocalVariable(name, args = {}) {
+export function getLocalVariable(name, args: Record<string, any> = {}) {
     if (!chat_metadata.variables) {
         chat_metadata.variables = {};
     }
@@ -45,7 +47,7 @@ export function getLocalVariable(name, args = {}) {
     return (localVariable?.trim?.() === '' || isNaN(Number(localVariable))) ? (localVariable || '') : Number(localVariable);
 }
 
-export function setLocalVariable(name, value, args = {}) {
+export function setLocalVariable(name, value, args: Record<string, any> = {}) {
     if (!name) {
         throw new Error('Variable name cannot be empty or undefined.');
     }
@@ -80,7 +82,7 @@ export function setLocalVariable(name, value, args = {}) {
     return value;
 }
 
-export function getGlobalVariable(name, args = {}) {
+export function getGlobalVariable(name, args: Record<string, any> = {}) {
     let globalVariable = extension_settings.variables.global[args.key ?? name];
     if (args.index !== undefined) {
         try {
@@ -102,7 +104,7 @@ export function getGlobalVariable(name, args = {}) {
     return (globalVariable?.trim?.() === '' || isNaN(Number(globalVariable))) ? (globalVariable || '') : Number(globalVariable);
 }
 
-export function setGlobalVariable(name, value, args = {}) {
+export function setGlobalVariable(name, value, args: Record<string, any> = {}) {
     if (!name) {
         throw new Error('Variable name cannot be empty or undefined.');
     }

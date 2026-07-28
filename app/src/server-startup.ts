@@ -191,6 +191,9 @@ export function setupPrivateEndpoints(app) {
  * Utilities for starting the express server.
  */
 export class ServerStartup {
+    app: import('express').Express;
+    cliArgs: import('./command-line.js').CommandLineArguments;
+
     /**
      * Creates a new ServerStartup instance.
      * @param {import('express').Express} app The Express app to use
