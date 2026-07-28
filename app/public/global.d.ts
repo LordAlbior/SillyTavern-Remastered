@@ -189,6 +189,10 @@ declare global {
         izoomify(options?: any): JQuery;
         sortable(options?: any): JQuery;
         sortable(method: string, options?: any): JQuery;
+        select2(options?: any): JQuery;
+        select2(method: string, ...args: any[]): any;
+        autocomplete(options?: any): JQuery;
+        autocomplete(method: string, ...args: any[]): any;
     }
 
     // NPM package doesn't have the 'queue' property in the type definition
