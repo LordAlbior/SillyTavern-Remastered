@@ -892,6 +892,9 @@ export function trimTrailingSlash(str) {
  * Simple TTL memory cache.
  */
 export class Cache {
+    cache: Map<string, { value: any; expiry: number }>;
+    ttl: number;
+
     /**
      * @param {number} ttl Time to live in milliseconds
      */
@@ -1123,6 +1126,11 @@ export function setupLogLevel() {
  * MemoryLimitedMap class that limits the memory usage of string values.
  */
 export class MemoryLimitedMap {
+    maxMemory: number;
+    currentMemory: number;
+    map: Map<string, string>;
+    queue: string[];
+
     /**
      * Creates an instance of MemoryLimitedMap.
      * @param {string} cacheCapacity - Maximum memory usage in human-readable format (e.g., '1 GB').
@@ -1305,7 +1313,7 @@ export class MemoryLimitedMap {
  * @param {Parameters<typeof fs.readFileSync>[1]} options Options object to pass through to `fs.readFileSync()` (default: `{ encoding: 'utf-8' }`).
  * @returns The contents at `filePath` if it exists, or `null` if not.
  */
-export function safeReadFileSync(filePath, options = { encoding: 'utf-8' }) {
+export function safeReadFileSync(filePath: string, options: any = { encoding: 'utf-8' }) {
     if (fs.existsSync(filePath)) return fs.readFileSync(filePath, options);
     return null;
 }
