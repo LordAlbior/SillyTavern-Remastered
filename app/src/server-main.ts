@@ -42,7 +42,6 @@ import {
     migratePublicOverrides,
 } from './users.js';
 
-import getWebpackServeMiddleware from './middleware/webpack-serve.js';
 import basicAuthMiddleware from './middleware/basicAuth.js';
 import getWhitelistMiddleware from './middleware/whitelist.js';
 import accessLoggerMiddleware, { getAccessLogPath, migrateAccessLog } from './middleware/accessLogWriter.js';
@@ -236,9 +235,9 @@ app.get('/callback/:source?', (request, response) => {
 app.get('/login', loginPageMiddleware);
 
 // Host frontend assets
-const webpackMiddleware = getWebpackServeMiddleware();
-app.use(webpackMiddleware);
 app.use(userCssMiddleware);
+// Transpiled frontend (dist/) takes priority, then source static files
+app.use(express.static(path.join(serverDirectory, 'public', 'dist'), {}));
 app.use(express.static(path.join(serverDirectory, 'public'), {}));
 // Top-level extensions/ workspace members served at the legacy /scripts/extensions URL.
 app.use('/scripts/extensions', express.static(path.join(path.dirname(serverDirectory), 'extensions'), {}));
@@ -351,8 +350,6 @@ async function preSetupTasks() {
     // Add request proxy.
     initRequestProxy({ enabled: cliArgs.requestProxyEnabled, url: cliArgs.requestProxyUrl, bypass: cliArgs.requestProxyBypass, enableKeepAlive: cliArgs.enableKeepAlive, privateRequestFilterEnabled: requestFilterOptions.enabled });
 
-    // Wait for frontend libs to compile
-    await webpackMiddleware.runWebpackCompiler({ pruneCache: true });
 }
 
 /**

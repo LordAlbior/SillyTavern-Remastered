@@ -68,3 +68,7 @@ pnpm-lock.yaml
 opencode.json
 opencode.json.openchamber.backup
 AGENTS.md
+
+# Build artifacts (transpiled TypeScript frontend)
+/app/public/dist/
+

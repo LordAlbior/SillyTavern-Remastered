@@ -3,17 +3,18 @@
   "version": "1.18.0",
   "private": true,
   "type": "module",
-  "main": "server.js",
+  "main": "server.ts",
   "bin": {
-    "sillytavern": "./src/server-global.js"
+    "sillytavern": "./src/server-global.ts"
   },
   "scripts": {
-    "start": "bun server.js",
-    "start:node": "node server.js",
-    "debug": "bun --inspect server.js",
-    "start:global": "bun server.js --global",
+    "build:frontend": "bun build-frontend.ts",
+    "start": "bun build-frontend.ts && bun server.ts",
+    "start:node": "node --experimental-strip-types server.ts",
+    "debug": "bun build-frontend.ts && bun --inspect server.ts",
+    "start:global": "bun build-frontend.ts && bun server.ts --global",
     "start:electron": "cd ./src/electron && bun run start",
-    "start:no-csrf": "bun server.js --disableCsrf",
+    "start:no-csrf": "bun build-frontend.ts && bun server.ts --disableCsrf",
     "plugins:update": "bun plugins update",
     "plugins:install": "bun plugins install"
   }

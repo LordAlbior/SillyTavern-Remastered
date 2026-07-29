@@ -91,7 +91,6 @@
     "url-join": "^5.0.0",
     "vectra": "^0.2.2",
     "wavefile": "^11.0.0",
-    "webpack": "^5.105.4",
     "write-file-atomic": "^5.0.1",
     "ws": "^8.18.3",
     "yaml": "^2.8.3",
@@ -123,15 +122,15 @@
   "version": "1.18.0",
   "scripts": {
     "init": "bun",
-    "start": "bun --cwd app server.js",
-    "start:node": "node --cwd app server.js",
-    "debug": "bun --cwd app --inspect server.js",
-    "start:global": "bun --cwd app server.js --global",
-    "start:global:node": "node --cwd app server.js --global",
+    "start": "bun --cwd app build-frontend.ts && bun --cwd app server.ts",
+    "start:node": "node --cwd app --experimental-strip-types server.ts",
+    "debug": "bun --cwd app build-frontend.ts && bun --cwd app --inspect server.ts",
+    "start:global": "bun --cwd app build-frontend.ts && bun --cwd app server.ts --global",
+    "start:global:node": "node --cwd app --experimental-strip-types server.ts --global",
     "start:electron": "cd ./app/src/electron && bun run start",
-    "start:deno": "deno run --allow-run --allow-net --allow-read --allow-write --allow-sys --allow-env app/server.js",
-    "start:bun": "bun --cwd app server.js",
-    "start:no-csrf": "bun --cwd app server.js --disableCsrf",
+    "start:deno": "deno run --allow-run --allow-net --allow-read --allow-write --allow-sys --allow-env app/server.ts",
+    "start:bun": "bun --cwd app build-frontend.ts && bun --cwd app server.ts",
+    "start:no-csrf": "bun --cwd app build-frontend.ts && bun --cwd app server.ts --disableCsrf",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
@@ -141,7 +140,7 @@
     "plugins:install": "bun --cwd app plugins install"
   },
   "bin": {
-    "sillytavern": "./app/src/server-global.js"
+    "sillytavern": "./app/src/server-global.ts"
   },
   "rules": {
     "no-path-concat": "off",
