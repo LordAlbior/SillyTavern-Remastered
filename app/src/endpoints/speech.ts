@@ -17,7 +17,7 @@ export const router = express.Router();
  * @returns {Float64Array} Audio data
  */
 function getWaveFile(audio) {
-    const wav = new wavefile.WaveFile();
+    const wav: any = new wavefile.WaveFile();
     wav.fromDataURI(audio);
     wav.toBitDepth('32f');
     wav.toSampleRate(16000);
@@ -71,8 +71,8 @@ router.post('/synthesize', async (req, res) => {
         const end = performance.now();
         console.debug(`Execution duration: ${(end - start) / 1000} seconds`);
 
-        const wav = new wavefile.WaveFile();
-        wav.fromScratch(1, result.sampling_rate, '32f', result.audio);
+        const wav: any = new wavefile.WaveFile();
+        wav.fromScratch(1, result.sampling_rate as any, '32f', result.audio);
         const buffer = wav.toBuffer();
 
         res.set('Content-Type', 'audio/wav');

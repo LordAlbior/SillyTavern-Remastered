@@ -221,7 +221,7 @@ export async function getOrGenerateMetadataBatch(userDataRoot, relativePaths, ty
         // Generate new metadata
         try {
             const metadata = await generateImageMetadata(fullPath, type);
-            metadata.mtime = currentMtime;
+            (metadata as any).mtime = currentMtime;
 
             // Preserve folderIds if they existed
             if (cached?.folderIds) {
@@ -404,7 +404,7 @@ export async function deleteFolder(userDataRoot, folderId) {
     if (idx === -1) throw new Error(`Folder '${folderId}' not found.`);
     index.folders.splice(idx, 1);
     // Remove folderId from all images
-    for (const meta of Object.values(index.images)) {
+    for (const meta of Object.values(index.images) as any[]) {
         if (Array.isArray(meta.folderIds)) {
             const fi = meta.folderIds.indexOf(folderId);
             if (fi !== -1) meta.folderIds.splice(fi, 1);

@@ -152,7 +152,7 @@ export class AutoComplete {
      * @param {AutoCompleteOption} item
      */
     updateName(item) {
-        const chars = Array.from(item.dom.querySelector('.name').children);
+        const chars: any[] = Array.from(item.dom.querySelector('.name').children);
         if (item.forceFullNameMatch) {
             chars.forEach(c => c.classList.toggle('matched', true));
             return;
@@ -277,7 +277,7 @@ export class AutoComplete {
         //TODO check if isInput and isForced are both required
         this.text = this.textarea.value;
         this.isReplaceable = false;
-        this.isShowForced = isForced; // Store forced state for checkIfActivate to access
+        (this as any).isShowForced = isForced; // Store forced state for checkIfActivate to access
 
         if (document.activeElement != this.textarea) {
             // only show with textarea in focus

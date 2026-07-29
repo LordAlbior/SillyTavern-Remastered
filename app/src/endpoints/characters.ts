@@ -359,7 +359,7 @@ const calculateChatSize = (charDir) => {
 
 // Calculate the total string length of the data object
 const calculateDataSize = (data) => {
-    return typeof data === 'object' ? Object.values(data).reduce((acc, val) => acc + String(val).length, 0) : 0;
+    return typeof data === 'object' ? Object.values(data as any).reduce((acc: number, val: any) => acc + String(val).length, 0) : 0;
 };
 
 /**
@@ -630,13 +630,13 @@ function charaFormatData(data, directories) {
             const file = readWorldInfoFile(directories, data.world, false);
 
             // File was imported - save it to the character book
-            if (file && file.originalData) {
-                _.set(char, 'data.character_book', file.originalData);
+            if (file && (file as any).originalData) {
+                _.set(char, 'data.character_book', (file as any).originalData);
             }
 
             // File was not imported - convert the world info to the character book
-            if (file && file.entries) {
-                _.set(char, 'data.character_book', convertWorldInfoToCharacterBook(data.world, file.entries));
+            if (file && (file as any).entries) {
+                _.set(char, 'data.character_book', convertWorldInfoToCharacterBook(data.world, (file as any).entries));
             }
         } catch {
             console.warn(`Failed to read world info file: ${data.world}. Character book will not be available.`);
@@ -772,10 +772,10 @@ async function importFromCharX(uploadPath, { request }, preservedFileName) {
     const { card, avatar, auxiliaryAssets, extractedBuffers } = await parser.parse();
 
     // Apply standard character transformations
-    if (card.data?.name) {
-        card.data.name = sanitize(card.data.name);
+    if ((card.data as any)?.name) {
+        (card.data as any).name = sanitize((card.data as any).name);
     }
-    card.name = sanitize(card.data?.name || card.name);
+    card.name = sanitize((card.data as any)?.name || card.name);
     let processedCard = readFromV2(card);
     unsetPrivateFields(processedCard);
     processedCard.create_date = new Date().toISOString();
@@ -1361,7 +1361,7 @@ router.post('/merge-attributes', getFileNameValidationFunction('avatar'), async 
 
                 try {
                     /** @type {(character: object) => boolean} */
-                    let shouldSkip = () => false;
+                    let shouldSkip = (() => false) as (character: object) => boolean;
 
                     // Apply optional server-side filter before updating the card
                     if (filter && typeof filter.path === 'string') {
@@ -1523,7 +1523,7 @@ router.post('/chats', validateAvatarUrlMiddleware, async function (request, resp
         });
 
         const chatData = (await Promise.allSettled(jsonFilesPromise)).filter(x => x.status === 'fulfilled').map(x => x.value);
-        const validFiles = chatData.filter(i => i.file_name);
+        const validFiles = chatData.filter(i => (i as any).file_name);
 
         return response.send(validFiles);
     } catch (error) {

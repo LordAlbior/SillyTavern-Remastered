@@ -37,7 +37,7 @@ router.post('/generate', async function (request, response_generate) {
         controller.abort();
     });
 
-    let this_settings = {
+    let this_settings: any = {
         prompt: request_prompt,
         use_story: false,
         use_memory: false,
@@ -153,28 +153,27 @@ router.post('/status', async function (request, response) {
 
     setAdditionalHeaders(request, args, api_server);
 
-    const result = {};
+    const result: any = {};
 
-    /** @type {any} */
-    const [koboldUnitedResponse, koboldExtraResponse, koboldModelResponse] = await Promise.all([
+    const [koboldUnitedResponse, koboldExtraResponse, koboldModelResponse]: any = await Promise.all([
         // We catch errors both from the response not having a successful HTTP status and from JSON parsing failing
 
         // Kobold United API version
         fetch(`${api_server}/v1/info/version`).then(response => {
             if (!response.ok) throw new Error(`Kobold API error: ${response.status, response.statusText}`);
-            return response.json();
+            return response.json() as any;
         }).catch(() => ({ result: '0.0.0' })),
 
         // KoboldCpp version
         fetch(`${api_server}/extra/version`).then(response => {
             if (!response.ok) throw new Error(`Kobold API error: ${response.status, response.statusText}`);
-            return response.json();
+            return response.json() as any;
         }).catch(() => ({ version: '0.0' })),
 
         // Current model
         fetch(`${api_server}/v1/model`).then(response => {
             if (!response.ok) throw new Error(`Kobold API error: ${response.status, response.statusText}`);
-            return response.json();
+            return response.json() as any;
         }).catch(() => null),
     ]);
 

@@ -3,10 +3,15 @@
 /** @typedef {import('chevrotain').ILexingError} ILexingError */
 /** @typedef {import('chevrotain').IRecognitionException} IRecognitionException */
 
+// @ts-ignore - no types for JS imports
 import { t } from '/scripts/i18n.js';
+// @ts-ignore
 import { Popup, POPUP_RESULT } from '/scripts/popup.js';
+// @ts-ignore
 import { power_user } from '/scripts/power-user.js';
+// @ts-ignore
 import { accountStorage } from '/scripts/util/AccountStorage.js';
+// @ts-ignore
 import { SimpleMutex } from '/scripts/util/SimpleMutex.js';
 
 /**
@@ -200,14 +205,16 @@ export function logMacroSyntaxWarning({ phase, input, errors }) {
 
 /**
  * Builds a structured payload for macro logging.
- *
- * @param {MacroErrorContext & { error?: any }} ctx
  */
-function buildMacroPayload({ call, def, macroName, error }) {
+function buildMacroPayload(ctx: any) {
+    const call: any = ctx?.call;
+    const def: any = ctx?.def;
+    const macroName: any = ctx?.macroName;
+    const error: any = ctx?.error;
     const inferredName = inferMacroName(call, def, macroName);
 
     /** @type {Record<string, any>} */
-    const payload = {
+    const payload: Record<string, any> = {
         macroName: inferredName,
     };
 

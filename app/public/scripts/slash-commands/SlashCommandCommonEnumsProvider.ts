@@ -327,13 +327,13 @@ export const commonEnumProviders = {
      * @returns {SlashCommandEnumValue[]}
      */
     types: () => [
-        new SlashCommandEnumValue('string', null, enumTypes.type, enumIcons.string),
-        new SlashCommandEnumValue('number', null, enumTypes.type, enumIcons.number),
-        new SlashCommandEnumValue('boolean', null, enumTypes.type, enumIcons.boolean),
-        new SlashCommandEnumValue('array', null, enumTypes.type, enumIcons.array),
-        new SlashCommandEnumValue('object', null, enumTypes.type, enumIcons.dictionary),
-        new SlashCommandEnumValue('null', null, enumTypes.type, enumIcons.null),
-        new SlashCommandEnumValue('undefined', null, enumTypes.type, enumIcons.undefined),
+        new SlashCommandEnumValue('string', null, enumTypes.enum, enumIcons.string),
+        new SlashCommandEnumValue('number', null, enumTypes.enum, enumIcons.number),
+        new SlashCommandEnumValue('boolean', null, enumTypes.enum, enumIcons.boolean),
+        new SlashCommandEnumValue('array', null, enumTypes.enum, enumIcons.array),
+        new SlashCommandEnumValue('object', null, enumTypes.enum, enumIcons.dictionary),
+        new SlashCommandEnumValue('null', null, enumTypes.enum, enumIcons.null),
+        new SlashCommandEnumValue('undefined', null, enumTypes.enum, enumIcons.undefined),
     ],
 
     messageRoles: () => [

@@ -248,10 +248,10 @@ router.post('/generate', async function (req, res) {
     // Tells the model to stop generation at '>'
     if ('theme_textadventure' === req.body.prefix) {
         if (req.body.model.includes('clio') || req.body.model.includes('kayra')) {
-            data.parameters.eos_token_id = 49405;
+            (data.parameters as any).eos_token_id = 49405;
         }
         if (req.body.model.includes('erato')) {
-            data.parameters.eos_token_id = 29;
+            (data.parameters as any).eos_token_id = 29;
         }
     }
 
@@ -389,7 +389,7 @@ router.post('/generate-image', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        const originalBase64 = imageBuffer.toString('base64');
+        const originalBase64 = (imageBuffer as any).toString('base64');
 
         // No upscaling
         if (isNaN(request.body.upscale_ratio) || request.body.upscale_ratio <= 1) {
@@ -425,7 +425,7 @@ router.post('/generate-image', async (request, response) => {
                 throw new Error('NovelAI upscaled an image, but the PNG file was not found.');
             }
 
-            const upscaledBase64 = upscaledImageBuffer.toString('base64');
+            const upscaledBase64 = (upscaledImageBuffer as any).toString('base64');
 
             return response.send(upscaledBase64);
         } catch (error) {
@@ -469,8 +469,8 @@ router.post('/generate-voice', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        const chunks = await readAllChunks(result.body);
-        const buffer = Buffer.concat(chunks.map(chunk => new Uint8Array(chunk)));
+        const chunks = await readAllChunks(result.body as any);
+        const buffer = Buffer.concat((chunks as any[]).map(chunk => new Uint8Array(chunk)));
         response.setHeader('Content-Type', 'audio/mpeg');
         return response.send(buffer);
     } catch (error) {

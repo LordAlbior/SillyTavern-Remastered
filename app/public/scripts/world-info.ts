@@ -10,6 +10,7 @@ import { getTokenCountAsync } from './tokenizers.js';
 import { power_user } from './power-user.js';
 import { getTagKeyForEntity } from './tags.js';
 import { debounce_timeout, GENERATION_TYPE_TRIGGERS } from './constants.js';
+// @ts-ignore - Module exists at runtime via server path resolution, but TypeScript cannot resolve it
 import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
 import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
 import { SlashCommand } from './slash-commands/SlashCommand.js';
@@ -86,7 +87,7 @@ const saveSettingsDebounced = debounce(() => {
     saveSettings();
 }, debounce_timeout.relaxed);
 const sortFn = (a, b) => b.order - a.order;
-let updateEditor = (navigation, flashOnNav = true) => { console.debug('Triggered WI navigation', navigation, flashOnNav); };
+let updateEditor = (navigation?: any, flashOnNav = true) => { console.debug('Triggered WI navigation', navigation, flashOnNav); };
 
 // Do not optimize. updateEditor is a function that is updated by the displayWorldEntries with new data.
 export const worldInfoFilter = new FilterHelper(() => updateEditor());
@@ -618,7 +619,7 @@ class WorldInfoTimedEffects {
      */
     #checkTimedEffectOfType(type, buffer, onEnded) {
         /** @type {[string, WITimedEffect][]} */
-        const effects = Object.entries(chat_metadata.timedWorldInfo[type]);
+        const effects = Object.entries(chat_metadata.timedWorldInfo[type]) as Array<[string, any]>;
         for (const [key, value] of effects) {
             console.log(`[WI] Processing ${type} entry ${key}`, value);
             const entry = this.#entries.find(x => String(this.#getEntryHash(x)) === String(value.hash));
@@ -1072,7 +1073,7 @@ function registerWorldInfoSlashCommands() {
             return '';
         }
 
-        const entries = Object.values(data.entries);
+        const entries = Object.values(data.entries) as any[];
 
         if (!entries || entries.length === 0) {
             toastr.warning(t`World Info file has no entries`);
@@ -2355,7 +2356,7 @@ async function displayWorldEntries(name, data, navigation = navigation_option.no
     // Before printing the WI, we check if we should enable/disable search sorting
     verifyWorldInfoSearchSortRule();
 
-    function getDataArray(callback) {
+    function getDataArray(callback?: any) {
         // Convert the data.entries object into an array
         let entriesArray = Object.keys(data.entries).map(uid => {
             const entry = data.entries[uid];
@@ -2516,7 +2517,7 @@ async function displayWorldEntries(name, data, navigation = navigation_option.no
         }
 
         // We need to sort the entries here, as the data source isn't sorted
-        const entries = Object.values(data.entries);
+        const entries = Object.values(data.entries) as any[];
         sortWorldInfoEntries(entries);
 
         let updated = 0, current = start;
@@ -2900,7 +2901,7 @@ function enableKeysInputHelper({ template, entry, entryPropName, originalDataVal
          */
         input.on('change', async function (_event, arg) {
             const uid = $(this).data('uid');
-            const keys = ($(this).select2('data')).map(x => x.text);
+            const keys = (($(this).select2('data')) as unknown as any[]).map(x => x.text);
             const skipReset = arg?.skipReset ?? false;
             const noSave = arg?.noSave ?? false;
             if (!skipReset) await resetScrollHeight(this);
@@ -3802,13 +3803,13 @@ export async function getWorldEntry(name, data, entry) {
  * @param {() => Iterable<string>} [opt.includeExtras] - Optional global extras to include
  * @param {(ctx:{result:string[], control:JQuery, input:any, haystack:string[]})=>string[]} [opt.postFilter] - Optional final filter step (for special rules like your "group" de-dupe logic)
  */
-function buildAutocompleteCallback({ data, collectValues, includeExtras = () => [], postFilter } = {}) {
+function buildAutocompleteCallback({ data, collectValues, includeExtras = () => [], postFilter }: any = {}) {
     return function (control, input, output) {
         const uid = $(control).data('uid');
 
         // Collect unique values from all *other* entries
-        const values = new Set();
-        for (const entry of Object.values(data.entries ?? {})) {
+        const values = new Set<any>();
+        for (const entry of Object.values(data.entries ?? {}) as any[]) {
             if (entry?.uid == uid) continue;
             const raw = collectValues(entry);
             if (raw == null) continue;
@@ -4046,7 +4047,7 @@ export const newWorldInfoEntryDefinition = {
 };
 
 export const newWorldInfoEntryTemplate = Object.fromEntries(
-    Object.entries(newWorldInfoEntryDefinition).filter(([_, value]) => !value.excludeFromTemplate).map(([key, value]) => [key, value.default]),
+    (Object.entries(newWorldInfoEntryDefinition) as Array<[string, any]>).filter(([_, value]) => !value.excludeFromTemplate).map(([key, value]) => [key, value.default]),
 );
 
 /**
@@ -4055,7 +4056,7 @@ export const newWorldInfoEntryTemplate = Object.fromEntries(
  * @param {any} data WI data
  * @returns {object | undefined} New entry object or undefined if failed
  */
-export function createWorldInfoEntry(_name, data) {
+export function createWorldInfoEntry(_name: any, data: any): any {
     const newUid = getFreeWorldEntryUid(data);
 
     if (!Number.isInteger(newUid)) {
@@ -4476,7 +4477,7 @@ async function getPersonaLore() {
     return entries;
 }
 
-export async function getSortedEntries() {
+export async function getSortedEntries(): Promise<any[]> {
     try {
         const [
             globalLore,
@@ -4618,8 +4619,8 @@ export async function checkWorldInfo(chat, maxContext, isDryRun, globalScanData 
     let scanState = scan_state.INITIAL;
     let token_budget_overflowed = false;
     let count = 0;
-    let allActivatedEntries = new Map();
-    let failedProbabilityChecks = new Set();
+    let allActivatedEntries = new Map<string, any>();
+    let failedProbabilityChecks = new Set<any>();
     let allActivatedText = '';
 
     let budget = Math.round(world_info_budget * maxContext / 100) || 1;
@@ -4669,7 +4670,7 @@ export async function checkWorldInfo(chat, maxContext, isDryRun, globalScanData 
         let nextScanState = scan_state.NONE;
 
         // Loop and find all entries that can activate here
-        let activatedNow = new Set();
+        let activatedNow = new Set<any>();
 
         for (const entry of sortedEntries) {
             // Logging preparation
@@ -5171,7 +5172,7 @@ export async function checkWorldInfo(chat, maxContext, isDryRun, globalScanData 
  * @param {Map<string, boolean>} hasStickyMap The sticky entries map
  */
 function filterGroupsByScoring(groups, buffer, removeEntry, scanState, hasStickyMap) {
-    for (const [key, group] of Object.entries(groups)) {
+    for (const [key, group] of Object.entries(groups) as Array<[string, any]>) {
         // Group scoring is disabled both globally and for the group entries
         if (!world_info_use_group_scoring && !group.some(x => x.useGroupScoring)) {
             console.debug(`[WI] Skipping group scoring for group '${key}'`);
@@ -5219,7 +5220,7 @@ function filterGroupsByTimedEffects(groups, timedEffects, removeEntry) {
     /** @type {Map<string, boolean>} */
     const hasStickyMap = new Map();
 
-    for (const [key, group] of Object.entries(groups)) {
+    for (const [key, group] of Object.entries(groups) as Array<[string, any]>) {
         hasStickyMap.set(key, false);
 
         // If the group has any sticky entries, leave only the sticky entries
@@ -5299,7 +5300,7 @@ function filterByInclusionGroups(newEntries, allActivatedEntries, buffer, scanSt
     const hasStickyMap = filterGroupsByTimedEffects(grouped, timedEffects, removeEntry);
     filterGroupsByScoring(grouped, buffer, removeEntry, scanState, hasStickyMap);
 
-    for (const [key, group] of Object.entries(grouped)) {
+    for (const [key, group] of Object.entries(grouped) as Array<[string, any]>) {
         console.debug(`[WI] Checking inclusion group '${key}' with ${group.length} entries`, group);
 
         // If the group has any sticky entries, the rest are already removed by the timed effects filter
@@ -5309,7 +5310,7 @@ function filterByInclusionGroups(newEntries, allActivatedEntries, buffer, scanSt
             continue;
         }
 
-        if (Array.from(allActivatedEntries.values()).some(x => x.group === key)) {
+        if ((Array.from(allActivatedEntries.values()) as any[]).some(x => x.group === key)) {
             console.debug(`[WI] Skipping inclusion group check, group '${key}' was already activated`);
             // We need to forcefully deactivate all other entries in the group
             removeAllBut(group, null, false);
@@ -5650,7 +5651,7 @@ export async function importEmbeddedWorldInfo(skipPopup = false) {
     setWorldInfoButtonClass(chid, true);
 }
 
-export function onWorldInfoChange(args, text) {
+export function onWorldInfoChange(args: any, text: any = '') {
     if (args !== '__notSlashCommand__') { // if it's a slash command
         const silent = isTrueBoolean(args.silent);
         if (text.trim() !== '') { // and args are provided
@@ -5740,7 +5741,7 @@ export async function importWorldInfo(file) {
         let jsonData;
 
         if (file.name.endsWith('.png')) {
-            const buffer = new Uint8Array(await getFileBuffer(file));
+            const buffer = new Uint8Array(await getFileBuffer(file) as any);
             jsonData = extractDataFromPng(buffer, 'naidata');
         } else {
             // File should be a JSON file
@@ -5928,7 +5929,7 @@ export async function moveWorldInfoEntry(sourceName, targetName, uid, { deleteOr
 
         entryToMove.uid = newUid;
         // Place the entry at the end of the target lorebook
-        const maxDisplayIndex = Object.values(targetData.entries).reduce((max, entry) => Math.max(max, entry.displayIndex ?? -1), -1);
+        const maxDisplayIndex = (Object.values(targetData.entries) as any[]).reduce((max, entry) => Math.max(max, entry.displayIndex ?? -1), -1);
         entryToMove.displayIndex = maxDisplayIndex + 1;
 
         targetData.entries[newUid] = entryToMove;
@@ -6002,7 +6003,7 @@ export async function charUpdatePrimaryWorld(name) {
         }
     }
 
-    await createOrEditCharacter();
+    await (createOrEditCharacter as any)();
 
     setWorldInfoButtonClass(undefined, !!name);
 }

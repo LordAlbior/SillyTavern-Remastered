@@ -382,7 +382,7 @@ export function findGroupMemberId(arg, full = false) {
             return;
         }
 
-        const chid = result[0].item.index;
+        const chid = (result[0].item as any).index;
 
         if (chid === -1) {
             console.warn(`WARN: No character found for group member ${arg}`);
@@ -391,7 +391,7 @@ export function findGroupMemberId(arg, full = false) {
 
         console.log(`Targeting group member ${chid} (${arg}) from search result`, result[0]);
 
-        return !full ? chid : { ...{ id: chid }, ...result[0].item };
+        return !full ? chid : { ...{ id: chid }, ...(result[0].item as object) };
     } else {
         const memberAvatar = group.members[index];
 
@@ -941,7 +941,7 @@ function getGroupChatNames(groupId) {
  * @param {object} params Additional Generate parameters
  * @returns {Promise<string|void>} Generated text or nothing if no generation occurred
  */
-async function generateGroupWrapper(byAutoMode, type = null, params = {}) {
+async function generateGroupWrapper(byAutoMode, type = null, params: any = {}) {
     function throwIfAborted() {
         if (params.signal instanceof AbortSignal && params.signal.aborted) {
             throw new Error('AbortSignal was fired. Group generation stopped');
@@ -1059,13 +1059,13 @@ async function generateGroupWrapper(byAutoMode, type = null, params = {}) {
 
             // Wait for generation to finish
             const generateType = ['swipe', 'impersonate', 'quiet', 'continue'].includes(type) ? type : 'normal';
-            textResult = await Generate(generateType, { automatic_trigger: byAutoMode, ...(params || {}) });
-            let messageChunk = textResult?.messageChunk;
+            textResult = await Generate(generateType, { automatic_trigger: byAutoMode, ...(params || {}) } as any);
+            let messageChunk = (textResult as any)?.messageChunk;
 
             if (messageChunk) {
                 while (shouldAutoContinue(messageChunk, type === 'impersonate')) {
-                    textResult = await Generate('continue', { automatic_trigger: byAutoMode, ...(params || {}) });
-                    messageChunk = textResult?.messageChunk;
+                    textResult = await Generate('continue', { automatic_trigger: byAutoMode, ...(params || {}) } as any);
+                    messageChunk = (textResult as any)?.messageChunk;
                 }
             }
             if (power_user.show_group_chat_queue) {
@@ -1573,8 +1573,8 @@ function getGroupCharacters({ doFilter = false, onlyMembers = false } = {}) {
         const memberIndexMap = new Map(membersArray.map((avatar, index) => [avatar, index]));
 
         function sortMembersFn(a, b) {
-            const aIndex = memberIndexMap.get(a.item.avatar) ?? -1;
-            const bIndex = memberIndexMap.get(b.item.avatar) ?? -1;
+            const aIndex = (memberIndexMap.get(a.item.avatar) as number) ?? -1;
+            const bIndex = (memberIndexMap.get(b.item.avatar) as number) ?? -1;
             return aIndex - bIndex;
         }
 
@@ -1915,7 +1915,7 @@ async function uploadGroupAvatar(event) {
 
     let thumbnail = await createThumbnail(String(croppedImage), 200, 300);
     //remove data:image/whatever;base64
-    thumbnail = thumbnail.replace(/^data:image\/[a-z]+;base64,/, '');
+    thumbnail = (thumbnail as string).replace(/^data:image\/[a-z]+;base64,/, '');
     let _thisGroup = groups.find((x) => x.id == openGroupId);
     // filename should be group id + human readable timestamp
     const filename = _thisGroup ? `${_thisGroup.id}_${humanizedDateTime()}` : humanizedDateTime();
@@ -1994,7 +1994,7 @@ async function onGroupActionClick(event) {
     if (action === 'speak') {
         const chid = Number(member.attr('data-chid'));
         if (Number.isInteger(chid)) {
-            Generate('normal', { force_chid: chid });
+            Generate('normal', { force_chid: chid } as any);
         }
     }
 

@@ -6,7 +6,6 @@ import { RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible';
 import { getIpAddress, retryAfter } from '../express-common.js';
 import { color, Cache, getConfigValue } from '../util.js';
 import { KEY_PREFIX, getUserAvatar, toKey, getPasswordHash, getPasswordSalt, getAccountVersion } from '../users.js';
-import type { User, UserViewModel } from '../users.js';
 
 const DISCREET_LOGIN = getConfigValue('enableDiscreetLogin', false, 'boolean');
 const PREFER_REAL_IP_HEADER = getConfigValue('rateLimiting.preferRealIpHeader', false, 'boolean');
@@ -32,11 +31,11 @@ router.post('/list', async (_request, response) => {
             return response.sendStatus(204);
         }
 
-        const users = await storage.values(x => x.key.startsWith(KEY_PREFIX)) as User[];
+        const users = await storage.values(x => x.key.startsWith(KEY_PREFIX)) as any[];
 
-        const viewModelPromises: Promise<UserViewModel>[] = users
+        const viewModelPromises: Promise<any>[] = users
             .filter(x => x.enabled)
-            .map(user => new Promise<UserViewModel>(async (resolve) => {
+            .map(user => new Promise<any>(async (resolve) => {
                 getUserAvatar(user.handle).then(avatar =>
                     resolve({
                         handle: user.handle,
@@ -67,7 +66,7 @@ router.post('/login', async (request, response) => {
         const ip = getIpAddress(request, PREFER_REAL_IP_HEADER);
         await loginLimiter.consume(ip);
 
-        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
+        const user = await storage.getItem(toKey(request.body.handle)) as any;
 
         if (!user) {
             console.error('Login failed: User', request.body.handle, 'not found');
@@ -115,7 +114,7 @@ router.post('/recover-step1', async (request, response) => {
         const ip = getIpAddress(request, PREFER_REAL_IP_HEADER);
         await recoverLimiter.consume(ip);
 
-        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
+        const user = await storage.getItem(toKey(request.body.handle)) as any;
 
         if (!user) {
             console.error('Recover step 1 failed: User', request.body.handle, 'not found');
@@ -151,7 +150,7 @@ router.post('/recover-step2', async (request, response) => {
             return response.status(400).json({ error: 'Missing required fields' });
         }
 
-        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
+        const user = await storage.getItem(toKey(request.body.handle)) as any;
         const ip = getIpAddress(request, PREFER_REAL_IP_HEADER);
         const rateLimit = await recoverLimiter.get(ip);
 

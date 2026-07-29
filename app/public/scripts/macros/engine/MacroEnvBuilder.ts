@@ -1,7 +1,7 @@
 import { name1, name2, characters, getCharacterCardFieldsLazy, getGeneratingModel } from '../../../script.js';
 import { groups, selected_group } from '../../../scripts/group-chats.js';
 import { logMacroGeneralError } from './MacroDiagnostics.js';
-import { getStringHash } from '/scripts/utils.js';
+import { getStringHash } from '../../utils.js';
 /**
  * MacroEnvBuilder is responsible for constructing the MacroEnv object
  * that is passed to macro handlers.
@@ -88,7 +88,7 @@ class MacroEnvBuilder {
             names: { user: '', char: '', group: '', groupNotMuted: '', notChar: '' },
             character: {},
             system: { model: '' },
-            functions: { postProcess: (x) => x },
+            functions: { postProcess: (x) => x } as any,
             dynamicMacros: {},
             extra: {},
         };
@@ -137,7 +137,7 @@ class MacroEnvBuilder {
         env.names.notChar = getGroupValue(ctx, { currentChar: env.names.char, filterOutChar: true, includeUser: env.names.user });
 
         // System
-        env.system.model = getGeneratingModel();
+        env.system.model = (getGeneratingModel as any)();
 
         // Functions
         // original (one-shot) and arbitrary additional values

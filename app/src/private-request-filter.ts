@@ -118,7 +118,7 @@ class PrivateRequestAgent extends Agent {
             if (options.secureEndpoint) {
                 return tls.connect(options);
             } else {
-                return net.connect(options);
+                return net.connect(options as any);
             }
         };
 
@@ -204,8 +204,8 @@ export default function initPrivateRequestFilter({ listen, enabled, privateAddre
 
     const agent = new PrivateRequestAgent({ privateAddressWhitelist, logBlocked, logAllowed, allowUnresolvedHosts, enableKeepAlive });
 
-    http.globalAgent = agent;
-    https.globalAgent = agent;
+    http.globalAgent = agent as any;
+    https.globalAgent = agent as any;
 
     console.info();
     console.info(color.green(LOG_HEADER), 'Enabled');

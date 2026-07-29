@@ -28,6 +28,7 @@ import {
     unshallowCharacter,
     updateRemoteChatName,
 } from '../script.js';
+// @ts-expect-error - no types for regex engine module
 import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
 import { deleteGroupChatByName, getGroupAvatar, groups, is_group_generating, openGroupById, openGroupChat } from './group-chats.js';
 import { t } from './i18n.js';
@@ -549,7 +550,7 @@ async function renameRecentCharacterChat(avatarId, fileName) {
             oldFileName: fileName,
             newFileName: newName,
             loader: false,
-        });
+        } as any);
         await updateRemoteChatName(characterId, newName);
         await refreshWelcomeScreen();
         toastr.success(t`Chat renamed.`);
@@ -582,7 +583,7 @@ async function renameRecentGroupChat(groupId, fileName) {
             oldFileName: fileName,
             newFileName: String(newName),
             loader: false,
-        });
+        } as any);
         await refreshWelcomeScreen();
         toastr.success(t`Group chat renamed.`);
     } catch (error) {

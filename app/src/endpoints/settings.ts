@@ -89,7 +89,7 @@ export function getSettingsBackupFilePrefix(handle) {
     return `settings_${handle}_`;
 }
 
-function readPresetsFromDirectory(directoryPath, options = {}) {
+function readPresetsFromDirectory(directoryPath: string, options: any = {}) {
     const {
         sortFunction,
         removeFileExtension = false,

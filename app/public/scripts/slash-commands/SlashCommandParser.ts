@@ -448,7 +448,7 @@ export class SlashCommandParser {
                 ABORT,
                 IMPORT,
                 BREAK,
-                RUN,
+                RUN as any,
                 LET,
                 GETVAR,
                 SETVAR,
@@ -457,7 +457,7 @@ export class SlashCommandParser {
                 PIPEBREAK,
                 PIPE,
             ],
-        }));
+        } as any));
     }
 
     getHelpString() {
@@ -657,7 +657,7 @@ export class SlashCommandParser {
             const pipeName = `_PARSER_PIPE_${uuidv4()}`;
             const storePipe = new SlashCommandExecutor(startIdx); {
                 storePipe.end = endIdx;
-                storePipe.command = this.commands.let;
+                storePipe.command = (this.commands as any).let;
                 storePipe.name = 'let';
                 const nameAss = new SlashCommandUnnamedArgumentAssignment();
                 nameAss.value = pipeName;
@@ -680,7 +680,7 @@ export class SlashCommandParser {
             const varName = `_PARSER_VAR_${uuidv4()}`;
             const setvar = new SlashCommandExecutor(startIdx); {
                 setvar.end = endIdx;
-                setvar.command = this.commands.let;
+                setvar.command = (this.commands as any).let;
                 setvar.name = 'let';
                 const nameAss = new SlashCommandUnnamedArgumentAssignment();
                 nameAss.value = varName;
@@ -692,7 +692,7 @@ export class SlashCommandParser {
             // return pipe
             const returnPipe = new SlashCommandExecutor(startIdx); {
                 returnPipe.end = endIdx;
-                returnPipe.command = this.commands.return;
+                returnPipe.command = (this.commands as any).return;
                 returnPipe.name = 'return';
                 const varAss = new SlashCommandUnnamedArgumentAssignment();
                 varAss.value = `{{var::${pipeName}}}`;
@@ -817,7 +817,7 @@ export class SlashCommandParser {
     parseBreakPoint() {
         const cmd = new SlashCommandBreakPoint();
         cmd.name = 'breakpoint';
-        cmd.command = this.commands.breakpoint;
+        cmd.command = (this.commands as any).breakpoint;
         cmd.start = this.index + 1;
         this.take('/breakpoint'.length);
         cmd.end = this.index;
@@ -832,7 +832,7 @@ export class SlashCommandParser {
     parseBreak() {
         const cmd = new SlashCommandBreak();
         cmd.name = 'break';
-        cmd.command = this.commands.break;
+        cmd.command = (this.commands as any).break;
         cmd.start = this.index + 1;
         this.take('/break'.length);
         this.discardWhitespace();
@@ -935,7 +935,7 @@ export class SlashCommandParser {
         const cmd = new SlashCommandExecutor(start);
         cmd.name = ':';
         cmd.unnamedArgumentList = [];
-        cmd.command = this.commands.run;
+        cmd.command = (this.commands as any).run;
         this.commandIndex.push(cmd);
         this.scopeIndex.push(this.scope.getCopy());
         this.take(2); //discard "/:"
@@ -1079,7 +1079,7 @@ export class SlashCommandParser {
     testUnnamedArgumentEnd() {
         return this.testCommandEnd();
     }
-    parseUnnamedArgument(split, splitCount = null, rawQuotes = false) {
+    parseUnnamedArgument(split = false, splitCount = null, rawQuotes = false) {
         const wasSplit = split;
         /**@type {SlashCommandClosure|String}*/
         let value = this.jumpedEscapeSequence ? this.take() : ''; // take the first, already tested, char if it is an escaped one
@@ -1164,7 +1164,7 @@ export class SlashCommandParser {
                     listQuoted.push(false);
                     assignment = new SlashCommandUnnamedArgumentAssignment();
                 } else {
-                    throw new SlashCommandParserError(`Unexpected end of unnamed argument at index ${this.userIndex}.`);
+                    throw new SlashCommandParserError(`Unexpected end of unnamed argument at index ${this.userIndex}.`, this.text, this.userIndex);
                 }
                 this.discardWhitespace();
             } else {

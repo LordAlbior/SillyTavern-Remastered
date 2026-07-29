@@ -84,6 +84,9 @@ export class FilterHelper {
      */
     scoreCache;
 
+    /** @type {any} */
+    onDataChanged;
+
     /**
      * Cache for fuzzy search results per category.
      * @type {Object.<string, { resultMap: Map<string, any> }>}
@@ -223,7 +226,7 @@ export class FilterHelper {
      */
     tagFilter(data) {
         const TAG_LOGIC_AND = true; // switch to false to use OR logic for combining tags
-        const { selected, excluded } = this.filterData[FILTER_TYPES.TAG];
+        const { selected, excluded } = this.filterData[FILTER_TYPES.TAG] as any;
 
         if (!selected.length && !excluded.length) {
             return data;
@@ -441,7 +444,7 @@ export class FilterHelper {
      * Clear the score cache for a specific type, or completely if no type is specified
      * @param {FilterType} [type] The type of data to clear scores for. Clears all if unspecified.
      */
-    clearScoreCache(type) {
+    clearScoreCache(type?: any) {
         if (type) {
             this.scoreCache.set(type, new Map());
         } else {
@@ -453,7 +456,7 @@ export class FilterHelper {
      * Clears fuzzy search caches
      */
     clearFuzzySearchCaches() {
-        for (const cache of Object.values(this.fuzzySearchCaches)) {
+        for (const cache of Object.values(this.fuzzySearchCaches) as any[]) {
             cache.resultMap.clear();
         }
     }

@@ -257,7 +257,7 @@ function getExtensionType(externalId) {
  * @param {RequestInit} args Request arguments
  * @returns {Promise<Response>} Response from the fetch
  */
-export async function doExtrasFetch(endpoint, args = {}) {
+export async function doExtrasFetch(endpoint, args: any = {}) {
     if (!args) {
         args = {};
     }
@@ -539,7 +539,7 @@ async function getManifests(names) {
     const promises = [];
 
     for (const name of names) {
-        const promise = new Promise((resolve, reject) => {
+        const promise = new Promise<void>((resolve, reject) => {
             fetch(`/scripts/extensions/${name}/manifest.json`).then(async response => {
                 if (response.ok) {
                     const json = await response.json();
@@ -783,7 +783,7 @@ function addExtensionStyle(name, manifest) {
         return Promise.resolve();
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         const url = `/scripts/extensions/${name}/${manifest.css}`;
         const id = sanitizeSelector(`${name}-css`);
 
@@ -815,7 +815,7 @@ function addExtensionScript(name, manifest) {
         return Promise.resolve();
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         const url = `/scripts/extensions/${name}/${manifest.js}`;
         const id = sanitizeSelector(`${name}-js`);
         let ready = false;
@@ -1112,7 +1112,7 @@ function getExtensionLoadErrors() {
 
     for (const error of extensionLoadErrors) {
         const errorElement = document.createElement('div');
-        errorElement.textContent = error;
+        errorElement.textContent = error as string;
         container.appendChild(errorElement);
     }
 
@@ -1949,7 +1949,7 @@ async function checkForExtensionUpdates(force) {
         if (manifest.auto_update && id.startsWith('third-party')) {
             const promise = enqueueVersionCheck(async () => {
                 try {
-                    const data = await getExtensionVersion(id.replace('third-party', ''));
+                    const data = await getExtensionVersion(id.replace('third-party', ''), undefined);
                     if (!data) {
                         return;
                     }
@@ -2140,7 +2140,7 @@ export async function writeExtensionField(characterId, key, value) {
  *   automatically skip characters where the field is missing/`undefined`.
  * @returns {Promise<BulkExtensionFieldResult>} Summary of the bulk operation
  */
-export async function writeExtensionFieldBulk(avatars, key, value, { filterPath } = {}) {
+export async function writeExtensionFieldBulk(avatars, key, value, { filterPath } = {} as { filterPath?: string }) {
     const context = getContext();
     const extensionPath = `data.extensions.${key}`;
     const isUnset = value === UNSET_VALUE;
@@ -2272,7 +2272,7 @@ export const EMPTY_AUTHOR = Object.freeze({
  * @returns {{name: string, url: string}} Object containing the author's name and URL, or empty strings if not found.
  */
 export function getAuthorFromUrl(url) {
-    const result = structuredClone(EMPTY_AUTHOR);
+    const result = structuredClone(EMPTY_AUTHOR) as { name: string; url: string };
 
     try {
         const parsedUrl = new URL(url);

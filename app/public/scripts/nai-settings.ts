@@ -33,7 +33,7 @@ const default_presets = {
 export let novelai_settings;
 export let novelai_setting_names;
 
-export const nai_settings = {
+export const nai_settings: any = {
     temperature: 1.5,
     repetition_penalty: 2.25,
     repetition_penalty_range: 2048,
@@ -751,7 +751,7 @@ export async function generateNovelWithStreaming(generate_data, signal) {
         tryParseStreamingError(response, await response.text());
         throw new Error(`Got response status ${response.status}`);
     }
-    const eventStream = getEventSourceStream();
+    const eventStream = getEventSourceStream() as any;
     response.body.pipeThrough(eventStream);
     const reader = eventStream.readable.getReader();
 
@@ -874,7 +874,7 @@ export function initNovelAISettings() {
         const api_key_novel = String($('#api_key_novel').val()).trim();
 
         if (api_key_novel.length) {
-            await writeSecret(SECRET_KEYS.NOVEL, api_key_novel);
+            await (writeSecret as any)(SECRET_KEYS.NOVEL, api_key_novel);
         }
 
         if (!secret_state[SECRET_KEYS.NOVEL]) {

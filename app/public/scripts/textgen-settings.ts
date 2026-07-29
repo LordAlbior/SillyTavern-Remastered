@@ -587,7 +587,7 @@ export async function loadTextGenSettings(data, loadedSettings) {
 
     for (const i of setting_names) {
         const value = textgenerationwebui_settings[i];
-        setSettingByName(i, value);
+        (setSettingByName as any)(i, value);
     }
 
     $('#textgen_type').val(textgenerationwebui_settings.type);
@@ -800,7 +800,7 @@ async function getStatusTextgen() {
         }
     } catch (err) {
         if (err instanceof AbortReason) {
-            console.info('Status check aborted.', err.reason);
+            console.info('Status check aborted.', (err as any).reason);
         } else {
             console.error('Error getting status', err);
         }
@@ -1020,7 +1020,7 @@ export function initTextGenSettings() {
                 if (power_user.enableZenSliders) {
                     let masterElementID = inputElement.prop('id');
                     console.log(masterElementID);
-                    let zenSlider = $(`#${masterElementID}_zenslider`).slider();
+                    let zenSlider = ($(`#${masterElementID}_zenslider`) as any).slider();
                     zenSlider.slider('option', 'value', value);
                     zenSlider.slider('option', 'slide')
                         .call(zenSlider, null, {
@@ -1112,7 +1112,7 @@ export function initTextGenSettings() {
         for (const key of keys) {
             const keyValue = String($(`#${key.id}`).val()).trim();
             if (keyValue.length) {
-                await writeSecret(key.secret, keyValue);
+                await (writeSecret as any)(key.secret, keyValue);
             }
         }
 
@@ -1265,7 +1265,7 @@ function setSettingByName(setting, value, trigger) {
         $(`#${setting}_textgenerationwebui`).val(val);
         $(`#${setting}_counter_textgenerationwebui`).val(val);
         if (power_user.enableZenSliders) {
-            let zenSlider = $(`#${setting}_textgenerationwebui_zenslider`).slider();
+            let zenSlider = ($(`#${setting}_textgenerationwebui_zenslider`) as any).slider();
             zenSlider.slider('option', 'value', val);
             zenSlider.slider('option', 'slide')
                 .call(zenSlider, null, {
@@ -1304,8 +1304,8 @@ export async function generateTextGenWithStreaming(generate_data, signal) {
     }
 
     const eventStream = getEventSourceStream();
-    response.body.pipeThrough(eventStream);
-    const reader = eventStream.readable.getReader();
+    (response.body as any).pipeThrough(eventStream);
+    const reader = (eventStream as any).readable.getReader();
 
     return async function* streamData() {
         let text = '';

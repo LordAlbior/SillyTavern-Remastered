@@ -125,7 +125,7 @@ if (corsEnabled) {
         origin: corsOrigin,
         methods: corsMethods,
         credentials: corsCredentials,
-    };
+    } as cors.CorsOptions;
     if (Array.isArray(corsAllowedHeaders) && corsAllowedHeaders.length > 0) {
         corsOptions.allowedHeaders = corsAllowedHeaders;
     }
@@ -187,7 +187,7 @@ if (!cliArgs.disableCsrf) {
             return cliArgs.enableCorsProxy ? /^\/proxy\//.test(req.path) : false;
         },
         size: 32,
-    });
+    }) as any;
 
     app.get('/csrf-token', (req, res) => {
         res.json({
@@ -466,7 +466,7 @@ function apply404Middleware() {
 function setDnsResolutionOrder() {
     try {
         if (cliArgs.dnsPreferIPv6) {
-            dns.setDefaultResultOrder('ipv6first');
+            dns.setDefaultResultOrder('ipv6first' as any);
             console.log('Preferring IPv6 for DNS resolution');
         } else {
             dns.setDefaultResultOrder('ipv4first');

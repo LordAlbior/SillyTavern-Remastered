@@ -76,7 +76,7 @@ async function getExistingChatNames() {
 
     if (response.ok) {
         const data = await response.json();
-        const chats = Object.values(data).map(x => x.file_name.replace('.jsonl', ''));
+        const chats = Object.values(data).map(x => (x as any).file_name.replace('.jsonl', ''));
         return [...chats];
     }
 
@@ -228,7 +228,7 @@ export async function createBranch(mesId, { swipeId = null } = {}) {
     if (selected_group) {
         await saveGroupBookmarkChat(selected_group, name, newMetadata, mesId, branchChatSnapshot);
     } else {
-        await saveChat({ chatName: name, withMetadata: newMetadata, mesId, chatData: branchChatSnapshot });
+        await saveChat({ chatName: name, withMetadata: newMetadata, mesId, chatData: branchChatSnapshot } as any);
     }
     // append to branches list if it exists
     // otherwise create it
@@ -284,7 +284,7 @@ export async function createNewBookmark(mesId, { forceName = null } = {}) {
     if (selected_group) {
         await saveGroupBookmarkChat(selected_group, name, newMetadata, mesId);
     } else {
-        await saveChat({ chatName: name, withMetadata: newMetadata, mesId });
+        await saveChat({ chatName: name, withMetadata: newMetadata, mesId } as any);
     }
 
     lastMes.extra.bookmark_link = name;

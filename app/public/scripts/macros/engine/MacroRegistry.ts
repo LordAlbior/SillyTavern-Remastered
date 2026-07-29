@@ -393,7 +393,7 @@ class MacroRegistry {
      * @param {MacroDefinition} [options.defOverride] - Override the macro definition.
      * @returns {string}
      */
-    executeMacro(call, { defOverride } = {}) {
+     executeMacro(call, { defOverride }: any = {}) {
         const name = call.name;
         const def = defOverride || this.getMacro(name);
         if (!def) {
@@ -416,9 +416,9 @@ class MacroRegistry {
 
             const message = `Macro "${def.name}" called with ${args.length} unnamed arguments but expects ${expectation}.`;
             if (def.strictArgs) {
-                throw createMacroRuntimeError({ message, call, def });
+                throw createMacroRuntimeError({ message, call, def, macroName: def?.name ?? name });
             }
-            logMacroRuntimeWarning({ message, call, def });
+            logMacroRuntimeWarning({ message, call, def, macroName: def?.name ?? name, error: undefined });
         }
 
         // Compute unnamed args (required + optional, up to maxArgs)
@@ -453,7 +453,7 @@ class MacroRegistry {
             resolve: (text, { offsetDelta = 0 } = {}) => MacroEngine.evaluate(text, call.env, {
                 contextOffset: call.globalOffset + offsetDelta,
             }),
-            warn: (message, error = undefined) => logMacroRuntimeWarning({ message, call, def, error }),
+            warn: (message, error = undefined) => logMacroRuntimeWarning({ message, call, def, error, macroName: def?.name }),
         };
 
         const result = def.handler(executionContext);
@@ -481,7 +481,7 @@ class MacroRegistry {
      * @returns {MacroDefinition} The built macro definition.
      * @throws {Error} If validation fails.
      */
-    buildMacroDefFromOptions(name, options, { source } = {}) {
+    buildMacroDefFromOptions(name, options, { source }: any = {}) {
         name = typeof name === 'string' ? name.trim() : String(name);
 
         if (!isIdentifierValid(name)) throw new Error(`Macro name "${name}" is invalid. Must start with a letter, followed by alphanumeric characters or hyphens.`);
@@ -520,7 +520,7 @@ class MacroRegistry {
         }
 
         /** @type {MacroCategory|string} */
-        let category = MacroCategory.UNCATEGORIZED;
+        let category = MacroCategory.UNCATEGORIZED as any;
         if (typeof rawCategory === 'string' && rawCategory.trim()) {
             category = rawCategory.trim();
         }
@@ -752,9 +752,9 @@ function validateArgTypes(call, def, unnamedArgs) {
             const optionalLabel = argDef.optional ? ' (optional)' : '';
             const message = `Macro "${call.name}" (position ${i + 1}${optionalLabel}) argument "${argName}" expected type ${argDef.type} but got value "${value}".`;
             if (def.strictArgs) {
-                throw createMacroRuntimeError({ message, call, def: def });
+                throw createMacroRuntimeError({ message, call, def: def, macroName: call?.name ?? def?.name });
             }
-            logMacroRuntimeWarning({ message, call, def: def });
+            logMacroRuntimeWarning({ message, call, def: def, macroName: call?.name ?? def?.name, error: undefined });
         }
     }
 }

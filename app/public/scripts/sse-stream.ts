@@ -8,6 +8,9 @@ const NOT_PRIMARY = Symbol('not_primary_swipe');
  * A stream which handles Server-Sent Events from a binary ReadableStream like you get from the fetch API.
  */
 class EventSourceStream {
+    readable: any;
+    writable: any;
+
     constructor() {
         const decoder = new TextDecoderStream('utf-8');
 

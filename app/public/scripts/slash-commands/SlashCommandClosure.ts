@@ -40,7 +40,7 @@ export class SlashCommandClosure {
         return this.executorList.map(executor => executor.commandCount).reduce((sum, cur) => sum + cur, 0);
     }
 
-    constructor(parent) {
+    constructor(parent?: import('./SlashCommandScope.js').SlashCommandScope) {
         this.scope = new SlashCommandScope(parent);
     }
 
@@ -95,7 +95,7 @@ export class SlashCommandClosure {
                 list: { min: 0, max: Number.MAX_SAFE_INTEGER },
                 handler: (context) => {
                     // Sort to prefer exact matches over wildcard matches
-                    const sortedMacroArgs = macroArguments.toSorted((a, b) => {
+                    const sortedMacroArgs = (macroArguments as any[]).toSorted((a: any, b: any) => {
                         const aHasWildcard = a.args.includes('*');
                         const bHasWildcard = b.args.includes('*');
                         if (aHasWildcard && !bHasWildcard) return 1;

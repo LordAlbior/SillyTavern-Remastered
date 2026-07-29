@@ -62,7 +62,7 @@ function generateLoaderId() {
  */
 function hasBlockingLoaders() {
     for (const handle of activeHandles) {
-        if (handle.isBlocking && handle.isActive) {
+        if ((handle as any).isBlocking && (handle as any).isActive) {
             return true;
         }
     }
@@ -441,7 +441,7 @@ export async function hideActionLoader(handle = null) {
     // No handle provided - hide all active loaders
     const handles = getActiveLoaderHandles();
     for (const h of handles) {
-        await h.hide();
+        await (h as any).hide();
     }
     return handles.length > 0;
 }
@@ -461,7 +461,7 @@ export function getActiveLoaderHandles() {
  */
 export function getLoaderHandleById(id) {
     for (const handle of activeHandles) {
-        if (handle.id === id) {
+        if ((handle as any).id === id) {
             return handle;
         }
     }
@@ -557,7 +557,7 @@ async function hideOverlay() {
         return Promise.resolve();
     }
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
         const loaderElement = $('#loader');
         const spinner = $('#load-spinner');
 

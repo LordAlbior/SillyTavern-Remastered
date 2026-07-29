@@ -326,7 +326,7 @@ async function viewSecrets() {
     $(table).append('<thead><th>Key</th><th>Value</th></thead>');
 
     for (const [key, value] of Object.entries(data)) {
-        $(table).append(`<tr><td>${DOMPurify.sanitize(key)}</td><td>${DOMPurify.sanitize(value)}</td></tr>`);
+        $(table).append(`<tr><td>${DOMPurify.sanitize(key)}</td><td>${DOMPurify.sanitize(value as any)}</td></tr>`);
     }
 
     await callGenericPopup(table.outerHTML, POPUP_TYPE.TEXT, '', { wide: true, large: true, allowVerticalScrolling: true });
@@ -346,11 +346,11 @@ export let secret_state = {};
  * @param {boolean} [options.allowEmpty] Whether to allow writing empty values. If false and value is empty, the secret will be deleted.
  * @return {Promise<string?>} The ID of the newly created secret key, or null if no value is provided.
  */
-export async function writeSecret(key, value, label, { allowEmpty } = {}) {
+export async function writeSecret(key, value, label, { allowEmpty } = {} as any) {
     try {
         if (!value && !allowEmpty) {
             console.warn(`No value provided for ${key} in writeSecret, redirecting to deleteSecret`);
-            await deleteSecret(key);
+            await deleteSecret(key, undefined as any);
             return null;
         }
 
@@ -513,7 +513,7 @@ const getVerifierKey = (source) => `${getCurrentUserHandle()}_${source}_code_ver
 const generateChallenge = (input) => {
     const encoder = new TextEncoder();
     const data = encoder.encode(input);
-    const hashBytes = sha256.array(data);
+    const hashBytes = (sha256 as any).array(data);
     return btoa(String.fromCharCode(...hashBytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 };
 
@@ -581,7 +581,7 @@ export async function checkOpenRouterAuth() {
                 throw new Error('OpenRouter invalid response');
             }
 
-            await writeSecret(SECRET_KEYS.OPENROUTER, data.key);
+            await writeSecret(SECRET_KEYS.OPENROUTER, data.key, undefined as any);
 
             if (secret_state[SECRET_KEYS.OPENROUTER]) {
                 toastr.success('OpenRouter token saved');

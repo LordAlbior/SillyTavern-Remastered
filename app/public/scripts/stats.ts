@@ -6,7 +6,7 @@ import { callGenericPopup, POPUP_TYPE } from './popup.js';
 import { registerDebugFunction } from './power-user.js';
 import { t, translate } from './i18n.js';
 
-let charStats = {};
+let charStats: Record<string, any> = {};
 
 /**
  * Creates an HTML stat block.

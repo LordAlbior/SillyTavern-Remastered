@@ -3,8 +3,9 @@
  * @implements {EventTarget}
  */
 export class AbstractEventTarget {
+    /**@type {Record<string, Function[]>}*/ listeners = {};
+
     constructor() {
-        this.listeners = {};
     }
 
     addEventListener(type, callback, _options) {

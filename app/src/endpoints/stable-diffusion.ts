@@ -268,8 +268,7 @@ router.post('/set-model', async (request, response) => {
         const CHECK_INTERVAL = 2000;
 
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            /** @type {any} */
-            const progressState = await getProgress();
+            const progressState = await getProgress() as any;
 
             const progress = progressState.progress;
             const jobCount = progressState.state.job_count;
@@ -1308,8 +1307,7 @@ chutes.post('/models', async (request, response) => {
 
         const data = await modelsResponse.json();
 
-        const chutesData = /** @type {{items: Array<{name: string}>}} */ (data);
-        const models = chutesData.items.map(x => ({ value: x.name, text: x.name })).sort((a, b) => a?.text?.localeCompare(b?.text));
+        const models = (data as any).items.map((x: any) => ({ value: x.name, text: x.name })).sort((a: any, b: any) => a?.text?.localeCompare(b?.text));
         return response.send(models);
     } catch (error) {
         console.error(error);
@@ -1395,7 +1393,7 @@ nanogpt.post('/models', async (request, response) => {
             return response.sendStatus(500);
         }
 
-        const models = Object.values(imageModels).map(x => ({ value: x.model, text: x.name }));
+        const models = Object.values(imageModels as any).map((x: any) => ({ value: x.model, text: x.name }));
         return response.send(models);
     } catch (error) {
         console.error(error);

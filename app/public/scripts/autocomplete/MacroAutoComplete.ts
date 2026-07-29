@@ -70,7 +70,7 @@ const elementAutoCompleteMap = new WeakMap();
  */
 function shouldActivateMacroAutocomplete(text, cursorPos, { isForced = false, autocompleteMode = MACRO_AUTOCOMPLETE_MODE.DEFAULT } = {}) {
     // If mode is 'hide', never show autocomplete
-    if (autocompleteMode === MACRO_AUTOCOMPLETE_MODE.HIDE) {
+    if ((autocompleteMode as any) === MACRO_AUTOCOMPLETE_MODE.HIDE) {
         return false;
     }
 
@@ -81,7 +81,7 @@ function shouldActivateMacroAutocomplete(text, cursorPos, { isForced = false, au
 
     // Determine if we should show normally based on mode and settings
     // ALWAYS mode: always show, DEFAULT mode: respect global setting
-    const alwaysShow = autocompleteMode === MACRO_AUTOCOMPLETE_MODE.ALWAYS;
+    const alwaysShow = (autocompleteMode as any) === MACRO_AUTOCOMPLETE_MODE.ALWAYS;
     const shouldShowNormally = isForced || alwaysShow || power_user.stscript.autocomplete.showInAllMacroFields;
 
     // Whether setting says autocomplete should only activate after typing {{ and two characters after that
@@ -119,8 +119,8 @@ function shouldActivateMacroAutocomplete(text, cursorPos, { isForced = false, au
 export function setMacroAutoComplete(textarea, { autocompleteMode = MACRO_AUTOCOMPLETE_MODE.DEFAULT, autocompleteStyle = MACRO_AUTOCOMPLETE_STYLE.SMALL } = {}) {
     const ac = new AutoComplete(
         textarea,
-        () => shouldActivateMacroAutocomplete(ac.text, textarea.selectionStart, { isForced: ac.isShowForced, autocompleteMode }),
-        (text, index) => getMacroAutoCompleteAt(text, index, { isForced: ac.isShowForced }),
+        () => shouldActivateMacroAutocomplete(ac.text, textarea.selectionStart, { isForced: (ac as any).isShowForced, autocompleteMode }),
+        (text, index) => getMacroAutoCompleteAt(text, index, { isForced: (ac as any).isShowForced }),
         true, // isFloating - always use floating mode for free text macro autocomplete
     );
 

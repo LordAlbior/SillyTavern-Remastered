@@ -462,7 +462,7 @@ async function sendMakerSuiteRequest(request, response) {
     const responseMimeType = request.body.responseMimeType ?? (request.body.json_schema ? 'application/json' : undefined);
     const responseSchema = request.body.responseSchema ?? (request.body.json_schema ? request.body.json_schema.value : undefined);
 
-    const generationConfig = {
+    const generationConfig: Record<string, any> = {
         stopSequences: request.body.stop,
         candidateCount: 1,
         maxOutputTokens: request.body.max_tokens,
@@ -555,7 +555,7 @@ async function sendMakerSuiteRequest(request, response) {
         }
 
         if (isThinkingConfigModel(model)) {
-            const thinkingConfig = { includeThoughts: includeReasoning };
+            const thinkingConfig: Record<string, any> = { includeThoughts: includeReasoning };
 
             const thinkingBudget = calculateGoogleBudgetTokens(generationConfig.maxOutputTokens, reasoningEffort, model);
             if (typeof thinkingBudget === 'number' && Number.isInteger(thinkingBudget)) {
@@ -575,7 +575,7 @@ async function sendMakerSuiteRequest(request, response) {
             generationConfig.thinkingConfig = thinkingConfig;
         }
 
-        let body = {
+        let body: Record<string, any> = {
             contents: prompt.contents,
             safetySettings: safetySettings,
             generationConfig: generationConfig,
@@ -947,7 +947,7 @@ async function sendCohereRequest(request, response) {
         }
 
         // https://docs.cohere.com/reference/chat
-        const requestBody = {
+        const requestBody: Record<string, any> = {
             stream: Boolean(request.body.stream),
             model: request.body.model,
             messages: convertedHistory.chatHistory,
@@ -1648,7 +1648,7 @@ async function sendAzureOpenAIRequest(request, response) {
     const endpointUrl = url.toString();
 
     // Create the base payload with all standard parameters
-    const apiRequestBody = /** @type {any} */ ({});
+    const apiRequestBody: Record<string, any> = {};
     for (const key of AZURE_OPENAI_KEYS) {
         if (Object.hasOwn(request.body, key)) {
             apiRequestBody[key] = request.body[key];
@@ -2197,7 +2197,7 @@ router.post('/generate', async function (request, response) {
                 bodyParams['user'] = uuidv4();
             }
 
-            embedOpenRouterMedia(request.body.messages, { audio: true, video: false });
+            embedOpenRouterMedia(request.body.messages, { audio: true, video: false } as any);
         } else if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.OPENROUTER) {
             apiUrl = 'https://openrouter.ai/api/v1';
             apiKey = readSecret(request.user.directories, SECRET_KEYS.OPENROUTER, request.body.secret_id);
@@ -2303,7 +2303,7 @@ router.post('/generate', async function (request, response) {
 
             mergeObjectWithYaml(bodyParams, request.body.custom_include_body);
             mergeObjectWithYaml(headers, request.body.custom_include_headers);
-            embedOpenRouterMedia(request.body.messages, { audio: true, video: false });
+            embedOpenRouterMedia(request.body.messages, { audio: true, video: false } as any);
             if (request.body.json_schema) {
                 bodyParams['response_format'] = {
                     type: 'json_schema',

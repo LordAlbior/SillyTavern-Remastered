@@ -119,7 +119,7 @@ export async function initSystemMessages() {
  * @param {ChatMessageExtra} [extra] Additional data to be added to the message
  * @returns {ChatMessage} System message object
  */
-export function getSystemMessageByType(type, text, extra = {}) {
+export function getSystemMessageByType(type: any, text = '', extra = {}) {
     const systemMessage = system_messages[type];
 
     if (!systemMessage) {
@@ -155,7 +155,7 @@ export function getSystemMessageByType(type, text, extra = {}) {
  * @param {string} [text] Text to be sent
  * @param {ChatMessageExtra} [extra] Additional data to be added to the message
  */
-export function sendSystemMessage(type, text, extra = {}) {
+export function sendSystemMessage(type: any, text = '', extra = {}) {
     const newMessage = getSystemMessageByType(type, text, extra);
     chat.push(newMessage);
     addOneMessage(newMessage);

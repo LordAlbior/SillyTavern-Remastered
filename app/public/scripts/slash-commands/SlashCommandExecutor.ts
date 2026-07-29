@@ -46,7 +46,7 @@ export class SlashCommandExecutor {
         }
     }
 
-    constructor(start) {
-        this.start = start;
+    constructor(start?: number) {
+        this.start = start ?? 0;
     }
 }

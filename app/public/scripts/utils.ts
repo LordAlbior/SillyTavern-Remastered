@@ -44,7 +44,7 @@ export function canUseNegativeLookbehind() {
      * A reference to the function itself, typed as a callable object with a cache property.
      * @type {{ (): boolean; result?: boolean }}
      */
-    const fn = canUseNegativeLookbehind;
+    const fn = canUseNegativeLookbehind as any;
     let result = fn.result;
     if (typeof result !== 'boolean') {
         try {
@@ -365,9 +365,9 @@ export function getSortableDelay() {
 
 export async function bufferToBase64(buffer) {
     // use a FileReader to generate a base64 data URI:
-    const base64url = await new Promise(resolve => {
+    const base64url = await new Promise<string>(resolve => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
+        reader.onload = () => resolve(reader.result as string);
         reader.readAsDataURL(new Blob([buffer]));
     });
     // remove the `data:...;base64,` part from the start
@@ -650,7 +650,7 @@ export function debouncedThrottle(func, limit = 300) {
     let db = debounce(func);
 
     return function () {
-        let now = +new Date, args = arguments;
+        let now = +new Date, args = Array.from(arguments) as any[];
         if (!last || (last && now < last + limit)) {
             clearTimeout(deferTimer);
             db.apply(this, args);
@@ -889,7 +889,7 @@ export function trimToEndSentence(input) {
     const punctuation = new Set(['.', '!', '?', '*', '"', ')', '}', '`', ']', '$', '。', '！', '？', '”', '）', '】', '’', '」', '_']); // extend this as you see fit
     let last = -1;
 
-    const characters = Array.from(input);
+    const characters = Array.from(input) as string[];
     for (let i = characters.length - 1; i >= 0; i--) {
         const char = characters[i];
         const emoji = isEmoji(char);
@@ -1403,6 +1403,9 @@ export function regexFromString(input) {
 }
 
 export class Stopwatch {
+    interval: any;
+    lastAction: any;
+
     /**
      * Initializes a Stopwatch class.
      * @param {number} interval Update interval in milliseconds. Must be a finite number above zero.
@@ -1467,7 +1470,7 @@ export class RateLimiter {
         const elapsedTime = currentTime - this.lastResolveTime;
         const remainingTime = Math.max(0, this.interval - elapsedTime);
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const timeoutId = setTimeout(() => {
                 resolve();
             }, remainingTime);
@@ -1879,7 +1882,7 @@ export async function ensureImageFormatSupported(file) {
  */
 export async function convertImageFile(inputFile, type = 'image/png') {
     const base64 = await getBase64Async(inputFile);
-    const thumbnail = await createThumbnail(base64, null, null, type);
+    const thumbnail = await createThumbnail(base64, null, null, type) as string;
     const blob = await fetch(thumbnail).then(res => res.blob());
     const outputFile = new File([blob], inputFile.name, { type });
     return outputFile;
@@ -1937,13 +1940,13 @@ export function createThumbnail(dataUrl, maxWidth = null, maxHeight = null, type
  * @returns {Promise<void>} A promise that resolves when the condition is true.
  */
 export async function waitUntilCondition(condition, timeout = 1000, interval = 100, options = {}) {
-    const { rejectOnTimeout = true } = options;
+    const { rejectOnTimeout = true } = options as any;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         const timeoutId = setTimeout(() => {
             clearInterval(intervalId);
             const timeoutFn = rejectOnTimeout ? reject : resolve;
-            timeoutFn(new Error('Timed out waiting for condition to be true'));
+            (timeoutFn as any)(new Error('Timed out waiting for condition to be true'));
         }, timeout);
 
         const intervalId = setInterval(() => {
@@ -2016,12 +2019,12 @@ function postProcessText(text, collapse = true) {
 export async function getReadableText(document, textSelector = 'body') {
     if (isProbablyReaderable(document)) {
         const parser = new Readability(document);
-        const article = parser.parse();
+        const article = parser.parse() as any;
         return postProcessText(article.textContent, false);
     }
 
     const elements = document.querySelectorAll(textSelector);
-    const rawText = Array.from(elements).map(e => e.textContent).join('\n');
+    const rawText = Array.from(elements).map((e: any) => e.textContent).join('\n');
     const text = postProcessText(rawText);
     return text;
 }

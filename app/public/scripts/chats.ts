@@ -206,7 +206,7 @@ export async function populateFileAttachment(message, inputId = 'file_form_input
             const slug = getStringHash(file.name);
             const fileNamePrefix = `${Date.now()}_${slug}`;
             const fileBase64 = await getBase64Async(file);
-            let base64Data = fileBase64.split(',')[1];
+            let base64Data = (fileBase64 as string).split(',')[1];
             const extension = getFileExtension(file);
 
             const mediaType = MEDIA_TYPE.getFromMime(file.type);
@@ -633,7 +633,9 @@ class StylesPreference {
      * Creates a new StylesPreference instance.
      * @param {string|null} avatarId - The avatar ID of the character
      */
-    constructor(avatarId) {
+    private avatarId: any;
+
+    constructor(avatarId: any) {
         this.avatarId = avatarId;
     }
 
@@ -1714,7 +1716,7 @@ export async function uploadFileAttachmentToServer(file, target) {
     }
 
     const fileUrl = await uploadFileAttachment(uniqueFileName, base64Data);
-    const convertedSize = Math.round(base64Data.length * 0.75);
+    const convertedSize = Math.round((base64Data as string).length * 0.75);
 
     if (!fileUrl) {
         return;
@@ -1947,7 +1949,7 @@ export function addDOMPurifyHooks() {
             const candidates = [];
             const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
             while (walker.nextNode()) {
-                const textNode = /** @type {Text} */ (walker.currentNode);
+                const textNode = walker.currentNode as Text;
                 if (!textNode.data.includes('\n')) continue;
 
                 // Skip if this text node is within a <pre> (any ancestor)
@@ -2159,7 +2161,7 @@ export function initChatUtilities() {
 
             try {
                 const text = await getFileText(file);
-                const lines = text.split('\n').filter(line => line.trim() !== '');
+                const lines = (text as string).split('\n').filter(line => line.trim() !== '');
                 const messages = lines.map(line => JSON.parse(line));
                 const metadata = messages.shift()?.chat_metadata || {};
                 messages.unshift(getSystemMessageByType(system_message_types.ASSISTANT_NOTE));

@@ -8,6 +8,7 @@ import { MacroEngine } from './MacroEngine.js';
 import { parseFlags, createEmptyFlags, MacroFlagType } from './MacroFlags.js';
 import { MacroParser } from './MacroParser.js';
 import { MacroRegistry } from './MacroRegistry.js';
+// @ts-ignore - no types for JS imports
 import { isFalseBoolean } from '/scripts/utils.js';
 
 /**
@@ -594,7 +595,7 @@ class MacroCstWalker {
                         hasValueExpr = true;
                         break;
                     default:
-                        logMacroInternalError({ message: `Lexer found macro operator that is not implemented for variable shorthand expressions in macro node '${macroNode.name}'.` });
+                        logMacroInternalError({ message: `Lexer found macro operator that is not implemented for variable shorthand expressions in macro node '${macroNode.name}'.` } as any);
                         break;
                 }
             }
@@ -679,7 +680,7 @@ class MacroCstWalker {
                 // Subtract by adding the negative value
                 const numValue = Number(lazyValue());
                 if (!isNaN(numValue)) vars.add(varName, -numValue);
-                else logMacroRuntimeWarning({ message: `Variable shorthand "-=" operator requires a numeric value, got: "${lazyValue()}"` });
+                else logMacroRuntimeWarning({ message: `Variable shorthand "-=" operator requires a numeric value, got: "${lazyValue()}"` } as any);
                 return '';
             }
 
@@ -738,7 +739,7 @@ class MacroCstWalker {
                 const currentNum = Number(vars.get(varName));
                 const compareNum = Number(lazyValue());
                 if (isNaN(currentNum) || isNaN(compareNum)) {
-                    logMacroRuntimeWarning({ message: `Variable shorthand ">" operator requires numeric values. Got: "${vars.get(varName)}" > "${lazyValue()}"` });
+                    logMacroRuntimeWarning({ message: `Variable shorthand ">" operator requires numeric values. Got: "${vars.get(varName)}" > "${lazyValue()}"` } as any);
                     return 'false';
                 }
                 return currentNum > compareNum ? 'true' : 'false';
@@ -749,7 +750,7 @@ class MacroCstWalker {
                 const currentNum = Number(vars.get(varName));
                 const compareNum = Number(lazyValue());
                 if (isNaN(currentNum) || isNaN(compareNum)) {
-                    logMacroRuntimeWarning({ message: `Variable shorthand ">=" operator requires numeric values. Got: "${vars.get(varName)}" >= "${lazyValue()}"` });
+                    logMacroRuntimeWarning({ message: `Variable shorthand ">=" operator requires numeric values. Got: "${vars.get(varName)}" >= "${lazyValue()}"` } as any);
                     return 'false';
                 }
                 return currentNum >= compareNum ? 'true' : 'false';
@@ -760,7 +761,7 @@ class MacroCstWalker {
                 const currentNum = Number(vars.get(varName));
                 const compareNum = Number(lazyValue());
                 if (isNaN(currentNum) || isNaN(compareNum)) {
-                    logMacroRuntimeWarning({ message: `Variable shorthand "<" operator requires numeric values. Got: "${vars.get(varName)}" < "${lazyValue()}"` });
+                    logMacroRuntimeWarning({ message: `Variable shorthand "<" operator requires numeric values. Got: "${vars.get(varName)}" < "${lazyValue()}"` } as any);
                     return 'false';
                 }
                 return currentNum < compareNum ? 'true' : 'false';
@@ -771,14 +772,14 @@ class MacroCstWalker {
                 const currentNum = Number(vars.get(varName));
                 const compareNum = Number(lazyValue());
                 if (isNaN(currentNum) || isNaN(compareNum)) {
-                    logMacroRuntimeWarning({ message: `Variable shorthand "<=" operator requires numeric values. Got: "${vars.get(varName)}" <= "${lazyValue()}"` });
+                    logMacroRuntimeWarning({ message: `Variable shorthand "<=" operator requires numeric values. Got: "${vars.get(varName)}" <= "${lazyValue()}"` } as any);
                     return 'false';
                 }
                 return currentNum <= compareNum ? 'true' : 'false';
             }
 
             default:
-                logMacroRuntimeWarning({ message: `Unknown variable shorthand operation: "${operation}"` });
+                logMacroRuntimeWarning({ message: `Unknown variable shorthand operation: "${operation}"` } as any);
                 return '';
         }
     }
@@ -842,7 +843,7 @@ class MacroCstWalker {
             if (entry.range.startOffset > cursor) {
                 result += text.slice(cursor, entry.range.startOffset);
             }
-            result += this.#evaluateMacroNode(entry.node, context);
+            result += this.#evaluateMacroNode(entry.node, context, undefined);
             cursor = entry.range.endOffset + 1;
         }
 

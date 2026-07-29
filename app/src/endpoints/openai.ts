@@ -16,7 +16,7 @@ router.post('/caption-image', async (request, response) => {
     try {
         let key = '';
         let headers = {};
-        let bodyParams = {};
+        let bodyParams: any = {};
 
         if (request.body.api === 'openai' && !request.body.reverse_proxy) {
             key = readSecret(request.user.directories, SECRET_KEYS.OPENAI);
@@ -213,9 +213,9 @@ router.post('/caption-image', async (request, response) => {
             if (message) {
                 const imgContent = message.content.find(c => c.type === 'image_url');
                 if (imgContent) {
-                    imgContent.type = 'video_url';
-                    imgContent.video_url = imgContent.image_url;
-                    delete imgContent.image_url;
+                    imgContent.type = 'video_url' as any;
+                    (imgContent as any).video_url = imgContent.image_url;
+                    delete (imgContent as any).image_url;
                 }
             }
         }
@@ -242,7 +242,7 @@ router.post('/caption-image', async (request, response) => {
                 role: 'user',
                 content: [],
                 image_url: imgMessage?.content?.[1]?.image_url?.url,
-            });
+            } as any);
         }
 
         setAdditionalHeaders(request, { headers }, apiUrl);
@@ -288,7 +288,7 @@ router.post('/generate-voice', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        const requestBody = {
+        const requestBody: any = {
             input: request.body.text,
             response_format: 'mp3',
             voice: request.body.voice ?? 'alloy',
@@ -336,7 +336,7 @@ router.post('/electronhub/generate-voice', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        const requestBody = {
+        const requestBody: any = {
             input: request.body.input,
             voice: request.body.voice,
             speed: request.body.speed ?? 1,

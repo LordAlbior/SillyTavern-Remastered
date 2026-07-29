@@ -2,7 +2,8 @@ import fetch from 'node-fetch';
 import express from 'express';
 import { translate as bingTranslate } from 'bing-translate-api';
 import urlJoin from 'url-join';
-import { Translator } from 'google-translate-api-x';
+import * as googleTranslate from 'google-translate-api-x';
+const Translator: any = (googleTranslate as any).Translator;
 
 import { readSecret, SECRET_KEYS } from './secrets.js';
 import { getConfigValue, uuidv4 } from '../util.js';
@@ -392,7 +393,7 @@ router.post('/bing', async (request, response) => {
 
         console.debug('Input text: ' + text);
 
-        const result = await bingTranslate(text, null, lang);
+        const result = await (bingTranslate as any)(text, null, lang);
         const translatedText = result?.translation;
         console.debug('Translated text: ' + translatedText);
         return response.send(translatedText);

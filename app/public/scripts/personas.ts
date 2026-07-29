@@ -114,7 +114,7 @@ export const personasFilter = new FilterHelper(debounce(getUserAvatars, debounce
 let personaLastLoadedChatId = null;
 
 /** @type {function(string): void} */
-let navigateToAvatar = () => { };
+let navigateToAvatar: any = () => { };
 
 /**
  * Checks if the Persona Management panel is currently open
@@ -741,7 +741,7 @@ export async function askForPersonaSelection(title, text, personas, { okButton =
     else
         personaListBlock.textContent = t`[Currently no personas connected]`;
 
-    const personasToHighlight = highlightPersonas instanceof Array ? highlightPersonas : (highlightPersonas ? getPersonasOfCurrentChat() : []);
+    const personasToHighlight: any = (highlightPersonas as any) instanceof Array ? highlightPersonas : (highlightPersonas ? getPersonasOfCurrentChat() : []);
 
     // Make the persona blocks clickable and close the popup
     personaListBlock.querySelectorAll('.avatar[data-type="persona"]').forEach(block => {
@@ -771,10 +771,11 @@ export async function askForPersonaSelection(title, text, personas, { okButton =
             result: 2,
             action: () => {
                 for (const [personaId, description] of Object.entries(power_user.persona_descriptions)) {
+                    const d = description as any;
                     /** @type {PersonaConnection[]} */
-                    const connections = description.connections;
+                    const connections = d.connections;
                     if (connections) {
-                        power_user.persona_descriptions[personaId].connections = connections.filter(c => {
+                        d.connections = connections.filter(c => {
                             if (targetedChar.type == c.type && targetedChar.id == c.id) return false;
                             return true;
                         });
@@ -1104,10 +1105,10 @@ async function lockPersona(type = 'chat') {
                 if (!power_user.persona_allow_multi_connections) {
                     for (const [avatarId, description] of Object.entries(power_user.persona_descriptions)) {
                         if (avatarId === user_avatar) continue;
-
-                        const filteredConnections = description.connections?.filter(c => !(c.type === newConnection.type && c.id === newConnection.id)) ?? [];
-                        if (filteredConnections.length !== description.connections?.length) {
-                            description.connections = filteredConnections;
+                        const d = description as any;
+                        const filteredConnections = d.connections?.filter(c => !(c.type === newConnection.type && c.id === newConnection.id)) ?? [];
+                        if (filteredConnections.length !== d.connections?.length) {
+                            d.connections = filteredConnections;
                             unlinkedCharacters.push(power_user.personas[avatarId]);
                         }
                     }
@@ -1674,7 +1675,7 @@ async function loadPersonaForCurrentChat({ doRender = false } = {}) {
 export function getConnectedPersonas(characterKey = undefined) {
     characterKey ??= selected_group || characters[Number(this_chid)]?.avatar;
     const connectedPersonas = Object.entries(power_user.persona_descriptions)
-        .filter(([_, { connections }]) => connections?.some(conn => conn.id === characterKey))
+        .filter(([_, desc]) => (desc as any).connections?.some((conn: any) => conn.id === characterKey))
         .map(([key, _]) => key);
     return connectedPersonas;
 }
@@ -1880,7 +1881,7 @@ export async function retriggerFirstMessageOnEmptyChat() {
         await reloadCurrentChat();
     }
     if (!selected_group && Number(this_chid) >= 0 && chat.length === 1) {
-        await createOrEditCharacter();
+        await (createOrEditCharacter as any)();
     }
 }
 

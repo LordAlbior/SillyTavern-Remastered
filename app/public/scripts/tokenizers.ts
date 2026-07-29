@@ -389,16 +389,16 @@ function callTokenizer(type, str) {
         case tokenizers.API_CURRENT:
             return callTokenizer(currentRemoteTokenizerAPI(), str);
         case tokenizers.API_KOBOLD:
-            return countTokensFromKoboldAPI(str);
+            return (countTokensFromKoboldAPI as any)(str);
         case tokenizers.API_TEXTGENERATIONWEBUI:
-            return countTokensFromTextgenAPI(str);
+            return (countTokensFromTextgenAPI as any)(str);
         default: {
             const endpointUrl = TOKENIZER_URLS[type]?.count;
             if (!endpointUrl) {
                 console.warn('Unknown tokenizer type', type);
                 return apiFailureTokenCount(str);
             }
-            return countTokensFromServer(endpointUrl, str);
+            return (countTokensFromServer as any)(endpointUrl, str);
         }
     }
 }
@@ -1159,9 +1159,9 @@ export function getTextTokens(tokenizerType, str) {
         case tokenizers.API_CURRENT:
             return getTextTokens(currentRemoteTokenizerAPI(), str);
         case tokenizers.API_TEXTGENERATIONWEBUI:
-            return getTextTokensFromTextgenAPI(str);
+            return (getTextTokensFromTextgenAPI as any)(str);
         case tokenizers.API_KOBOLD:
-            return getTextTokensFromKoboldAPI(str);
+            return (getTextTokensFromKoboldAPI as any)(str);
         default: {
             const tokenizerEndpoints = TOKENIZER_URLS[tokenizerType];
             if (!tokenizerEndpoints) {
@@ -1178,7 +1178,7 @@ export function getTextTokens(tokenizerType, str) {
             if (tokenizerType === tokenizers.OPENAI) {
                 endpointUrl += `?model=${getTokenizerModel()}`;
             }
-            return getTextTokensFromServer(endpointUrl, str);
+            return (getTextTokensFromServer as any)(endpointUrl, str);
         }
     }
 }
@@ -1207,7 +1207,7 @@ export function decodeTextTokens(tokenizerType, ids) {
     if (tokenizerType === tokenizers.OPENAI) {
         endpointUrl += `?model=${getTokenizerModel()}`;
     }
-    return decodeTextTokensFromServer(endpointUrl, ids);
+    return (decodeTextTokensFromServer as any)(endpointUrl, ids);
 }
 
 export async function initTokenizers() {

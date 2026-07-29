@@ -1,8 +1,28 @@
 import fetch from 'node-fetch';
 import express from 'express';
-import { AIHorde, ModelGenerationInputStableSamplers, ModelInterrogationFormTypes, HordeAsyncRequestStates } from '@zeldafan0225/ai_horde';
+import { AIHorde } from '@zeldafan0225/ai_horde';
 import { getVersion, delay, Cache } from '../util.js';
 import { readSecret, SECRET_KEYS } from './secrets.js';
+
+// ponytail: inline enums cast as any — module types don't resolve these exports
+const ModelGenerationInputStableSamplers: any = Object.freeze({
+    lcm: 'lcm', k_lms: 'k_lms', k_heun: 'k_heun', k_euler_a: 'k_euler_a',
+    k_euler: 'k_euler', k_dpm_2: 'k_dpm_2', k_dpm_2_a: 'k_dpm_2_a',
+    DDIM: 'DDIM', PLMS: 'PLMS', k_dpm_fast: 'k_dpm_fast',
+    k_dpm_adaptive: 'k_dpm_adaptive', k_dpmpp_2s_a: 'k_dpmpp_2s_a',
+    k_dpmpp_2m: 'k_dpmpp_2m', dpmsolver: 'dpmsolver', k_dpmpp_sde: 'k_dpmpp_sde',
+});
+const ModelInterrogationFormTypes: any = Object.freeze({
+    caption: 'caption', interrogation: 'interrogation', nsfw: 'nsfw',
+    GFPGAN: 'GFPGAN', RealESRGAN_x4plus: 'RealESRGAN_x4plus',
+    RealESRGAN_x4plus_anime_6B: 'RealESRGAN_x4plus_anime_6B',
+    NMKD_Siax: 'NMKD_Siax', '4x_AnimeSharp': '4x_AnimeSharp',
+    CodeFormers: 'CodeFormers', strip_background: 'strip_background',
+});
+const HordeAsyncRequestStates: any = Object.freeze({
+    waiting: 'waiting', processing: 'processing', done: 'done',
+    faulted: 'faulted', partial: 'partial', cancelled: 'cancelled',
+});
 
 const ANONYMOUS_KEY = '0000000000';
 const HORDE_TEXT_MODEL_METADATA_URL = 'https://raw.githubusercontent.com/db0/AI-Horde-text-model-reference/main/db.json';
@@ -22,10 +42,10 @@ async function getClientAgent() {
  * Returns the AIHorde client.
  * @returns {Promise<AIHorde>} AIHorde client
  */
-async function getHordeClient() {
+async function getHordeClient(): Promise<any> {
     return new AIHorde({
         client_agent: await getClientAgent(),
-    });
+    }) as any;
 }
 
 /**

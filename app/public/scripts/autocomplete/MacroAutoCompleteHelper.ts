@@ -26,6 +26,7 @@ import { MacroFlagDefinitions, MacroFlagType } from '../macros/engine/MacroFlags
 import { MacroParser } from '../macros/engine/MacroParser.js';
 import { MacroCstWalker } from '../macros/engine/MacroCstWalker.js';
 import { onboardingExperimentalMacroEngine } from '../macros/engine/MacroDiagnostics.js';
+// @ts-ignore
 import { chat_metadata } from '/script.js';
 import { extension_settings } from '../extensions.js';
 
@@ -204,12 +205,10 @@ function filterOptionalScopes(unclosedScopes, textUpToCursor, isForced) {
 /**
  * Builds autocomplete options for variable shorthand syntax (.varName or $varName).
  * @param {MacroAutoCompleteContext} context
- * @param {Object} [opts] - Optional configuration.
- * @param {boolean} [opts.forIfCondition=false] - If true, options are for {{if}} condition (closes with }}).
- * @param {string} [opts.paddingAfter=''] - Whitespace to add before closing }}.
+ * @param {any} [opts] - Optional configuration.
  * @returns {AnyMacroAutoCompleteOption[]}
  */
-export function buildVariableShorthandOptions(context, opts = {}) {
+export function buildVariableShorthandOptions(context, opts: any = {}) {
     const { forIfCondition = false, paddingAfter = '' } = opts;
     /** @type {AnyMacroAutoCompleteOption[]} */
     const options = [];

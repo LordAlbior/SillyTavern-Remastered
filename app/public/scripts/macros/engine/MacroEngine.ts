@@ -194,12 +194,12 @@ class MacroEngine {
                     defOverride = MacroRegistry.buildMacroDefFromOptions(name, options);
                 } catch (error) {
                     // If building fails, log warning and fall through to check registered macros
-                    logMacroRuntimeWarning({ message: `Dynamic macro "${name}" has invalid options: ${error.message}`, call });
+                    logMacroRuntimeWarning({ message: `Dynamic macro "${name}" has invalid options: ${error.message}`, call } as any);
                 }
             } else if (['string', 'number', 'boolean', 'function'].includes((typeof impl))) {
                 // Case 1 & 2: string or handler function
                 if (['number', 'boolean'].includes(typeof impl)) {
-                    logMacroRuntimeWarning({ message: `Dynamic macro "${name}" uses unsupported number/boolean format.`, call });
+                    logMacroRuntimeWarning({ message: `Dynamic macro "${name}" uses unsupported number/boolean format.`, call } as any);
                 }
                 defOverride = MacroRegistry.buildMacroDefFromOptions(name, {
                     handler: typeof impl === 'function' ? impl : () => String(impl ?? ''),
@@ -208,7 +208,7 @@ class MacroEngine {
                     returnType: MacroValueType.STRING,
                 });
             } else {
-                logMacroRuntimeWarning({ message: `Dynamic macro "${name}" is not defined correctly (must be string, a handler function, or a macro def options object with handler property).`, call });
+                logMacroRuntimeWarning({ message: `Dynamic macro "${name}" is not defined correctly (must be string, a handler function, or a macro def options object with handler property).`, call } as any);
             }
         }
 
@@ -223,15 +223,15 @@ class MacroEngine {
             try {
                 return call.env.functions.postProcess(result);
             } catch (error) {
-                logMacroInternalError({ message: `Macro "${name}" postProcess function failed.`, call, error });
+                logMacroInternalError({ message: `Macro "${name}" postProcess function failed.`, call, error } as any);
                 return result;
             }
         } catch (error) {
             const isRuntimeError = !!(error && (error.name === 'MacroRuntimeError' || error.isMacroRuntimeError));
             if (isRuntimeError) {
-                logMacroRuntimeWarning({ message: (error.message || `Macro "${name}" execution failed.`), call, error });
+                logMacroRuntimeWarning({ message: (error.message || `Macro "${name}" execution failed.`), call, error } as any);
             } else {
-                logMacroInternalError({ message: `Macro "${name}" internal execution error.`, call, error });
+                logMacroInternalError({ message: `Macro "${name}" internal execution error.`, call, error } as any);
             }
             return raw;
         }

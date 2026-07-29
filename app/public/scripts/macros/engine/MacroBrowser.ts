@@ -5,6 +5,7 @@
 
 import { MacroRegistry, MacroCategory } from './MacroRegistry.js';
 import { performFuzzySearch } from '../../power-user.js';
+// @ts-ignore - path alias, not resolvable by tsc
 import { escapeRegex } from '/scripts/utils.js';
 
 /** @typedef {import('./MacroRegistry.js').MacroDefinition} MacroDefinition */
@@ -467,7 +468,7 @@ function renderMacroItem(macro) {
  * @param {boolean} [options.showCategory=true] - Whether to show category badge.
  * @returns {HTMLElement}
  */
-export function renderMacroDetails(macro, options = {}) {
+export function renderMacroDetails(macro, options: any = {}) {
     const { currentArgIndex = -1, showCategory = true } = options;
     const details = document.createElement('div');
     details.classList.add('macro-details');

@@ -159,7 +159,7 @@ export class TextCompletionService {
             throw new Error(`Got response status ${response.status}`);
         }
 
-        const eventStream = new EventSourceStream();
+        const eventStream = new EventSourceStream() as any;
         response.body.pipeThrough(eventStream);
         const reader = eventStream.readable.getReader();
         return async function* streamData() {
@@ -281,7 +281,7 @@ export class TextCompletionService {
      * @throws {Error}
      */
     static async processRequest(requestData, options = {}, extractData = true, signal = null) {
-        const { presetName, instructName } = options;
+        const { presetName, instructName } = options as any;
 
         // remove any undefined params in given request data
         requestData = this.createRequestData(requestData);
@@ -295,7 +295,7 @@ export class TextCompletionService {
                 const instructPresetManager = getPresetManager('instruct');
                 instructPreset = instructPresetManager?.getCompletionPresetByName(instructName);
                 if (instructPreset) {
-                    requestData.prompt = this.constructPrompt(prompt, instructPreset, options.instructSettings);
+                    requestData.prompt = this.constructPrompt(prompt, instructPreset, (options as any).instructSettings);
                     const stoppingStrings = getInstructStoppingSequences({ customInstruct: instructPreset, useStopStrings: false });
                     requestData.stop = stoppingStrings;
                     requestData.stopping_strings = stoppingStrings;
@@ -408,10 +408,10 @@ export class TextCompletionService {
         }
 
         // convert to a generation payload
-        const payload = createTextGenGenerationData(settings, overridePayload.model, overridePayload.prompt, preset.genamt);
+        const payload = createTextGenGenerationData(settings, (overridePayload as any).model, (overridePayload as any).prompt, preset.genamt);
 
         // apply overrides
-        return this.createRequestData({ ...payload, ...overridePayload });
+        return this.createRequestData({ ...payload, ...overridePayload } as any);
     }
 }
 
@@ -500,7 +500,7 @@ export class ChatCompletionService {
             throw new Error(`Got response status ${response.status}`);
         }
 
-        const eventStream = new EventSourceStream();
+        const eventStream = new EventSourceStream() as any;
         response.body.pipeThrough(eventStream);
         const reader = eventStream.readable.getReader();
         return async function* streamData() {
@@ -598,10 +598,10 @@ export class ChatCompletionService {
         });
 
         // Convert from settings to generation payload
-        const data = await createGenerationParameters(settings, overridePayload.model, 'quiet', overridePayload.messages);
+        const data = await createGenerationParameters(settings, (overridePayload as any).model, 'quiet', (overridePayload as any).messages);
         const payload = data.generate_data;
 
         // apply overrides
-        return this.createRequestData({ ...payload, ...overridePayload });
+        return this.createRequestData({ ...payload, ...overridePayload } as any);
     }
 }

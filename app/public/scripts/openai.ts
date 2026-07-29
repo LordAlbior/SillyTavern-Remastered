@@ -788,7 +788,7 @@ export function formatWorldInfo(value, { wiFormat = null } = {}) {
         return value;
     }
 
-    return stringFormat(format, value);
+    return (stringFormat as any)(format, value);
 }
 
 /**
@@ -1302,7 +1302,7 @@ async function populateChatCompletion(prompts, chatCompletion, { bias, quietProm
         const toolData = {};
         await ToolManager.registerFunctionToolsOpenAI(toolData);
         const toolMessage = [{ role: 'user', content: JSON.stringify(toolData) }];
-        const toolTokens = await tokenHandler.countAsync(toolMessage);
+        const toolTokens = await tokenHandler.countAsync(toolMessage, undefined, 'toolData');
         chatCompletion.reserveBudget(toolTokens);
     }
 
@@ -1362,7 +1362,7 @@ async function preparePromptsForChatCompletion({ scenario, charPersonality, name
     const impersonationPrompt = oai_settings.impersonation_prompt ? substituteParams(oai_settings.impersonation_prompt) : '';
 
     // Create entries for system prompts
-    const systemPrompts = [
+    const systemPrompts: any[] = [
         // Ordered prompts for which a marker should exist
         { role: 'system', content: formatWorldInfo(worldInfoBefore), identifier: 'worldInfoBefore' },
         { role: 'system', content: formatWorldInfo(worldInfoAfter), identifier: 'worldInfoAfter' },
@@ -3064,7 +3064,7 @@ async function sendOpenAIRequest(type, messages, signal, { jsonSchema = null } =
         throw new Error(`Got response status ${response.status}`);
     }
     if (stream) {
-        const eventStream = getEventSourceStream();
+        const eventStream = getEventSourceStream() as any;
         response.body.pipeThrough(eventStream);
         const reader = eventStream.readable.getReader();
         return async function* streamData() {
@@ -3430,7 +3430,7 @@ class Message {
     /** @type {string} */
     name;
     /** @type {object} */
-    tool_call = null;
+    tool_calls = null;
     /** @type {string?} */
     signature = null;
     /** @type {string?} */
@@ -3467,7 +3467,7 @@ class Message {
         const message = new Message(role, content, identifier);
 
         if (typeof message.content === 'string' && message.content.length > 0) {
-            message.tokens = await tokenHandler.countAsync({ role: message.role, content: message.content });
+            message.tokens = await tokenHandler.countAsync({ role: message.role, content: message.content }, undefined, identifier);
         }
 
         return message;
@@ -3496,7 +3496,7 @@ class Message {
             role: this.role,
             tool_calls: JSON.stringify(this.tool_calls),
             ...(this.reasoning ? { reasoning: this.reasoning } : {}),
-        });
+        }, undefined, 'toolCall-' + this.identifier);
     }
 
     /**
@@ -3506,7 +3506,7 @@ class Message {
      */
     async setName(name) {
         this.name = name;
-        this.tokens = await tokenHandler.countAsync({ role: this.role, content: this.content, name: this.name });
+        this.tokens = await tokenHandler.countAsync({ role: this.role, content: this.content, name: this.name }, undefined, 'setName-' + this.identifier);
     }
 
     /**
@@ -3585,7 +3585,7 @@ class Message {
         try {
             // Using Gemini calculation (263 tokens per second)
             const duration = await getVideoDurationFromDataURL(video);
-            this.tokens += 263 * Math.ceil(duration);
+            this.tokens += 263 * Math.ceil(duration as number);
         } catch (error) {
             // Convservative estimate for video token cost without knowing duration
             this.tokens += 263 * 40; // ~40 second video (60 seconds max)
@@ -3618,7 +3618,7 @@ class Message {
         try {
             // Using Gemini calculation (32 tokens per second)
             const duration = await getAudioDurationFromDataURL(audio);
-            this.tokens += 32 * Math.ceil(duration);
+            this.tokens += 32 * Math.ceil(duration as number);
         } catch (error) {
             // Estimate for audio token cost without knowing duration
             const tokens = 32 * 300; // ~5 minute audio
@@ -3663,7 +3663,7 @@ class Message {
             return Message.tokensPerImage;
         }
 
-        const size = await getImageSizeFromDataURL(dataUrl);
+        const size = await getImageSizeFromDataURL(dataUrl) as { width: number; height: number; };
 
         // If the image is small enough, we can use the low quality token cost
         if (quality === 'auto' && size.width <= 512 && size.height <= 512) {
@@ -3681,6 +3681,7 @@ class Message {
         const scale = 2048 / Math.min(size.width, size.height);
         const scaledWidth = Math.round(size.width * scale);
         const scaledHeight = Math.round(size.height * scale);
+
 
         const finalScale = 768 / Math.min(scaledWidth, scaledHeight);
         const finalWidth = Math.round(scaledWidth * finalScale);
@@ -3852,7 +3853,7 @@ export class ChatCompletion {
             if (shouldSquash(message)) {
                 if (lastMessage && shouldSquash(lastMessage)) {
                     lastMessage.content += '\n' + message.content;
-                    lastMessage.tokens = await tokenHandler.countAsync({ role: lastMessage.role, content: lastMessage.content });
+                    lastMessage.tokens = await tokenHandler.countAsync({ role: lastMessage.role, content: lastMessage.content }, undefined, 'squashed-' + lastMessage.identifier);
                 } else {
                     squashedMessages.push(message);
                     lastMessage = message;
@@ -4249,7 +4250,8 @@ function loadOpenAISettings(data, settings) {
         const settingToUpdate = Object.values(settingsToUpdate).find(([_, k]) => k === key);
         if (settingToUpdate) {
             const [selector] = settingToUpdate;
-            const $element = $(selector);
+            if (!selector) continue;
+            const $element = $(selector as string);
 
             if ($element.length === 0) {
                 continue;
@@ -4391,7 +4393,7 @@ async function getStatusOpen() {
         return resultCheckStatus();
     }
 
-    let data = {
+    let data: any = {
         reverse_proxy: oai_settings.reverse_proxy,
         proxy_password: oai_settings.proxy_password,
         chat_completion_source: oai_settings.chat_completion_source,
@@ -4484,7 +4486,7 @@ async function getStatusOpen() {
  */
 export function getChatCompletionPreset(settings = oai_settings) {
     const presetBody = {};
-    for (const [presetKey, [, settingsKey]] of Object.entries(settingsToUpdate)) {
+    for (const [presetKey, [, settingsKey]] of Object.entries(settingsToUpdate) as any) {
         presetBody[presetKey] = settings[settingsKey];
     }
     return structuredClone(presetBody);
@@ -4679,7 +4681,7 @@ async function onPresetImportFileChange(e) {
     e.target.value = '';
 
     try {
-        presetBody = JSON.parse(importedFile);
+        presetBody = JSON.parse(importedFile as string);
     } catch (err) {
         toastr.error(t`Invalid file`);
         return;
@@ -4780,7 +4782,7 @@ async function onExportPresetClick() {
 
     const removeConnectionData = exportConnectionTemplate.find('input[name="export_connection_data"]:checked').val() === 'false';
     if (removeConnectionData) {
-        for (const [, [, settingName, , isConnection]] of Object.entries(settingsToUpdate)) {
+        for (const [, [, settingName, , isConnection]] of Object.entries(settingsToUpdate) as any) {
             if (isConnection) {
                 delete preset[settingName];
             }
@@ -4929,7 +4931,7 @@ function onSettingsPresetChange() {
             $('.model_custom_select').empty();
         }
 
-        for (const [key, [selector, setting, isCheckbox, isConnection]] of Object.entries(settingsToUpdate)) {
+        for (const [key, [selector, setting, isCheckbox, isConnection]] of Object.entries(settingsToUpdate) as any) {
             if (isConnection && !oai_settings.bind_preset_to_connection) {
                 continue;
             }
@@ -4976,8 +4978,7 @@ function getMaxContextOpenAI(value) {
         return unlocked_max;
     }
 
-    /** @type {[RegExp, number][]} */
-    const contextMap = [
+    const contextMap: [RegExp, number][] = [
         [/^gpt-5\.[45]/, max_1mil],
         [/^gpt-5/, max_400k],
         [/gpt-4\.1/, max_1mil],
@@ -5023,8 +5024,7 @@ function getGeminiMaxContext(model, isUnlocked) {
         }
     }
 
-    /** @type {[RegExp, number][]} */
-    const contextMap = [
+    const contextMap: [RegExp, number][] = [
         [/gemini-2\.5-flash-image/, max_32k],
         [/gemini-3-pro-image/, max_64k],
         [/gemini-(?:3[.\d]*|2\.(?:5|0))-(pro|flash)/, max_1mil],
@@ -5965,7 +5965,7 @@ async function onConnectButtonClick(e) {
     if (config) {
         const apiKey = String($(config.selector).val()).trim();
         if (apiKey.length) {
-            await writeSecret(config.key, apiKey);
+            await writeSecret(config.key, apiKey, undefined);
         }
 
         if (!secret_state[config.key] && (!config.proxy || !oai_settings.reverse_proxy) && !config.keyless) {
@@ -6544,7 +6544,7 @@ async function onVertexAIClearServiceAccount() {
     $('#vertexai_service_account_json').val('');
 
     // Clear from backend secret storage
-    await writeSecret(SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT, '');
+    await writeSecret(SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT, '', undefined);
 
     updateVertexAIServiceAccountStatus(false);
     toastr.info(t`Service Account JSON cleared`);

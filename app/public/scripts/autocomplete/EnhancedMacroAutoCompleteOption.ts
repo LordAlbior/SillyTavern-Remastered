@@ -1177,7 +1177,7 @@ export class MacroClosingTagAutoCompleteOption extends AutoCompleteOption {
      * @param {boolean} [options.isOptional=false] - Whether this closing tag is for an optional scope.
      * @param {number} [options.nestingLevel=0] - Nesting level (0 = innermost).
      */
-    constructor(macroName, options = {}) {
+    constructor(macroName, options = {} as any) {
         // The closing tag is what we're suggesting - use /macroName as the name for matching
         const closingTag = `/${macroName}`;
         super(closingTag, '{/');

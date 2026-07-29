@@ -105,7 +105,7 @@ let lazyLoadObserver = null;
  */
 let cachedSystemBackgrounds = [];
 
-export let background_settings = {
+export let background_settings: Record<string, any> = {
     name: '__transparent.png',
     url: generateUrlParameter('__transparent.png', false),
     fitting: 'classic',
@@ -434,7 +434,7 @@ async function getThumbnailFromStorage(bg, isCustom) {
         return cachedBlobUrl;
     }
 
-    const savedBlob = await THUMBNAIL_STORAGE.getItem(bg);
+    const savedBlob = await THUMBNAIL_STORAGE.getItem(bg) as Blob | null;
     if (savedBlob) {
         const savedBlobUrl = URL.createObjectURL(savedBlob);
         THUMBNAIL_BLOBS.set(bg, savedBlobUrl);
@@ -449,7 +449,7 @@ async function getThumbnailFromStorage(bg, isCustom) {
         }
         const imageBlob = await response.blob();
         const imageBase64 = await getBase64Async(imageBlob);
-        const thumbnailBase64 = await createThumbnail(imageBase64, THUMBNAIL_CONFIG.width, THUMBNAIL_CONFIG.height);
+        const thumbnailBase64 = await createThumbnail(imageBase64, THUMBNAIL_CONFIG.width, THUMBNAIL_CONFIG.height) as string;
         const thumbnailBlob = await fetch(thumbnailBase64).then(res => res.blob());
         await THUMBNAIL_STORAGE.setItem(bg, thumbnailBlob);
         const blobUrl = URL.createObjectURL(thumbnailBlob);
@@ -631,7 +631,7 @@ async function autoBackgroundCommand() {
     }
 
     const list = options.map(option => `- ${option.text}`).join('\n');
-    const prompt = stringFormat(autoBgPrompt, list);
+    const prompt = (stringFormat as any)(autoBgPrompt, list);
     const reply = await generateQuietPrompt({ quietPrompt: prompt });
     const fuse = new Fuse(options, { keys: ['text'] });
     const bestMatch = fuse.search(reply, { limit: 1 });
@@ -672,7 +672,7 @@ function renderSystemBackgrounds(backgrounds) {
     const metadataByFilename = new Map(sourceList.map(bg => [bg.filename, bg]));
     sortedList.forEach(filename => {
         const bg = metadataByFilename.get(filename);
-        const imageData = { filename, isCustom: false, isAnimated: bg?.isAnimated ?? false };
+        const imageData = { filename, isCustom: false, isAnimated: (bg as any)?.isAnimated ?? false };
         const thumbnail = createThumbnailElement(imageData);
         container.append(thumbnail);
     });
@@ -685,7 +685,7 @@ function renderSystemBackgrounds(backgrounds) {
  * Renders the chat-specific (custom) backgrounds gallery.
  * @param {string[]} [backgrounds] - Optional filtered list of backgrounds.
  */
-function renderChatBackgrounds(backgrounds) {
+function renderChatBackgrounds(backgrounds = undefined) {
     const sourceList = backgrounds ?? (chat_metadata[LIST_METADATA_KEY] || []);
     const container = $('#bg_custom_content');
     container.empty();
@@ -1090,7 +1090,7 @@ async function onAddSelectedToFolder() {
         let totalAdded = 0;
         for (const folderId of folderIds) {
             const actionableBgFiles = bgFiles.filter(bgFile => {
-                const currentFolderIds = imageFolderMap[bgFile] || [];
+                const currentFolderIds = (imageFolderMap as any)[bgFile as string] || [];
                 return !currentFolderIds.includes(folderId);
             });
             if (actionableBgFiles.length > 0) {
@@ -1161,7 +1161,7 @@ async function onCreateFolder() {
         return;
     }
 
-    const name = await Popup.show.input(t`Enter folder name:`);
+    const name = await Popup.show.input(t`Enter folder name:`, '');
     if (!name || !name.trim()) return;
 
     try {
@@ -1230,7 +1230,7 @@ async function onDeleteFolder(folderId) {
         if (response.ok) {
             folderList = folderList.filter(f => f.id !== folderId);
             // Clean imageFolderMap
-            for (const fids of Object.values(imageFolderMap)) {
+            for (const fids of Object.values(imageFolderMap) as string[][]) {
                 const idx = fids.indexOf(folderId);
                 if (idx !== -1) fids.splice(idx, 1);
             }
@@ -1594,7 +1594,7 @@ async function uploadChatBackground(formData) {
         }
 
         const imageDataUri = await getBase64Async(file);
-        const base64Data = imageDataUri.split(',')[1];
+        const base64Data = (imageDataUri as string).split(',')[1];
         const extension = getFileExtension(file);
         const characterName = selected_group
             ? groups.find(g => g.id === selected_group)?.id?.toString()
@@ -1687,7 +1687,7 @@ export function getActiveBackgroundTab() {
     if (!tabs.length || !tabs.data('ui-tabs')) {
         return BG_SOURCES.GLOBAL;
     }
-    return tabs.tabs('option', 'active');
+    return (tabs as any).tabs('option', 'active');
 }
 
 export function initBackgrounds() {
@@ -1858,7 +1858,7 @@ export function initBackgrounds() {
         });
     });
 
-    $('#bg_tabs').tabs();
+    ($('#bg_tabs') as any).tabs();
     $('#bg_tabs').on('tabsactivate', () => updateGroupFolderControlsVisibility());
     updateGroupFolderControlsVisibility();
     syncGroupSelectionUi();

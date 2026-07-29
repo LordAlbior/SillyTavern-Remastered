@@ -295,12 +295,12 @@ function getModelScope(sourceSettings) {
  * @param {string} collectionId - The collection ID
  * @param {string} source - The source of the vector
  * @param {object} sourceSettings - The model for the source
- * @returns {Promise<vectra.LocalIndex>} - The index for the collection
+ * @returns {Promise<any>} - The index for the collection
  */
 async function getIndex(directories, collectionId, source, sourceSettings) {
     const model = getModelScope(sourceSettings);
     const pathToFile = path.join(directories.vectors, sanitize(source), sanitize(collectionId), sanitize(model));
-    const store = new vectra.LocalIndex(pathToFile);
+    const store = new vectra.LocalIndex(pathToFile) as any;
 
     if (!await store.isIndexCreated()) {
         await store.createIndex();

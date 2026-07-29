@@ -380,7 +380,7 @@ const setHotswapsDebounced = debounce(favsToHotswap);
  * @param {boolean} [param.force] Whether to force play the sound.
  * @returns {void}
  */
-export function playMessageSound({ force } = {}) {
+export function playMessageSound({ force }: { force?: boolean } = {}) {
     if (!power_user.play_message_sound && !force) {
         return;
     }
@@ -795,7 +795,7 @@ async function CreateZenSliders(elmnt) {
         .attr('id', `${sliderID}_zenslider`)
         .css('width', '100%')
         .insertBefore(originalSlider);
-    newSlider.slider({
+    (newSlider as any).slider({
         value: sliderValue,
         step: stepScale,
         min: sliderMin,
@@ -1101,7 +1101,7 @@ function applyChatWidth(type) {
     $('#chat_width_slider_counter').val(power_user.chat_width);
 }
 
-function applyThemeColor(type) {
+function applyThemeColor(type?: string) {
     if (type === 'main') {
         document.documentElement.style.setProperty('--SmartThemeBodyColor', power_user.main_text_color);
         const color = power_user.main_text_color.split('(')[1].split(')')[0].split(',');
@@ -1626,7 +1626,7 @@ export async function loadPowerUserSettings(settings, data) {
         power_user.chat_width = 50;
     }
 
-    if (power_user.tokenizer === tokenizers.LEGACY) {
+    if (power_user.tokenizer === (tokenizers as any).LEGACY) {
         power_user.tokenizer = tokenizers.GPT2;
     }
 
@@ -2248,7 +2248,7 @@ export function renderStoryString(params, { customStoryString = null, customInst
         let output = compiledTemplate(params);
 
         // substitute {{macro}} params that are not defined in the story string
-        output = substituteParams(output, params.user, params.char);
+        output = substituteParams(output, { name1Override: params.user, name2Override: params.char });
 
         // remove leading newlines
         output = output.replace(/^\n+/, '');
@@ -2446,7 +2446,7 @@ async function importTheme(file) {
     }
 
     const fileText = await getFileText(file);
-    const parsed = JSON.parse(fileText);
+    const parsed = JSON.parse(fileText as string);
 
     if (!parsed.name) {
         throw new Error('Missing name');
@@ -2652,7 +2652,7 @@ export function resetMovableStyles(id) {
     }
 }
 
-async function resetMovablePanels(type) {
+async function resetMovablePanels(type?: string) {
     const panelIds = [
         'sheld',
         'left-nav-panel',
@@ -2671,7 +2671,7 @@ async function resetMovablePanels(type) {
      * @type {HTMLElement[]} Generic panels that don't have a known ID
      */
     const draggedElements = Array.from(document.querySelectorAll('[data-dragged]'));
-    const allDraggable = panelIds.map(id => document.getElementById(id)).concat(draggedElements).filter(onlyUnique);
+    const allDraggable = [...new Set([...panelIds.map(id => document.getElementById(id)), ...draggedElements])].filter(Boolean) as HTMLElement[];
 
     const panelStyles = ['top', 'left', 'right', 'bottom', 'height', 'width', 'margin'];
     allDraggable.forEach((panel) => {
@@ -2767,7 +2767,7 @@ async function doRandomChat(_, tagName) {
 
         const tagId = findTagIdByName(tagName);
         const taggedCharacters = Object.entries(tag_map)
-            .filter(x => x[1].includes(tagId)) // Get only records that include the tag
+            .filter(x => (x[1] as any).includes(tagId)) // Get only records that include the tag
             .map(x => x[0]) // Map the character avatar
             .filter(x => characters.find(y => y.avatar === x)); // Filter out characters that don't exist
         const randomCharacter = taggedCharacters[Math.floor(Math.random() * taggedCharacters.length)];
@@ -3360,7 +3360,7 @@ jQuery(() => {
         saveSettingsDebounced();
     });
 
-    $('#movingUIreset').on('click', resetMovablePanels);
+    $('#movingUIreset').on('click', () => resetMovablePanels());
 
     $('#avatar_style').on('change', function () {
         const value = $(this).find(':selected').val();
@@ -3445,61 +3445,61 @@ jQuery(() => {
         saveSettingsDebounced();
     });
 
-    $('#main-text-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#main-text-color-picker').on('change', function (evt: any) {
         power_user.main_text_color = evt.detail.rgba;
         applyThemeColor('main');
         saveSettingsDebounced();
     });
 
-    $('#italics-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#italics-color-picker').on('change', function (evt: any) {
         power_user.italics_text_color = evt.detail.rgba;
         applyThemeColor('italics');
         saveSettingsDebounced();
     });
 
-    $('#underline-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#underline-color-picker').on('change', function (evt: any) {
         power_user.underline_text_color = evt.detail.rgba;
         applyThemeColor('underline');
         saveSettingsDebounced();
     });
 
-    $('#quote-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#quote-color-picker').on('change', function (evt: any) {
         power_user.quote_text_color = evt.detail.rgba;
         applyThemeColor('quote');
         saveSettingsDebounced();
     });
 
-    $('#blur-tint-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#blur-tint-color-picker').on('change', function (evt: any) {
         power_user.blur_tint_color = evt.detail.rgba;
         applyThemeColor('blurTint');
         saveSettingsDebounced();
     });
 
-    $('#chat-tint-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#chat-tint-color-picker').on('change', function (evt: any) {
         power_user.chat_tint_color = evt.detail.rgba;
         applyThemeColor('chatTint');
         saveSettingsDebounced();
     });
 
-    $('#user-mes-blur-tint-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#user-mes-blur-tint-color-picker').on('change', function (evt: any) {
         power_user.user_mes_blur_tint_color = evt.detail.rgba;
         applyThemeColor('userMesBlurTint');
         saveSettingsDebounced();
     });
 
-    $('#bot-mes-blur-tint-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#bot-mes-blur-tint-color-picker').on('change', function (evt: any) {
         power_user.bot_mes_blur_tint_color = evt.detail.rgba;
         applyThemeColor('botMesBlurTint');
         saveSettingsDebounced();
     });
 
-    $('#shadow-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#shadow-color-picker').on('change', function (evt: any) {
         power_user.shadow_color = evt.detail.rgba;
         applyThemeColor('shadow');
         saveSettingsDebounced();
     });
 
-    $('#border-color-picker').on('change', (/** @type {ColorPickerEvent} */ evt) => {
+    $('#border-color-picker').on('change', function (evt: any) {
         power_user.border_color = evt.detail.rgba;
         applyThemeColor('border');
         saveSettingsDebounced();
@@ -4136,7 +4136,7 @@ jQuery(() => {
             SlashCommandArgument.fromProps({
                 description: 'optional tag name',
                 typeList: [ARGUMENT_TYPE.STRING],
-                enumProvider: () => tags.filter(tag => Object.values(tag_map).some(x => x.includes(tag.id))).map(tag => new SlashCommandEnumValue(tag.name, null, enumTypes.enum, enumIcons.tag)),
+                enumProvider: () => tags.filter(tag => (Object.values(tag_map) as any[]).some((x: any) => x.includes(tag.id))).map(tag => new SlashCommandEnumValue(tag.name, null, enumTypes.enum, enumIcons.tag)),
             }),
         ],
         helpString: 'Start a new chat with a random character. If an argument is provided, only considers characters that have the specified tag.',

@@ -239,7 +239,7 @@ class WebTokenizer {
         try {
             const pathToModel = await getPathToTokenizer(this.#model, this.#fallbackModel);
             const fileBuffer = await fs.promises.readFile(pathToModel);
-            this.#instance = await Tokenizer.fromJSON(fileBuffer);
+            this.#instance = await (Tokenizer as any).fromJSON(fileBuffer);
             console.info('Instantiated the tokenizer for', path.parse(pathToModel).name);
             return this.#instance;
         } catch (error) {
@@ -249,15 +249,15 @@ class WebTokenizer {
     }
 }
 
-const spp_llama = new SentencePieceTokenizer('src/tokenizers/llama.model');
-const spp_nerd = new SentencePieceTokenizer('src/tokenizers/nerdstash.model');
-const spp_nerd_v2 = new SentencePieceTokenizer('src/tokenizers/nerdstash_v2.model');
-const spp_mistral = new SentencePieceTokenizer('src/tokenizers/mistral.model');
-const spp_yi = new SentencePieceTokenizer('src/tokenizers/yi.model');
-const spp_gemma = new SentencePieceTokenizer('src/tokenizers/gemma.model');
-const spp_jamba = new SentencePieceTokenizer('src/tokenizers/jamba.model');
-const claude_tokenizer = new WebTokenizer('src/tokenizers/claude.json');
-const llama3_tokenizer = new WebTokenizer('src/tokenizers/llama3.json');
+const spp_llama = new (SentencePieceTokenizer as any)('src/tokenizers/llama.model');
+const spp_nerd = new (SentencePieceTokenizer as any)('src/tokenizers/nerdstash.model');
+const spp_nerd_v2 = new (SentencePieceTokenizer as any)('src/tokenizers/nerdstash_v2.model');
+const spp_mistral = new (SentencePieceTokenizer as any)('src/tokenizers/mistral.model');
+const spp_yi = new (SentencePieceTokenizer as any)('src/tokenizers/yi.model');
+const spp_gemma = new (SentencePieceTokenizer as any)('src/tokenizers/gemma.model');
+const spp_jamba = new (SentencePieceTokenizer as any)('src/tokenizers/jamba.model');
+const claude_tokenizer = new (WebTokenizer as any)('src/tokenizers/claude.json');
+const llama3_tokenizer = new (WebTokenizer as any)('src/tokenizers/llama3.json');
 const commandRTokenizer = new WebTokenizer('https://github.com/SillyTavern/SillyTavern-Tokenizers/raw/main/command-r.json.gz', 'src/tokenizers/llama3.json');
 const commandATokenizer = new WebTokenizer('https://github.com/SillyTavern/SillyTavern-Tokenizers/raw/main/command-a.json.gz', 'src/tokenizers/llama3.json');
 const qwen2Tokenizer = new WebTokenizer('https://github.com/SillyTavern/SillyTavern-Tokenizers/raw/main/qwen2.json.gz', 'src/tokenizers/llama3.json');
@@ -532,7 +532,7 @@ export function getTiktokenTokenizer(model) {
         return tokenizersCache[model];
     }
 
-    const tokenizer = tiktoken.encoding_for_model(model);
+    const tokenizer = (tiktoken as any).encoding_for_model(model);
     console.info('Instantiated the tokenizer for', model);
     tokenizersCache[model] = tokenizer;
     return tokenizer;
@@ -1079,7 +1079,7 @@ router.post('/remote/textgenerationwebui/encode', async function (request, respo
     const model = String(request.body.model) || '';
 
     try {
-        const args = {
+        const args: any = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         };

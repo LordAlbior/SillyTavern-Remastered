@@ -341,7 +341,7 @@ function onToggleLogprobsPanel() {
         logprobsViewer.transition({
             opacity: 1.0,
             duration: animation_duration,
-        }, async function () {
+        } as any, async function () {
             await delay(50);
             logprobsViewer.removeClass('resizing');
         });
@@ -350,7 +350,7 @@ function onToggleLogprobsPanel() {
         logprobsViewer.transition({
             opacity: 0.0,
             duration: animation_duration,
-        },
+        } as any,
         async function () {
             await delay(50);
             logprobsViewer.removeClass('resizing');
@@ -374,7 +374,7 @@ function createSwipe(messageId, prompt) {
         isImpersonate: false,
         isContinue: false,
         displayIncompleteSentences: true,
-    });
+    } as any);
 
     const msg = chat[messageId];
 

@@ -68,6 +68,7 @@ import { SlashCommandParserError } from './slash-commands/SlashCommandParserErro
 import { getMessageTimeStamp, isMobile } from './RossAscends-mods.js';
 import { hideChatMessageRange } from './chats.js';
 import { getContext, saveMetadataDebounced } from './extensions.js';
+// @ts-ignore - module resolved by webpack alias
 import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
 import { findGroupMemberId, groups, is_group_generating, openGroupById, regenerateGroup, resetSelectedGroup, saveGroupChat, selected_group, getGroupMembers } from './group-chats.js';
 import { chat_completion_sources, MINIMAX_ENDPOINT, oai_settings, promptManager, SILICONFLOW_ENDPOINT, ZAI_ENDPOINT } from './openai.js';
@@ -356,7 +357,7 @@ export function initDefaultSlashCommands() {
                 // Prevent generate recursion
                 $('#send_textarea').val('')[0].dispatchEvent(new Event('input', { bubbles: true }));
 
-                outerResolve(new Promise(innerResolve => setTimeout(() => innerResolve(Generate('impersonate', options)), 1)));
+                outerResolve(new Promise(innerResolve => setTimeout(() => innerResolve(Generate('impersonate', options as any)), 1)));
             }, 1));
 
             if (shouldAwait) {
@@ -3667,12 +3668,12 @@ export function initDefaultSlashCommands() {
         callback: (args, value) => {
             // Closures are not supported
             if (value instanceof SlashCommandClosure) {
-                throw new SlashCommandExecutionError(t`Closures are not supported as unnamed arguments for /array-wrap. Did you forget to call the closure with parentheses?`);
+                throw new (SlashCommandExecutionError as any)(t`Closures are not supported as unnamed arguments for /array-wrap. Did you forget to call the closure with parentheses?`);
             }
 
             // Multiple unnamed arguments are not supported since acceptsMultiple is false, but check just in case
             if (Array.isArray(value)) {
-                throw new SlashCommandExecutionError(t`/array-wrap does not support multiple unnamed arguments.`);
+                throw new (SlashCommandExecutionError as any)(t`/array-wrap does not support multiple unnamed arguments.`);
             }
 
             // Empty string - empty arrays
@@ -3724,12 +3725,12 @@ export function initDefaultSlashCommands() {
         callback: (_args, value) => {
             // Closures are not supported
             if (value instanceof SlashCommandClosure) {
-                throw new SlashCommandExecutionError(t`Closures are not supported as unnamed arguments for /array-unwrap. Did you forget to call the closure with parentheses?`);
+                throw new (SlashCommandExecutionError as any)(t`Closures are not supported as unnamed arguments for /array-unwrap. Did you forget to call the closure with parentheses?`);
             }
 
             // Multiple unnamed arguments are not supported since acceptsMultiple is false, but check just in case
             if (Array.isArray(value)) {
-                throw new SlashCommandExecutionError(t`/array-unwrap does not support multiple unnamed arguments.`);
+                throw new (SlashCommandExecutionError as any)(t`/array-unwrap does not support multiple unnamed arguments.`);
             }
 
             try {
@@ -3903,7 +3904,8 @@ export function processChatSlashCommands() {
         delete context.extensionPrompts[id];
     }
 
-    for (const [id, inject] of Object.entries(context.chatMetadata.script_injects)) {
+    for (const [id, rawInject] of Object.entries(context.chatMetadata.script_injects)) {
+        const inject = rawInject as any;
         /**
          * Rehydrates a filter closure from a string.
          * @returns {SlashCommandClosure | null}
@@ -3914,7 +3916,7 @@ export function processChatSlashCommands() {
             }
 
             try {
-                return new SlashCommandParser().parse(inject.filter, true);
+                return new SlashCommandParser().parse(inject.filter as string, true);
             } catch (error) {
                 console.warn('Failed to revive filter closure for script injection', id, error);
                 return null;
@@ -4113,10 +4115,10 @@ async function buttonsCallback(args, text) {
                 .then((result => resolve(getResult(result))))
                 .catch(() => resolve(''));
 
-            /** @returns {string} @param {string|number|boolean} result */
-            function getResult(result) {
+            /** @returns {string} */
+            function getResult(result: any) {
                 if (multiple) {
-                    const array = result === POPUP_RESULT.AFFIRMATIVE ? Array.from(multipleToggledState).map(r => resultToButtonMap.get(r)?.text ?? '') : [];
+                    const array = result === POPUP_RESULT.AFFIRMATIVE ? Array.from(multipleToggledState).map((r: any) => resultToButtonMap.get(r)?.text ?? '') : [];
                     return JSON.stringify(array);
                 }
                 return typeof result === 'number' ? resultToButtonMap.get(result)?.text ?? '' : '';
@@ -5007,7 +5009,7 @@ async function triggerGenerationCallback(args, value) {
             }
         }
 
-        outerResolve(new Promise(innerResolve => setTimeout(() => innerResolve(Generate('normal', { force_chid: chid })), 100)));
+        outerResolve(new Promise(innerResolve => setTimeout(() => innerResolve(Generate('normal', { force_chid: chid } as any)), 100)));
     }, 1));
 
     if (shouldAwait) {
@@ -5608,7 +5610,7 @@ async function deleteCharacterCallback(args) {
 async function continueChatCallback(args, prompt) {
     const shouldAwait = isTrueBoolean(args?.await);
 
-    const outerPromise = new Promise(async (resolve, reject) => {
+    const outerPromise = new Promise<void>(async (resolve, reject) => {
         try {
             await waitUntilCondition(() => !is_send_press && !is_group_generating, 10000, 100);
         } catch {
@@ -5622,7 +5624,7 @@ async function continueChatCallback(args, prompt) {
             $('#send_textarea').val('')[0].dispatchEvent(new Event('input', { bubbles: true }));
 
             const options = prompt?.trim() ? { quiet_prompt: prompt.trim(), quietToLoud: true } : {};
-            await Generate('continue', options);
+            await Generate('continue', options as any);
 
             resolve();
         } catch (error) {
@@ -5684,7 +5686,7 @@ async function swipeChatCallback(args) {
             return '';
         }
 
-        outerResolve(Promise.resolve(swipe(null, direction, { source: SWIPE_SOURCE.SLASH_COMMAND, repeated: false })));
+        outerResolve(Promise.resolve(swipe(null, direction, { source: SWIPE_SOURCE.SLASH_COMMAND, repeated: false } as any)));
         return '';
     }, 1));
 
@@ -5889,7 +5891,7 @@ async function messageNameCallback(args, name) {
     if (message.is_user) {
         const persona = findPersona({ name: name });
         if (persona) {
-            message.name = newName = persona.name;
+            message.name = newName = persona.name as string;
             message.force_avatar = getThumbnailUrl('persona', persona.avatar);
             message.original_avatar = persona.avatar;
         } else {
@@ -5956,7 +5958,7 @@ export async function sendMessageAs(args, text) {
 
     const { name: avatarCharName, force_avatar, original_avatar } = getNameAndAvatarForMessage(avatarCharacter, name);
 
-    const message = {
+    const message: Record<string, any> = {
         name: character?.name || name || avatarCharName,
         is_user: false,
         is_system: isSystem,
@@ -6865,7 +6867,7 @@ const clearCommandProgressDebounced = debounce(clearCommandProgress);
  * @param {string} text Slash command text
  * @param {ExecuteSlashCommandsOnChatInputOptions} options
  */
-export async function executeSlashCommandsOnChatInput(text, options = {}) {
+export async function executeSlashCommandsOnChatInput(text: string, options: Record<string, any> = {}) {
     if (isExecutingCommandsFromChatInput) return null;
 
     options = Object.assign({
@@ -6879,8 +6881,7 @@ export async function executeSlashCommandsOnChatInput(text, options = {}) {
     commandsFromChatInputAbortController?.abort('processCommands was called');
     activateScriptButtons();
 
-    /** @type {HTMLTextAreaElement} */
-    const ta = document.querySelector('#send_textarea') as HTMLElement;
+    const ta = document.querySelector('#send_textarea') as HTMLTextAreaElement;
     const fs = document.querySelector('#form_sheld') as HTMLElement;
 
     if (options.clearChatInput) {
@@ -6957,7 +6958,7 @@ export async function executeSlashCommandsOnChatInput(text, options = {}) {
  * @param {ExecuteSlashCommandsOptions} [options]
  * @returns {Promise<SlashCommandClosureResult>}
  */
-async function executeSlashCommandsWithOptions(text, options = {}) {
+async function executeSlashCommandsWithOptions(text: string, options: Record<string, any> = {}) {
     if (!text) {
         return null;
     }

@@ -124,7 +124,7 @@ function importOobaChat(userName, characterName, jsonData) {
                 mes: arr[0],
                 extra: {},
             };
-            chat.push(userMessage);
+            chat.push(userMessage as any);
         }
         if (arr[1]) {
             const charMessage = {
@@ -134,7 +134,7 @@ function importOobaChat(userName, characterName, jsonData) {
                 mes: arr[1],
                 extra: {},
             };
-            chat.push(charMessage);
+            chat.push(charMessage as any);
         }
     }
 
@@ -164,7 +164,7 @@ function importAgnaiChat(userName, characterName, jsonData) {
             send_date: new Date().toISOString(),
             mes: message.msg,
             extra: {},
-        });
+        } as any);
     }
 
     return chat.map(obj => JSON.stringify(obj)).join('\n');
@@ -301,7 +301,7 @@ function importRisuChat(userName, characterName, jsonData) {
             send_date: new Date(Number(message.time ?? Date.now())).toISOString(),
             mes: message.data ?? '',
             extra: {},
-        });
+        } as any);
     }
 
     return chat.map(obj => JSON.stringify(obj)).join('\n');
@@ -392,7 +392,7 @@ export async function getChatInfo(pathToFile, additionalData = {}, withMetadata 
             if (withMetadata && itemCounter === 0) {
                 const jsonData = tryParse(line);
                 if (jsonData && _.isObjectLike(jsonData.chat_metadata)) {
-                    chatData.chat_metadata = jsonData.chat_metadata;
+                    (chatData as any).chat_metadata = jsonData.chat_metadata;
                 }
             }
             // Skip matching if any match was already found
@@ -441,7 +441,7 @@ class IntegrityMismatchError extends Error {
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, IntegrityMismatchError);
         }
-        this.date = new Date();
+        (this as any).date = new Date();
     }
 }
 
@@ -944,7 +944,7 @@ router.post('/search', validateAvatarUrlMiddleware, async function (request, res
 
         for (const chatFile of chatFiles) {
             const matcher = query ? hasTextMatch : null;
-            const chatInfo = await getChatInfo(chatFile, {}, false, matcher);
+            const chatInfo = await getChatInfo(chatFile, {}, false, matcher) as any;
             const hasMatch = chatInfo.match || hasTextMatch([chatInfo.file_id ?? '']);
 
             // Skip corrupted or invalid chat files
@@ -1067,7 +1067,7 @@ router.post('/recent', async function (request, response) {
         });
 
         const chatData = (await Promise.allSettled(jsonFilesPromise)).filter(x => x.status === 'fulfilled').map(x => x.value);
-        const validFiles = chatData.filter(i => i.file_name);
+        const validFiles = chatData.filter((i: any) => i.file_name);
 
         return response.send(validFiles);
     } catch (error) {

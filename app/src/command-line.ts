@@ -96,6 +96,9 @@ export class CommandLineParser {
         });
     }
 
+    /** @type {any[]} */
+    booleanAutoOptions;
+
     constructor() {
         this.booleanAutoOptions = [true, false, 'auto'];
     }

@@ -129,8 +129,8 @@ export async function ensurePublicDirectoriesExist() {
     const directoriesList = userHandles.map(handle => getUserDirectories(handle));
     for (const userDirectories of directoriesList) {
         for (const dir of Object.values(userDirectories)) {
-            if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, { recursive: true });
+            if (!fs.existsSync(dir as string)) {
+                fs.mkdirSync(dir as string, { recursive: true });
             }
         }
     }
@@ -851,7 +851,7 @@ function isRequestFromTrustedProxy(ip) {
         try {
             // This will throw if the entry is not a valid IP or CIDR
             const match = ipMatching.getMatch(entry);
-            if (ipMatching.matches(ip, match)) {
+            if ((ipMatching as any).matches(ip, match)) {
                 return true;
             }
         } catch (e) {

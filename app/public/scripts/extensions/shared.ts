@@ -49,7 +49,7 @@ export async function getMultimodalCaption(base64Img, prompt) {
     const proxyUrl = useReverseProxy ? oai_settings.reverse_proxy : '';
     const proxyPassword = useReverseProxy ? oai_settings.proxy_password : '';
 
-    const requestBody = {
+    const requestBody: Record<string, any> = {
         image: base64Img,
         prompt: prompt,
         reverse_proxy: proxyUrl,
@@ -629,10 +629,10 @@ export class ConnectionManagerRequestService {
     static handleDropdown(
         selector,
         initialSelectedProfileId,
-        onChange = () => { },
-        onCreate = () => { },
-        unUpdate = () => { },
-        onDelete = () => { },
+        onChange: (...args: any[]) => void = () => {},
+        onCreate: (...args: any[]) => void = () => {},
+        unUpdate: (...args: any[]) => void = () => {},
+        onDelete: (...args: any[]) => void = () => {},
     ) {
         const context = SillyTavern.getContext();
         if (context.extensionSettings.disabledExtensions.includes('connection-manager')) {
@@ -660,14 +660,14 @@ export class ConnectionManagerRequestService {
         const profiles = context.extensionSettings.connectionManager.profiles;
 
         // Create optgroups using document.createElement
-        const groups = {};
+        const groups: Record<string, HTMLOptGroupElement> = {};
         for (const [apiType, groupLabel] of Object.entries(this.getAllowedTypes())) {
             const optgroup = document.createElement('optgroup');
             optgroup.label = groupLabel;
             groups[apiType] = optgroup;
         }
 
-        const sortedProfilesByGroup = {};
+        const sortedProfilesByGroup: Record<string, any[]> = {};
         for (const apiType of Object.keys(this.getAllowedTypes())) {
             sortedProfilesByGroup[apiType] = [];
         }

@@ -11,7 +11,9 @@ import Handlebars from 'handlebars';
 import css from '@adobe/css-tools';
 import Bowser from 'bowser';
 import DiffMatchPatch from 'diff-match-patch';
-import { isProbablyReaderable, Readability } from '@mozilla/readability';
+import * as readability from '@mozilla/readability';
+const { Readability } = readability;
+const isProbablyReaderable: any = (readability as any).isProbablyReaderable;
 import SVGInject from '@iconfu/svg-inject';
 import showdown from 'showdown';
 import moment from 'moment';
@@ -19,11 +21,13 @@ import seedrandom from 'seedrandom';
 import * as Popper from '@popperjs/core';
 import droll from 'droll';
 import morphdom from 'morphdom';
-import { toggle as slideToggle } from 'slidetoggle';
+import slideToggle from 'slidetoggle';
 import chalk from 'chalk';
 import yaml from 'yaml';
 import * as chevrotain from 'chevrotain';
-import { gzipSync, gzip } from 'fflate';
+import * as fflate from 'fflate';
+const { gzip } = fflate;
+const gzipSync: any = (fflate as any).gzipSync;
 import { sha256 } from 'js-sha256';
 
 /**

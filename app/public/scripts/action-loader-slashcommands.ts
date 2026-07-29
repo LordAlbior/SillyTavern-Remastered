@@ -49,7 +49,7 @@ export function registerActionLoaderSlashCommands() {
             new SlashCommandEnumValue(ActionLoaderToastMode.STOPPABLE, 'Toast with stop button (default)', enumTypes.enum, enumIcons.stop),
         ],
         loaderHandleProvider: () => getActiveLoaderHandles().map(
-            handle => new SlashCommandEnumValue(handle.id, `Active loader: ${handle.id}`, enumTypes.enum, enumIcons.spinner),
+            handle => new SlashCommandEnumValue((handle as any).id, `Active loader: ${(handle as any).id}`, enumTypes.enum, enumIcons.spinner),
         ).concat(
             new SlashCommandEnumValue('Temporary loader handle', 'Any loader handle saved in variables or similar', 'enum', '📄', () => true, () => ''),
         ),
@@ -313,7 +313,7 @@ export function registerActionLoaderSlashCommands() {
             const handleId = args.handle ? String(args.handle) : null;
 
             if (handleId) {
-                const handle = getLoaderHandleById(handleId);
+                const handle = getLoaderHandleById(handleId) as any;
                 if (handle && handle.isActive) {
                     await handle.hide();
                     return 'true';
@@ -358,7 +358,7 @@ export function registerActionLoaderSlashCommands() {
                 return 'false';
             }
 
-            const handle = getLoaderHandleById(handleId);
+            const handle = getLoaderHandleById(handleId) as any;
             if (handle && handle.isActive) {
                 await handle.stop();
                 return 'true';

@@ -858,7 +858,7 @@ export async function loadFeatherlessModels(data) {
     });
 
     // Function to populate class selection dropdown
-    function populateClassSelection(models) {
+    function populateClassSelection(models: any[]) {
         const uniqueClasses = [...new Set(models.map(model => model.model_class).filter(Boolean))];  // Get unique class names
         uniqueClasses.sort((a, b) => a.localeCompare(b));
         uniqueClasses.forEach(className => {
@@ -1244,8 +1244,8 @@ async function downloadTabbyModel() {
         }
 
         // Params for the server side of ST
-        params.api_server = serverUrl;
-        params.api_type = textgen_settings.type;
+        (params as any).api_server = serverUrl;
+        (params as any).api_type = textgen_settings.type;
 
         toastr.info('Downloading. Check the Tabby console for progress reports.');
 
@@ -1453,7 +1453,7 @@ export function initTextGenModels() {
             closeOnSelect: false,
         });
         providersSelect.on('select2:select', function (/** @type {any} */ evt) {
-            const element = evt.params.data.element;
+            const element = (evt as any).params.data.element;
             const $element = $(element);
 
             $element.detach();

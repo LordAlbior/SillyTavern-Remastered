@@ -51,10 +51,11 @@ router.post('/folders', async function (request, response) {
         /** @type {Object.<string, string[]>} */
         const imageFolderMap = {};
         for (const [relativePath, meta] of Object.entries(index.images)) {
-            if (Array.isArray(meta.folderIds) && meta.folderIds.length > 0) {
+            const entry = meta as any;
+            if (Array.isArray(entry.folderIds) && entry.folderIds.length > 0) {
                 // Strip the directory prefix to get just the filename
                 const filename = relativePath.split('/').pop() || relativePath;
-                imageFolderMap[filename] = meta.folderIds;
+                imageFolderMap[filename] = entry.folderIds;
             }
         }
 

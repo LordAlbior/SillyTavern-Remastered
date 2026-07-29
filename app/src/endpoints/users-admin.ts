@@ -55,7 +55,7 @@ router.post('/get', requireAdminMiddleware, async (_request, response) => {
             }));
 
         const viewModels = await Promise.all(viewModelPromises);
-        viewModels.sort((x, y) => (x.created ?? 0) - (y.created ?? 0));
+        viewModels.sort((x: any, y: any) => (x.created ?? 0) - (y.created ?? 0));
         return response.json(viewModels);
     } catch (error) {
         console.error('User list failed:', error);

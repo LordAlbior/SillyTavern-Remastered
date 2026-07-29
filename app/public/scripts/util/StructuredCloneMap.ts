@@ -5,6 +5,9 @@
  * @extends Map<K, V>
  */
 export class StructuredCloneMap extends Map {
+    cloneOnGet: any;
+    cloneOnSet: any;
+
     /**
      * Constructs a new StructuredCloneMap.
      * @param {object} options - Options for the map

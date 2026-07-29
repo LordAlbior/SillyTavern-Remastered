@@ -236,12 +236,12 @@ export class Popup {
         this.dlg = template.content.cloneNode(true).querySelector('.popup');
         if (!this.dlg.showModal) {
             this.dlg.classList.add('poly_dialog');
-            dialogPolyfill.registerDialog(this.dlg);
+            (dialogPolyfill as any).registerDialog(this.dlg);
             // Force a vertical reposition after the content
             // (like crop image) has been set
             const resizeObserver = new ResizeObserver((entries) => {
                 for (const entry of entries) {
-                    dialogPolyfill.reposition(entry.target);
+                    (dialogPolyfill as any).reposition(entry.target);
                 }
             });
             resizeObserver.observe(this.dlg);
@@ -484,7 +484,7 @@ export class Popup {
             case POPUP_TYPE.CROP: {
                 this.cropWrap.style.display = 'block';
                 this.cropImage.src = cropImage;
-                $(this.cropImage).cropper({
+                ($(this.cropImage) as any).cropper({
                     aspectRatio: cropAspect ?? 2 / 3,
                     autoCropArea: 1,
                     viewMode: 2,
@@ -522,7 +522,7 @@ export class Popup {
 
         this.content.innerHTML = '';
         if (content instanceof jQuery) {
-            $(this.content).append(content);
+            ($(this.content) as any).append(content);
         } else if (content instanceof HTMLElement) {
             this.content.append(content);
         } else if (typeof content == 'string') {

@@ -158,8 +158,7 @@ router.post('/status', async function (request, response) {
             return response.sendStatus(400);
         }
 
-        /** @type {any} */
-        let data = await modelsReply.json();
+        let data: any = await modelsReply.json();
 
         // Rewrap to OAI-like response
         if (apiType === TEXTGEN_TYPES.TOGETHERAI && Array.isArray(data)) {

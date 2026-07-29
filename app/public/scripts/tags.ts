@@ -367,7 +367,7 @@ let expanded_tags_cache = [];
  * @returns The filtered list of entities
  */
 function filterByTagState(entities, { globalDisplayFilters = false, subForEntity = undefined, filterHidden = true } = {}) {
-    const filterData = structuredClone(entitiesFilter.getFilterData(FILTER_TYPES.TAG));
+    const filterData: any = structuredClone(entitiesFilter.getFilterData(FILTER_TYPES.TAG));
 
     entities = entities.filter(entity => {
         if (entity.type === 'tag') {
@@ -417,7 +417,7 @@ function filterByTagState(entities, { globalDisplayFilters = false, subForEntity
  * @returns {object[]} The filtered list of entities that apply to the given tag
  */
 function filterTagSubEntities(tag, entities, { filterHidden = true } = {}) {
-    const filterData = structuredClone(entitiesFilter.getFilterData(FILTER_TYPES.TAG));
+    const filterData: any = structuredClone(entitiesFilter.getFilterData(FILTER_TYPES.TAG));
 
     const closedFolders = entities.filter(x => x.type === 'tag' && TAG_FOLDER_TYPES[x.item.folder_type] === TAG_FOLDER_TYPES.CLOSED);
 
@@ -454,7 +454,7 @@ function isBogusFolder(tag) {
  * @return {Tag[]} An array of open bogus folders
  */
 function getOpenBogusFolders() {
-    return entitiesFilter.getFilterData(FILTER_TYPES.TAG)?.selected
+    return (entitiesFilter.getFilterData(FILTER_TYPES.TAG) as any)?.selected
         .map(tagId => tags.find(x => x.id === tagId))
         .filter(isBogusFolder) ?? [];
 }
@@ -797,7 +797,7 @@ export function addTagsToEntity(tag, entityId, { tagListSelector = null, tagList
     saveSettingsDebounced();
 
     // We should manually add the selected tag to the print tag function, so we cover places where the tag list did not automatically include it
-    tagListOptions.addTag = tags;
+    (tagListOptions as any).addTag = tags;
 
     // add tag to the UI and internal map - we reprint so sorting and new markup is done correctly
     if (tagListSelector) printTagList(tagListSelector, tagListOptions);
@@ -1194,17 +1194,17 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
     const key = forEntityOrKey !== undefined ? getTagKeyForEntity(forEntityOrKey) : getTagKey();
     let printableTags = tags ? (typeof tags === 'function' ? tags() : tags) : getTagsList(key, sort);
 
-    if (tagOptions.isCharacterList) {
+    if ((tagOptions as any).isCharacterList) {
         printableTags = printableTags.filter(tag => !tag.is_hidden_on_character_card);
     }
 
-    if (empty === 'always' || (empty && (printableTags?.length > 0 || key))) {
+    if ((empty as any) === 'always' || (empty && (printableTags?.length > 0 || key))) {
         $element.empty();
     }
 
     if (addTag) {
         const addTags = Array.isArray(addTag) ? addTag : [addTag];
-        printableTags = printableTags.concat(addTags.filter(tag => tagOptions.skipExistsCheck || !printableTags.some(t => t.id === tag.id)));
+        printableTags = printableTags.concat(addTags.filter(tag => (tagOptions as any).skipExistsCheck || !printableTags.some(t => t.id === tag.id)));
     }
 
     // one last sort, because we might have modified the tag list or manually retrieved it from a function
@@ -1239,7 +1239,7 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
             if (action && typeof action !== 'function') {
                 console.error('The action parameter must return a function for tag.', tag);
             } else {
-                tagOptions.action = action;
+                (tagOptions as any).action = action;
             }
         }
 
@@ -2293,7 +2293,7 @@ function removeMissingTagFilters() {
     const isEmptyOpenBogusFolder = (tagId) => openBogusFolderIds.has(tagId) && !assignedTagIds.has(tagId);
 
     for (const helper of [groupCandidatesFilter, groupMembersFilter, entitiesFilter]) {
-        const { selected, excluded } = helper.getFilterData(FILTER_TYPES.TAG);
+        const { selected, excluded } = helper.getFilterData(FILTER_TYPES.TAG) as any;
         let anyRemoved = false;
 
         if (Array.isArray(selected)) {
