@@ -299,6 +299,23 @@ async function preSetupTasks() {
     }
     console.log();
 
+    // Auto-build frontend if dist/ is missing (e.g., after git pull)
+    const distEntry = path.join(serverDirectory, 'public', 'dist', 'script.js');
+    if (!fs.existsSync(distEntry)) {
+        console.log('Frontend build output (public/dist/) not found. Running build...');
+        const { spawnSync } = await import('node:child_process');
+        const result = spawnSync('bun', [path.join(serverDirectory, 'build-frontend.ts')], {
+            cwd: path.dirname(serverDirectory),
+            stdio: 'inherit',
+            shell: true,
+        });
+        if (result.status !== 0) {
+            console.error('Failed to build frontend. Run "bun run build:frontend" manually and restart.');
+            process.exit(1);
+        }
+        console.log('Frontend build complete.');
+    }
+
     const directories = await getUserDirectoriesList();
     await migrateGroupChatsMetadataFormat(directories);
     await checkForNewContent(directories);
