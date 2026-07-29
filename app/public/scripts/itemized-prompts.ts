@@ -271,7 +271,7 @@ export async function promptItemize(itemizedPrompts, requestedMesId) {
     if (priorPromptArrayItemForRawPromptDisplay >= 0) {
         diffPrevPrompt.style.display = '';
         diffPrevPrompt.addEventListener('click', function () {
-            const dmp = new DiffMatchPatch();
+            const dmp = new (DiffMatchPatch as any)();
             const text1 = flatten(itemizedPrompts[priorPromptArrayItemForRawPromptDisplay].rawPrompt);
             const text2 = flatten(itemizedPrompts[PromptArrayItemForRawPromptDisplay].rawPrompt);
 

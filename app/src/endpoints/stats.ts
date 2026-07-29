@@ -133,7 +133,7 @@ async function collectAndCreateStats(chatsPath, charactersPath) {
     );
     const statsArr = await Promise.all(processingPromises);
 
-    let finalStats = {};
+    let finalStats: any = {};
     for (let stat of statsArr) {
         finalStats = { ...finalStats, ...stat };
     }

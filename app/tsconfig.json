@@ -8,7 +8,10 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "useUnknownInCatchVariables": false,
-    "types": ["node", "jquery", "toastr"]
+    "types": ["node", "jquery", "toastr"],
+    "paths": {
+      "/script.js": ["./public/script.ts"]
+    }
   },
   "include": [
     "src/**/*",

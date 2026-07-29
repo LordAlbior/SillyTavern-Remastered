@@ -3,7 +3,7 @@ import { updateSecretDisplay } from './secrets.js';
 
 const storageKey = 'language';
 const overrideLanguage = localStorage.getItem(storageKey);
-const localeFile = String(overrideLanguage || navigator.language || navigator.userLanguage || 'en').toLowerCase();
+const localeFile = String(overrideLanguage || navigator.language || (navigator as any).userLanguage || 'en').toLowerCase();
 var langs;
 // Don't change to let/const! It will break module loading.
 // eslint-disable-next-line prefer-const

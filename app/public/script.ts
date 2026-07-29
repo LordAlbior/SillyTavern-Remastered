@@ -218,6 +218,7 @@ import { markdownExclusionExt } from './scripts/showdown-exclusion.js';
 import { markdownUnderscoreExt } from './scripts/showdown-underscore.js';
 import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from './scripts/authors-note.js';
 import { registerPromptManagerMigration } from './scripts/PromptManager.js';
+// @ts-expect-error - module not yet created
 import { getRegexedString, regex_placement } from './scripts/extensions/regex/engine.js';
 import { initLogprobs, saveLogprobsForActiveMessage } from './scripts/logprobs.js';
 import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from './scripts/filters.js';
@@ -292,7 +293,7 @@ import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker
 globalThis.SillyTavern = {
     libs,
     getContext,
-};
+} as any;
 
 export {
     user_avatar,
@@ -335,11 +336,11 @@ export {
 /**
  * Wait for page to load before continuing the app initialization.
  */
-await new Promise((resolve) => {
+await new Promise<void>((resolve) => {
     if (document.readyState === 'complete') {
         resolve();
     } else {
-        window.addEventListener('load', resolve);
+        window.addEventListener('load', resolve as any);
     }
 });
 
@@ -1186,8 +1187,8 @@ export function getEntitiesList({ doFilter = false, doSort = true } = {}) {
             if (doSort) {
                 sortEntitiesList(subEntities, false);
             }
-            entity.entities = subEntities;
-            entity.hidden = subCount - subEntities.length;
+            (entity as any).entities = subEntities;
+            (entity as any).hidden = subCount - subEntities.length;
         }
     }
 
@@ -1206,7 +1207,7 @@ export function getEntitiesList({ doFilter = false, doSort = true } = {}) {
     const nonTagEntitiesCount = entities.filter(entity => entity.type !== 'tag').length;
     for (const entity of entities) {
         if (entity.type === 'tag') {
-            if (entity.entities?.length == nonTagEntitiesCount) entity.isUseless = true;
+            if ((entity as any).entities?.length == nonTagEntitiesCount) (entity as any).isUseless = true;
         }
     }
 
@@ -1390,7 +1391,7 @@ export async function deleteCharacterChatByName(characterId, fileName) {
             headers: getRequestHeaders(),
             body: JSON.stringify({ avatar_url: character.avatar }),
         });
-        const chats = Object.values(await chatsResponse.json());
+        const chats = Object.values(await chatsResponse.json()) as any[];
         chats.sort((a, b) => sortMoments(timestampToMoment(a.last_mes), timestampToMoment(b.last_mes)));
         const newChatName = chats.length && typeof chats[0] === 'object' ? chats[0].file_name.replace('.jsonl', '') : `${character.name} - ${humanizedDateTime()}`;
         await updateRemoteChatName(characterId, newChatName);
@@ -1409,7 +1410,7 @@ export async function replaceCurrentChat() {
     });
 
     if (chatsResponse.ok) {
-        const chats = Object.values(await chatsResponse.json());
+        const chats = Object.values(await chatsResponse.json()) as any[];
         chats.sort((a, b) => sortMoments(timestampToMoment(a.last_mes), timestampToMoment(b.last_mes)));
 
         if (chats.length && typeof chats[0] === 'object') {
@@ -1758,7 +1759,7 @@ export function messageFormatting(mes, ch_name, isSystem, isUser, messageId, san
     if (Number(messageId) === 0 && !isSystem && !isUser && !isReasoning) {
         const mesBeforeReplace = mes;
         const chatMessage = chat[messageId];
-        mes = substituteParams(mes, undefined, ch_name);
+        mes = (substituteParams as any)(mes, undefined, ch_name);
         if (chatMessage && chatMessage.mes === mesBeforeReplace && chatMessage.extra?.display_text !== mesBeforeReplace) {
             chatMessage.mes = mes;
         }
@@ -1950,7 +1951,7 @@ function insertSVGIcon(mes, extra) {
                 if (insertBefore) mes.find(targetSelector).before(image);
                 else mes.find(targetSelector).after(image);
             }
-            await SVGInject(image);
+            await (SVGInject as any)(image);
         };
     };
 
@@ -1960,7 +1961,7 @@ function insertSVGIcon(mes, extra) {
         insertOrReplaceSVG(image, className, targetSelector, insertBefore);
     };
 
-    insertIcon('timestamp-icon', '.timestamp');
+    (insertIcon as any)('timestamp-icon', '.timestamp');
     insertIcon('thinking-icon', '.mes_reasoning_header_title', true);
 }
 
@@ -2118,8 +2119,8 @@ export function ensureMessageMediaIsArray(mes) {
 
     migrateMediaToArray(mes.extra);
     addArrayAutoWrapper(mes.extra, 'file', 'files');
-    addArrayAutoWrapper(mes.extra, 'image', 'media', (t) => t.type === MEDIA_TYPE.IMAGE, (t) => t.url);
-    addArrayAutoWrapper(mes.extra, 'video', 'media', (t) => t.type === MEDIA_TYPE.VIDEO, (t) => t.url);
+    (addArrayAutoWrapper as any)(mes.extra, 'image', 'media', (t) => t.type === MEDIA_TYPE.IMAGE, (t) => t.url);
+    (addArrayAutoWrapper as any)(mes.extra, 'video', 'media', (t) => t.type === MEDIA_TYPE.VIDEO, (t) => t.url);
 }
 
 /**
@@ -2204,7 +2205,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
         const image = template.find('.mes_img');
         image.attr('src', attachment.url);
         image.attr('title', attachment.title || mes.extra.title || '');
-        mediaPromises.push(new Promise((resolve) => {
+        mediaPromises.push(new Promise<void>((resolve) => {
             function onLoad() {
                 image.removeAttr('alt');
                 image.removeClass('error');
@@ -2240,7 +2241,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
         const video = template.find('.mes_video');
         video.attr('src', attachment.url);
         video.attr('title', attachment.title || mes.extra.title || '');
-        mediaPromises.push(new Promise((resolve) => {
+        mediaPromises.push(new Promise<void>((resolve) => {
             function onLoad() {
                 resolve();
             }
@@ -2273,7 +2274,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
         audio.attr('src', attachment.url);
         audio.attr('title', attachment.title || mes.extra.title || '');
 
-        mediaPromises.push(new Promise((resolve) => {
+        mediaPromises.push(new Promise<void>((resolve) => {
             function onLoad() {
                 resolve();
             }
@@ -2542,7 +2543,7 @@ export function addOneMessage(mes, { type = undefined, insertAfter = null, scrol
         scrollChatToBottom({ waitForFrame: true });
     }
 
-    applyCharacterTagsToMessageDivs({ mesIds: messageId });
+    applyCharacterTagsToMessageDivs({ mesIds: messageId as any });
     updateEditArrowClasses();
     return messageElement;
 }
@@ -2891,7 +2892,7 @@ export function substituteParamsLegacy(content, _name1, _name2, _original, _grou
     environment.group = environment.charIfNotGroup = getGroupValue(true);
     environment.groupNotMuted = getGroupValue(false);
     environment.notChar = getNotCharValue();
-    environment.model = getGeneratingModel();
+    environment.model = (getGeneratingModel as any)();
 
     if (additionalMacro && typeof additionalMacro === 'object') {
         Object.assign(environment, additionalMacro);
@@ -2918,7 +2919,7 @@ export function substituteParamsLegacy(content, _name1, _name2, _original, _grou
  * @param {(x: string) => string} [options.postProcessFn=(x) => x] - Post-processing function for each substituted macro.
  * @returns {string} The string with substituted parameters.
  */
-export function substituteParams(content, options = {}) {
+export function substituteParams(content, options: any = {}) {
     if (!content) return '';
 
     if (typeof content !== 'string') {
@@ -2930,7 +2931,7 @@ export function substituteParams(content, options = {}) {
     // We'll simply re-route them to a temporary legacy function. In the future, we'll remove this and cleanly build the options object ourselves.
     const isOptionsObject = options && typeof options === 'object' && !Array.isArray(options);
     if (!isOptionsObject) {
-        return substituteParamsLegacy.call(this, ...arguments);
+        return (substituteParamsLegacy as any).call(this, ...arguments);
     }
 
     // Keep the new macro engine behind a feature switch for now
@@ -3574,7 +3575,7 @@ class StreamingProcessor {
     }
 
     markUIGenStopped() {
-        unblockGeneration();
+        (unblockGeneration as any)();
     }
 
     async onStartStreaming(text) {
@@ -3730,7 +3731,7 @@ class StreamingProcessor {
                 gen_finished: message.gen_finished,
                 extra: swipeInfoExtra,
             };
-            const swipeInfoArray = Array(this.swipes.length).fill().map(() => structuredClone(swipeInfo));
+            const swipeInfoArray = (Array(this.swipes.length) as any).fill().map(() => structuredClone(swipeInfo));
             parseReasoningInSwipes(this.swipes, swipeInfoArray, message.extra?.reasoning_duration);
             message.swipes.push(...this.swipes);
             message.swipe_info.push(...swipeInfoArray);
@@ -3852,7 +3853,7 @@ class StreamingProcessor {
                 this.images = state?.images ?? [];
                 this.reasoningSignature = state?.signature ?? null;
                 await eventSource.emit(event_types.STREAM_TOKEN_RECEIVED, text);
-                await sw.tick(async () => await this.onProgressStreaming(this.messageId, this.continueMessage + text));
+                await (sw.tick as any)(async () => await (this.onProgressStreaming as any)(this.messageId, this.continueMessage + text));
             }
             const seconds = (timestamps[timestamps.length - 1] - timestamps[0]) / 1000;
             console.warn(`Stream stats: ${timestamps.length} tokens, ${seconds.toFixed(2)} seconds, rate: ${Number(timestamps.length / seconds).toFixed(2)} TPS`);
@@ -4202,7 +4203,7 @@ class TempResponseLength {
  * @returns {Promise<void>} Resolves when the message is removed.
  */
 function removeLastMessage() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
         const lastMes = chatElement.children('.mes').last();
         if (lastMes.length === 0) {
             return resolve();
@@ -4244,7 +4245,7 @@ function removeLastMessage() {
  * @param {boolean} dryRun Whether to actually generate a message or just assemble the prompt
  * @returns {Promise<any>} Returns a promise that resolves when the text is done generating.
  */
-export async function Generate(type, { automatic_trigger, force_name2, quiet_prompt, quietToLoud, skipWIAN, force_chid, signal, quietImage, quietName, jsonSchema = null, depth = 0 } = {}, dryRun = false) {
+export async function Generate(type, { automatic_trigger, force_name2, quiet_prompt, quietToLoud, skipWIAN, force_chid, signal, quietImage, quietName, jsonSchema = null, depth = 0 }: any = {}, dryRun = false) {
     console.log('Generate entered');
     setGenerationProgress(0);
     generation_started = new Date();
@@ -5843,16 +5844,16 @@ export async function sendMessageAsUser(messageText, messageBias, insertAt = nul
     };
 
     if (power_user.message_token_count_enabled) {
-        message.extra.token_count = await getTokenCountAsync(message.mes, 0);
+        (message.extra as any).token_count = await getTokenCountAsync(message.mes, 0);
     }
 
     // Lock user avatar to a persona.
     if (avatar in power_user.personas) {
-        message.force_avatar = getThumbnailUrl('persona', avatar);
+        (message as any).force_avatar = getThumbnailUrl('persona', avatar);
     }
 
     if (messageBias) {
-        message.extra.bias = messageBias;
+        (message.extra as any).bias = messageBias;
         message.mes = removeMacros(message.mes);
     }
 
@@ -6395,7 +6396,7 @@ function extractMultiSwipes(data, type) {
  *
  * @returns {string} The formatted message
  */
-export function cleanUpMessage({ getMessage, isImpersonate, isContinue, displayIncompleteSentences = false, stoppingStrings = null, includeUserPromptBias = true, trimNames = true, trimWrongNames = true } = {}) {
+export function cleanUpMessage({ getMessage, isImpersonate, isContinue, displayIncompleteSentences = false, stoppingStrings = null, includeUserPromptBias = true, trimNames = true, trimWrongNames = true }: any = {}) {
     if (arguments.length > 0 && typeof arguments[0] !== 'object') {
         console.trace('cleanUpMessage called with positional arguments. Please use an object instead.');
         [getMessage, isImpersonate, isContinue, displayIncompleteSentences, stoppingStrings, includeUserPromptBias, trimNames, trimWrongNames] = arguments;
@@ -6634,7 +6635,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
             lastMessage.gen_finished = generationFinished;
             lastMessage.send_date = getMessageTimeStamp();
             lastMessage.extra.api = getGeneratingApi();
-            lastMessage.extra.model = getGeneratingModel();
+            lastMessage.extra.model = (getGeneratingModel as any)();
             lastMessage.extra.reasoning = reasoning;
             lastMessage.extra.reasoning_duration = null;
             lastMessage.extra.reasoning_signature = reasoningSignature;
@@ -6659,7 +6660,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
         lastMessage.gen_finished = generationFinished;
         lastMessage.send_date = getMessageTimeStamp();
         lastMessage.extra.api = getGeneratingApi();
-        lastMessage.extra.model = getGeneratingModel();
+        lastMessage.extra.model = (getGeneratingModel as any)();
         lastMessage.extra.reasoning = reasoning;
         lastMessage.extra.reasoning_duration = null;
         lastMessage.extra.reasoning_signature = reasoningSignature;
@@ -6681,7 +6682,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
         lastMessage.gen_finished = generationFinished;
         lastMessage.send_date = getMessageTimeStamp();
         lastMessage.extra.api = getGeneratingApi();
-        lastMessage.extra.model = getGeneratingModel();
+        lastMessage.extra.model = (getGeneratingModel as any)();
         lastMessage.extra.reasoning += reasoning;
         lastMessage.extra.reasoning_signature = reasoningSignature;
         await processImageAttachment(lastMessage, { imageUrls });
@@ -6703,7 +6704,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
         newMessage.is_user = false;
         newMessage.send_date = getMessageTimeStamp();
         newMessage.extra.api = getGeneratingApi();
-        newMessage.extra.model = getGeneratingModel();
+        newMessage.extra.model = (getGeneratingModel as any)();
         newMessage.extra.reasoning = reasoning;
         newMessage.extra.reasoning_duration = null;
         newMessage.extra.reasoning_signature = reasoningSignature;
@@ -6775,7 +6776,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
             gen_finished: item.gen_finished,
             extra: swipeInfoExtra,
         };
-        const swipeInfoArray = Array(swipes.length).fill().map(() => structuredClone(swipeInfo));
+        const swipeInfoArray = (Array(swipes.length) as any).fill().map(() => structuredClone(swipeInfo));
         parseReasoningInSwipes(swipes, swipeInfoArray, item.extra?.reasoning_duration);
         item.swipes.push(...swipes);
         item.swipe_info.push(...swipeInfoArray);
@@ -7261,7 +7262,7 @@ export async function renameCharacter(name = null, { silent = false, renameChats
 async function renamePastChats(oldAvatar, newAvatar, newName) {
     const pastChats = await getPastCharacterChats();
 
-    for (const { file_name } of pastChats) {
+    for (const { file_name } of pastChats as any[]) {
         try {
             const fileNameWithoutExtension = file_name.replace('.jsonl', '');
             const getChatResponse = await fetch('/api/chats/get', {
@@ -7348,7 +7349,7 @@ export function saveChatDebounced() {
  *
  * @returns {Promise<void>}
  */
-export async function saveChat({ chatName, withMetadata, mesId, force = false, chatData = undefined } = {}) {
+export async function saveChat({ chatName, withMetadata, mesId, force = false, chatData = undefined }: any = {}) {
     if (selected_group) {
         toastr.error(t`Operation was aborted to prevent data corruption.`, t`saveChat called for a group chat`);
         throw new Error('saveChat called for a group chat');
@@ -7461,16 +7462,16 @@ async function read_avatar_load(input) {
             crop_data = dlg.cropData;
             $('#avatar_load_preview').attr('src', String(croppedImage));
         } else {
-            $('#avatar_load_preview').attr('src', fileData);
+            $('#avatar_load_preview').attr('src', fileData as string);
         }
 
         if (menu_type == 'create') {
             return;
         }
 
-        await createOrEditCharacter();
+        await (createOrEditCharacter as any)();
 
-        const formData = new FormData(/** @type {HTMLFormElement} */($('#form_create').get(0)));
+        const formData = new FormData($('#form_create').get(0) as any);
         const avatarKey = formData.get('avatar_url').toString();
 
         // Bust cache for the avatar thumbnail and character image
@@ -7684,9 +7685,9 @@ function getFirstMessage() {
             message.mes = swipes[0];
         }
 
-        message.swipe_id = 0;
-        message.swipes = swipes;
-        message.swipe_info = swipes.map(_ => ({
+        (message as any).swipe_id = 0;
+        (message as any).swipes = swipes;
+        (message as any).swipe_info = swipes.map(_ => ({
             send_date: message.send_date,
             gen_started: void 0,
             gen_finished: void 0,
@@ -8401,10 +8402,10 @@ async function messageEditDone(div) {
  */
 export async function getChatsFromFiles(data, isGroupChat) {
     const context = getContext();
-    let chat_dict: Record<string, any> = {};    let chat_list = Object.values(data).sort((a, b) => a.file_name.localeCompare(b.file_name)).reverse();
+    let chat_dict: Record<string, any> = {};    let chat_list = (Object.values(data) as any[]).sort((a, b) => a.file_name.localeCompare(b.file_name)).reverse();
 
     let chat_promise = chat_list.map(({ file_name }) => {
-        return new Promise(async (res, rej) => {
+        return new Promise<void>(async (res, rej) => {
             try {
                 const endpoint = isGroupChat ? '/api/chats/group/get' : '/api/chats/get';
                 const requestBody = isGroupChat
@@ -8476,7 +8477,7 @@ export async function getPastCharacterChats(characterId = null) {
         return [];
     }
 
-    const chats = Object.values(data);
+    const chats = Object.values(data) as any[];
     return chats.sort((a, b) => a.file_name.localeCompare(b.file_name)).reverse();
 }
 
@@ -8805,7 +8806,7 @@ function select_rm_create({ switchMenu = true } = {}) {
 
     //console.log('select_rm_Create() -- selected button: '+selected_button);
     if (selected_button == 'create' && create_save.avatar) {
-        const addAvatarInput = /** @type {HTMLInputElement} */ ($('#add_avatar_button').get(0));
+        const addAvatarInput = $('#add_avatar_button').get(0) as HTMLInputElement;
         addAvatarInput.files = create_save.avatar;
         read_avatar_load(addAvatarInput);
     }
@@ -8853,7 +8854,7 @@ function select_rm_create({ switchMenu = true } = {}) {
     $('#set_character_world').data('chid', -1);
     setWorldInfoButtonClass(undefined, !!create_save.world);
     updateFavButtonState(false);
-    checkEmbeddedWorld();
+    (checkEmbeddedWorld as any)();
 
     $('#form_create').attr('actiontype', 'createcharacter');
     $('.form_create_bottom_buttons_block .chat_lorebook_button').hide();
@@ -9067,7 +9068,7 @@ export function callPopup(text, type, inputValue = '', { okButton, rows, wide, w
         easing: animation_easing,
     });
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
         dialogueResolve = resolve;
     });
 }
@@ -9594,7 +9595,7 @@ function openAlternateGreetings() {
         allowVerticalScrolling: true,
         onClose: async () => {
             if (menu_type !== 'create') {
-                await createOrEditCharacter();
+                await (createOrEditCharacter as any)();
             }
         },
     });
@@ -9706,7 +9707,7 @@ export async function createOrEditCharacter(e) {
     }
 
     $('#rm_info_avatar').html('');
-    const formData = new FormData(/** @type {HTMLFormElement} */($('#form_create').get(0)));
+    const formData = new FormData($('#form_create').get(0) as any);
     formData.set('fav', String(fav_ch_checked));
     const isNewChat = e instanceof CustomEvent && e.type === 'newChat';
 
@@ -9905,7 +9906,7 @@ function formatSwipeCounter(current, total) {
  * @param {number} [params.forceSwipeId] The target swipe_id. When out of range, it will be looped or clamped.
  * @param {number} [params.forceDuration] Overwrites the default swipe duration.
  */
-export async function swipe(event, direction, { source, repeated, message = chat[chat.length - 1], forceMesId, forceSwipeId, forceDuration } = {}) {
+export async function swipe(event, direction, { source, repeated, message = chat[chat.length - 1], forceMesId, forceSwipeId, forceDuration }: any = {}) {
     if (chat.length === 0) {
         console.warn('Swipe was called on an empty chat.');
         return;
@@ -10285,7 +10286,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
     }
 
     if (isHordeGenerationNotAllowed()) {
-        return unblockGeneration();
+        return (unblockGeneration as any)();
     }
 
     //If the swipe is not being deleted.
@@ -10550,7 +10551,7 @@ async function importCharacter(file, { preserveFileName = '', importTags = false
 async function importFromURL(items, files) {
     for (const item of items) {
         if (item.type === 'text/uri-list') {
-            const uriList = await new Promise((resolve) => {
+            const uriList = await new Promise<string>((resolve) => {
                 item.getAsString((uriList) => { resolve(uriList); });
             });
             const uris = uriList.split('\n').filter(uri => uri.trim() !== '');
@@ -10660,7 +10661,7 @@ export async function renameGroupOrCharacterChat({ characterId, groupId, oldFile
         } else if (characterId !== undefined && String(characterId) === String(this_chid) && characters[characterId]?.chat === oldFileName) {
             characters[characterId].chat = newFileName;
             $('#selected_chat_pole').val(characters[characterId].chat);
-            await createOrEditCharacter();
+            await (createOrEditCharacter as any)();
         }
 
         if (currentChatId) {
@@ -11999,7 +12000,7 @@ jQuery(async function () {
         exportPopper.update();
 
         // Save before exporting
-        await createOrEditCharacter();
+        await (createOrEditCharacter as any)();
         const body = { format, avatar_url: characters[this_chid].avatar };
 
         const response = await fetch('/api/characters/export', {
@@ -12303,7 +12304,7 @@ jQuery(async function () {
     });
 
     $('#char-management-dropdown').on('change', async (e) => {
-        const targetElement = /** @type {HTMLSelectElement} */ (e.target);
+        const targetElement = e.target as HTMLSelectElement;
         const target = $(targetElement.selectedOptions).attr('id');
         switch (target) {
             case 'set_character_world':

@@ -131,7 +131,7 @@ router.post('/install', async (request, response) => {
             return response.status(409).send(`Directory already exists at ${extensionPath}`);
         }
 
-        const cloneOptions = { depth: 1 };
+        const cloneOptions: any = { depth: 1 };
         if (branch) {
             cloneOptions.branch = branch;
         }

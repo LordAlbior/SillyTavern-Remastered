@@ -120,7 +120,7 @@ class BackupsBrowser {
      * @returns {Promise<boolean>} True if deleted, false otherwise.
      */
     async deleteBackup(name) {
-        const confirm = await Popup.show.confirm(t`Are you sure?`);
+        const confirm = await (Popup.show.confirm as any)(t`Are you sure?`);
         if (!confirm) {
             return false;
         }

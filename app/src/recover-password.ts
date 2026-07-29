@@ -7,7 +7,7 @@ import {
     getPasswordHash,
     toKey,
 } from './users.js';
-import type { User } from './users.js';
+
 
 /**
  * Initializes the storage with the data root specified in the config file.
@@ -30,7 +30,7 @@ async function initStorage(configPath: string): Promise<void> {
 export async function recoverPassword(configPath: string, userAccount: string, userPassword?: string): Promise<void> {
     await initStorage(configPath);
 
-    const user = await storage.get(toKey(userAccount)) as User | undefined;
+    const user = await storage.get(toKey(userAccount)) as any;
 
     if (!user) {
         console.error(`User "${userAccount}" not found.`);

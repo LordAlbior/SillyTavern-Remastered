@@ -125,7 +125,7 @@ router.post('/generate-voice', async (req, res) => {
             });
         });
 
-        const finalAudioData = Buffer.concat(result);
+        const finalAudioData = Buffer.concat(result as any);
 
         res.set('Content-Type', 'audio/mpeg');
         res.status(200).send(finalAudioData);

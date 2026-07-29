@@ -1,3 +1,4 @@
+// @ts-ignore - runtime path, no type declarations
 import { gzip } from '/lib.js';
 
 /**

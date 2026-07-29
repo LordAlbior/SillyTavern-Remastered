@@ -22,7 +22,7 @@ export function segmentTextInElement(htmlElement, htmlContent, granularity = 'wo
     }
 
     // TODO: Support more locales, make granularity configurable.
-    const segmenter = new Intl.Segmenter('en-US', { granularity });
+    const segmenter = new Intl.Segmenter('en-US', { granularity } as any);
     const textNodes = [];
     const walker = document.createTreeWalker(htmlElement, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
@@ -34,7 +34,7 @@ export function segmentTextInElement(htmlElement, htmlContent, granularity = 'wo
         }
 
         // Skip text nodes that are empty or only whitespace
-        if (/^\s*$/.test(textNode.data)) {
+        if (/^\s*$/.test((textNode as any).data)) {
             continue;
         }
 

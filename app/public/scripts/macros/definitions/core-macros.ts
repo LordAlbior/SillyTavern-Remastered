@@ -324,13 +324,13 @@ export function registerCoreMacros() {
                 formula = `1d${formula}`;
             }
 
-            const isValid = droll.validate(formula);
+            const isValid = (droll as any).validate(formula);
             if (!isValid) {
                 warn(`Invalid roll formula: ${formula}`);
                 return '';
             }
 
-            const result = droll.roll(formula);
+            const result = (droll as any).roll(formula);
             if (result === false) return '';
             return String(result.total);
         },

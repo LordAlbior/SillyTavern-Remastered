@@ -527,7 +527,7 @@ export function dragElement($elmnt) {
         }
 
         const element = /** @type {HTMLElement} */ ($target[0]);
-        const style = getComputedStyle(element);
+        const style = getComputedStyle(element as any);
         height = parseInt(style.height);
         width = parseInt(style.width);
         top = parseInt(style.top);
@@ -699,7 +699,7 @@ export function initRossMods() {
     }
 
     if (power_user.auto_connect) {
-        RA_autoconnect();
+        RA_autoconnect(undefined as any);
     }
 
     $('#main_api').on('change', function () {

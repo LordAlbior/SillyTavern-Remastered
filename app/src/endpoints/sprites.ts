@@ -119,7 +119,7 @@ router.get('/get', function (request, response) {
     const name = String(request.query.name);
     const isSubfolder = name.includes('/');
     const spritesPath = getSpritesPath(request.user.directories, name, isSubfolder);
-    let sprites: Array<[string, Buffer]> = [];
+    let sprites: any[] = [];
 
     try {
         if (spritesPath && fs.existsSync(spritesPath) && fs.statSync(spritesPath).isDirectory()) {

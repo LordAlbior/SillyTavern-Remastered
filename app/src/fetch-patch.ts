@@ -28,7 +28,7 @@ globalThis.fetch = async (request: string | URL | Request, options?: RequestInit
     }
     const fileName = parsedPath.base;
     const buffer = await fs.promises.readFile(filePath);
-    const response = new Response(buffer, {
+    const response = new Response(buffer as any, {
         status: 200,
         statusText: 'OK',
         headers: {

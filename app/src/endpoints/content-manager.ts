@@ -132,7 +132,7 @@ export function getDefaultPresetFile(filename) {
  * @param {string[]} [forceCategories] List of categories to force check (even if content check is skipped)
  * @returns {boolean} Whether any content was added
  */
-function seedContent(contentIndex, contentLogPath, resolveTarget, forceCategories) {
+function seedContent(contentIndex, contentLogPath, resolveTarget, forceCategories = undefined) {
     let anyContentAdded = false;
     const contentLog = getContentLog(contentLogPath);
 

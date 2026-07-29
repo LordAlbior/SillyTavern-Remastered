@@ -61,7 +61,7 @@ router.post('/generate-voice', async (request, response) => {
 
         // Add language parameter if provided
         if (language) {
-            requestBody.lang = language;
+            (requestBody as any).lang = language;
         }
 
         const apiUrl = `${apiHost}/v1/t2a_v2?GroupId=${groupId}`;

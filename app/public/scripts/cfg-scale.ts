@@ -125,7 +125,7 @@ function onCfgMenuItemClick() {
         $('#cfgConfig').transition({
             opacity: 1.0,
             duration: animation_duration,
-        }, async function () {
+        } as any, async function () {
             await delay(50);
             $('#cfgConfig').removeClass('resizing');
         });
@@ -143,7 +143,7 @@ function onCfgMenuItemClick() {
         $('#cfgConfig').transition({
             opacity: 0.0,
             duration: animation_duration,
-        }, async function () {
+        } as any, async function () {
             await delay(50);
             $('#cfgConfig').removeClass('resizing');
         });

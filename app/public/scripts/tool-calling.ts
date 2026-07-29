@@ -853,7 +853,7 @@ export class ToolManager {
             acc[name] = (acc[name] || 0) + 1;
             return acc;
         }, {});
-        return Object.entries(toolCounts).map(([name, count]) => count > 1 ? `${name} (${count})` : name).join(', ');
+        return Object.entries(toolCounts).map(([name, count]) => (count as number) > 1 ? `${name} (${count})` : name).join(', ');
     }
 
     /**
@@ -898,7 +898,7 @@ export class ToolManager {
                 isSmallSys: true,
                 tool_invocations: invocations,
                 api: getGeneratingApi(),
-                model: getGeneratingModel(),
+                model: (getGeneratingModel as any)(),
             },
         };
         chat.push(message);

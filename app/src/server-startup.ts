@@ -192,7 +192,7 @@ export function setupPrivateEndpoints(app) {
  */
 export class ServerStartup {
     app: import('express').Express;
-    cliArgs: import('./command-line.js').CommandLineArguments;
+    cliArgs: any;
 
     /**
      * Creates a new ServerStartup instance.

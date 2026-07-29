@@ -455,7 +455,7 @@ export function initHorde() {
             toastr.warning(t`Please enter your Horde API key`);
             return;
         }
-        await writeSecret(SECRET_KEYS.HORDE, key);
+        await writeSecret(SECRET_KEYS.HORDE, key, undefined as any);
     });
 
     $('#horde_refresh').on('click', () => getHordeModels(true));

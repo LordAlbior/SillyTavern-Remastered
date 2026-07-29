@@ -37,7 +37,7 @@ export default function getWebpackServeMiddleware() {
         const publicLibConfig = getPublicLibConfig({ forceDist, pruneCache });
         const compiler = webpack(publicLibConfig);
 
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
             compiler.run((_error, stats) => {
                 const output = stats?.toString(publicLibConfig.stats);
                 if (output) {

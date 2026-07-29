@@ -8,9 +8,9 @@ export class SimpleMutex {
     isBusy = false;
 
     /**
-     * @type {Function}
+     * @type {(...args: any[]) => Promise<void> | void}
      */
-    callback = () => {};
+    callback: (...args: any[]) => Promise<void> | void = () => {};
 
     /**
      * Constructs a SimpleMutex.

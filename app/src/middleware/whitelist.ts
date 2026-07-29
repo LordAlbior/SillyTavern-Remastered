@@ -71,7 +71,7 @@ export default async function getWhitelistMiddleware(): Promise<import('express'
          * Checks if an IP address matches any entry in the whitelist.
          */
         function isIPInWhitelist(whitelist: string[], ip: string): boolean {
-            return whitelist.some(x => ipMatching.matches(ip, ipMatching.getMatch(x)));
+            return whitelist.some(x => (ipMatching as any).matches(ip, (ipMatching as any).getMatch(x)));
         }
 
         //clientIp = req.connection.remoteAddress.split(':').pop();

@@ -523,7 +523,7 @@ export function convertGooglePrompt(messages, model, useSysPrompt, names) {
 
                     // https://ai.google.dev/gemini-api/docs/gemini-3#media_resolution
                     if (/gemini-3/.test(model) && mediaResolution) {
-                        part.mediaResolution = {
+                        (part as any).mediaResolution = {
                             level: mediaResolution,
                         };
                     }
@@ -1426,7 +1426,7 @@ export function addOpenRouterSignatures(messages, model) {
         };
         if (typeof message.signature === 'string') {
             if (enableThoughtSignatures) {
-                addDetail(message.signature);
+                (addDetail as any)(message.signature);
             }
             delete message.signature;
         }

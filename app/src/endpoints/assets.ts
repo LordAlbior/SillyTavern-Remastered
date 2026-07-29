@@ -107,7 +107,7 @@ export const router = express.Router();
  */
 router.post('/get', async (request, response) => {
     const folderPath = path.join(request.user.directories.assets);
-    let output = {};
+    let output: any = {};
 
     try {
         if (fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory()) {

@@ -1,7 +1,9 @@
 import { Buffer } from 'node:buffer';
 import fetch from 'node-fetch';
 import express from 'express';
-import { speak, languages } from 'google-translate-api-x';
+import * as googleTranslate from 'google-translate-api-x';
+const speak = (googleTranslate as any).speak;
+const languages = (googleTranslate as any).languages;
 import crypto from 'node:crypto';
 import util from 'node:util';
 import urlJoin from 'url-join';

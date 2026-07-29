@@ -6,7 +6,6 @@ import storage from 'node-persist';
 import express from 'express';
 
 import { getUserAvatar, toKey, getPasswordHash, getPasswordSalt, createBackupArchive, ensurePublicDirectoriesExist, toAvatarKey, getAccountVersion } from '../users.js';
-import type { User } from '../users.js';
 import { SETTINGS_FILE } from '../constants.js';
 import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
 import { color, Cache, getConfigValue } from '../util.js';
@@ -74,7 +73,7 @@ router.post('/change-avatar', async (request, response) => {
             return response.status(400).json({ error: 'Invalid data URL' });
         }
 
-        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
+        const user = await storage.getItem(toKey(request.body.handle)) as any;
 
         if (!user) {
             console.error('Change avatar failed: User not found');
@@ -102,7 +101,7 @@ router.post('/change-password', async (request, response) => {
             return response.status(403).json({ error: 'Unauthorized' });
         }
 
-        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
+        const user = await storage.getItem(toKey(request.body.handle)) as any;
 
         if (!user) {
             console.error('Change password failed: User not found');
@@ -202,7 +201,7 @@ router.post('/change-name', async (request, response) => {
             return response.status(403).json({ error: 'Unauthorized' });
         }
 
-        const user = await storage.getItem(toKey(request.body.handle)) as User | undefined;
+        const user = await storage.getItem(toKey(request.body.handle)) as any;
 
         if (!user) {
             console.warn('Change name failed: User not found');

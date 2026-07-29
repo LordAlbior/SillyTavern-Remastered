@@ -67,13 +67,13 @@ function handleNodeChange(node) {
         if (isKeyboardInteractable(node)) {
             makeKeyboardInteractable(node);
         }
-        initializeInteractables(node);
+        initializeInteractables(node as any);
 
         // Handle scroll reset containers
         if (node.classList.contains('scroll-reset-container')) {
             applyScrollResetBehavior(node);
         }
-        initializeScrollResetBehaviors(node);
+        initializeScrollResetBehaviors(node as any);
     }
 }
 

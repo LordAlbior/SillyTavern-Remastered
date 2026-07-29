@@ -16,7 +16,7 @@ router.post('/chat/get', async (request, response) => {
         for (const name of backupFiles) {
             const filePath = path.join(request.user.directories.backups, name);
             const info = await getChatInfo(filePath);
-            if (!info || !info.file_name) {
+            if (!info || !(info as any).file_name) {
                 continue;
             }
             backupModels.push(info);
