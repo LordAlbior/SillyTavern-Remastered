@@ -1,20 +1,20 @@
-import { getCurrentChatId, saveSettingsDebounced } from '../script.js';
-import { extension_settings, saveMetadataDebounced } from './extensions.js';
-import { executeSlashCommandsWithOptions } from './slash-commands.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.js';
+import { getCurrentChatId, saveSettingsDebounced } from '../script.ts';
+import { extension_settings, saveMetadataDebounced } from './extensions.ts';
+import { executeSlashCommandsWithOptions } from './slash-commands.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.ts';
 
 const chat_metadata: Record<string, any> = (await import('../script.js')).chat_metadata; // ponytail: widen type, fix when script.ts exports typed chat_metadata
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.js';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
-import { SlashCommandClosureResult } from './slash-commands/SlashCommandClosureResult.js';
-import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.js';
-import { SlashCommandScope } from './slash-commands/SlashCommandScope.js';
-import { isFalseBoolean, convertValueType, isTrueBoolean } from './utils.js';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.ts';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
+import { SlashCommandClosureResult } from './slash-commands/SlashCommandClosureResult.ts';
+import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.ts';
+import { SlashCommandScope } from './slash-commands/SlashCommandScope.ts';
+import { isFalseBoolean, convertValueType, isTrueBoolean } from './utils.ts';
 
 /** @typedef {import('./slash-commands/SlashCommandParser.js').NamedArguments} NamedArguments */
 /** @typedef {import('./slash-commands/SlashCommand.js').UnnamedArguments} UnnamedArguments */

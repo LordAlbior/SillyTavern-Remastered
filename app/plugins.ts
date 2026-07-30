@@ -9,8 +9,8 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 import { default as git, CheckRepoActions } from 'simple-git';
-import { createGitClient } from './src/git/client.js';
-import { color } from './src/util.js';
+import { createGitClient } from './src/git/client.ts';
+import { color } from './src/util.ts';
 
 const __dirname = import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url));
 process.chdir(__dirname);

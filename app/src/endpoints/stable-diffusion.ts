@@ -9,10 +9,10 @@ import urlJoin from 'url-join';
 import _ from 'lodash';
 import mime from 'mime-types';
 
-import { delay, getBasicAuthHeader, isValidUrl, tryParse } from '../util.js';
-import { readSecret, SECRET_KEYS } from './secrets.js';
-import { getFileNameValidationFunction } from '../middleware/validateFileName.js';
-import { AIMLAPI_HEADERS } from '../constants.js';
+import { delay, getBasicAuthHeader, isValidUrl, tryParse } from '../util.ts';
+import { readSecret, SECRET_KEYS } from './secrets.ts';
+import { getFileNameValidationFunction } from '../middleware/validateFileName.ts';
+import { AIMLAPI_HEADERS } from '../constants.ts';
 
 /**
  * Gets the comfy workflows.

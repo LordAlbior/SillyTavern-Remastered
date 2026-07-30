@@ -1,5 +1,5 @@
-import { power_user } from './power-user.js';
-import { delay } from './utils.js';
+import { power_user } from './power-user.ts';
+import { delay } from './utils.ts';
 
 // Symbol for not primary swipe error
 const NOT_PRIMARY = Symbol('not_primary_swipe');

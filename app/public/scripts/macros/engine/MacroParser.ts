@@ -1,5 +1,5 @@
 import { chevrotain } from '../../../lib.js';
-import { MacroLexer } from './MacroLexer.js';
+import { MacroLexer } from './MacroLexer.ts';
 
 const { CstParser } = chevrotain;
 

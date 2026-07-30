@@ -13,20 +13,20 @@ import {
     setOnlineStatus,
     startStatusLoading,
     substituteParams,
-} from '../script.js';
-import { deriveTemplatesFromChatTemplate } from './chat-templates.js';
-import { t } from './i18n.js';
-import { autoSelectInstructPreset, selectContextPreset, selectInstructPreset } from './instruct-mode.js';
-import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from './logit-bias.js';
+} from '../script.ts';
+import { deriveTemplatesFromChatTemplate } from './chat-templates.ts';
+import { t } from './i18n.ts';
+import { autoSelectInstructPreset, selectContextPreset, selectInstructPreset } from './instruct-mode.ts';
+import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from './logit-bias.ts';
 
-import { power_user, registerDebugFunction } from './power-user.js';
-import { getActiveManualApiSamplers, loadApiSelectedSamplers, isSamplerManualPriorityEnabled } from './samplerSelect.js';
-import { SECRET_KEYS, writeSecret } from './secrets.js';
-import { getEventSourceStream } from './sse-stream.js';
-import { getCurrentDreamGenModelTokenizer, getCurrentOpenRouterModelTokenizer, loadAphroditeModels, loadDreamGenModels, loadFeatherlessModels, loadGenericModels, loadInfermaticAIModels, loadLlamaCppModels, loadMancerModels, loadOllamaModels, loadOpenRouterModels, loadTabbyModels, loadTogetherAIModels, loadVllmModels, updateOpenRouterProvidersWarning } from './textgen-models.js';
-import { ENCODE_TOKENIZERS, TEXTGEN_TOKENIZERS, TOKENIZER_SUPPORTED_KEY, getTextTokens, getTokenizerBestMatch, tokenizers } from './tokenizers.js';
-import { AbortReason } from './util/AbortReason.js';
-import { getSortableDelay, onlyUnique, arraysEqual, isObject } from './utils.js';
+import { power_user, registerDebugFunction } from './power-user.ts';
+import { getActiveManualApiSamplers, loadApiSelectedSamplers, isSamplerManualPriorityEnabled } from './samplerSelect.ts';
+import { SECRET_KEYS, writeSecret } from './secrets.ts';
+import { getEventSourceStream } from './sse-stream.ts';
+import { getCurrentDreamGenModelTokenizer, getCurrentOpenRouterModelTokenizer, loadAphroditeModels, loadDreamGenModels, loadFeatherlessModels, loadGenericModels, loadInfermaticAIModels, loadLlamaCppModels, loadMancerModels, loadOllamaModels, loadOpenRouterModels, loadTabbyModels, loadTogetherAIModels, loadVllmModels, updateOpenRouterProvidersWarning } from './textgen-models.ts';
+import { ENCODE_TOKENIZERS, TEXTGEN_TOKENIZERS, TOKENIZER_SUPPORTED_KEY, getTextTokens, getTokenizerBestMatch, tokenizers } from './tokenizers.ts';
+import { AbortReason } from './util/AbortReason.ts';
+import { getSortableDelay, onlyUnique, arraysEqual, isObject } from './utils.ts';
 
 export const textgen_types = {
     OOBA: 'ooba',

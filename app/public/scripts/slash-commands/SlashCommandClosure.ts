@@ -1,17 +1,17 @@
-import { substituteParams } from '../../script.js';
-import { power_user } from '../power-user.js';
-import { delay, escapeRegex, uuidv4 } from '../utils.js';
-import { SlashCommand } from './SlashCommand.js';
-import { SlashCommandAbortController } from './SlashCommandAbortController.js';
-import { SlashCommandBreak } from './SlashCommandBreak.js';
-import { SlashCommandBreakController } from './SlashCommandBreakController.js';
-import { SlashCommandBreakPoint } from './SlashCommandBreakPoint.js';
-import { SlashCommandClosureResult } from './SlashCommandClosureResult.js';
-import { SlashCommandDebugController } from './SlashCommandDebugController.js';
-import { SlashCommandExecutionError } from './SlashCommandExecutionError.js';
-import { SlashCommandExecutor } from './SlashCommandExecutor.js';
-import { SlashCommandNamedArgumentAssignment } from './SlashCommandNamedArgumentAssignment.js';
-import { SlashCommandScope } from './SlashCommandScope.js';
+import { substituteParams } from '../../script.ts';
+import { power_user } from '../power-user.ts';
+import { delay, escapeRegex, uuidv4 } from '../utils.ts';
+import { SlashCommand } from './SlashCommand.ts';
+import { SlashCommandAbortController } from './SlashCommandAbortController.ts';
+import { SlashCommandBreak } from './SlashCommandBreak.ts';
+import { SlashCommandBreakController } from './SlashCommandBreakController.ts';
+import { SlashCommandBreakPoint } from './SlashCommandBreakPoint.ts';
+import { SlashCommandClosureResult } from './SlashCommandClosureResult.ts';
+import { SlashCommandDebugController } from './SlashCommandDebugController.ts';
+import { SlashCommandExecutionError } from './SlashCommandExecutionError.ts';
+import { SlashCommandExecutor } from './SlashCommandExecutor.ts';
+import { SlashCommandNamedArgumentAssignment } from './SlashCommandNamedArgumentAssignment.ts';
+import { SlashCommandScope } from './SlashCommandScope.ts';
 
 export class SlashCommandClosure {
     /** @type {SlashCommandScope} */ scope;

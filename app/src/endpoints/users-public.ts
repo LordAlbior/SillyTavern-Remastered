@@ -3,9 +3,9 @@ import crypto from 'node:crypto';
 import storage from 'node-persist';
 import express from 'express';
 import { RateLimiterMemory, RateLimiterRes } from 'rate-limiter-flexible';
-import { getIpAddress, retryAfter } from '../express-common.js';
-import { color, Cache, getConfigValue } from '../util.js';
-import { KEY_PREFIX, getUserAvatar, toKey, getPasswordHash, getPasswordSalt, getAccountVersion } from '../users.js';
+import { getIpAddress, retryAfter } from '../express-common.ts';
+import { color, Cache, getConfigValue } from '../util.ts';
+import { KEY_PREFIX, getUserAvatar, toKey, getPasswordHash, getPasswordSalt, getAccountVersion } from '../users.ts';
 
 const DISCREET_LOGIN = getConfigValue('enableDiscreetLogin', false, 'boolean');
 const PREFER_REAL_IP_HEADER = getConfigValue('rateLimiting.preferRealIpHeader', false, 'boolean');

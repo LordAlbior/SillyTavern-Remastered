@@ -1,4 +1,4 @@
-import { debounce_timeout } from './constants.js';
+import { debounce_timeout } from './constants.ts';
 
 /**
  * Drag and drop handler

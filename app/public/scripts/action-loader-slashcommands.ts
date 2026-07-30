@@ -1,12 +1,12 @@
-import { ActionLoaderToastMode, getActiveLoaderHandles, getLoaderHandleById, loader } from './action-loader.js';
-import { t } from './i18n.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { SlashCommandNamedArgument, ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.js';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
-import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { isFalseBoolean } from './utils.js';
+import { ActionLoaderToastMode, getActiveLoaderHandles, getLoaderHandleById, loader } from './action-loader.ts';
+import { t } from './i18n.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { SlashCommandNamedArgument, ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.ts';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
+import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { isFalseBoolean } from './utils.ts';
 import { DOMPurify } from '../lib.js';
 
 /**

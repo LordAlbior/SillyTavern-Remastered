@@ -1,4 +1,4 @@
-import { MacroRegistry, MacroCategory, MacroValueType } from '../engine/MacroRegistry.js';
+import { MacroRegistry, MacroCategory, MacroValueType } from '../engine/MacroRegistry.ts';
 
 /**
  * Registers variable-related {{...}} macros that operate on local and global

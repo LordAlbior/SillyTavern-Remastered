@@ -5,9 +5,9 @@ import express from 'express';
 import sanitize from 'sanitize-filename';
 import { CheckRepoActions, default as simpleGit } from 'simple-git';
 
-import { PUBLIC_DIRECTORIES } from '../constants.js';
-import { getConfigValue, isValidUrl } from '../util.js';
-import { createGitClient } from '../git/client.js';
+import { PUBLIC_DIRECTORIES } from '../constants.ts';
+import { getConfigValue, isValidUrl } from '../util.ts';
+import { createGitClient } from '../git/client.ts';
 
 const gitBackend = getConfigValue('git.backend', 'auto');
 

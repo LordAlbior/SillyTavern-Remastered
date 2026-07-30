@@ -1,3 +1,3 @@
-import { SlashCommandExecutor } from './SlashCommandExecutor.js';
+import { SlashCommandExecutor } from './SlashCommandExecutor.ts';
 
 export class SlashCommandBreakPoint extends SlashCommandExecutor {}

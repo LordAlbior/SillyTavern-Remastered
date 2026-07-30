@@ -18,10 +18,10 @@ import mime from 'mime-types';
 import { default as simpleGit } from 'simple-git';
 import chalk from 'chalk';
 import bytes from 'bytes';
-import { LOG_LEVELS, CHAT_COMPLETION_SOURCES, MEDIA_REQUEST_TYPE } from './constants.js';
-import { serverDirectory } from './server-directory.js';
+import { LOG_LEVELS, CHAT_COMPLETION_SOURCES, MEDIA_REQUEST_TYPE } from './constants.ts';
+import { serverDirectory } from './server-directory.ts';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
-import { isFirefox } from './express-common.js';
+import { isFirefox } from './express-common.ts';
 
 /**
  * Parsed config object.

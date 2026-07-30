@@ -3,9 +3,9 @@ import express from 'express';
 import ipRegex from 'ip-regex';
 
 import { decode } from 'html-entities';
-import { readSecret, SECRET_KEYS } from './secrets.js';
-import { trimV1 } from '../util.js';
-import { setAdditionalHeaders } from '../additional-headers.js';
+import { readSecret, SECRET_KEYS } from './secrets.ts';
+import { trimV1 } from '../util.ts';
+import { setAdditionalHeaders } from '../additional-headers.ts';
 
 export const router = express.Router();
 

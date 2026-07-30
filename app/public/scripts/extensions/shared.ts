@@ -1,11 +1,11 @@
-import { CONNECT_API_MAP, createModelIcon, getRequestHeaders } from '../../script.js';
-import { extension_settings, openThirdPartyExtensionMenu } from '../extensions.js';
-import { t } from '../i18n.js';
-import { oai_settings, proxies, ZAI_ENDPOINT } from '../openai.js';
-import { SECRET_KEYS, secret_state } from '../secrets.js';
-import { textgen_types, textgenerationwebui_settings } from '../textgen-settings.js';
-import { getTokenCountAsync } from '../tokenizers.js';
-import { createThumbnail, isValidUrl } from '../utils.js';
+import { CONNECT_API_MAP, createModelIcon, getRequestHeaders } from '../../script.ts';
+import { extension_settings, openThirdPartyExtensionMenu } from '../extensions.ts';
+import { t } from '../i18n.ts';
+import { oai_settings, proxies, ZAI_ENDPOINT } from '../openai.ts';
+import { SECRET_KEYS, secret_state } from '../secrets.ts';
+import { textgen_types, textgenerationwebui_settings } from '../textgen-settings.ts';
+import { getTokenCountAsync } from '../tokenizers.ts';
+import { createThumbnail, isValidUrl } from '../utils.ts';
 
 /**
  * Generates a caption for an image using a multimodal model.

@@ -5,8 +5,8 @@ import express from 'express';
 import sanitize from 'sanitize-filename';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 
-import { getDefaultPresetFile, getDefaultPresets } from './content-manager.js';
-import type { UserDirectoryList } from '../users.js';
+import { getDefaultPresetFile, getDefaultPresets } from './content-manager.ts';
+import type { UserDirectoryList } from '../users.ts';
 
 interface PresetSettings {
     folder: string | null;

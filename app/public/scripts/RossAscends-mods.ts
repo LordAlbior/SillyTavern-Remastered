@@ -20,29 +20,29 @@ import {
     sendTextareaMessage,
     doNavbarIconClick,
     isSwipingAllowed,
-} from '../script.js';
+} from '../script.ts';
 
 import {
     power_user,
     send_on_enter_options,
-} from './power-user.js';
+} from './power-user.ts';
 
-import { selected_group, is_group_generating, openGroupById } from './group-chats.js';
-import { getTagKeyForEntity, applyTagsOnCharacterSelect } from './tags.js';
+import { selected_group, is_group_generating, openGroupById } from './group-chats.ts';
+import { getTagKeyForEntity, applyTagsOnCharacterSelect } from './tags.ts';
 import {
     SECRET_KEYS,
     secret_state,
-} from './secrets.js';
-import { debounce, getStringHash, isValidUrl } from './utils.js';
-import { chat_completion_sources, oai_settings } from './openai.js';
-import { getTokenCountAsync } from './tokenizers.js';
-import { textgen_types, textgenerationwebui_settings as textgen_settings, getTextGenServer } from './textgen-settings.js';
-import { debounce_timeout, SWIPE_SOURCE } from './constants.js';
+} from './secrets.ts';
+import { debounce, getStringHash, isValidUrl } from './utils.ts';
+import { chat_completion_sources, oai_settings } from './openai.ts';
+import { getTokenCountAsync } from './tokenizers.ts';
+import { textgen_types, textgenerationwebui_settings as textgen_settings, getTextGenServer } from './textgen-settings.ts';
+import { debounce_timeout, SWIPE_SOURCE } from './constants.ts';
 
-import { Popup } from './popup.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { getCurrentUserHandle } from './user.js';
-import { kai_settings } from './kai-settings.js';
+import { Popup } from './popup.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { getCurrentUserHandle } from './user.ts';
+import { kai_settings } from './kai-settings.ts';
 
 var RPanelPin = document.getElementById('rm_button_panel_pin');
 var LPanelPin = document.getElementById('lm_button_panel_pin');

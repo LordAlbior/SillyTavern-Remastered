@@ -4,15 +4,15 @@
 /** @typedef {import('chevrotain').IRecognitionException} IRecognitionException */
 
 // @ts-ignore - no types for JS imports
-import { t } from '/scripts/i18n.js';
+import { t } from '/scripts/i18n.ts';
 // @ts-ignore
-import { Popup, POPUP_RESULT } from '/scripts/popup.js';
+import { Popup, POPUP_RESULT } from '/scripts/popup.ts';
 // @ts-ignore
-import { power_user } from '/scripts/power-user.js';
+import { power_user } from '/scripts/power-user.ts';
 // @ts-ignore
-import { accountStorage } from '/scripts/util/AccountStorage.js';
+import { accountStorage } from '/scripts/util/AccountStorage.ts';
 // @ts-ignore
-import { SimpleMutex } from '/scripts/util/SimpleMutex.js';
+import { SimpleMutex } from '/scripts/util/SimpleMutex.ts';
 
 /**
  * @typedef {Object} MacroErrorContext
@@ -33,18 +33,6 @@ import { SimpleMutex } from '/scripts/util/SimpleMutex.js';
  * @typedef {MacroErrorContext & { message: string, error?: any }} MacroLogOptions
  */
 
-
-// Use mutex here so even on parallel usage without awaiting the popup, this will only show up once.
-export const onboardingExperimentalMacroEngineMutex = new SimpleMutex(onboardingExperimentalMacroEngineUnsafe);
-
-/**
- * Onboards the user to use the experimental macro engine.
- * Asks the user to enable it if they haven't already.
- *
- * @param {string|null} feature - The feature that requires the experimental macro engine, or null if not applicable or unknown.
- * @returns {Promise<void>} - A promise that resolves when the user has been onboarded.
- */
-export const onboardingExperimentalMacroEngine = onboardingExperimentalMacroEngineMutex.update.bind(onboardingExperimentalMacroEngineMutex);
 
 async function onboardingExperimentalMacroEngineUnsafe(feature = null) {
     // Show a popup once telling a user that they are using experimental features that only work with the new engine.
@@ -71,6 +59,18 @@ async function onboardingExperimentalMacroEngineUnsafe(feature = null) {
     // Only show this once
     accountStorage.setItem('slash_command_experimental_engine_warning_shown', 'true');
 }
+
+// Use mutex here so even on parallel usage without awaiting the popup, this will only show up once.
+export const onboardingExperimentalMacroEngineMutex = new SimpleMutex(onboardingExperimentalMacroEngineUnsafe);
+
+/**
+ * Onboards the user to use the experimental macro engine.
+ * Asks the user to enable it if they haven't already.
+ *
+ * @param {string|null} feature - The feature that requires the experimental macro engine, or null if not applicable or unknown.
+ * @returns {Promise<void>} - A promise that resolves when the user has been onboarded.
+ */
+export const onboardingExperimentalMacroEngine = (...args) => onboardingExperimentalMacroEngineMutex.update(...args);
 
 /**
  * Creates an error representing a runtime macro invocation problem (such as

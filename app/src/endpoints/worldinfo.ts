@@ -5,8 +5,8 @@ import express from 'express';
 import sanitize from 'sanitize-filename';
 import _ from 'lodash';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
-import { tryParse } from '../util.js';
-import type { UserDirectoryList } from '../users.js';
+import { tryParse } from '../util.ts';
+import type { UserDirectoryList } from '../users.ts';
 
 /**
  * Reads a World Info file and returns its contents

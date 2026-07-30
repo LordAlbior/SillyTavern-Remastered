@@ -9,8 +9,8 @@ import crypto from 'node:crypto';
 import { imageSize } from 'image-size';
 import writeFileAtomic from 'write-file-atomic';
 import express from 'express';
-import { Jimp } from '../jimp.js';
-import { getConfigValue, isPathUnderParent, uuidv4 } from '../util.js';
+import { Jimp } from '../jimp.ts';
+import { getConfigValue, isPathUnderParent, uuidv4 } from '../util.ts';
 
 export const METADATA_FILE = 'image-metadata.json';
 

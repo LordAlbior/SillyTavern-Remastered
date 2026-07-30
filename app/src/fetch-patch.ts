@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import mime from 'mime-types';
-import { serverDirectory } from './server-directory.js';
-import { getRequestURL, isFileURL, isPathUnderParent } from './util.js';
+import { serverDirectory } from './server-directory.ts';
+import { getRequestURL, isFileURL, isPathUnderParent } from './util.ts';
 
 const originalFetch = globalThis.fetch;
 

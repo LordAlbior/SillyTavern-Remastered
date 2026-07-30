@@ -1,8 +1,8 @@
-import { t } from './i18n.js';
-import { callGenericPopup, Popup, POPUP_TYPE } from './popup.js';
-import { getFileExtension, sortMoments, timestampToMoment } from './utils.js';
-import { displayPastChats, getRequestHeaders, importCharacterChat } from '/script.js';
-import { importGroupChat } from './group-chats.js';
+import { t } from './i18n.ts';
+import { callGenericPopup, Popup, POPUP_TYPE } from './popup.ts';
+import { getFileExtension, sortMoments, timestampToMoment } from './utils.ts';
+import { displayPastChats, getRequestHeaders, importCharacterChat } from '/script.ts';
+import { importGroupChat } from './group-chats.ts';
 
 class BackupsBrowser {
     /** @type {HTMLElement} */

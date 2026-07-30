@@ -1,5 +1,5 @@
-import { registerDebugFunction } from './power-user.js';
-import { updateSecretDisplay } from './secrets.js';
+import { registerDebugFunction } from './power-user.ts';
+import { updateSecretDisplay } from './secrets.ts';
 
 const storageKey = 'language';
 const overrideLanguage = localStorage.getItem(storageKey);

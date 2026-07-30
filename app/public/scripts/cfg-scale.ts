@@ -6,11 +6,11 @@ import {
     event_types,
     saveSettingsDebounced,
     animation_duration,
-} from '../script.js';
-import { extension_settings, saveMetadataDebounced } from './extensions.js';
-import { selected_group } from './group-chats.js';
-import { getCharaFilename, delay } from './utils.js';
-import { power_user } from './power-user.js';
+} from '../script.ts';
+import { extension_settings, saveMetadataDebounced } from './extensions.ts';
+import { selected_group } from './group-chats.ts';
+import { getCharaFilename, delay } from './utils.ts';
+import { power_user } from './power-user.ts';
 
 const extensionName = 'cfg';
 const defaultSettings = {

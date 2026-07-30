@@ -21,9 +21,9 @@ import {
     saveSettingsDebounced,
     setUserName,
     this_chid,
-} from '../script.js';
-import { power_user } from './power-user.js';
-import { getTokenCountAsync } from './tokenizers.js';
+} from '../script.ts';
+import { power_user } from './power-user.ts';
+import { getTokenCountAsync } from './tokenizers.ts';
 import {
     PAGINATION_TEMPLATE,
     clearInfoBlock,
@@ -50,23 +50,23 @@ import {
     resolveAvatarData,
     findPersona,
     escapeHtml,
-} from './utils.js';
-import { debounce_timeout } from './constants.js';
-import { FILTER_TYPES, FilterHelper } from './filters.js';
-import { groups, selected_group } from './group-chats.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.js';
-import { t } from './i18n.js';
-import { openWorldInfoEditor, world_names } from './world-info.js';
-import { renderTemplateAsync } from './templates.js';
-import { saveMetadataDebounced } from './extensions.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { SlashCommandNamedArgument, ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.js';
-import { commonEnumMatchProviders, commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { isFirefox } from './browser-fixes.js';
-import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.js';
+} from './utils.ts';
+import { debounce_timeout } from './constants.ts';
+import { FILTER_TYPES, FilterHelper } from './filters.ts';
+import { groups, selected_group } from './group-chats.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.ts';
+import { t } from './i18n.ts';
+import { openWorldInfoEditor, world_names } from './world-info.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { saveMetadataDebounced } from './extensions.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { SlashCommandNamedArgument, ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.ts';
+import { commonEnumMatchProviders, commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { isFirefox } from './browser-fixes.ts';
+import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.ts';
 
 /**
  * @typedef {object} PersonaConnection A connection between a character and a character or group entity

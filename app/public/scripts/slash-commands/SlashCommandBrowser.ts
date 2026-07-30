@@ -1,5 +1,5 @@
-import { escapeRegex } from '../utils.js';
-import { SlashCommandParser } from './SlashCommandParser.js';
+import { escapeRegex } from '../utils.ts';
+import { SlashCommandParser } from './SlashCommandParser.ts';
 
 export class SlashCommandBrowser {
     /**@type {SlashCommand[]}*/ cmdList;

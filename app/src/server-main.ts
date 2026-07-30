@@ -20,10 +20,10 @@ import bodyParser from 'body-parser';
 
 // local library imports
 import './fetch-patch.js';
-import { serverDirectory } from './server-directory.js';
+import { serverDirectory } from './server-directory.ts';
 
-import { serverEvents, EVENT_NAMES } from './server-events.js';
-import { loadPlugins } from './plugin-loader.js';
+import { serverEvents, EVENT_NAMES } from './server-events.ts';
+import { loadPlugins } from './plugin-loader.ts';
 import {
     initUserStorage,
     getCookieSecret,
@@ -40,18 +40,18 @@ import {
     verifySecuritySettings,
     loginPageMiddleware,
     migratePublicOverrides,
-} from './users.js';
+} from './users.ts';
 
-import basicAuthMiddleware from './middleware/basicAuth.js';
-import getWhitelistMiddleware from './middleware/whitelist.js';
-import accessLoggerMiddleware, { getAccessLogPath, migrateAccessLog } from './middleware/accessLogWriter.js';
-import multerMonkeyPatch from './middleware/multerMonkeyPatch.js';
-import initRequestProxy from './request-proxy.js';
-import initPrivateRequestFilter from './private-request-filter.js';
-import cacheBuster from './middleware/cacheBuster.js';
-import corsProxyMiddleware from './middleware/corsProxy.js';
-import hostWhitelistMiddleware from './middleware/hostWhitelist.js';
-import userCssMiddleware from './middleware/userCss.js';
+import basicAuthMiddleware from './middleware/basicAuth.ts';
+import getWhitelistMiddleware from './middleware/whitelist.ts';
+import accessLoggerMiddleware, { getAccessLogPath, migrateAccessLog } from './middleware/accessLogWriter.ts';
+import multerMonkeyPatch from './middleware/multerMonkeyPatch.ts';
+import initRequestProxy from './request-proxy.ts';
+import initPrivateRequestFilter from './private-request-filter.ts';
+import cacheBuster from './middleware/cacheBuster.ts';
+import corsProxyMiddleware from './middleware/corsProxy.ts';
+import hostWhitelistMiddleware from './middleware/hostWhitelist.ts';
+import userCssMiddleware from './middleware/userCss.ts';
 import {
     getVersion,
     color,
@@ -61,18 +61,18 @@ import {
     setupLogLevel,
     setWindowTitle,
     getConfigValue,
-} from './util.js';
-import { UPLOADS_DIRECTORY } from './constants.js';
+} from './util.ts';
+import { UPLOADS_DIRECTORY } from './constants.ts';
 
 // Routers
-import { router as usersPublicRouter } from './endpoints/users-public.js';
-import { init as statsInit, onExit as statsOnExit } from './endpoints/stats.js';
-import { checkForNewContent } from './endpoints/content-manager.js';
-import { init as settingsInit } from './endpoints/settings.js';
-import { redirectDeprecatedEndpoints, ServerStartup, setupPrivateEndpoints } from './server-startup.js';
-import { diskCache } from './endpoints/characters.js';
-import { migrateFlatSecrets } from './endpoints/secrets.js';
-import { migrateGroupChatsMetadataFormat } from './endpoints/groups.js';
+import { router as usersPublicRouter } from './endpoints/users-public.ts';
+import { init as statsInit, onExit as statsOnExit } from './endpoints/stats.ts';
+import { checkForNewContent } from './endpoints/content-manager.ts';
+import { init as settingsInit } from './endpoints/settings.ts';
+import { redirectDeprecatedEndpoints, ServerStartup, setupPrivateEndpoints } from './server-startup.ts';
+import { diskCache } from './endpoints/characters.ts';
+import { migrateFlatSecrets } from './endpoints/secrets.ts';
+import { migrateGroupChatsMetadataFormat } from './endpoints/groups.ts';
 
 // Work around a node v20.0.0, v20.1.0, and v20.2.0 bug. The issue was fixed in v20.3.0.
 // https://github.com/nodejs/node/issues/47822#issuecomment-1564708870

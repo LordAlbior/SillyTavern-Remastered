@@ -6,17 +6,17 @@ import {
     lodash,
 } from '../lib.js';
 
-import { getContext } from './extensions.js';
-import { characters, getRequestHeaders, processDroppedFiles, this_chid, user_avatar } from '../script.js';
-import { isMobile } from './RossAscends-mods.js';
-import { collapseNewlines, power_user } from './power-user.js';
-import { debounce_timeout } from './constants.js';
-import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
-import { getTagsList } from './tags.js';
-import { groups, selected_group } from './group-chats.js';
-import { getCurrentLocale, t } from './i18n.js';
-import { importWorldInfo } from './world-info.js';
+import { getContext } from './extensions.ts';
+import { characters, getRequestHeaders, processDroppedFiles, this_chid, user_avatar } from '../script.ts';
+import { isMobile } from './RossAscends-mods.ts';
+import { collapseNewlines, power_user } from './power-user.ts';
+import { debounce_timeout } from './constants.ts';
+import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
+import { getTagsList } from './tags.ts';
+import { groups, selected_group } from './group-chats.ts';
+import { getCurrentLocale, t } from './i18n.ts';
+import { importWorldInfo } from './world-info.ts';
 
 export const shiftUpByOne = (e, i, a) => a[i] = e + 1;
 export const shiftDownByOne = (e, i, a) => a[i] = e - 1;

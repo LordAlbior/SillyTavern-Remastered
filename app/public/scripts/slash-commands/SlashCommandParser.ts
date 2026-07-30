@@ -1,29 +1,29 @@
 import { hljs } from '../../lib.js';
-import { power_user } from '../power-user.js';
-import { isFalseBoolean, isTrueBoolean, uuidv4 } from '../utils.js';
-import { SlashCommand } from './SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument } from './SlashCommandArgument.js';
-import { SlashCommandClosure } from './SlashCommandClosure.js';
-import { SlashCommandExecutor } from './SlashCommandExecutor.js';
-import { SlashCommandParserError } from './SlashCommandParserError.js';
-import { AutoCompleteNameResult } from '../autocomplete/AutoCompleteNameResult.js';
-import { SlashCommandQuickReplyAutoCompleteOption } from './SlashCommandQuickReplyAutoCompleteOption.js';
-import { SlashCommandScope } from './SlashCommandScope.js';
-import { SlashCommandVariableAutoCompleteOption } from './SlashCommandVariableAutoCompleteOption.js';
-import { SlashCommandNamedArgumentAssignment } from './SlashCommandNamedArgumentAssignment.js';
-import { SlashCommandAbortController } from './SlashCommandAbortController.js';
-import { SlashCommandAutoCompleteNameResult } from './SlashCommandAutoCompleteNameResult.js';
-import { SlashCommandUnnamedArgumentAssignment } from './SlashCommandUnnamedArgumentAssignment.js';
-import { SlashCommandEnumValue } from './SlashCommandEnumValue.js';
+import { power_user } from '../power-user.ts';
+import { isFalseBoolean, isTrueBoolean, uuidv4 } from '../utils.ts';
+import { SlashCommand } from './SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument } from './SlashCommandArgument.ts';
+import { SlashCommandClosure } from './SlashCommandClosure.ts';
+import { SlashCommandExecutor } from './SlashCommandExecutor.ts';
+import { SlashCommandParserError } from './SlashCommandParserError.ts';
+import { AutoCompleteNameResult } from '../autocomplete/AutoCompleteNameResult.ts';
+import { SlashCommandQuickReplyAutoCompleteOption } from './SlashCommandQuickReplyAutoCompleteOption.ts';
+import { SlashCommandScope } from './SlashCommandScope.ts';
+import { SlashCommandVariableAutoCompleteOption } from './SlashCommandVariableAutoCompleteOption.ts';
+import { SlashCommandNamedArgumentAssignment } from './SlashCommandNamedArgumentAssignment.ts';
+import { SlashCommandAbortController } from './SlashCommandAbortController.ts';
+import { SlashCommandAutoCompleteNameResult } from './SlashCommandAutoCompleteNameResult.ts';
+import { SlashCommandUnnamedArgumentAssignment } from './SlashCommandUnnamedArgumentAssignment.ts';
+import { SlashCommandEnumValue } from './SlashCommandEnumValue.ts';
 import {
     findUnclosedScopes,
     buildMacroAutoCompleteResult,
-} from '../autocomplete/MacroAutoCompleteHelper.js';
-import { SlashCommandBreakPoint } from './SlashCommandBreakPoint.js';
-import { SlashCommandDebugController } from './SlashCommandDebugController.js';
-import { commonEnumProviders } from './SlashCommandCommonEnumsProvider.js';
-import { SlashCommandBreak } from './SlashCommandBreak.js';
-import { parseMacroContext } from '../autocomplete/EnhancedMacroAutoCompleteOption.js';
+} from '../autocomplete/MacroAutoCompleteHelper.ts';
+import { SlashCommandBreakPoint } from './SlashCommandBreakPoint.ts';
+import { SlashCommandDebugController } from './SlashCommandDebugController.ts';
+import { commonEnumProviders } from './SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandBreak } from './SlashCommandBreak.ts';
+import { parseMacroContext } from '../autocomplete/EnhancedMacroAutoCompleteOption.ts';
 
 /** @typedef {import('./SlashCommand.js').NamedArgumentsCapture} NamedArgumentsCapture */
 /** @typedef {import('./SlashCommand.js').NamedArguments} NamedArguments */

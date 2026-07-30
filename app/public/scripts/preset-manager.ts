@@ -17,29 +17,29 @@ import {
     saveSettings,
     saveSettingsDebounced,
     this_chid,
-} from '../script.js';
-import { groups, selected_group } from './group-chats.js';
-import { t } from './i18n.js';
-import { instruct_presets } from './instruct-mode.js';
-import { kai_settings } from './kai-settings.js';
-import { convertNovelPreset } from './nai-settings.js';
-import { oai_settings, openai_setting_names, openai_settings } from './openai.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup } from './popup.js';
-import { context_presets, getContextSettings, power_user } from './power-user.js';
-import { reasoning_templates } from './reasoning.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.js';
-import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { checkForSystemPromptInInstructTemplate, system_prompts } from './sysprompt.js';
-import { renderTemplateAsync } from './templates.js';
+} from '../script.ts';
+import { groups, selected_group } from './group-chats.ts';
+import { t } from './i18n.ts';
+import { instruct_presets } from './instruct-mode.ts';
+import { kai_settings } from './kai-settings.ts';
+import { convertNovelPreset } from './nai-settings.ts';
+import { oai_settings, openai_setting_names, openai_settings } from './openai.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup } from './popup.ts';
+import { context_presets, getContextSettings, power_user } from './power-user.ts';
+import { reasoning_templates } from './reasoning.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.ts';
+import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { checkForSystemPromptInInstructTemplate, system_prompts } from './sysprompt.ts';
+import { renderTemplateAsync } from './templates.ts';
 import {
     textgenerationwebui_settings as textgen_settings,
     textgenerationwebui_preset_names,
     textgenerationwebui_presets,
-} from './textgen-settings.js';
-import { download, ensurePlainObject, equalsIgnoreCaseAndAccents, getSanitizedFilename, parseJsonFile, waitUntilCondition } from './utils.js';
+} from './textgen-settings.ts';
+import { download, ensurePlainObject, equalsIgnoreCaseAndAccents, getSanitizedFilename, parseJsonFile, waitUntilCondition } from './utils.ts';
 
 const presetManagers = {};
 

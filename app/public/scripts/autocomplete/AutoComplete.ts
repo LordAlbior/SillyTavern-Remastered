@@ -1,10 +1,10 @@
-import { power_user } from '../power-user.js';
-import { debounce, escapeRegex } from '../utils.js';
-import { AutoCompleteOption } from './AutoCompleteOption.js';
-import { AutoCompleteFuzzyScore } from './AutoCompleteFuzzyScore.js';
-import { BlankAutoCompleteOption } from './BlankAutoCompleteOption.js';
-import { AutoCompleteNameResult } from './AutoCompleteNameResult.js';
-import { AutoCompleteSecondaryNameResult } from './AutoCompleteSecondaryNameResult.js';
+import { power_user } from '../power-user.ts';
+import { debounce, escapeRegex } from '../utils.ts';
+import { AutoCompleteOption } from './AutoCompleteOption.ts';
+import { AutoCompleteFuzzyScore } from './AutoCompleteFuzzyScore.ts';
+import { BlankAutoCompleteOption } from './BlankAutoCompleteOption.ts';
+import { AutoCompleteNameResult } from './AutoCompleteNameResult.ts';
+import { AutoCompleteSecondaryNameResult } from './AutoCompleteSecondaryNameResult.ts';
 
 /**@readonly*/
 /**@enum {Number}*/

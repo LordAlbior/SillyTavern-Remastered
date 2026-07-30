@@ -1,4 +1,4 @@
-import { AutoCompleteOption } from './AutoCompleteOption.js';
+import { AutoCompleteOption } from './AutoCompleteOption.ts';
 
 export class MacroAutoCompleteOption extends AutoCompleteOption {
     /**@type {string}*/ fullName;

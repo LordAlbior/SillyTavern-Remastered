@@ -1,6 +1,6 @@
-import { fuzzySearchCharacters, fuzzySearchGroups, fuzzySearchPersonas, fuzzySearchTags, fuzzySearchWorldInfo, power_user } from './power-user.js';
-import { tag_map } from './tags.js';
-import { includesIgnoreCaseAndAccents } from './utils.js';
+import { fuzzySearchCharacters, fuzzySearchGroups, fuzzySearchPersonas, fuzzySearchTags, fuzzySearchWorldInfo, power_user } from './power-user.ts';
+import { tag_map } from './tags.ts';
+import { includesIgnoreCaseAndAccents } from './utils.ts';
 
 
 /**

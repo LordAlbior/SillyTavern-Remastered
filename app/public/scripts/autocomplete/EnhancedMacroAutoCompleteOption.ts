@@ -3,17 +3,17 @@
  * Reuses rendering logic from MacroBrowser for consistency and DRY.
  */
 
-import { AutoCompleteOption } from './AutoCompleteOption.js';
+import { AutoCompleteOption } from './AutoCompleteOption.ts';
 import {
     formatMacroSignature,
     createSourceIndicator,
     createAliasIndicator,
     renderMacroDetails,
-} from '../macros/engine/MacroBrowser.js';
-import { enumIcons } from '../slash-commands/SlashCommandCommonEnumsProvider.js';
-import { ValidFlagSymbols } from '../macros/engine/MacroFlags.js';
-import { MACRO_VARIABLE_SHORTHAND_PATTERN } from '../macros/engine/MacroLexer.js';
-import { onboardingExperimentalMacroEngine } from '../macros/engine/MacroDiagnostics.js';
+} from '../macros/engine/MacroBrowser.ts';
+import { enumIcons } from '../slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { ValidFlagSymbols } from '../macros/engine/MacroFlags.ts';
+import { MACRO_VARIABLE_SHORTHAND_PATTERN } from '../macros/engine/MacroLexer.ts';
+import { onboardingExperimentalMacroEngine } from '../macros/engine/MacroDiagnostics.ts';
 
 /** @typedef {import('../macros/engine/MacroRegistry.js').MacroDefinition} MacroDefinition */
 

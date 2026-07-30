@@ -1,15 +1,15 @@
 import { Fuse, localforage } from '../lib.js';
-import { characters, chat_metadata, eventSource, event_types, generateQuietPrompt, getCurrentChatId, getRequestHeaders, getThumbnailUrl, saveMetadata, saveSettingsDebounced, this_chid } from '../script.js';
-import { openThirdPartyExtensionMenu, saveMetadataDebounced } from './extensions.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { createThumbnail, flashHighlight, getBase64Async, stringFormat, debounce, setupScrollToTop, saveBase64AsFile, getFileExtension, sortIgnoreCaseAndAccents } from './utils.js';
-import { debounce_timeout } from './constants.js';
-import { t } from './i18n.js';
-import { callGenericPopup, Popup, POPUP_TYPE } from './popup.js';
-import { groups, selected_group } from './group-chats.js';
-import { humanizedDateTime } from './RossAscends-mods.js';
-import { deleteMediaFromServer } from './chats.js';
+import { characters, chat_metadata, eventSource, event_types, generateQuietPrompt, getCurrentChatId, getRequestHeaders, getThumbnailUrl, saveMetadata, saveSettingsDebounced, this_chid } from '../script.ts';
+import { openThirdPartyExtensionMenu, saveMetadataDebounced } from './extensions.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { createThumbnail, flashHighlight, getBase64Async, stringFormat, debounce, setupScrollToTop, saveBase64AsFile, getFileExtension, sortIgnoreCaseAndAccents } from './utils.ts';
+import { debounce_timeout } from './constants.ts';
+import { t } from './i18n.ts';
+import { callGenericPopup, Popup, POPUP_TYPE } from './popup.ts';
+import { groups, selected_group } from './group-chats.ts';
+import { humanizedDateTime } from './RossAscends-mods.ts';
+import { deleteMediaFromServer } from './chats.ts';
 
 const BG_METADATA_KEY = 'custom_background';
 const LIST_METADATA_KEY = 'chat_backgrounds';

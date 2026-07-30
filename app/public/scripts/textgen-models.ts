@@ -1,13 +1,13 @@
 import { DOMPurify } from '../lib.js';
-import { isMobile } from './RossAscends-mods.js';
-import { amount_gen, eventSource, event_types, getRequestHeaders, max_context, online_status, setGenerationParamsFromPreset } from '../script.js';
-import { textgenerationwebui_settings as textgen_settings, textgen_types } from './textgen-settings.js';
-import { tokenizers } from './tokenizers.js';
-import { renderTemplateAsync } from './templates.js';
-import { POPUP_TYPE, callGenericPopup } from './popup.js';
-import { t } from './i18n.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { localizePagination, PAGINATION_TEMPLATE, textValueMatcher } from './utils.js';
+import { isMobile } from './RossAscends-mods.ts';
+import { amount_gen, eventSource, event_types, getRequestHeaders, max_context, online_status, setGenerationParamsFromPreset } from '../script.ts';
+import { textgenerationwebui_settings as textgen_settings, textgen_types } from './textgen-settings.ts';
+import { tokenizers } from './tokenizers.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { POPUP_TYPE, callGenericPopup } from './popup.ts';
+import { t } from './i18n.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { localizePagination, PAGINATION_TEMPLATE, textValueMatcher } from './utils.ts';
 
 let mancerModels = [];
 let togetherModels = [];

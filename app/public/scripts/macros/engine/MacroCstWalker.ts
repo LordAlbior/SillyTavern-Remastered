@@ -3,13 +3,13 @@
 /** @typedef {import('./MacroEnv.types.js').MacroEnv} MacroEnv */
 /** @typedef {import('./MacroFlags.js').MacroFlags} MacroFlags */
 
-import { logMacroInternalError, logMacroRuntimeWarning } from './MacroDiagnostics.js';
-import { MacroEngine } from './MacroEngine.js';
-import { parseFlags, createEmptyFlags, MacroFlagType } from './MacroFlags.js';
-import { MacroParser } from './MacroParser.js';
-import { MacroRegistry } from './MacroRegistry.js';
+import { logMacroInternalError, logMacroRuntimeWarning } from './MacroDiagnostics.ts';
+import { MacroEngine } from './MacroEngine.ts';
+import { parseFlags, createEmptyFlags, MacroFlagType } from './MacroFlags.ts';
+import { MacroParser } from './MacroParser.ts';
+import { MacroRegistry } from './MacroRegistry.ts';
 // @ts-ignore - no types for JS imports
-import { isFalseBoolean } from '/scripts/utils.js';
+import { isFalseBoolean } from '/scripts/utils.ts';
 
 /**
  * @typedef {Object} MacroCall

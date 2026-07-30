@@ -11,9 +11,9 @@
  * - Dynamically added elements are automatically initialized via MutationObserver
  */
 
-import { power_user } from '../power-user.js';
-import { AutoComplete, AUTOCOMPLETE_STATE } from './AutoComplete.js';
-import { findMacroAtCursor, findUnclosedScopes, getMacroAutoCompleteAt } from './MacroAutoCompleteHelper.js';
+import { power_user } from '../power-user.ts';
+import { AutoComplete, AUTOCOMPLETE_STATE } from './AutoComplete.ts';
+import { findMacroAtCursor, findUnclosedScopes, getMacroAutoCompleteAt } from './MacroAutoCompleteHelper.ts';
 
 /** Custom attribute name used to mark elements that support macro autocomplete */
 export const MACRO_AUTOCOMPLETE_ATTRIBUTE = 'data-macros';

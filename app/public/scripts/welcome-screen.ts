@@ -27,16 +27,15 @@ import {
     this_chid,
     unshallowCharacter,
     updateRemoteChatName,
-} from '../script.js';
-// @ts-expect-error - no types for regex engine module
-import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
-import { deleteGroupChatByName, getGroupAvatar, groups, is_group_generating, openGroupById, openGroupChat } from './group-chats.js';
-import { t } from './i18n.js';
-import { callGenericPopup, POPUP_TYPE } from './popup.js';
-import { getMessageTimeStamp } from './RossAscends-mods.js';
-import { renderTemplateAsync } from './templates.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { clamp, flashHighlight, isElementInViewport, sortMoments, timestampToMoment } from './utils.js';
+} from '../script.ts';
+import { getRegexedString, regex_placement } from './regex-engine.ts';
+import { deleteGroupChatByName, getGroupAvatar, groups, is_group_generating, openGroupById, openGroupChat } from './group-chats.ts';
+import { t } from './i18n.ts';
+import { callGenericPopup, POPUP_TYPE } from './popup.ts';
+import { getMessageTimeStamp } from './RossAscends-mods.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { clamp, flashHighlight, isElementInViewport, sortMoments, timestampToMoment } from './utils.ts';
 
 const assistantAvatarKey = 'assistant';
 const pinnedChatsKey = 'pinnedChats';

@@ -5,18 +5,18 @@ import vectra from 'vectra';
 import express from 'express';
 import sanitize from 'sanitize-filename';
 
-import { getConfigValue } from '../util.js';
+import { getConfigValue } from '../util.ts';
 
-import { getNomicAIBatchVector, getNomicAIVector } from '../vectors/nomicai-vectors.js';
-import { getOpenAIVector, getOpenAIBatchVector } from '../vectors/openai-vectors.js';
-import { getTransformersVector, getTransformersBatchVector } from '../vectors/embedding.js';
-import { getExtrasVector, getExtrasBatchVector } from '../vectors/extras-vectors.js';
-import { getMakerSuiteVector, getMakerSuiteBatchVector } from '../vectors/google-vectors.js';
-import { getVertexVector, getVertexBatchVector } from '../vectors/google-vectors.js';
-import { getCohereVector, getCohereBatchVector } from '../vectors/cohere-vectors.js';
-import { getLlamaCppVector, getLlamaCppBatchVector } from '../vectors/llamacpp-vectors.js';
-import { getVllmVector, getVllmBatchVector } from '../vectors/vllm-vectors.js';
-import { getOllamaVector, getOllamaBatchVector } from '../vectors/ollama-vectors.js';
+import { getNomicAIBatchVector, getNomicAIVector } from '../vectors/nomicai-vectors.ts';
+import { getOpenAIVector, getOpenAIBatchVector } from '../vectors/openai-vectors.ts';
+import { getTransformersVector, getTransformersBatchVector } from '../vectors/embedding.ts';
+import { getExtrasVector, getExtrasBatchVector } from '../vectors/extras-vectors.ts';
+import { getMakerSuiteVector, getMakerSuiteBatchVector } from '../vectors/google-vectors.ts';
+import { getVertexVector, getVertexBatchVector } from '../vectors/google-vectors.ts';
+import { getCohereVector, getCohereBatchVector } from '../vectors/cohere-vectors.ts';
+import { getLlamaCppVector, getLlamaCppBatchVector } from '../vectors/llamacpp-vectors.ts';
+import { getVllmVector, getVllmBatchVector } from '../vectors/vllm-vectors.ts';
+import { getOllamaVector, getOllamaBatchVector } from '../vectors/ollama-vectors.ts';
 
 // Don't forget to add new sources to the SOURCES array
 const SOURCES = [

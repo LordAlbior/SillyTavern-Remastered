@@ -1,11 +1,11 @@
 import { lodash } from '../lib.js';
-import { addOneMessage, chat, displayVersion, setSendButtonState, system_avatar, systemUserName } from '../script.js';
-import { t } from './i18n.js';
-import { getMessageTimeStamp } from './RossAscends-mods.js';
-import { getSlashCommandsHelp } from './slash-commands.js';
-import { SlashCommandBrowser } from './slash-commands/SlashCommandBrowser.js';
-import { MacroBrowser, getMacrosHelp } from './macros/engine/MacroBrowser.js';
-import { renderTemplateAsync } from './templates.js';
+import { addOneMessage, chat, displayVersion, setSendButtonState, system_avatar, systemUserName } from '../script.ts';
+import { t } from './i18n.ts';
+import { getMessageTimeStamp } from './RossAscends-mods.ts';
+import { getSlashCommandsHelp } from './slash-commands.ts';
+import { SlashCommandBrowser } from './slash-commands/SlashCommandBrowser.ts';
+import { MacroBrowser, getMacrosHelp } from './macros/engine/MacroBrowser.ts';
+import { renderTemplateAsync } from './templates.ts';
 
 /** @type {Record<string, ChatMessage>} */
 export const system_messages = {};

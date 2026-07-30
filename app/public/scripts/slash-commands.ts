@@ -1,5 +1,5 @@
 import { Fuse, DOMPurify } from '../lib.js';
-import { canUseNegativeLookbehind, copyText, findPersona, flashHighlight, resolveAvatarData } from './utils.js';
+import { canUseNegativeLookbehind, copyText, findPersona, flashHighlight, resolveAvatarData } from './utils.ts';
 
 import {
     Generate,
@@ -62,54 +62,64 @@ import {
     system_message_types,
     this_chid,
     updateMessageElement,
-} from '../script.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { SlashCommandParserError } from './slash-commands/SlashCommandParserError.js';
-import { getMessageTimeStamp, isMobile } from './RossAscends-mods.js';
-import { hideChatMessageRange } from './chats.js';
-import { getContext, saveMetadataDebounced } from './extensions.js';
+} from '../script.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { SlashCommandParserError } from './slash-commands/SlashCommandParserError.ts';
+import { getMessageTimeStamp, isMobile } from './RossAscends-mods.ts';
+import { hideChatMessageRange } from './chats.ts';
+import { getContext, saveMetadataDebounced } from './extensions.ts';
 // @ts-ignore - module resolved by webpack alias
-import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
-import { findGroupMemberId, groups, is_group_generating, openGroupById, regenerateGroup, resetSelectedGroup, saveGroupChat, selected_group, getGroupMembers } from './group-chats.js';
-import { chat_completion_sources, MINIMAX_ENDPOINT, oai_settings, promptManager, SILICONFLOW_ENDPOINT, ZAI_ENDPOINT } from './openai.js';
-import { user_avatar } from './personas.js';
-import { addEphemeralStoppingString, chat_styles, context_presets, flushEphemeralStoppingStrings, playMessageSound, power_user } from './power-user.js';
-import { SERVER_INPUTS, textgen_types, textgenerationwebui_settings } from './textgen-settings.js';
-import { decodeTextTokens, getAvailableTokenizers, getFriendlyTokenizerName, getTextTokens, getTokenCountAsync, selectTokenizer } from './tokenizers.js';
-import { debounce, delay, equalsIgnoreCaseAndAccents, findChar, getCharIndex, isFalseBoolean, isTrueBoolean, onlyUnique, regexFromString, showFontAwesomePicker, stringToRange, trimToEndSentence, trimToStartSentence, waitUntilCondition } from './utils.js';
-import { registerVariableCommands, resolveVariable } from './variables.js';
-import { registerActionLoaderSlashCommands } from './action-loader-slashcommands.js';
-import { background_settings } from './backgrounds.js';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
-import { SlashCommandClosureResult } from './slash-commands/SlashCommandClosureResult.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { AutoComplete, AUTOCOMPLETE_STATE } from './autocomplete/AutoComplete.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.js';
-import { SlashCommandNamedArgumentAssignment } from './slash-commands/SlashCommandNamedArgumentAssignment.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.js';
-import { commonEnumProviders, enumIcons, commonEnumMatchProviders } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.js';
-import { SlashCommandExecutionError } from './slash-commands/SlashCommandExecutionError.js';
-import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { SlashCommandDebugController } from './slash-commands/SlashCommandDebugController.js';
-import { SlashCommandScope } from './slash-commands/SlashCommandScope.js';
-import { t } from './i18n.js';
-import { kai_settings } from './kai-settings.js';
-import { instruct_presets, selectContextPreset, selectInstructPreset } from './instruct-mode.js';
-import { debounce_timeout, SWIPE_DIRECTION, SWIPE_SOURCE } from './constants.js';
+import { getRegexedString, regex_placement } from  './regex-engine.ts';
+import { findGroupMemberId, groups, is_group_generating, openGroupById, regenerateGroup, resetSelectedGroup, saveGroupChat, selected_group, getGroupMembers } from './group-chats.ts';
+import { chat_completion_sources, MINIMAX_ENDPOINT, oai_settings, promptManager, SILICONFLOW_ENDPOINT, ZAI_ENDPOINT } from './openai.ts';
+import { user_avatar } from './personas.ts';
+import { addEphemeralStoppingString, chat_styles, context_presets, flushEphemeralStoppingStrings, playMessageSound, power_user } from './power-user.ts';
+import { SERVER_INPUTS, textgen_types, textgenerationwebui_settings } from './textgen-settings.ts';
+import { decodeTextTokens, getAvailableTokenizers, getFriendlyTokenizerName, getTextTokens, getTokenCountAsync, selectTokenizer } from './tokenizers.ts';
+import { debounce, delay, equalsIgnoreCaseAndAccents, findChar, getCharIndex, isFalseBoolean, isTrueBoolean, onlyUnique, regexFromString, showFontAwesomePicker, stringToRange, trimToEndSentence, trimToStartSentence, waitUntilCondition } from './utils.ts';
+import { registerVariableCommands, resolveVariable } from './variables.ts';
+import { registerActionLoaderSlashCommands } from './action-loader-slashcommands.ts';
+import { background_settings } from './backgrounds.ts';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
+import { SlashCommandClosureResult } from './slash-commands/SlashCommandClosureResult.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { AutoComplete, AUTOCOMPLETE_STATE } from './autocomplete/AutoComplete.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.ts';
+import { SlashCommandNamedArgumentAssignment } from './slash-commands/SlashCommandNamedArgumentAssignment.ts';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.ts';
+import { commonEnumProviders, enumIcons, commonEnumMatchProviders } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.ts';
+import { SlashCommandExecutionError } from './slash-commands/SlashCommandExecutionError.ts';
+import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { SlashCommandDebugController } from './slash-commands/SlashCommandDebugController.ts';
+import { SlashCommandScope } from './slash-commands/SlashCommandScope.ts';
+import { t } from './i18n.ts';
+import { kai_settings } from './kai-settings.ts';
+import { instruct_presets, selectContextPreset, selectInstructPreset } from './instruct-mode.ts';
+import { debounce_timeout, SWIPE_DIRECTION, SWIPE_SOURCE } from './constants.ts';
 export {
     executeSlashCommands, executeSlashCommandsWithOptions, getSlashCommandsHelp, registerSlashCommand,
 };
 
-export const parser = new SlashCommandParser();
+// Lazy initialization to avoid circular dependency TDZ error:
+// script.ts → slash-commands.ts → SlashCommandParser.ts → SlashCommandClosure.ts → script.ts
+let _parser: SlashCommandParser | null = null;
+function getParser(): SlashCommandParser {
+    if (!_parser) {
+        _parser = new SlashCommandParser();
+    }
+    return _parser;
+}
 /**
  * @deprecated Use SlashCommandParser.addCommandObject() instead
  */
-const registerSlashCommand = SlashCommandParser.addCommand.bind(SlashCommandParser);
-const getSlashCommandsHelp = parser.getHelpString.bind(parser);
+function registerSlashCommand(command: string, callback: (...args: any[]) => any, aliases: string[] = [], helpString = '') {
+    return SlashCommandParser.addCommand(command, callback, aliases, helpString);
+}
+const getSlashCommandsHelp = () => getParser().getHelpString();
 
 /**
  * Converts a SlashCommandClosure to a filter function that returns a boolean.
@@ -6975,7 +6985,7 @@ async function executeSlashCommandsWithOptions(text: string, options: Record<str
 
     let closure;
     try {
-        closure = parser.parse(text, true, options.parserFlags, options.abortController ?? new SlashCommandAbortController());
+        closure = getParser().parse(text, true, options.parserFlags, options.abortController ?? new SlashCommandAbortController());
         closure.scope.parent = options.scope;
         closure.onProgress = options.onProgress;
         closure.debugController = options.debugController;

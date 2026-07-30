@@ -1,6 +1,6 @@
-import { AutoCompleteOption } from '../autocomplete/AutoCompleteOption.js';
-import { SlashCommand } from './SlashCommand.js';
-import { SlashCommandEnumValue } from './SlashCommandEnumValue.js';
+import { AutoCompleteOption } from '../autocomplete/AutoCompleteOption.ts';
+import { SlashCommand } from './SlashCommand.ts';
+import { SlashCommandEnumValue } from './SlashCommandEnumValue.ts';
 
 export class SlashCommandEnumAutoCompleteOption extends AutoCompleteOption {
     /**

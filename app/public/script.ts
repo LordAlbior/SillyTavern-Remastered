@@ -9,10 +9,10 @@ import {
     initLibraryShims,
     default as libs,
     lodash,
-} from './lib.js';
+} from './lib.ts';
 
-import { humanizedDateTime, favsToHotswap, getMessageTimeStamp, dragElement, isMobile, initRossMods } from './scripts/RossAscends-mods.js';
-import { userStatsHandler, statMesProcess, initStats } from './scripts/stats.js';
+import { humanizedDateTime, favsToHotswap, getMessageTimeStamp, dragElement, isMobile, initRossMods } from './scripts/RossAscends-mods.ts';
+import { userStatsHandler, statMesProcess, initStats } from './scripts/stats.ts';
 import {
     generateKoboldWithStreaming,
     kai_settings,
@@ -22,7 +22,7 @@ import {
     koboldai_settings,
     koboldai_setting_names,
     initKoboldSettings,
-} from './scripts/kai-settings.js';
+} from './scripts/kai-settings.ts';
 
 import {
     textgenerationwebui_settings as textgen_settings,
@@ -33,7 +33,7 @@ import {
     parseTextgenLogprobs,
     parseTabbyLogprobs,
     initTextGenSettings,
-} from './scripts/textgen-settings.js';
+} from './scripts/textgen-settings.ts';
 
 import {
     world_info,
@@ -49,7 +49,7 @@ import {
     initWorldInfo,
     charUpdatePrimaryWorld,
     charSetAuxWorlds,
-} from './scripts/world-info.js';
+} from './scripts/world-info.ts';
 
 import {
     groups,
@@ -72,7 +72,7 @@ import {
     getGroupBlock,
     getGroupCharacterCardsLazy,
     getGroupDepthPrompts,
-} from './scripts/group-chats.js';
+} from './scripts/group-chats.ts';
 
 import {
     collapseNewlines,
@@ -94,7 +94,7 @@ import {
     applyPowerUserSettings,
     generatedTextFiltered,
     applyStylePins,
-} from './scripts/power-user.js';
+} from './scripts/power-user.ts';
 
 import {
     setOpenAIMessageExamples,
@@ -111,7 +111,7 @@ import {
     loadProxyPresets,
     selected_proxy,
     initOpenAI,
-} from './scripts/openai.js';
+} from './scripts/openai.ts';
 
 import {
     generateNovelWithStreaming,
@@ -124,13 +124,13 @@ import {
     novelai_settings,
     novelai_setting_names,
     initNovelAISettings,
-} from './scripts/nai-settings.js';
+} from './scripts/nai-settings.ts';
 
 import {
     initBookmarks,
     showBookmarksButtons,
     updateBookmarkDisplay,
-} from './scripts/bookmarks.js';
+} from './scripts/bookmarks.ts';
 
 import {
     horde_settings,
@@ -142,7 +142,7 @@ import {
     isHordeGenerationNotAllowed,
     MIN_LENGTH,
     initHorde,
-} from './scripts/horde.js';
+} from './scripts/horde.ts';
 
 import {
     debounce,
@@ -184,12 +184,12 @@ import {
     clamp,
     shakeElement,
     createTimeout,
-} from './scripts/utils.js';
-import { debounce_timeout, GENERATION_TYPE_TRIGGERS, IGNORE_SYMBOL, inject_ids, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, OVERSWIPE_BEHAVIOR, SCROLL_BEHAVIOR, SWIPE_DIRECTION, SWIPE_SOURCE, SWIPE_STATE } from './scripts/constants.js';
+} from './scripts/utils.ts';
+import { debounce_timeout, GENERATION_TYPE_TRIGGERS, IGNORE_SYMBOL, inject_ids, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, OVERSWIPE_BEHAVIOR, SCROLL_BEHAVIOR, SWIPE_DIRECTION, SWIPE_SOURCE, SWIPE_STATE } from './scripts/constants.ts';
 
-import { cancelDebouncedMetadataSave, doDailyExtensionUpdatesCheck, extension_settings, initExtensions, loadExtensionSettings, runGenerationInterceptors } from './scripts/extensions.js';
-import { COMMENT_NAME_DEFAULT, CONNECT_API_MAP, executeSlashCommandsOnChatInput, initDefaultSlashCommands, initSlashCommandAutoComplete, isExecutingCommandsFromChatInput, pauseScriptExecution, stopScriptExecution, UNIQUE_APIS } from './scripts/slash-commands.js';
-import { initMacroAutoComplete } from './scripts/autocomplete/MacroAutoComplete.js';
+import { cancelDebouncedMetadataSave, doDailyExtensionUpdatesCheck, extension_settings, initExtensions, loadExtensionSettings, runGenerationInterceptors } from './scripts/extensions.ts';
+import { COMMENT_NAME_DEFAULT, CONNECT_API_MAP, executeSlashCommandsOnChatInput, initDefaultSlashCommands, initSlashCommandAutoComplete, isExecutingCommandsFromChatInput, pauseScriptExecution, stopScriptExecution, UNIQUE_APIS } from './scripts/slash-commands.ts';
+import { initMacroAutoComplete } from './scripts/autocomplete/MacroAutoComplete.ts';
 import {
     tag_map,
     tags,
@@ -212,17 +212,16 @@ import {
     applyTagsOnGroupSelect,
     tag_import_setting,
     applyCharacterTagsToMessageDivs,
-} from './scripts/tags.js';
-import { checkOpenRouterAuth, initSecrets, readSecretState } from './scripts/secrets.js';
-import { markdownExclusionExt } from './scripts/showdown-exclusion.js';
-import { markdownUnderscoreExt } from './scripts/showdown-underscore.js';
-import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from './scripts/authors-note.js';
-import { registerPromptManagerMigration } from './scripts/PromptManager.js';
-// @ts-expect-error - module not yet created
-import { getRegexedString, regex_placement } from './scripts/extensions/regex/engine.js';
-import { initLogprobs, saveLogprobsForActiveMessage } from './scripts/logprobs.js';
-import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from './scripts/filters.js';
-import { getCfgPrompt, getGuidanceScale, initCfg } from './scripts/cfg-scale.js';
+} from './scripts/tags.ts';
+import { checkOpenRouterAuth, initSecrets, readSecretState } from './scripts/secrets.ts';
+import { markdownExclusionExt } from './scripts/showdown-exclusion.ts';
+import { markdownUnderscoreExt } from './scripts/showdown-underscore.ts';
+import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from './scripts/authors-note.ts';
+import { registerPromptManagerMigration } from './scripts/PromptManager.ts';
+import { getRegexedString, regex_placement } from './scripts/regex-engine.ts';
+import { initLogprobs, saveLogprobsForActiveMessage } from './scripts/logprobs.ts';
+import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from './scripts/filters.ts';
+import { getCfgPrompt, getGuidanceScale, initCfg } from './scripts/cfg-scale.ts';
 import {
     force_output_sequence,
     formatInstructModeChat,
@@ -230,9 +229,9 @@ import {
     formatInstructModeExamples,
     formatInstructModeStoryString,
     getInstructStoppingSequences,
-} from './scripts/instruct-mode.js';
-import { initLocales, t } from './scripts/i18n.js';
-import { getFriendlyTokenizerName, getTokenCount, getTokenCountAsync, initTokenizers, saveTokenCache } from './scripts/tokenizers.js';
+} from './scripts/instruct-mode.ts';
+import { initLocales, t } from './scripts/i18n.ts';
+import { getFriendlyTokenizerName, getTokenCount, getTokenCountAsync, initTokenizers, saveTokenCache } from './scripts/tokenizers.ts';
 import {
     user_avatar,
     getUserAvatars,
@@ -243,51 +242,51 @@ import {
     initUserAvatar,
     updatePersonaConnectionsAvatarList,
     isPersonaPanelOpen,
-} from './scripts/personas.js';
-import { getBackgrounds, initBackgrounds, loadBackgroundSettings, background_settings } from './scripts/backgrounds.js';
-import { loader } from './scripts/action-loader.js';
-import { BulkEditOverlay } from './scripts/BulkEditOverlay.js';
-import { initTextGenModels } from './scripts/textgen-models.js';
-import { appendFileContent, hasPendingFileAttachment, populateFileAttachment, decodeStyleTags, encodeStyleTags, isExternalMediaAllowed, preserveNeutralChat, restoreNeutralChat, formatCreatorNotes, initChatUtilities, addDOMPurifyHooks } from './scripts/chats.js';
-import { getPresetManager, initPresetManager } from './scripts/preset-manager.js';
-import { evaluateMacros, getLastMessageId, initMacros } from './scripts/macros.js';
-import { currentUser, setUserControls } from './scripts/user.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup, fixToastrForDialogs } from './scripts/popup.js';
-import { renderTemplate, renderTemplateAsync } from './scripts/templates.js';
-import { initScrapers } from './scripts/scrapers.js';
-import { initCustomSelectedSamplers, validateDisabledSamplers } from './scripts/samplerSelect.js';
-import { DragAndDropHandler } from './scripts/dragdrop.js';
-import { INTERACTABLE_CONTROL_CLASS, initKeyboard } from './scripts/keyboard.js';
-import { initDynamicStyles } from './scripts/dynamic-styles.js';
-import { initInputMarkdown } from './scripts/input-md-formatting.js';
-import { AbortReason } from './scripts/util/AbortReason.js';
-import { initSystemPrompts } from './scripts/sysprompt.js';
-import { registerExtensionSlashCommands as initExtensionSlashCommands } from './scripts/extensions-slashcommands.js';
-import { ToolManager } from './scripts/tool-calling.js';
-import { addShowdownPatch } from './scripts/util/showdown-patch.js';
-import { applyBrowserFixes } from './scripts/browser-fixes.js';
-import { initServerHistory } from './scripts/server-history.js';
-import { initSettingsSearch } from './scripts/setting-search.js';
-import { initBulkEdit } from './scripts/bulk-edit.js';
-import { getContext } from './scripts/st-context.js';
-import { extractReasoningFromData, extractReasoningSignatureFromData, initReasoning, parseReasoningInSwipes, PromptReasoning, ReasoningHandler, removeReasoningFromString, updateReasoningUI } from './scripts/reasoning.js';
-import { accountStorage } from './scripts/util/AccountStorage.js';
-import { initWelcomeScreen, openPermanentAssistantChat, openPermanentAssistantCard, getPermanentAssistantAvatar } from './scripts/welcome-screen.js';
-import { initDataMaid } from './scripts/data-maid.js';
-import { clearItemizedPrompts, deleteItemizedPromptForMessage, deleteItemizedPrompts, findItemizedPromptSet, initItemizedPrompts, itemizedParams, itemizedPrompts, loadItemizedPrompts, promptItemize, replaceItemizedPromptText, saveItemizedPrompts, swapItemizedPrompts } from './scripts/itemized-prompts.js';
-import { getSystemMessageByType, initSystemMessages, SAFETY_CHAT, sendSystemMessage, system_message_types, system_messages } from './scripts/system-messages.js';
-import { event_types, eventSource } from './scripts/events.js';
-import { initAccessibility } from './scripts/a11y.js';
-import { applyStreamFadeIn } from './scripts/util/stream-fadein.js';
-import { initDomHandlers } from './scripts/dom-handlers.js';
-import { SimpleMutex } from './scripts/util/SimpleMutex.js';
-import { AudioPlayer } from './scripts/audio-player.js';
-import { MacroEnvBuilder } from './scripts/macros/engine/MacroEnvBuilder.js';
-import { MacroEngine } from './scripts/macros/engine/MacroEngine.js';
-import { addChatBackupsBrowser } from './scripts/chat-backups.js';
-import { onboardingExperimentalMacroEngine } from './scripts/macros/engine/MacroDiagnostics.js';
-import { compressRequest, setRequestCompressionConfig } from './scripts/request-compression.js';
-import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker } from './scripts/swipe-picker.js';
+} from './scripts/personas.ts';
+import { getBackgrounds, initBackgrounds, loadBackgroundSettings, background_settings } from './scripts/backgrounds.ts';
+import { loader } from './scripts/action-loader.ts';
+import { BulkEditOverlay } from './scripts/BulkEditOverlay.ts';
+import { initTextGenModels } from './scripts/textgen-models.ts';
+import { appendFileContent, hasPendingFileAttachment, populateFileAttachment, decodeStyleTags, encodeStyleTags, isExternalMediaAllowed, preserveNeutralChat, restoreNeutralChat, formatCreatorNotes, initChatUtilities, addDOMPurifyHooks } from './scripts/chats.ts';
+import { getPresetManager, initPresetManager } from './scripts/preset-manager.ts';
+import { evaluateMacros, getLastMessageId, initMacros } from './scripts/macros.ts';
+import { currentUser, setUserControls } from './scripts/user.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup, fixToastrForDialogs } from './scripts/popup.ts';
+import { renderTemplate, renderTemplateAsync } from './scripts/templates.ts';
+import { initScrapers } from './scripts/scrapers.ts';
+import { initCustomSelectedSamplers, validateDisabledSamplers } from './scripts/samplerSelect.ts';
+import { DragAndDropHandler } from './scripts/dragdrop.ts';
+import { INTERACTABLE_CONTROL_CLASS, initKeyboard } from './scripts/keyboard.ts';
+import { initDynamicStyles } from './scripts/dynamic-styles.ts';
+import { initInputMarkdown } from './scripts/input-md-formatting.ts';
+import { AbortReason } from './scripts/util/AbortReason.ts';
+import { initSystemPrompts } from './scripts/sysprompt.ts';
+import { registerExtensionSlashCommands as initExtensionSlashCommands } from './scripts/extensions-slashcommands.ts';
+import { ToolManager } from './scripts/tool-calling.ts';
+import { addShowdownPatch } from './scripts/util/showdown-patch.ts';
+import { applyBrowserFixes } from './scripts/browser-fixes.ts';
+import { initServerHistory } from './scripts/server-history.ts';
+import { initSettingsSearch } from './scripts/setting-search.ts';
+import { initBulkEdit } from './scripts/bulk-edit.ts';
+import { getContext } from './scripts/st-context.ts';
+import { extractReasoningFromData, extractReasoningSignatureFromData, initReasoning, parseReasoningInSwipes, PromptReasoning, ReasoningHandler, removeReasoningFromString, updateReasoningUI } from './scripts/reasoning.ts';
+import { accountStorage } from './scripts/util/AccountStorage.ts';
+import { initWelcomeScreen, openPermanentAssistantChat, openPermanentAssistantCard, getPermanentAssistantAvatar } from './scripts/welcome-screen.ts';
+import { initDataMaid } from './scripts/data-maid.ts';
+import { clearItemizedPrompts, deleteItemizedPromptForMessage, deleteItemizedPrompts, findItemizedPromptSet, initItemizedPrompts, itemizedParams, itemizedPrompts, loadItemizedPrompts, promptItemize, replaceItemizedPromptText, saveItemizedPrompts, swapItemizedPrompts } from './scripts/itemized-prompts.ts';
+import { getSystemMessageByType, initSystemMessages, SAFETY_CHAT, sendSystemMessage, system_message_types, system_messages } from './scripts/system-messages.ts';
+import { event_types, eventSource } from './scripts/events.ts';
+import { initAccessibility } from './scripts/a11y.ts';
+import { applyStreamFadeIn } from './scripts/util/stream-fadein.ts';
+import { initDomHandlers } from './scripts/dom-handlers.ts';
+import { SimpleMutex } from './scripts/util/SimpleMutex.ts';
+import { AudioPlayer } from './scripts/audio-player.ts';
+import { MacroEnvBuilder } from './scripts/macros/engine/MacroEnvBuilder.ts';
+import { MacroEngine } from './scripts/macros/engine/MacroEngine.ts';
+import { addChatBackupsBrowser } from './scripts/chat-backups.ts';
+import { onboardingExperimentalMacroEngine } from './scripts/macros/engine/MacroDiagnostics.ts';
+import { compressRequest, setRequestCompressionConfig } from './scripts/request-compression.ts';
+import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker } from './scripts/swipe-picker.ts';
 
 // API OBJECT FOR EXTERNAL WIRING
 globalThis.SillyTavern = {

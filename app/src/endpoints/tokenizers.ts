@@ -12,10 +12,10 @@ import { Tokenizer } from '@agnai/web-tokenizers';
 import { SentencePieceProcessor } from '@agnai/sentencepiece-js';
 import tiktoken from 'tiktoken';
 
-import { convertClaudePrompt } from '../prompt-converters.js';
-import { TEXTGEN_TYPES } from '../constants.js';
-import { setAdditionalHeaders } from '../additional-headers.js';
-import { getConfigValue, isValidUrl } from '../util.js';
+import { convertClaudePrompt } from '../prompt-converters.ts';
+import { TEXTGEN_TYPES } from '../constants.ts';
+import { setAdditionalHeaders } from '../additional-headers.ts';
+import { getConfigValue, isValidUrl } from '../util.ts';
 
 /**
  * @typedef { (req: import('express').Request, res: import('express').Response) => Promise<any> } TokenizationHandler

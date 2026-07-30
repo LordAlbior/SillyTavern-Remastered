@@ -1,4 +1,4 @@
-import { AutoCompleteFuzzyScore } from './AutoCompleteFuzzyScore.js';
+import { AutoCompleteFuzzyScore } from './AutoCompleteFuzzyScore.ts';
 
 
 export class AutoCompleteOption {

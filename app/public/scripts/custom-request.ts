@@ -1,10 +1,10 @@
-import { getPresetManager } from './preset-manager.js';
-import { extractJsonFromData, extractMessageFromData, getGenerateUrl, getRequestHeaders, name1, name2 } from '../script.js';
-import { getTextGenServer, createTextGenGenerationData, setting_names, textgenerationwebui_settings } from './textgen-settings.js';
-import { extractReasoningFromData } from './reasoning.js';
-import { formatInstructModeChat, formatInstructModePrompt, getInstructStoppingSequences } from './instruct-mode.js';
-import { getStreamingReply, tryParseStreamingError, createGenerationParameters, settingsToUpdate, oai_settings } from './openai.js';
-import EventSourceStream from './sse-stream.js';
+import { getPresetManager } from './preset-manager.ts';
+import { extractJsonFromData, extractMessageFromData, getGenerateUrl, getRequestHeaders, name1, name2 } from '../script.ts';
+import { getTextGenServer, createTextGenGenerationData, setting_names, textgenerationwebui_settings } from './textgen-settings.ts';
+import { extractReasoningFromData } from './reasoning.ts';
+import { formatInstructModeChat, formatInstructModePrompt, getInstructStoppingSequences } from './instruct-mode.ts';
+import { getStreamingReply, tryParseStreamingError, createGenerationParameters, settingsToUpdate, oai_settings } from './openai.ts';
+import EventSourceStream from './sse-stream.ts';
 
 // #region Type Definitions
 /**

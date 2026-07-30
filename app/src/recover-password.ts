@@ -6,7 +6,7 @@ import {
     getPasswordSalt,
     getPasswordHash,
     toKey,
-} from './users.js';
+} from './users.ts';
 
 
 /**

@@ -5,10 +5,10 @@ import crypto from 'node:crypto';
 import storage from 'node-persist';
 import express from 'express';
 
-import { getUserAvatar, toKey, getPasswordHash, getPasswordSalt, createBackupArchive, ensurePublicDirectoriesExist, toAvatarKey, getAccountVersion } from '../users.js';
-import { SETTINGS_FILE } from '../constants.js';
-import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
-import { color, Cache, getConfigValue } from '../util.js';
+import { getUserAvatar, toKey, getPasswordHash, getPasswordSalt, createBackupArchive, ensurePublicDirectoriesExist, toAvatarKey, getAccountVersion } from '../users.ts';
+import { SETTINGS_FILE } from '../constants.ts';
+import { checkForNewContent, CONTENT_TYPES } from './content-manager.ts';
+import { color, Cache, getConfigValue } from '../util.ts';
 
 const RESET_CACHE = new Cache(5 * 60 * 1000);
 

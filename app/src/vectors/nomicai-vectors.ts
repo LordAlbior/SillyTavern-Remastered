@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { SECRET_KEYS, readSecret } from '../endpoints/secrets.js';
-import type { UserDirectoryList } from '../users.js';
+import { SECRET_KEYS, readSecret } from '../endpoints/secrets.ts';
+import type { UserDirectoryList } from '../users.ts';
 
 const SOURCES = {
     'nomicai': {

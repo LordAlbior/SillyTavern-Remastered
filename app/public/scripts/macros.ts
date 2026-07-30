@@ -1,13 +1,13 @@
 import { Handlebars, moment, seedrandom, droll } from '../lib.js';
-import { chat, chat_metadata, main_api, getMaxPromptTokens, getMaxContextTokens, getMaxResponseTokens, getCurrentChatId, substituteParams, eventSource, event_types, extension_prompts } from '../script.js';
-import { timestampToMoment, isDigitsOnly, getStringHash, escapeRegex, uuidv4 } from './utils.js';
-import { textgenerationwebui_banned_in_macros } from './textgen-settings.js';
-import { getInstructMacros } from './instruct-mode.js';
-import { getVariableMacros } from './variables.js';
-import { isMobile } from './RossAscends-mods.js';
-import { inject_ids } from './constants.js';
-import { initRegisterMacros, macros as macroSystem } from './macros/macro-system.js';
-import { power_user } from './power-user.js';
+import { chat, chat_metadata, main_api, getMaxPromptTokens, getMaxContextTokens, getMaxResponseTokens, getCurrentChatId, substituteParams, eventSource, event_types, extension_prompts } from '../script.ts';
+import { timestampToMoment, isDigitsOnly, getStringHash, escapeRegex, uuidv4 } from './utils.ts';
+import { textgenerationwebui_banned_in_macros } from './textgen-settings.ts';
+import { getInstructMacros } from './instruct-mode.ts';
+import { getVariableMacros } from './variables.ts';
+import { isMobile } from './RossAscends-mods.ts';
+import { inject_ids } from './constants.ts';
+import { initRegisterMacros, macros as macroSystem } from './macros/macro-system.ts';
+import { power_user } from './power-user.ts';
 
 /**
  * @typedef Macro

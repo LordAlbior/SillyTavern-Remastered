@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { SECRET_KEYS, readSecret } from '../endpoints/secrets.js';
+import { SECRET_KEYS, readSecret } from '../endpoints/secrets.ts';
 
 /**
  * Gets the vector for the given text batch from an OpenAI compatible endpoint.

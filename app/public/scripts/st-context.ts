@@ -68,7 +68,7 @@ import {
     scrollOnMediaLoad,
     getOneCharacter,
     getCharacterSource,
-} from '../script.js';
+} from '../script.ts';
 import {
     extension_settings,
     getExtensionManifest,
@@ -80,36 +80,36 @@ import {
     UNSET_VALUE,
     writeExtensionField,
     writeExtensionFieldBulk,
-} from './extensions.js';
-import { groups, openGroupChat, selected_group, unshallowGroupMembers } from './group-chats.js';
-import { addLocaleData, getCurrentLocale, t, translate } from './i18n.js';
-import { hideLoader, showLoader } from './loader.js';
-import { loader } from './action-loader.js';
-import { MacrosParser } from './macros.js';
-import { getChatCompletionModel, oai_settings } from './openai.js';
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
-import { power_user, registerDebugFunction } from './power-user.js';
-import { getPresetManager } from './preset-manager.js';
-import { humanizedDateTime, isMobile, shouldSendOnEnter } from './RossAscends-mods.js';
-import { ScraperManager } from './scrapers.js';
-import { executeSlashCommands, executeSlashCommandsWithOptions, registerSlashCommand } from './slash-commands.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { tag_map, tags, importTags } from './tags.js';
-import { getTextGenServer, textgenerationwebui_settings } from './textgen-settings.js';
-import { tokenizers, getTextTokens, getTokenCount, getTokenCountAsync, getTokenizerModel } from './tokenizers.js';
-import { ToolManager } from './tool-calling.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { timestampToMoment, uuidv4, importFromExternalUrl } from './utils.js';
-import { addGlobalVariable, addLocalVariable, decrementGlobalVariable, decrementLocalVariable, deleteGlobalVariable, deleteLocalVariable, existsGlobalVariable, existsLocalVariable, getGlobalVariable, getLocalVariable, incrementGlobalVariable, incrementLocalVariable, setGlobalVariable, setLocalVariable } from './variables.js';
-import { convertCharacterBook, getWorldInfoPrompt, loadWorldInfo, reloadEditor, saveWorldInfo, updateWorldInfoList, world_names } from './world-info.js';
-import { ChatCompletionService, TextCompletionService } from './custom-request.js';
-import { ConnectionManagerRequestService } from './extensions/shared.js';
-import { updateReasoningUI, parseReasoningFromString, getReasoningTemplateByName } from './reasoning.js';
-import { IGNORE_SYMBOL } from './constants.js';
-import { macros } from './macros/macro-system.js';
+} from './extensions.ts';
+import { groups, openGroupChat, selected_group, unshallowGroupMembers } from './group-chats.ts';
+import { addLocaleData, getCurrentLocale, t, translate } from './i18n.ts';
+import { hideLoader, showLoader } from './loader.ts';
+import { loader } from './action-loader.ts';
+import { MacrosParser } from './macros.ts';
+import { getChatCompletionModel, oai_settings } from './openai.ts';
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
+import { power_user, registerDebugFunction } from './power-user.ts';
+import { getPresetManager } from './preset-manager.ts';
+import { humanizedDateTime, isMobile, shouldSendOnEnter } from './RossAscends-mods.ts';
+import { ScraperManager } from './scrapers.ts';
+import { executeSlashCommands, executeSlashCommandsWithOptions, registerSlashCommand } from './slash-commands.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { tag_map, tags, importTags } from './tags.ts';
+import { getTextGenServer, textgenerationwebui_settings } from './textgen-settings.ts';
+import { tokenizers, getTextTokens, getTokenCount, getTokenCountAsync, getTokenizerModel } from './tokenizers.ts';
+import { ToolManager } from './tool-calling.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { timestampToMoment, uuidv4, importFromExternalUrl } from './utils.ts';
+import { addGlobalVariable, addLocalVariable, decrementGlobalVariable, decrementLocalVariable, deleteGlobalVariable, deleteLocalVariable, existsGlobalVariable, existsLocalVariable, getGlobalVariable, getLocalVariable, incrementGlobalVariable, incrementLocalVariable, setGlobalVariable, setLocalVariable } from './variables.ts';
+import { convertCharacterBook, getWorldInfoPrompt, loadWorldInfo, reloadEditor, saveWorldInfo, updateWorldInfoList, world_names } from './world-info.ts';
+import { ChatCompletionService, TextCompletionService } from './custom-request.ts';
+import { ConnectionManagerRequestService } from './extensions/shared.ts';
+import { updateReasoningUI, parseReasoningFromString, getReasoningTemplateByName } from './reasoning.ts';
+import { IGNORE_SYMBOL } from './constants.ts';
+import { macros } from './macros/macro-system.ts';
 
 export function getContext() {
     return {

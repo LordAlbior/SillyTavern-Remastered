@@ -31,44 +31,44 @@ import {
     extension_prompt_roles,
     deleteMessage,
     settingsReady,
-} from '../script.js';
-import { isMobile, initMovingUI, favsToHotswap } from './RossAscends-mods.js';
+} from '../script.ts';
+import { isMobile, initMovingUI, favsToHotswap } from './RossAscends-mods.ts';
 import {
     groups,
     resetSelectedGroup,
-} from './group-chats.js';
+} from './group-chats.ts';
 import {
     instruct_presets,
     loadInstructMode,
     names_behavior_types,
     selectInstructPreset,
     updateBindModelTemplatesState,
-} from './instruct-mode.js';
+} from './instruct-mode.ts';
 
-import { getTagsList, tag_import_setting, tag_map, tag_sort_mode, tags } from './tags.js';
-import { tokenizers } from './tokenizers.js';
-import { BIAS_CACHE } from './logit-bias.js';
-import { renderTemplateAsync } from './templates.js';
+import { getTagsList, tag_import_setting, tag_map, tag_sort_mode, tags } from './tags.ts';
+import { tokenizers } from './tokenizers.ts';
+import { BIAS_CACHE } from './logit-bias.ts';
+import { renderTemplateAsync } from './templates.ts';
 
-import { countOccurrences, debounce, delay, download, getFileText, getSanitizedFilename, getStringHash, isOdd, isTrueBoolean, onlyUnique, resetScrollHeight, shuffle, sortMoments, stringToRange, timestampToMoment } from './utils.js';
-import { FILTER_TYPES } from './filters.js';
-import { PARSER_FLAG, SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from './autocomplete/AutoComplete.js';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.js';
-import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { POPUP_TYPE, callGenericPopup, fixToastrForDialogs } from './popup.js';
-import { loadSystemPrompts } from './sysprompt.js';
-import { fuzzySearchCategories } from './filters.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { extractDominantColor, generateThemePalette, deriveBackgroundName } from './util/ThemeGenerator.js';
-import { DEFAULT_REASONING_TEMPLATE, loadReasoningTemplates } from './reasoning.js';
-import { bindModelTemplates } from './chat-templates.js';
-import { IMAGE_OVERSWIPE, MEDIA_DISPLAY } from './constants.js';
-import { t } from './i18n.js';
-import { getBackgroundPath, isCustomBackgroundUrl } from './backgrounds.js';
-import { persona_description_positions as _persona_description_positions } from './personas.js';
+import { countOccurrences, debounce, delay, download, getFileText, getSanitizedFilename, getStringHash, isOdd, isTrueBoolean, onlyUnique, resetScrollHeight, shuffle, sortMoments, stringToRange, timestampToMoment } from './utils.ts';
+import { FILTER_TYPES } from './filters.ts';
+import { PARSER_FLAG, SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from './autocomplete/AutoComplete.ts';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
+import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { POPUP_TYPE, callGenericPopup, fixToastrForDialogs } from './popup.ts';
+import { loadSystemPrompts } from './sysprompt.ts';
+import { fuzzySearchCategories } from './filters.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { extractDominantColor, generateThemePalette, deriveBackgroundName } from './util/ThemeGenerator.ts';
+import { DEFAULT_REASONING_TEMPLATE, loadReasoningTemplates } from './reasoning.ts';
+import { bindModelTemplates } from './chat-templates.ts';
+import { IMAGE_OVERSWIPE, MEDIA_DISPLAY } from './constants.ts';
+import { t } from './i18n.ts';
+import { getBackgroundPath, isCustomBackgroundUrl } from './backgrounds.ts';
+import { persona_description_positions as _persona_description_positions } from './personas.ts';
 
 export const toastPositionClasses = [
     'toast-top-left',

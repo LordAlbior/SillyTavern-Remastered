@@ -2,16 +2,16 @@
 
 import { DOMPurify } from '../lib.js';
 
-import { event_types, eventSource, is_send_press, main_api, substituteParams } from '../script.js';
-import { is_group_generating } from './group-chats.js';
-import { Message, MessageCollection, TokenHandler } from './openai.js';
-import { power_user } from './power-user.js';
-import { debounce, waitUntilCondition, escapeHtml, uuidv4 } from './utils.js';
-import { debounce_timeout } from './constants.js';
-import { renderTemplateAsync } from './templates.js';
-import { Popup } from './popup.js';
-import { t } from './i18n.js';
-import { isMobile } from './RossAscends-mods.js';
+import { event_types, eventSource, is_send_press, main_api, substituteParams } from '../script.ts';
+import { is_group_generating } from './group-chats.ts';
+import { Message, MessageCollection, TokenHandler } from './openai.ts';
+import { power_user } from './power-user.ts';
+import { debounce, waitUntilCondition, escapeHtml, uuidv4 } from './utils.ts';
+import { debounce_timeout } from './constants.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { Popup } from './popup.ts';
+import { t } from './i18n.ts';
+import { isMobile } from './RossAscends-mods.ts';
 
 function debouncePromise(func, delay) {
     let timeoutId;

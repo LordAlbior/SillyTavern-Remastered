@@ -1,10 +1,10 @@
-import { getRequestHeaders } from '../script.js';
-import { renderExtensionTemplateAsync } from './extensions.js';
-import { POPUP_RESULT, POPUP_TYPE, callGenericPopup } from './popup.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { isValidUrl } from './utils.js';
+import { getRequestHeaders } from '../script.ts';
+import { renderExtensionTemplateAsync } from './extensions.ts';
+import { POPUP_RESULT, POPUP_TYPE, callGenericPopup } from './popup.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { isValidUrl } from './utils.ts';
 
 interface Scraper {
     id: string;

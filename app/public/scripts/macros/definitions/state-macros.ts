@@ -1,7 +1,7 @@
-import { MacroRegistry, MacroCategory } from '../engine/MacroRegistry.js';
-import { eventSource, event_types } from '../../events.js';
+import { MacroRegistry, MacroCategory } from '../engine/MacroRegistry.ts';
+import { eventSource, event_types } from '../../events.ts';
 // @ts-ignore - root-relative path resolved by bundler
-import { findExtension } from '/scripts/extensions.js';
+import { findExtension } from '/scripts/extensions.ts';
 
 let lastGenerationTypeValue = '';
 let lastGenerationTypeTrackingInitialized = false;

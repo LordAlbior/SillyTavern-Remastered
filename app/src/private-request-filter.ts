@@ -6,8 +6,8 @@ import dns from 'node:dns';
 import ipMatch from 'ip-matching';
 import ipRegex from 'ip-regex';
 import { Agent } from 'agent-base';
-import { color } from './util.js';
-import { filterValidIpPatterns } from './express-common.js';
+import { color } from './util.ts';
+import { filterValidIpPatterns } from './express-common.ts';
 
 const LOG_HEADER = '[Private Request Filter]';
 

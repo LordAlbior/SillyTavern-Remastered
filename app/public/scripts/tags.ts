@@ -12,24 +12,24 @@ import {
     event_types,
     DEFAULT_PRINT_TIMEOUT,
     printCharacters,
-} from '../script.js';
-import { FILTER_TYPES, FILTER_STATES, DEFAULT_FILTER_STATE, isFilterState, FilterHelper } from './filters.js';
+} from '../script.ts';
+import { FILTER_TYPES, FILTER_STATES, DEFAULT_FILTER_STATE, isFilterState, FilterHelper } from './filters.ts';
 
-import { groupCandidatesFilter, groupMembersFilter, groups, selected_group } from './group-chats.js';
-import { download, onlyUnique, parseJsonFile, uuidv4, getSortableDelay, flashHighlight, equalsIgnoreCaseAndAccents, includesIgnoreCaseAndAccents, removeFromArray, getFreeName, debounce, findChar, escapeHtml } from './utils.js';
-import { power_user } from './power-user.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { isMobile } from './RossAscends-mods.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.js';
-import { debounce_timeout } from './constants.js';
-import { INTERACTABLE_CONTROL_CLASS } from './keyboard.js';
-import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { renderTemplateAsync } from './templates.js';
-import { t, translate } from './i18n.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
+import { groupCandidatesFilter, groupMembersFilter, groups, selected_group } from './group-chats.ts';
+import { download, onlyUnique, parseJsonFile, uuidv4, getSortableDelay, flashHighlight, equalsIgnoreCaseAndAccents, includesIgnoreCaseAndAccents, removeFromArray, getFreeName, debounce, findChar, escapeHtml } from './utils.ts';
+import { power_user } from './power-user.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { isMobile } from './RossAscends-mods.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.ts';
+import { debounce_timeout } from './constants.ts';
+import { INTERACTABLE_CONTROL_CLASS } from './keyboard.ts';
+import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { t, translate } from './i18n.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
 
 export {
     TAG_FOLDER_TYPES,

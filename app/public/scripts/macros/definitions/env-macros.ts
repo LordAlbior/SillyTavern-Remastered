@@ -1,8 +1,8 @@
-import { MacroRegistry, MacroCategory, MacroValueType } from '../engine/MacroRegistry.js';
-import { isMobile } from '../../RossAscends-mods.js';
-import { parseMesExamples, main_api } from '../../../script.js';
-import { power_user } from '../../power-user.js';
-import { formatInstructModeExamples } from '../../instruct-mode.js';
+import { MacroRegistry, MacroCategory, MacroValueType } from '../engine/MacroRegistry.ts';
+import { isMobile } from '../../RossAscends-mods.ts';
+import { parseMesExamples, main_api } from '../../../script.ts';
+import { power_user } from '../../power-user.ts';
+import { formatInstructModeExamples } from '../../instruct-mode.ts';
 
 /** @typedef {import('../engine/MacroEnv.types.js').MacroEnv} MacroEnv */
 

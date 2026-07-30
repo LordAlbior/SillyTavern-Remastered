@@ -14,8 +14,8 @@ import {
     saveItemizedPrompts,
     setActiveGroup,
     getCurrentChatDetails,
-} from '../script.js';
-import { humanizedDateTime } from './RossAscends-mods.js';
+} from '../script.ts';
+import { humanizedDateTime } from './RossAscends-mods.ts';
 import {
     DEFAULT_AUTO_MODE_DELAY,
     group_activation_strategy,
@@ -25,23 +25,23 @@ import {
     openGroupChat,
     saveGroupBookmarkChat,
     selected_group,
-} from './group-chats.js';
-import { loader } from './action-loader.js';
-import { getLastMessageId } from './macros.js';
-import { Popup } from './popup.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { createTagMapFromList } from './tags.js';
-import { renderTemplateAsync } from './templates.js';
-import { compressRequest } from './request-compression.js';
-import { t } from './i18n.js';
+} from './group-chats.ts';
+import { loader } from './action-loader.ts';
+import { getLastMessageId } from './macros.ts';
+import { Popup } from './popup.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { createTagMapFromList } from './tags.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { compressRequest } from './request-compression.ts';
+import { t } from './i18n.ts';
 
 import {
     getUniqueName,
     isTrueBoolean,
-} from './utils.js';
+} from './utils.ts';
 
 const bookmarkNameToken = 'Checkpoint #';
 

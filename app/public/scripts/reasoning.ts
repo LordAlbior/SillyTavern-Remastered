@@ -1,23 +1,23 @@
 import {
     moment,
 } from '../lib.js';
-import { chat, closeMessageEditor, event_types, eventSource, main_api, messageFormatting, saveChatConditional, saveChatDebounced, saveSettingsDebounced, substituteParams, syncMesToSwipe, updateMessageBlock } from '../script.js';
+import { chat, closeMessageEditor, event_types, eventSource, main_api, messageFormatting, saveChatConditional, saveChatDebounced, saveSettingsDebounced, substituteParams, syncMesToSwipe, updateMessageBlock } from '../script.ts';
 // @ts-ignore
-import { getRegexedString, regex_placement } from './extensions/regex/engine.js';
-import { getCurrentLocale, t, translate } from './i18n.js';
-import { macros, MacroCategory } from './macros/macro-system.js';
-import { chat_completion_sources, getChatCompletionModel, oai_settings } from './openai.js';
-import { Popup } from './popup.js';
-import { performFuzzySearch, power_user } from './power-user.js';
-import { getPresetManager } from './preset-manager.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { textgen_types, textgenerationwebui_settings } from './textgen-settings.js';
-import { applyStreamFadeIn } from './util/stream-fadein.js';
-import { copyText, escapeRegex, isFalseBoolean, isTrueBoolean, setDatasetProperty, stringToRange, trimSpaces } from './utils.js';
+import { getRegexedString, regex_placement } from './regex-engine.ts';
+import { getCurrentLocale, t, translate } from './i18n.ts';
+import { macros, MacroCategory } from './macros/macro-system.ts';
+import { chat_completion_sources, getChatCompletionModel, oai_settings } from './openai.ts';
+import { Popup } from './popup.ts';
+import { performFuzzySearch, power_user } from './power-user.ts';
+import { getPresetManager } from './preset-manager.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { textgen_types, textgenerationwebui_settings } from './textgen-settings.ts';
+import { applyStreamFadeIn } from './util/stream-fadein.ts';
+import { copyText, escapeRegex, isFalseBoolean, isTrueBoolean, setDatasetProperty, stringToRange, trimSpaces } from './utils.ts';
 
 /**
  * @typedef {object} ReasoningTemplate

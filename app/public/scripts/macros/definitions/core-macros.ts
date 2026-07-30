@@ -1,12 +1,12 @@
 import { seedrandom, droll } from '../../../lib.js';
-import { chat_metadata, main_api, getMaxPromptTokens, getMaxContextTokens, getMaxResponseTokens, extension_prompts, getCurrentChatId } from '../../../script.js';
-import { getStringHash, isFalseBoolean } from '../../utils.js';
-import { textgenerationwebui_banned_in_macros } from '../../textgen-settings.js';
-import { inject_ids } from '../../constants.js';
-import { MacroRegistry, MacroCategory, MacroValueType } from '../engine/MacroRegistry.js';
-import { MACRO_VARIABLE_SHORTHAND_PATTERN } from '../engine/MacroLexer.js';
-import { MacroParser } from '../engine/MacroParser.js';
-import { MacroCstWalker } from '../engine/MacroCstWalker.js';
+import { chat_metadata, main_api, getMaxPromptTokens, getMaxContextTokens, getMaxResponseTokens, extension_prompts, getCurrentChatId } from '../../../script.ts';
+import { getStringHash, isFalseBoolean } from '../../utils.ts';
+import { textgenerationwebui_banned_in_macros } from '../../textgen-settings.ts';
+import { inject_ids } from '../../constants.ts';
+import { MacroRegistry, MacroCategory, MacroValueType } from '../engine/MacroRegistry.ts';
+import { MACRO_VARIABLE_SHORTHAND_PATTERN } from '../engine/MacroLexer.ts';
+import { MacroParser } from '../engine/MacroParser.ts';
+import { MacroCstWalker } from '../engine/MacroCstWalker.ts';
 
 /**
  * Marker used by {{else}} to split content in {{if}} blocks.

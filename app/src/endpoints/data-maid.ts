@@ -3,10 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import express from 'express';
 import mime from 'mime-types';
-import { getSettingsBackupFilePrefix } from './settings.js';
-import { CHAT_BACKUPS_PREFIX } from './chats.js';
-import { isPathUnderParent, tryParse } from '../util.js';
-import { SETTINGS_FILE } from '../constants.js';
+import { getSettingsBackupFilePrefix } from './settings.ts';
+import { CHAT_BACKUPS_PREFIX } from './chats.ts';
+import { isPathUnderParent, tryParse } from '../util.ts';
+import { SETTINGS_FILE } from '../constants.ts';
 
 const sha256 = str => crypto.createHash('sha256').update(str).digest('hex');
 

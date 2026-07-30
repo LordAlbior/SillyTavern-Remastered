@@ -7,9 +7,9 @@ import express from 'express';
 import sanitize from 'sanitize-filename';
 import fetch from 'node-fetch';
 
-import { UNSAFE_EXTENSIONS } from '../constants.js';
-import { clientRelativePath, isValidUrl } from '../util.js';
-import { getHostFromUrl, isHostWhitelisted } from './content-manager.js';
+import { UNSAFE_EXTENSIONS } from '../constants.ts';
+import { clientRelativePath, isValidUrl } from '../util.ts';
+import { getHostFromUrl, isHostWhitelisted } from './content-manager.ts';
 
 const VALID_CATEGORIES = ['bgm', 'ambient', 'blip', 'live2d', 'vrm', 'character', 'temp'];
 

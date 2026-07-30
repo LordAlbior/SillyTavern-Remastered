@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
-import { DEFAULT_USER } from '../constants.js';
-import { getConfigValue } from '../util.js';
+import { DEFAULT_USER } from '../constants.ts';
+import { getConfigValue } from '../util.ts';
 
 /**
  * Sets the Clear-Site-Data header to bust the browser cache.

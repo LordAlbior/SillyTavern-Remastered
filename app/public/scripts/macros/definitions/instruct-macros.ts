@@ -1,5 +1,5 @@
-import { MacroRegistry, MacroCategory } from '../engine/MacroRegistry.js';
-import { power_user } from '../../power-user.js';
+import { MacroRegistry, MacroCategory } from '../engine/MacroRegistry.ts';
+import { power_user } from '../../power-user.ts';
 
 /**
  * Registers instruct-mode related {{...}} macros (instruct* and system

@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import express from 'express';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
-import { color, getConfigValue, uuidv4 } from '../util.js';
+import { color, getConfigValue, uuidv4 } from '../util.ts';
 
 export const SECRETS_FILE = 'secrets.json';
 export const SECRET_KEYS = {

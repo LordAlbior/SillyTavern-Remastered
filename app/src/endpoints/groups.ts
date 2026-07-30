@@ -6,8 +6,8 @@ import express from 'express';
 import sanitize from 'sanitize-filename';
 import { sync as writeFileAtomicSync, default as writeFileAtomic } from 'write-file-atomic';
 
-import { color, tryParse } from '../util.js';
-import { getFileNameValidationFunction } from '../middleware/validateFileName.js';
+import { color, tryParse } from '../util.ts';
+import { getFileNameValidationFunction } from '../middleware/validateFileName.ts';
 
 export const router = express.Router();
 

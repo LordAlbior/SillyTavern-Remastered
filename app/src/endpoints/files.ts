@@ -5,8 +5,8 @@ import express from 'express';
 import sanitize from 'sanitize-filename';
 import { sync as writeFileSyncAtomic } from 'write-file-atomic';
 
-import { validateAssetFileName } from './assets.js';
-import { clientRelativePath } from '../util.js';
+import { validateAssetFileName } from './assets.ts';
+import { clientRelativePath } from '../util.ts';
 
 export const router = express.Router();
 

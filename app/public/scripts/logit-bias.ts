@@ -1,6 +1,6 @@
-import { saveSettingsDebounced } from '../script.js';
-import { getTextTokens } from './tokenizers.js';
-import { getSortableDelay, uuidv4 } from './utils.js';
+import { saveSettingsDebounced } from '../script.ts';
+import { getTextTokens } from './tokenizers.ts';
+import { getSortableDelay, uuidv4 } from './utils.ts';
 
 export const BIAS_CACHE = new Map();
 

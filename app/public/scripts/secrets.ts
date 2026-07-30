@@ -1,20 +1,20 @@
 import { DOMPurify, moment, sha256 } from '../lib.js';
-import { event_types, eventSource, getRequestHeaders, saveSettings } from '../script.js';
-import { t } from './i18n.js';
-import { chat_completion_sources } from './openai.js';
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandExecutor } from './slash-commands/SlashCommandExecutor.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { SlashCommandScope } from './slash-commands/SlashCommandScope.js';
-import { renderTemplateAsync } from './templates.js';
-import { textgen_types } from './textgen-settings.js';
-import { getCurrentUserHandle } from './user.js';
-import { copyText, isTrueBoolean, uuidv4 } from './utils.js';
-import { accountStorage } from './util/AccountStorage.js';
+import { event_types, eventSource, getRequestHeaders, saveSettings } from '../script.ts';
+import { t } from './i18n.ts';
+import { chat_completion_sources } from './openai.ts';
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandExecutor } from './slash-commands/SlashCommandExecutor.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { SlashCommandScope } from './slash-commands/SlashCommandScope.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { textgen_types } from './textgen-settings.ts';
+import { getCurrentUserHandle } from './user.ts';
+import { copyText, isTrueBoolean, uuidv4 } from './utils.ts';
+import { accountStorage } from './util/AccountStorage.ts';
 
 export const SECRET_KEYS = {
     HORDE: 'api_key_horde',

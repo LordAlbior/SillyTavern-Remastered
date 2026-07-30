@@ -31,8 +31,8 @@ import {
     substituteParamsExtended,
     system_message_types,
     this_chid,
-} from '../script.js';
-import { getGroupNames, selected_group } from './group-chats.js';
+} from '../script.ts';
+import { getGroupNames, selected_group } from './group-chats.ts';
 
 import {
     chatCompletionDefaultPrompts,
@@ -40,12 +40,12 @@ import {
     Prompt,
     PromptManager,
     promptManagerDefaultPromptOrders,
-} from './PromptManager.js';
+} from './PromptManager.ts';
 
-import { forceCharacterEditorTokenize, getCustomStoppingStrings, persona_description_positions, power_user } from './power-user.js';
-import { SECRET_KEYS, secret_state, writeSecret } from './secrets.js';
+import { forceCharacterEditorTokenize, getCustomStoppingStrings, persona_description_positions, power_user } from './power-user.ts';
+import { SECRET_KEYS, secret_state, writeSecret } from './secrets.ts';
 
-import { getEventSourceStream } from './sse-stream.js';
+import { getEventSourceStream } from './sse-stream.ts';
 import {
     clamp,
     createThumbnail,
@@ -66,21 +66,21 @@ import {
     stringFormat,
     textValueMatcher,
     uuidv4,
-} from './utils.js';
-import { countTokensOpenAIAsync, getTokenizerModel } from './tokenizers.js';
-import { isMobile } from './RossAscends-mods.js';
-import { saveLogprobsForActiveMessage } from './logprobs.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.js';
-import { renderTemplateAsync } from './templates.js';
-import { SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
-import { t } from './i18n.js';
-import { ToolManager } from './tool-calling.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { COMETAPI_IGNORE_PATTERNS, IGNORE_SYMBOL, MEDIA_DISPLAY, MEDIA_TYPE } from './constants.js';
-import { syncNanoGptProvidersForModel, syncOpenRouterProvidersForModel, updateNanoGptProvidersWarning, updateOpenRouterProvidersWarning } from './textgen-models.js';
+} from './utils.ts';
+import { countTokensOpenAIAsync, getTokenizerModel } from './tokenizers.ts';
+import { isMobile } from './RossAscends-mods.ts';
+import { saveLogprobsForActiveMessage } from './logprobs.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
+import { t } from './i18n.ts';
+import { ToolManager } from './tool-calling.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { COMETAPI_IGNORE_PATTERNS, IGNORE_SYMBOL, MEDIA_DISPLAY, MEDIA_TYPE } from './constants.ts';
+import { syncNanoGptProvidersForModel, syncOpenRouterProvidersForModel, updateNanoGptProvidersWarning, updateOpenRouterProvidersWarning } from './textgen-models.ts';
 
 export {
     openai_messages_count,

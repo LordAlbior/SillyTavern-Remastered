@@ -6,7 +6,7 @@
  * consistent behavior across all contexts where macro autocomplete is used.
  */
 
-import { AutoCompleteNameResult } from './AutoCompleteNameResult.js';
+import { AutoCompleteNameResult } from './AutoCompleteNameResult.ts';
 import {
     EnhancedMacroAutoCompleteOption,
     MacroFlagAutoCompleteOption,
@@ -20,15 +20,15 @@ import {
     isValidVariableShorthandName,
     parseMacroContext,
     SimpleAutoCompleteOption,
-} from './EnhancedMacroAutoCompleteOption.js';
-import { macros as macroSystem } from '../macros/macro-system.js';
-import { MacroFlagDefinitions, MacroFlagType } from '../macros/engine/MacroFlags.js';
-import { MacroParser } from '../macros/engine/MacroParser.js';
-import { MacroCstWalker } from '../macros/engine/MacroCstWalker.js';
-import { onboardingExperimentalMacroEngine } from '../macros/engine/MacroDiagnostics.js';
+} from './EnhancedMacroAutoCompleteOption.ts';
+import { macros as macroSystem } from '../macros/macro-system.ts';
+import { MacroFlagDefinitions, MacroFlagType } from '../macros/engine/MacroFlags.ts';
+import { MacroParser } from '../macros/engine/MacroParser.ts';
+import { MacroCstWalker } from '../macros/engine/MacroCstWalker.ts';
+import { onboardingExperimentalMacroEngine } from '../macros/engine/MacroDiagnostics.ts';
 // @ts-ignore
-import { chat_metadata } from '/script.js';
-import { extension_settings } from '../extensions.js';
+import { chat_metadata } from '/script.ts';
+import { extension_settings } from '../extensions.ts';
 
 /** @typedef {import('./EnhancedMacroAutoCompleteOption.js').MacroAutoCompleteContext} MacroAutoCompleteContext */
 /** @typedef {import('./EnhancedMacroAutoCompleteOption.js').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */

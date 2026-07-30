@@ -12,15 +12,15 @@ import {
     setGenerationParamsFromPreset,
     eventSource,
     event_types,
-} from '../script.js';
-import { t } from './i18n.js';
-import { autoSelectInstructPreset } from './instruct-mode.js';
+} from '../script.ts';
+import { t } from './i18n.ts';
+import { autoSelectInstructPreset } from './instruct-mode.ts';
 
 import {
     power_user,
-} from './power-user.js';
-import { getEventSourceStream } from './sse-stream.js';
-import { getSortableDelay, versionCompare } from './utils.js';
+} from './power-user.ts';
+import { getEventSourceStream } from './sse-stream.ts';
+import { getSortableDelay, versionCompare } from './utils.ts';
 
 export let koboldai_settings;
 export let koboldai_setting_names;

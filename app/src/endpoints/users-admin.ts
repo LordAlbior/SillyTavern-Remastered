@@ -3,7 +3,7 @@ import { promises as fsPromises } from 'node:fs';
 import storage from 'node-persist';
 import express from 'express';
 import lodash from 'lodash';
-import { checkForNewContent, CONTENT_TYPES } from './content-manager.js';
+import { checkForNewContent, CONTENT_TYPES } from './content-manager.ts';
 import {
     KEY_PREFIX,
     toKey,
@@ -14,8 +14,8 @@ import {
     getPasswordHash,
     getUserDirectories,
     ensurePublicDirectoriesExist,
-} from '../users.js';
-import { DEFAULT_USER } from '../constants.js';
+} from '../users.ts';
+import { DEFAULT_USER } from '../constants.ts';
 
 export const router = express.Router();
 

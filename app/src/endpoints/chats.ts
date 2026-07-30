@@ -8,7 +8,7 @@ import sanitize from 'sanitize-filename';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 import _ from 'lodash';
 
-import validateAvatarUrlMiddleware from '../middleware/validateFileName.js';
+import validateAvatarUrlMiddleware from '../middleware/validateFileName.ts';
 import {
     getConfigValue,
     humanizedDateTime,
@@ -21,7 +21,7 @@ import {
     tryDeleteFile,
     readFirstLine,
     isPathUnderParent,
-} from '../util.js';
+} from '../util.ts';
 
 const isBackupEnabled = !!getConfigValue('backups.chat.enabled', true, 'boolean');
 const maxTotalChatBackups = Number(getConfigValue('backups.chat.maxTotalBackups', -1, 'number'));

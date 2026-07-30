@@ -11,9 +11,9 @@
  * @module action-loader
  */
 
-import { t } from './i18n.js';
-import { stopGeneration } from '../script.js';
-import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
+import { t } from './i18n.ts';
+import { stopGeneration } from '../script.ts';
+import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
 
 /**
  * Enum representing the toast display mode for the action loader.

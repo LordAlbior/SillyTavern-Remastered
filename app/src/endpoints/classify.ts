@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getPipeline } from '../transformers.js';
+import { getPipeline } from '../transformers.ts';
 
 const TASK = 'text-classification';
 

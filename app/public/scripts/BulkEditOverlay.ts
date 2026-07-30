@@ -11,14 +11,14 @@ import {
     characterToEntity,
     printCharactersDebounced,
     deleteCharacter,
-} from '../script.js';
+} from '../script.ts';
 
-import { favsToHotswap } from './RossAscends-mods.js';
-import { loader } from './action-loader.js';
-import { convertCharacterToPersona } from './personas.js';
-import { callGenericPopup, POPUP_TYPE } from './popup.js';
-import { createTagInput, getTagKeyForEntity, getTagsList, printTagList, tag_map, compareTagsForSort, removeTagFromMap, importTags, tag_import_setting } from './tags.js';
-import { t } from './i18n.js';
+import { favsToHotswap } from './RossAscends-mods.ts';
+import { loader } from './action-loader.ts';
+import { convertCharacterToPersona } from './personas.ts';
+import { callGenericPopup, POPUP_TYPE } from './popup.ts';
+import { createTagInput, getTagKeyForEntity, getTagsList, printTagList, tag_map, compareTagsForSort, removeTagFromMap, importTags, tag_import_setting } from './tags.ts';
+import { t } from './i18n.ts';
 
 /**
  * Static object representing the actions of the

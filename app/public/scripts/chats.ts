@@ -28,9 +28,9 @@ import {
     getMediaIndex,
     getMediaDisplay,
     chatElement,
-} from '../script.js';
-import { selected_group } from './group-chats.js';
-import { power_user } from './power-user.js';
+} from '../script.ts';
+import { selected_group } from './group-chats.ts';
+import { power_user } from './power-user.ts';
 import {
     extractTextFromHTML,
     extractTextFromMarkdown,
@@ -47,16 +47,16 @@ import {
     convertTextToBase64,
     isSameFile,
     clamp,
-} from './utils.js';
-import { extension_settings, renderExtensionTemplateAsync, saveMetadataDebounced } from './extensions.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.js';
-import { ScraperManager } from './scrapers.js';
-import { DragAndDropHandler } from './dragdrop.js';
-import { renderTemplateAsync } from './templates.js';
-import { t } from './i18n.js';
-import { humanizedDateTime } from './RossAscends-mods.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR, SWIPE_DIRECTION } from './constants.js';
+} from './utils.ts';
+import { extension_settings, renderExtensionTemplateAsync, saveMetadataDebounced } from './extensions.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.ts';
+import { ScraperManager } from './scrapers.ts';
+import { DragAndDropHandler } from './dragdrop.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { t } from './i18n.ts';
+import { humanizedDateTime } from './RossAscends-mods.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR, SWIPE_DIRECTION } from './constants.ts';
 
 /**
  * @typedef {Object} FileAttachment

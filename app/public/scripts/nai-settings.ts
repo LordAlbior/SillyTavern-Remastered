@@ -9,17 +9,17 @@ import {
     setGenerationParamsFromPreset,
     setOnlineStatus,
     startStatusLoading,
-} from '../script.js';
-import { MAX_CONTEXT_DEFAULT, MAX_RESPONSE_DEFAULT, power_user } from './power-user.js';
-import { getTextTokens, tokenizers } from './tokenizers.js';
-import { getEventSourceStream } from './sse-stream.js';
+} from '../script.ts';
+import { MAX_CONTEXT_DEFAULT, MAX_RESPONSE_DEFAULT, power_user } from './power-user.ts';
+import { getTextTokens, tokenizers } from './tokenizers.ts';
+import { getEventSourceStream } from './sse-stream.ts';
 import {
     getSortableDelay,
     getStringHash,
     onlyUnique,
-} from './utils.js';
-import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from './logit-bias.js';
-import { SECRET_KEYS, secret_state, writeSecret } from './secrets.js';
+} from './utils.ts';
+import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from './logit-bias.ts';
+import { SECRET_KEYS, secret_state, writeSecret } from './secrets.ts';
 
 const default_preamble = '[ Style: chat, complex, sensory, visceral ]';
 const default_order = [1, 5, 0, 2, 3, 4];

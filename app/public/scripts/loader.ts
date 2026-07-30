@@ -1,4 +1,4 @@
-import { loader } from './action-loader.js';
+import { loader } from './action-loader.ts';
 
 /**
  * Handle for the legacy loader created by showLoader().
@@ -15,7 +15,7 @@ let legacyLoaderHandle = null;
  *
  * @example
  * // New recommended approach:
- * import { showActionLoader } from './action-loader.js';
+ * import { showActionLoader } from './action-loader.ts';
  * const handle = showActionLoader({ message: 'Loading...' });
  * // ... do work ...
  * handle.hide();
@@ -42,7 +42,7 @@ export function showLoader() {
  *
  * @example
  * // New recommended approach:
- * import { showActionLoader } from './action-loader.js';
+ * import { showActionLoader } from './action-loader.ts';
  * const handle = showActionLoader({ message: 'Loading...' });
  * // ... do work ...
  * await handle.hide();

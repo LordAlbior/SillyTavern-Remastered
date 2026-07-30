@@ -1,5 +1,5 @@
 import process from 'node:process';
-import { setConfigFilePath } from './src/util.js';
+import { setConfigFilePath } from './src/util.ts';
 
 const userAccount = process.argv[2];
 const userPassword = process.argv[3];

@@ -6,7 +6,7 @@ import mime from 'mime-types';
 import sanitize from 'sanitize-filename';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 
-import { getImageBuffers } from '../util.js';
+import { getImageBuffers } from '../util.ts';
 
 /**
  * Gets the path to the sprites folder for the provided character name

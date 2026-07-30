@@ -8,20 +8,20 @@ import {
     extension_prompt_types,
     saveSettingsDebounced,
     this_chid,
-} from '../script.js';
-import { selected_group } from './group-chats.js';
-import { extension_settings, getContext, saveMetadataDebounced } from './extensions.js';
-import { getCharaFilename, debounce, delay } from './utils.js';
-import { getTokenCountAsync } from './tokenizers.js';
-import { debounce_timeout } from './constants.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.js';
+} from '../script.ts';
+import { selected_group } from './group-chats.ts';
+import { extension_settings, getContext, saveMetadataDebounced } from './extensions.ts';
+import { getCharaFilename, debounce, delay } from './utils.ts';
+import { getTokenCountAsync } from './tokenizers.ts';
+import { debounce_timeout } from './constants.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument } from './slash-commands/SlashCommandArgument.ts';
 export { MODULE_NAME as NOTE_MODULE_NAME };
-import { t } from './i18n.js';
-import { macros, MacroCategory } from './macros/macro-system.js';
-import { MacrosParser } from './macros.js';
-import { power_user } from './power-user.js';
+import { t } from './i18n.ts';
+import { macros, MacroCategory } from './macros/macro-system.ts';
+import { MacrosParser } from './macros.ts';
+import { power_user } from './power-user.ts';
 
 const MODULE_NAME = '2_floating_prompt'; // <= Deliberate, for sorting lower than memory
 

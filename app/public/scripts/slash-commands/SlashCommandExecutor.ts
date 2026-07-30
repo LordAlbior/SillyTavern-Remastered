@@ -1,8 +1,8 @@
-import { uuidv4 } from '../utils.js';
-import { SlashCommand } from './SlashCommand.js';
-import { SlashCommandClosure } from './SlashCommandClosure.js';
-import { SlashCommandNamedArgumentAssignment } from './SlashCommandNamedArgumentAssignment.js';
-import { SlashCommandUnnamedArgumentAssignment } from './SlashCommandUnnamedArgumentAssignment.js';
+import { uuidv4 } from '../utils.ts';
+import { SlashCommand } from './SlashCommand.ts';
+import { SlashCommandClosure } from './SlashCommandClosure.ts';
+import { SlashCommandNamedArgumentAssignment } from './SlashCommandNamedArgumentAssignment.ts';
+import { SlashCommandUnnamedArgumentAssignment } from './SlashCommandUnnamedArgumentAssignment.ts';
 
 export class SlashCommandExecutor {
     /**@type {Boolean}*/ injectPipe = true;

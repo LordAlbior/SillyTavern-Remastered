@@ -1,6 +1,6 @@
-import { characterGroupOverlay } from '../script.js';
-import { BulkEditOverlay, BulkEditOverlayState, CharacterContextMenu } from './BulkEditOverlay.js';
-import { event_types, eventSource } from './events.js';
+import { characterGroupOverlay } from '../script.ts';
+import { BulkEditOverlay, BulkEditOverlayState, CharacterContextMenu } from './BulkEditOverlay.ts';
+import { event_types, eventSource } from './events.ts';
 
 let is_bulk_edit = false;
 

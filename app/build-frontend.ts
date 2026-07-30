@@ -1,52 +1,77 @@
-import { $ } from 'bun';
-import { Glob } from 'bun';
 import path from 'node:path';
 import fs from 'node:fs';
 
 const publicDir = path.join(import.meta.dir, 'public');
 const distDir = path.join(publicDir, 'dist');
-const scriptsDir = path.join(publicDir, 'scripts');
 
-// Ensure dist directory exists
 fs.mkdirSync(distDir, { recursive: true });
 
 console.log('===== Frontend Build → public/dist/ =====');
 
-// Step 1: Bundle lib.ts → dist/lib.js (npm dependencies, replaces webpack)
-console.log('[1/4] Bundling lib.ts...');
-await $`bun build ${path.join(publicDir, 'lib.ts')} --outfile ${path.join(distDir, 'lib.js')} --format esm --target browser`.quiet();
+// Minimal plugin for edge-case imports
+const resolveEdgeCases = {
+    name: 'resolve-edge-cases' as const,
+    setup(build: any) {
+        // /lib.js → source lib.ts (URL-style absolute import in request-compression.ts)
+        build.onResolve({ filter: /^\/lib\.js$/ }, (args: any) => ({
+            path: path.join(publicDir, 'lib.ts'),
+        }));
+        // JSZip global inside vendor epub.min.js — leave as external
+        build.onResolve({ filter: /^JSZip$/ }, () => ({
+            path: 'JSZip',
+            external: true,
+        }));
+    },
+};
 
-// Step 2: Transpile script.ts → dist/script.js
-console.log('[2/4] Transpiling script.ts...');
-await $`bun build ${path.join(publicDir, 'script.ts')} --outfile ${path.join(distDir, 'script.js')} --target browser --format esm --no-bundle`.quiet();
+// 1. Bundle lib.ts → dist/lib.js (npm deps, window shims for legacy extensions)
+console.log('[1/3] Bundling lib.ts...');
+const libResult = await Bun.build({
+    entrypoints: [path.join(publicDir, 'lib.ts')],
+    outdir: distDir,
+    target: 'browser',
+    format: 'esm',
+});
 
-// Step 3: Transpile scripts/login.ts → dist/scripts/login.js
-console.log('[3/4] Transpiling login.ts...');
-const distScriptsDir = path.join(distDir, 'scripts');
-fs.mkdirSync(distScriptsDir, { recursive: true });
-await $`bun build ${path.join(scriptsDir, 'login.ts')} --outfile ${path.join(distScriptsDir, 'login.js')} --target browser --format esm --no-bundle`.quiet();
-
-// Step 4: Transpile all scripts/**/*.ts → dist/scripts/**/*.js
-console.log('[4/4] Transpiling scripts/ files...');
-const tsFiles: string[] = [];
-for await (const file of new Glob('**/*.ts').scan(scriptsDir)) {
-    if (file.endsWith('.d.ts')) continue;
-    if (file === 'login.ts') continue; // already done
-    tsFiles.push(file);
+if (!libResult.success) {
+    console.error('Lib bundle FAILED:');
+    for (const log of libResult.logs) console.error(log);
+    process.exit(1);
 }
+console.log(`  → dist/lib.js (${(libResult.outputs[0].size / 1024).toFixed(0)} KB)`);
 
-tsFiles.sort();
-let count = 0;
-for (const file of tsFiles) {
-    const fullPath = path.join(scriptsDir, file);
-    const outPath = path.join(distDir, 'scripts', file.replace(/\.ts$/, '.js'));
-    // Create subdirectories as needed
-    const outDir = path.dirname(outPath);
-    fs.mkdirSync(outDir, { recursive: true });
-    await $`bun build ${fullPath} --outfile ${outPath} --target browser --format esm --no-bundle`.quiet();
-    count++;
-    if (count % 20 === 0) console.log(`  ${count}/${tsFiles.length}...`);
+// 2. Bundle script.ts → dist/script.js (main app — all static imports inlined)
+console.log('[2/3] Bundling script.ts...');
+const scriptResult = await Bun.build({
+    entrypoints: [path.join(publicDir, 'script.ts')],
+    outdir: distDir,
+    target: 'browser',
+    format: 'esm',
+    plugins: [resolveEdgeCases],
+});
+
+if (!scriptResult.success) {
+    console.error('Script bundle FAILED:');
+    for (const log of scriptResult.logs) console.error(log);
+    process.exit(1);
 }
-console.log(`  ${count} scripts transpiled.`);
+console.log(`  → dist/script.js (${(scriptResult.outputs[0].size / 1024).toFixed(0)} KB)`);
 
-console.log('===== Build complete → public/dist/ =====');
+// 3. Bundle login.ts → dist/scripts/login.js (separate login page entry)
+console.log('[3/3] Bundling login.ts...');
+fs.mkdirSync(path.join(distDir, 'scripts'), { recursive: true });
+const loginResult = await Bun.build({
+    entrypoints: [path.join(publicDir, 'scripts', 'login.ts')],
+    outdir: path.join(distDir, 'scripts'),
+    target: 'browser',
+    format: 'esm',
+});
+
+if (!loginResult.success) {
+    console.error('Login bundle FAILED:');
+    for (const log of loginResult.logs) console.error(log);
+    process.exit(1);
+}
+console.log(`  → dist/scripts/login.js (${(loginResult.outputs[0].size / 1024).toFixed(0)} KB)`);
+
+console.log('===== Build complete =====');

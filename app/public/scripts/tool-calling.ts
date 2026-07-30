@@ -1,16 +1,16 @@
 import { DOMPurify } from '../lib.js';
 
-import { addOneMessage, chat, event_types, eventSource, getGeneratingApi, getGeneratingModel, main_api, saveChatConditional, system_avatar, systemUserName } from '../script.js';
-import { chat_completion_sources, custom_prompt_post_processing_types, getChatCompletionModel, model_list, oai_settings } from './openai.js';
-import { Popup } from './popup.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
-import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.js';
-import { isTrueBoolean } from './utils.js';
+import { addOneMessage, chat, event_types, eventSource, getGeneratingApi, getGeneratingModel, main_api, saveChatConditional, system_avatar, systemUserName } from '../script.ts';
+import { chat_completion_sources, custom_prompt_post_processing_types, getChatCompletionModel, model_list, oai_settings } from './openai.ts';
+import { Popup } from './popup.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
+import { enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.ts';
+import { isTrueBoolean } from './utils.ts';
 
 /**
  * @typedef {object} ToolInvocation

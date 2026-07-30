@@ -1,6 +1,6 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import { readSecret, SECRET_KEYS } from './secrets.js';
+import { readSecret, SECRET_KEYS } from './secrets.ts';
 
 export const router = express.Router();
 const API_NANOGPT = 'https://nano-gpt.com/api';

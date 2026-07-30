@@ -1,7 +1,7 @@
 import EventEmitter from 'node:events';
 import process from 'node:process';
 
-import type { ServerEventMap } from '../index.js';
+import type { ServerEventMap } from '../index.ts';
 
 /** The default event source. */
 export const serverEvents = new EventEmitter<ServerEventMap>();

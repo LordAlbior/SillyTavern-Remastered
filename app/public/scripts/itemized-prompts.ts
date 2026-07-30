@@ -1,13 +1,13 @@
 import { DiffMatchPatch, DOMPurify, localforage } from '../lib.js';
-import { chat, event_types, eventSource, getCurrentChatId, reloadCurrentChat } from '../script.js';
-import { t } from './i18n.js';
-import { oai_settings } from './openai.js';
-import { Popup, POPUP_TYPE } from './popup.js';
-import { power_user, registerDebugFunction } from './power-user.js';
-import { isMobile } from './RossAscends-mods.js';
-import { renderTemplateAsync } from './templates.js';
-import { getFriendlyTokenizerName, getTokenCountAsync } from './tokenizers.js';
-import { copyText } from './utils.js';
+import { chat, event_types, eventSource, getCurrentChatId, reloadCurrentChat } from '../script.ts';
+import { t } from './i18n.ts';
+import { oai_settings } from './openai.ts';
+import { Popup, POPUP_TYPE } from './popup.ts';
+import { power_user, registerDebugFunction } from './power-user.ts';
+import { isMobile } from './RossAscends-mods.ts';
+import { renderTemplateAsync } from './templates.ts';
+import { getFriendlyTokenizerName, getTokenCountAsync } from './tokenizers.ts';
+import { copyText } from './utils.ts';
 
 let PromptArrayItemForRawPromptDisplay;
 let priorPromptArrayItemForRawPromptDisplay;

@@ -1,10 +1,10 @@
 // statsHelper.js
 import { moment } from '../lib.js';
-import { getRequestHeaders, characters, this_chid } from '../script.js';
-import { humanizeGenTime } from './RossAscends-mods.js';
-import { callGenericPopup, POPUP_TYPE } from './popup.js';
-import { registerDebugFunction } from './power-user.js';
-import { t, translate } from './i18n.js';
+import { getRequestHeaders, characters, this_chid } from '../script.ts';
+import { humanizeGenTime } from './RossAscends-mods.ts';
+import { callGenericPopup, POPUP_TYPE } from './popup.ts';
+import { registerDebugFunction } from './power-user.ts';
+import { t, translate } from './i18n.ts';
 
 let charStats: Record<string, any> = {};
 

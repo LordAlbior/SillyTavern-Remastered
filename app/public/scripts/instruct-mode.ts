@@ -1,13 +1,13 @@
 'use strict';
 
-import { extension_prompt_types, name1, name2, online_status, saveSettingsDebounced, substituteParams } from '../script.js';
-import { selected_group } from './group-chats.js';
-import { parseExampleIntoIndividual } from './openai.js';
+import { extension_prompt_types, name1, name2, online_status, saveSettingsDebounced, substituteParams } from '../script.ts';
+import { selected_group } from './group-chats.ts';
+import { parseExampleIntoIndividual } from './openai.ts';
 import {
     power_user,
     context_presets,
-} from './power-user.js';
-import { onlyUnique, regexFromString, resetScrollHeight } from './utils.js';
+} from './power-user.ts';
+import { onlyUnique, regexFromString, resetScrollHeight } from './utils.ts';
 
 /**
  * @type {InstructSettings[]} Instruct mode presets.

@@ -9,9 +9,9 @@ import util from 'node:util';
 import urlJoin from 'url-join';
 import lodash from 'lodash';
 
-import { readSecret, SECRET_KEYS } from './secrets.js';
-import { GEMINI_SAFETY, VERTEX_SAFETY } from '../constants.js';
-import { delay, getConfigValue, trimTrailingSlash } from '../util.js';
+import { readSecret, SECRET_KEYS } from './secrets.ts';
+import { GEMINI_SAFETY, VERTEX_SAFETY } from '../constants.ts';
+import { delay, getConfigValue, trimTrailingSlash } from '../util.ts';
 
 const API_MAKERSUITE = 'https://generativelanguage.googleapis.com';
 const API_VERTEX_AI = 'https://us-central1-aiplatform.googleapis.com';

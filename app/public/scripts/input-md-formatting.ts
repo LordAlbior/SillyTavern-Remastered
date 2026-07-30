@@ -1,4 +1,4 @@
-import { power_user } from './power-user.js';
+import { power_user } from './power-user.ts';
 
 export function initInputMarkdown() {
     $(document).on('keydown', 'textarea.mdHotkeys', function (e) {

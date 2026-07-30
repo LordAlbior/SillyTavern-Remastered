@@ -1,9 +1,9 @@
 import fetch from 'node-fetch';
 import urlJoin from 'url-join';
-import { setAdditionalHeadersByType } from '../additional-headers.js';
-import { TEXTGEN_TYPES } from '../constants.js';
-import { trimV1 } from '../util.js';
-import type { UserDirectoryList } from '../users.js';
+import { setAdditionalHeadersByType } from '../additional-headers.ts';
+import { TEXTGEN_TYPES } from '../constants.ts';
+import { trimV1 } from '../util.ts';
+import type { UserDirectoryList } from '../users.ts';
 
 interface VllmEmbeddingData {
     index: number;

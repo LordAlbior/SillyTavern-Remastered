@@ -17,5 +17,8 @@
     "start:no-csrf": "bun build-frontend.ts && bun server.ts --disableCsrf",
     "plugins:update": "bun plugins update",
     "plugins:install": "bun plugins install"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
   }
 }

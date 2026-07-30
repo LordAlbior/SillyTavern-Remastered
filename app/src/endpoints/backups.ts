@@ -2,7 +2,7 @@ import express from 'express';
 import fs, { promises as fsPromises } from 'node:fs';
 import path from 'node:path';
 import sanitize from 'sanitize-filename';
-import { CHAT_BACKUPS_PREFIX, getChatInfo } from './chats.js';
+import { CHAT_BACKUPS_PREFIX, getChatInfo } from './chats.ts';
 
 export const router = express.Router();
 

@@ -1,8 +1,8 @@
 import { promises as fsPromises } from 'node:fs';
 import path from 'node:path';
 import urlJoin from 'url-join';
-import { DEFAULT_AVATAR_PATH } from './constants.js';
-import { extractFileFromZipBuffer } from './util.js';
+import { DEFAULT_AVATAR_PATH } from './constants.ts';
+import { extractFileFromZipBuffer } from './util.ts';
 
 interface ByafCharacterImageEntry {
     filename: string;

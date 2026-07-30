@@ -1,5 +1,5 @@
-import { power_user } from './power-user.js';
-import { substituteParams } from '../script.js';
+import { power_user } from './power-user.ts';
+import { substituteParams } from '../script.ts';
 
 /**
  * Showdown extension to make chat separators (dinkuses) ignore markdown formatting

@@ -3,11 +3,11 @@
 /** @typedef {import('./MacroCstWalker.js').MacroCall} MacroCall */
 /** @typedef {import('./MacroFlags.js').MacroFlags} MacroFlags */
 
-import { MACRO_IDENTIFIER_PATTERN } from './MacroLexer.js';
+import { MACRO_IDENTIFIER_PATTERN } from './MacroLexer.ts';
 
-import { isFalseBoolean, isTrueBoolean } from '../../utils.js';
-import { MacroEngine } from './MacroEngine.js';
-import { createMacroRuntimeError, logMacroRegisterError, logMacroRegisterWarning, logMacroRuntimeWarning } from './MacroDiagnostics.js';
+import { isFalseBoolean, isTrueBoolean } from '../../utils.ts';
+import { MacroEngine } from './MacroEngine.ts';
+import { createMacroRuntimeError, logMacroRegisterError, logMacroRegisterWarning, logMacroRuntimeWarning } from './MacroDiagnostics.ts';
 
 /**
  * Enum of standard macro categories for grouping in documentation and autocomplete.

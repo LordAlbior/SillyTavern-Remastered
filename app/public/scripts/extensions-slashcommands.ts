@@ -1,11 +1,11 @@
-import { disableExtension, enableExtension, extensionNames, findExtension } from './extensions.js';
-import { SlashCommand } from './slash-commands/SlashCommand.js';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.js';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.js';
-import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.js';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.js';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.js';
-import { isFalseBoolean, isTrueBoolean } from './utils.js';
+import { disableExtension, enableExtension, extensionNames, findExtension } from './extensions.ts';
+import { SlashCommand } from './slash-commands/SlashCommand.ts';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
+import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
+import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
+import { isFalseBoolean, isTrueBoolean } from './utils.ts';
 
 /**
  * @param {'enable' | 'disable' | 'toggle'} action - The action to perform on the extension

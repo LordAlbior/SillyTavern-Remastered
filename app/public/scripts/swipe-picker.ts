@@ -1,12 +1,12 @@
-import { branchChat } from './bookmarks.js';
-import { SWIPE_DIRECTION, SWIPE_SOURCE } from './constants.js';
-import { t } from './i18n.js';
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.js';
-import { power_user } from './power-user.js';
-import { isMobile } from './RossAscends-mods.js';
-import { getTokenCountAsync } from './tokenizers.js';
-import { addLongPressEvent, clamp, copyText, timestampToMoment } from './utils.js';
-import { chat, deleteSwipe, ensureSwipes, isMessageSwipeable, isSwipingAllowed, swipe, syncMesToSwipe } from '/script.js';
+import { branchChat } from './bookmarks.ts';
+import { SWIPE_DIRECTION, SWIPE_SOURCE } from './constants.ts';
+import { t } from './i18n.ts';
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
+import { power_user } from './power-user.ts';
+import { isMobile } from './RossAscends-mods.ts';
+import { getTokenCountAsync } from './tokenizers.ts';
+import { addLongPressEvent, clamp, copyText, timestampToMoment } from './utils.ts';
+import { chat, deleteSwipe, ensureSwipes, isMessageSwipeable, isSwipingAllowed, swipe, syncMesToSwipe } from '/script.ts';
 
 /**
  * Returns whether a swipe picker can be opened for the message.

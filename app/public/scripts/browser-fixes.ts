@@ -1,4 +1,4 @@
-import { getParsedUA, isMobile } from './RossAscends-mods.js';
+import { getParsedUA, isMobile } from './RossAscends-mods.ts';
 
 const isFirefox = () => /firefox/i.test(navigator.userAgent);
 

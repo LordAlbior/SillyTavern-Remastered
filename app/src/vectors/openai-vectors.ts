@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { SECRET_KEYS, readSecret } from '../endpoints/secrets.js';
-import { OPENROUTER_HEADERS } from '../constants.js';
+import { SECRET_KEYS, readSecret } from '../endpoints/secrets.ts';
+import { OPENROUTER_HEADERS } from '../constants.ts';
 
 const SOURCES = {
     'togetherai': {

@@ -8,11 +8,11 @@ import fetch from 'node-fetch';
 import sanitize from 'sanitize-filename';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 
-import { getConfigValue, color, setPermissionsSync, isValidUrl } from '../util.js';
-import { write } from '../character-card-parser.js';
-import { serverDirectory } from '../server-directory.js';
-import { Jimp, JimpMime } from '../jimp.js';
-import { DEFAULT_AVATAR_PATH } from '../constants.js';
+import { getConfigValue, color, setPermissionsSync, isValidUrl } from '../util.ts';
+import { write } from '../character-card-parser.ts';
+import { serverDirectory } from '../server-directory.ts';
+import { Jimp, JimpMime } from '../jimp.ts';
+import { DEFAULT_AVATAR_PATH } from '../constants.ts';
 
 const contentDirectory = path.join(serverDirectory, 'default/content');
 const scaffoldDirectory = path.join(serverDirectory, 'default/scaffold');

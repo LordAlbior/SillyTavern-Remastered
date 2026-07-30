@@ -7,21 +7,21 @@
  */
 
 // Engine singletons and enums
-import { MacroEngine } from './engine/MacroEngine.js';
-import { MacroRegistry, MacroCategory, MacroValueType } from './engine/MacroRegistry.js';
-import { MacroLexer } from './engine/MacroLexer.js';
-import { MacroParser } from './engine/MacroParser.js';
-import { MacroCstWalker } from './engine/MacroCstWalker.js';
-import { MacroEnvBuilder } from './engine/MacroEnvBuilder.js';
+import { MacroEngine } from './engine/MacroEngine.ts';
+import { MacroRegistry, MacroCategory, MacroValueType } from './engine/MacroRegistry.ts';
+import { MacroLexer } from './engine/MacroLexer.ts';
+import { MacroParser } from './engine/MacroParser.ts';
+import { MacroCstWalker } from './engine/MacroCstWalker.ts';
+import { MacroEnvBuilder } from './engine/MacroEnvBuilder.ts';
 
 // Macro definition groups
-import { registerCoreMacros } from './definitions/core-macros.js';
-import { registerEnvMacros } from './definitions/env-macros.js';
-import { registerStateMacros } from './definitions/state-macros.js';
-import { registerChatMacros } from './definitions/chat-macros.js';
-import { registerTimeMacros } from './definitions/time-macros.js';
-import { registerVariableMacros } from './definitions/variable-macros.js';
-import { registerInstructMacros } from './definitions/instruct-macros.js';
+import { registerCoreMacros } from './definitions/core-macros.ts';
+import { registerEnvMacros } from './definitions/env-macros.ts';
+import { registerStateMacros } from './definitions/state-macros.ts';
+import { registerChatMacros } from './definitions/chat-macros.ts';
+import { registerTimeMacros } from './definitions/time-macros.ts';
+import { registerVariableMacros } from './definitions/variable-macros.ts';
+import { registerInstructMacros } from './definitions/instruct-macros.ts';
 
 // Re-export the category enum for external use
 export { MacroCategory, MacroValueType };
@@ -53,9 +53,9 @@ export const macros = {
     // enums
     category: MacroCategory,
 
-    // shorthand functions
-    register: MacroRegistry.registerMacro.bind(MacroRegistry),
-    registerAlias: MacroRegistry.registerMacroAlias.bind(MacroRegistry),
+    // shorthand functions (lazy to avoid circular dependency TDZ)
+    register: (...args) => MacroRegistry.registerMacro(...args),
+    registerAlias: (...args) => MacroRegistry.registerMacroAlias(...args),
 };
 
 /**

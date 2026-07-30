@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { forwardFetchResponse } from '../util.js';
+import { forwardFetchResponse } from '../util.ts';
 
 /**
  * Middleware to proxy requests to a different domain

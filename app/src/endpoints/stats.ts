@@ -8,7 +8,7 @@ import writeFileAtomic from 'write-file-atomic';
 const readFile = fs.promises.readFile;
 const readdir = fs.promises.readdir;
 
-import { getAllUserHandles, getUserDirectories } from '../users.js';
+import { getAllUserHandles, getUserDirectories } from '../users.ts';
 
 const STATS_FILE = 'stats.json';
 

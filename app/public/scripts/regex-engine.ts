@@ -1,8 +1,8 @@
-import { characters, saveSettingsDebounced, substituteParams, substituteParamsExtended, this_chid } from '../../../script.js';
-import { extension_settings, writeExtensionField } from '../../extensions.js';
-import { getPresetManager } from '../../preset-manager.js';
-import { regexFromString } from '../../utils.js';
-import { lodash } from '../../../lib.js';
+import { characters, saveSettingsDebounced, substituteParams, substituteParamsExtended, this_chid } from '../script.ts';
+import { extension_settings, writeExtensionField } from './extensions.ts';
+import { getPresetManager } from './preset-manager.ts';
+import { regexFromString } from './utils.ts';
+import { lodash } from '../lib.ts';
 
 /**
  * @readonly
@@ -21,7 +21,7 @@ export const SCRIPT_TYPES = {
 export const SCRIPT_TYPE_UNKNOWN = -1;
 
 /**
- * @typedef {import('../../char-data.js').RegexScriptData} RegexScript
+ * @typedef {import('./char-data.ts').RegexScriptData} RegexScript
  */
 
 /**
@@ -29,9 +29,6 @@ export const SCRIPT_TYPE_UNKNOWN = -1;
  * @property {boolean} allowedOnly Only return allowed scripts
  */
 
-/**
- * @type {Readonly<GetRegexScriptsOptions>}
- */
 const DEFAULT_GET_REGEX_SCRIPTS_OPTIONS = Object.freeze({ allowedOnly: false });
 
 /**
@@ -95,7 +92,7 @@ export class RegexProvider {
  * @param {GetRegexScriptsOptions} options Options for retrieving the regex scripts
  * @returns {RegexScript[]} An array of regex scripts, where each script is an object containing the necessary information.
  */
-export function getRegexScripts(options = DEFAULT_GET_REGEX_SCRIPTS_OPTIONS) {
+export function getRegexScripts(options: { allowedOnly?: boolean } = DEFAULT_GET_REGEX_SCRIPTS_OPTIONS) {
     return [...Object.values(SCRIPT_TYPES).flatMap(type => getScriptsByType(type, options))];
 }
 
@@ -105,7 +102,7 @@ export function getRegexScripts(options = DEFAULT_GET_REGEX_SCRIPTS_OPTIONS) {
  * @param {GetRegexScriptsOptions} options Options for retrieving the regex scripts
  * @returns {RegexScript[]} An array of regex scripts for the specified type.
  */
-export function getScriptsByType(scriptType, { allowedOnly } = DEFAULT_GET_REGEX_SCRIPTS_OPTIONS) {
+export function getScriptsByType(scriptType, { allowedOnly }: { allowedOnly?: boolean } = DEFAULT_GET_REGEX_SCRIPTS_OPTIONS) {
     switch (scriptType) {
         case SCRIPT_TYPE_UNKNOWN:
             return [];
@@ -327,11 +324,28 @@ function sanitizeRegexMacro(x) {
  * Parent function to fetch a regexed version of a raw string
  * @param {string} rawString The raw string to be regexed
  * @param {regex_placement} placement The placement of the string
- * @param {RegexParams} params The parameters to use for the regex script
+ * @param {{
+ *   characterOverride?: string,
+ *   isMarkdown?: boolean,
+ *   isPrompt?: boolean,
+ *   isEdit?: boolean,
+ *   depth?: number,
+ * }} params The parameters to use for the regex script
  * @returns {string} The regexed string
- * @typedef {{characterOverride?: string, isMarkdown?: boolean, isPrompt?: boolean, isEdit?: boolean, depth?: number }} RegexParams The parameters to use for the regex script
  */
-export function getRegexedString(rawString, placement, { characterOverride, isMarkdown, isPrompt, isEdit, depth } = {}) {
+export function getRegexedString(rawString: string, placement: number, {
+    characterOverride,
+    isMarkdown,
+    isPrompt,
+    isEdit,
+    depth,
+}: {
+    characterOverride?: string;
+    isMarkdown?: boolean;
+    isPrompt?: boolean;
+    isEdit?: boolean;
+    depth?: number;
+} = {}) {
     // WTF have you passed me?
     if (typeof rawString !== 'string') {
         console.warn('getRegexedString: rawString is not a string. Returning empty string.');
@@ -384,11 +398,10 @@ export function getRegexedString(rawString, placement, { characterOverride, isMa
  * Runs the provided regex script on the given string
  * @param {RegexScript} regexScript The regex script to run
  * @param {string} rawString The string to run the regex script on
- * @param {RegexScriptParams} params The parameters to use for the regex script
+ * @param {{characterOverride?: string}} params The parameters to use for the regex script
  * @returns {string} The new string
- * @typedef {{characterOverride?: string}} RegexScriptParams The parameters to use for the regex script
  */
-export function runRegexScript(regexScript, rawString, { characterOverride } = {}) {
+export function runRegexScript(regexScript, rawString: string, { characterOverride }: { characterOverride?: string } = {}) {
     let newString = rawString;
     if (!regexScript || !!(regexScript.disabled) || !regexScript?.findRegex || !rawString) {
         return newString;
@@ -451,10 +464,10 @@ export function runRegexScript(regexScript, rawString, { characterOverride } = {
  * Filters anything to trim from the regex match
  * @param {string} rawString The raw string to filter
  * @param {string[]} trimStrings The strings to trim
- * @param {RegexScriptParams} params The parameters to use for the regex filter
+ * @param {{characterOverride?: string}} params The parameters to use for the regex filter
  * @returns {string} The filtered string
  */
-function filterString(rawString, trimStrings, { characterOverride } = {}) {
+function filterString(rawString: string, trimStrings: string[], { characterOverride }: { characterOverride?: string } = {}) {
     let finalString = rawString;
     trimStrings.forEach((trimString) => {
         const subTrimString = substituteParams(trimString, { name2Override: characterOverride });

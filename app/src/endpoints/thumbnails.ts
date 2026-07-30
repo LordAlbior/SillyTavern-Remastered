@@ -3,14 +3,14 @@ import path from 'node:path';
 
 import express from 'express';
 import sanitize from 'sanitize-filename';
-import { Jimp, JimpMime } from '../jimp.js';
+import { Jimp, JimpMime } from '../jimp.ts';
 import { sync as writeFileAtomicSync } from 'write-file-atomic';
 import { imageSize as sizeOf } from 'image-size';
 
-import { getConfigValue, invalidateFirefoxCache } from '../util.js';
-import { getThumbnailResolution, isAnimatedWebP, isAnimatedApng, thumbnailDimensions as dimensions } from './image-metadata.js';
+import { getConfigValue, invalidateFirefoxCache } from '../util.ts';
+import { getThumbnailResolution, isAnimatedWebP, isAnimatedApng, thumbnailDimensions as dimensions } from './image-metadata.ts';
 import { ResizeStrategy } from '@jimp/plugin-resize';
-import type { UserDirectoryList } from '../users.js';
+import type { UserDirectoryList } from '../users.ts';
 
 export const publicRouter = express.Router();
 export const apiRouter = express.Router();

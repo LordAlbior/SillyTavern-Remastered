@@ -16,13 +16,13 @@ import { sync as writeFileAtomicSync } from 'write-file-atomic';
 import sanitize from 'sanitize-filename';
 import ipMatching from 'ip-matching';
 
-import { USER_DIRECTORY_TEMPLATE, DEFAULT_USER, PUBLIC_DIRECTORIES, SETTINGS_FILE, UPLOADS_DIRECTORY } from './constants.js';
-import { getConfigValue, color, delay, generateTimestamp, invalidateFirefoxCache, isPathUnderParent, setPermissionsSync } from './util.js';
-import { allowKeysExposure, readSecret, writeSecret, SECRETS_FILE } from './endpoints/secrets.js';
-import { getContentOfType } from './endpoints/content-manager.js';
-import { serverDirectory } from './server-directory.js';
-import { filterValidIpPatterns, getIpFromRequest } from './express-common.js';
-import { extensionsEnabledFeatureGuard } from './endpoints/extensions.js';
+import { USER_DIRECTORY_TEMPLATE, DEFAULT_USER, PUBLIC_DIRECTORIES, SETTINGS_FILE, UPLOADS_DIRECTORY } from './constants.ts';
+import { getConfigValue, color, delay, generateTimestamp, invalidateFirefoxCache, isPathUnderParent, setPermissionsSync } from './util.ts';
+import { allowKeysExposure, readSecret, writeSecret, SECRETS_FILE } from './endpoints/secrets.ts';
+import { getContentOfType } from './endpoints/content-manager.ts';
+import { serverDirectory } from './server-directory.ts';
+import { filterValidIpPatterns, getIpFromRequest } from './express-common.ts';
+import { extensionsEnabledFeatureGuard } from './endpoints/extensions.ts';
 
 export const KEY_PREFIX = 'user:';
 const AVATAR_PREFIX = 'avatar:';

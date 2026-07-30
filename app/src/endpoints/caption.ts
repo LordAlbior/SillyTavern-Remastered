@@ -1,5 +1,5 @@
 import express from 'express';
-import { getPipeline, getRawImage } from '../transformers.js';
+import { getPipeline, getRawImage } from '../transformers.ts';
 
 export const router = express.Router();
 

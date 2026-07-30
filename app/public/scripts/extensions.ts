@@ -1,15 +1,15 @@
 import { Popper } from '../lib.js';
 
-import { eventSource, event_types, saveSettings, saveSettingsDebounced, getRequestHeaders, animation_duration, CLIENT_VERSION } from '../script.js';
-import { POPUP_RESULT, POPUP_TYPE, Popup } from './popup.js';
-import { renderTemplate, renderTemplateAsync } from './templates.js';
-import { delay, deleteValueByPath, equalsIgnoreCaseAndAccents, escapeHtml, isSubsetOf, sanitizeSelector, setValueByPath, versionCompare } from './utils.js';
-import { getContext } from './st-context.js';
-import { isAdmin } from './user.js';
-import { addLocaleData, getCurrentLocale, t } from './i18n.js';
-import { debounce_timeout } from './constants.js';
-import { accountStorage } from './util/AccountStorage.js';
-import { SimpleMutex } from './util/SimpleMutex.js';
+import { eventSource, event_types, saveSettings, saveSettingsDebounced, getRequestHeaders, animation_duration, CLIENT_VERSION } from '../script.ts';
+import { POPUP_RESULT, POPUP_TYPE, Popup } from './popup.ts';
+import { renderTemplate, renderTemplateAsync } from './templates.ts';
+import { delay, deleteValueByPath, equalsIgnoreCaseAndAccents, escapeHtml, isSubsetOf, sanitizeSelector, setValueByPath, versionCompare } from './utils.ts';
+import { getContext } from './st-context.ts';
+import { isAdmin } from './user.ts';
+import { addLocaleData, getCurrentLocale, t } from './i18n.ts';
+import { debounce_timeout } from './constants.ts';
+import { accountStorage } from './util/AccountStorage.ts';
+import { SimpleMutex } from './util/SimpleMutex.ts';
 
 export {
     getContext,

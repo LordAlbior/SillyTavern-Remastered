@@ -9,22 +9,22 @@ import { sync as writeFileAtomicSync } from 'write-file-atomic';
 import yaml from 'yaml';
 import _ from 'lodash';
 import mime from 'mime-types';
-import { Jimp, JimpMime } from '../jimp.js';
+import { Jimp, JimpMime } from '../jimp.ts';
 import storage from 'node-persist';
 
-import { AVATAR_WIDTH, AVATAR_HEIGHT, DEFAULT_AVATAR_PATH } from '../constants.js';
-import { default as validateAvatarUrlMiddleware, getFileNameValidationFunction, forbiddenRegExp } from '../middleware/validateFileName.js';
-import { deepMerge, humanizedDateTime, tryParse, MemoryLimitedMap, getConfigValue, mutateJsonString, clientRelativePath, getUniqueName, sanitizeSafeCharacterReplacements } from '../util.js';
-import { TavernCardValidator } from '../validator/TavernCardValidator.js';
-import { parse, read, write } from '../character-card-parser.js';
-import { readWorldInfoFile } from './worldinfo.js';
-import { invalidateThumbnail } from './thumbnails.js';
-import { importRisuSprites } from './sprites.js';
-import { getUserDirectories } from '../users.js';
-import { getChatInfo } from './chats.js';
-import { ByafParser } from '../byaf.js';
-import { CharXParser, persistCharXAssets } from '../charx.js';
-import cacheBuster from '../middleware/cacheBuster.js';
+import { AVATAR_WIDTH, AVATAR_HEIGHT, DEFAULT_AVATAR_PATH } from '../constants.ts';
+import { default as validateAvatarUrlMiddleware, getFileNameValidationFunction, forbiddenRegExp } from '../middleware/validateFileName.ts';
+import { deepMerge, humanizedDateTime, tryParse, MemoryLimitedMap, getConfigValue, mutateJsonString, clientRelativePath, getUniqueName, sanitizeSafeCharacterReplacements } from '../util.ts';
+import { TavernCardValidator } from '../validator/TavernCardValidator.ts';
+import { parse, read, write } from '../character-card-parser.ts';
+import { readWorldInfoFile } from './worldinfo.ts';
+import { invalidateThumbnail } from './thumbnails.ts';
+import { importRisuSprites } from './sprites.ts';
+import { getUserDirectories } from '../users.ts';
+import { getChatInfo } from './chats.ts';
+import { ByafParser } from '../byaf.ts';
+import { CharXParser, persistCharXAssets } from '../charx.ts';
+import cacheBuster from '../middleware/cacheBuster.ts';
 
 // With 100 MB limit it would take roughly 3000 characters to reach this limit
 const memoryCacheCapacity = getConfigValue('performance.memoryCacheCapacity', '100mb');

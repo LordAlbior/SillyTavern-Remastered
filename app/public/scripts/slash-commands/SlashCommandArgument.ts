@@ -1,8 +1,8 @@
-import { SlashCommandClosure } from './SlashCommandClosure.js';
-import { commonEnumProviders } from './SlashCommandCommonEnumsProvider.js';
-import { SlashCommandEnumValue } from './SlashCommandEnumValue.js';
-import { SlashCommandExecutor } from './SlashCommandExecutor.js';
-import { SlashCommandScope } from './SlashCommandScope.js';
+import { SlashCommandClosure } from './SlashCommandClosure.ts';
+import { commonEnumProviders } from './SlashCommandCommonEnumsProvider.ts';
+import { SlashCommandEnumValue } from './SlashCommandEnumValue.ts';
+import { SlashCommandExecutor } from './SlashCommandExecutor.ts';
+import { SlashCommandScope } from './SlashCommandScope.ts';
 
 
 /**@readonly*/
