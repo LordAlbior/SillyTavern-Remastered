@@ -11,9 +11,9 @@
  * @module action-loader
  */
 
-import { t } from './i18n.ts';
-import { stopGeneration } from '../script.ts';
-import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
+import { t } from "./i18n.ts";
+import { stopGeneration } from "../script.ts";
+import { Popup, POPUP_RESULT, POPUP_TYPE } from "./popup.ts";
 
 /**
  * Enum representing the toast display mode for the action loader.
@@ -21,12 +21,12 @@ import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
  * @enum {string}
  */
 export const ActionLoaderToastMode = {
-    /** No toast is displayed */
-    NONE: 'none',
-    /** Toast is displayed without stop button (non-interactable) */
-    STATIC: 'static',
-    /** Toast is displayed with stop button (default) */
-    STOPPABLE: 'stoppable',
+  /** No toast is displayed */
+  NONE: "none",
+  /** Toast is displayed without stop button (non-interactable) */
+  STATIC: "static",
+  /** Toast is displayed with stop button (default) */
+  STOPPABLE: "stoppable",
 };
 
 /**
@@ -53,7 +53,7 @@ const activeHandles = new Set();
  * @returns {string} Unique loader ID
  */
 function generateLoaderId() {
-    return `loader_${++loaderIdCounter}`;
+  return `loader_${++loaderIdCounter}`;
 }
 
 /**
@@ -61,12 +61,12 @@ function generateLoaderId() {
  * @returns {boolean} True if at least one blocking loader is active
  */
 function hasBlockingLoaders() {
-    for (const handle of activeHandles) {
-        if ((handle as any).isBlocking && (handle as any).isActive) {
-            return true;
-        }
+  for (const handle of activeHandles) {
+    if ((handle as any).isBlocking && (handle as any).isActive) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 /**
@@ -74,235 +74,237 @@ function hasBlockingLoaders() {
  * Manages its own toast, stop handler, and lifecycle.
  */
 export class ActionLoaderHandle {
-    /**
-     * A special empty handle that is already disposed. Useful as a default value to avoid null checks.
-     * Does not generate any id, toast, or overlay, and all its methods are no-ops.
-     * @type {ActionLoaderHandle}
-     */
-    static get EMPTY() {
-        return new ActionLoaderHandle({ predisposed: true });
+  /**
+   * A special empty handle that is already disposed. Useful as a default value to avoid null checks.
+   * Does not generate any id, toast, or overlay, and all its methods are no-ops.
+   * @type {ActionLoaderHandle}
+   */
+  static get EMPTY() {
+    return new ActionLoaderHandle({ predisposed: true });
+  }
+
+  /** @type {string} Unique identifier for this handle */
+  #id;
+
+  /** @type {string|null} Unique slug for the loader */
+  #slug = null;
+
+  /** @type {JQuery<HTMLElement>|null} The toast element for this loader */
+  #toast = null;
+
+  /** @type {(() => void)|null} Custom stop handler */
+  #onStop = null;
+
+  /** @type {(() => void)|null} Custom hide handler */
+  #onHide = null;
+
+  /** @type {boolean} Whether this loader blocks the UI with an overlay */
+  #blocking = true;
+
+  /** @type {boolean} Whether this handle has been disposed */
+  #disposed = false;
+
+  /**
+   * Creates a new ActionLoaderHandle.
+   * @param {object} options - Configuration options
+   * @param {boolean} [options.blocking=true] - Whether to show blocking overlay
+   * @param {ActionLoaderToastMode} [options.toastMode] - Toast display mode
+   * @param {string|null} [options.slug] - Unique slug for the loader (to identify it easily via code or CSS)
+   * @param {string} [options.message='Generating...'] - Message to display in the toast
+   * @param {string} [options.title] - Title for the toast notification
+   * @param {string} [options.stopTooltip='Stop'] - Tooltip for the stop button
+   * @param {boolean} [options.predisposed=false] - Whether this handle is already disposed (for special use)
+   * @param {HTMLElement|string|null} [options.overlayContent] - Custom content for the overlay (replaces default spinner)
+   * @param {(() => void)|null} [options.onStop] - Custom stop handler
+   * @param {(() => void)|null} [options.onHide] - Custom hide handler
+   */
+  constructor({
+    blocking = true,
+    toastMode = ActionLoaderToastMode.STOPPABLE,
+    slug = null,
+    message = t`Generating...`,
+    title = "",
+    stopTooltip = t`Stop`,
+    overlayContent = null,
+    onStop = null,
+    onHide = null,
+    predisposed = false,
+  } = {}) {
+    if (predisposed) {
+      this.#disposed = true;
+      return;
     }
 
-    /** @type {string} Unique identifier for this handle */
-    #id;
+    this.#id = generateLoaderId();
+    this.#slug = slug;
+    this.#blocking = blocking;
+    this.#onStop = onStop;
+    this.#onHide = onHide;
 
-    /** @type {string|null} Unique slug for the loader */
-    #slug = null;
-
-    /** @type {JQuery<HTMLElement>|null} The toast element for this loader */
-    #toast = null;
-
-    /** @type {(() => void)|null} Custom stop handler */
-    #onStop = null;
-
-    /** @type {(() => void)|null} Custom hide handler */
-    #onHide = null;
-
-    /** @type {boolean} Whether this loader blocks the UI with an overlay */
-    #blocking = true;
-
-    /** @type {boolean} Whether this handle has been disposed */
-    #disposed = false;
-
-    /**
-     * Creates a new ActionLoaderHandle.
-     * @param {object} options - Configuration options
-     * @param {boolean} [options.blocking=true] - Whether to show blocking overlay
-     * @param {ActionLoaderToastMode} [options.toastMode] - Toast display mode
-     * @param {string|null} [options.slug] - Unique slug for the loader (to identify it easily via code or CSS)
-     * @param {string} [options.message='Generating...'] - Message to display in the toast
-     * @param {string} [options.title] - Title for the toast notification
-     * @param {string} [options.stopTooltip='Stop'] - Tooltip for the stop button
-     * @param {boolean} [options.predisposed=false] - Whether this handle is already disposed (for special use)
-     * @param {HTMLElement|string|null} [options.overlayContent] - Custom content for the overlay (replaces default spinner)
-     * @param {(() => void)|null} [options.onStop] - Custom stop handler
-     * @param {(() => void)|null} [options.onHide] - Custom hide handler
-     */
-    constructor({
-        blocking = true,
-        toastMode = ActionLoaderToastMode.STOPPABLE,
-        slug = null,
-        message = t`Generating...`,
-        title = '',
-        stopTooltip = t`Stop`,
-        overlayContent = null,
-        onStop = null,
-        onHide = null,
-        predisposed = false,
-    } = {}) {
-        if (predisposed) {
-            this.#disposed = true;
-            return;
-        }
-
-        this.#id = generateLoaderId();
-        this.#slug = slug;
-        this.#blocking = blocking;
-        this.#onStop = onStop;
-        this.#onHide = onHide;
-
-        // Warn if non-blocking loader has no toast - it won't be visible to the user
-        if (!blocking && toastMode === ActionLoaderToastMode.NONE && !overlayContent) {
-            console.warn('[ActionLoader] Non-blocking loader created without a toast. This loader will not be visible to the user.');
-        }
-
-        // Show the blocking loader overlay if this is the first blocking handle
-        if (blocking && !hasBlockingLoaders() && !isOverlayDisplayed()) {
-            showOverlay(overlayContent);
-        }
-
-        // Register this handle
-        activeHandles.add(this);
-
-        // Create toast if needed
-        if (toastMode !== ActionLoaderToastMode.NONE) {
-            this.#createToast(message, title, toastMode, stopTooltip);
-        }
+    // Warn if non-blocking loader has no toast - it won't be visible to the user
+    if (!blocking && toastMode === ActionLoaderToastMode.NONE && !overlayContent) {
+      console.warn(
+        "[ActionLoader] Non-blocking loader created without a toast. This loader will not be visible to the user.",
+      );
     }
 
-    /**
-     * Creates the toast element for this loader.
-     * @param {string} message - Message to display
-     * @param {string} title - Title for the toast
-     * @param {ActionLoaderToastMode} toastMode - Toast mode
-     * @param {string} stopTooltip - Tooltip for stop button
-     */
-    #createToast(message, title, toastMode, stopTooltip) {
-        const toastContent = document.createElement('div');
-        toastContent.className = 'action-loader-toast';
-
-        if (this.#slug) {
-            toastContent.dataset.slug = this.#slug;
-        }
-        toastContent.dataset.loaderId = this.#id;
-        toastContent.dataset.blocking = this.#blocking.toString();
-
-        const messageSpan = document.createElement('span');
-        messageSpan.className = 'action-loader-message';
-        messageSpan.textContent = message;
-        toastContent.appendChild(messageSpan);
-
-        // Add stop button if mode is STOPPABLE
-        if (toastMode === ActionLoaderToastMode.STOPPABLE) {
-            const stopButton = document.createElement('i');
-            stopButton.className = 'fa-solid fa-stop-circle action-loader-stop interactable';
-            stopButton.title = stopTooltip;
-            stopButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.stop();
-            });
-            toastContent.appendChild(stopButton);
-        }
-
-        // Show toast with no timeout (sticky)
-        this.#toast = toastr.info($(toastContent), title, {
-            timeOut: 0,
-            extendedTimeOut: 0,
-            tapToDismiss: false,
-            escapeHtml: false,
-        });
+    // Show the blocking loader overlay if this is the first blocking handle
+    if (blocking && !hasBlockingLoaders() && !isOverlayDisplayed()) {
+      showOverlay(overlayContent);
     }
 
-    /**
-     * Clears the toast element for this loader.
-     */
-    #clearToast() {
-        if (this.#toast) {
-            toastr.clear(this.#toast, { force: true }); // Need to force as the toast might have focus/hover
-            this.#toast = null;
-        }
+    // Register this handle
+    activeHandles.add(this);
+
+    // Create toast if needed
+    if (toastMode !== ActionLoaderToastMode.NONE) {
+      this.#createToast(message, title, toastMode, stopTooltip);
+    }
+  }
+
+  /**
+   * Creates the toast element for this loader.
+   * @param {string} message - Message to display
+   * @param {string} title - Title for the toast
+   * @param {ActionLoaderToastMode} toastMode - Toast mode
+   * @param {string} stopTooltip - Tooltip for stop button
+   */
+  #createToast(message, title, toastMode, stopTooltip) {
+    const toastContent = document.createElement("div");
+    toastContent.className = "action-loader-toast";
+
+    if (this.#slug) {
+      toastContent.dataset.slug = this.#slug;
+    }
+    toastContent.dataset.loaderId = this.#id;
+    toastContent.dataset.blocking = this.#blocking.toString();
+
+    const messageSpan = document.createElement("span");
+    messageSpan.className = "action-loader-message";
+    messageSpan.textContent = message;
+    toastContent.appendChild(messageSpan);
+
+    // Add stop button if mode is STOPPABLE
+    if (toastMode === ActionLoaderToastMode.STOPPABLE) {
+      const stopButton = document.createElement("i");
+      stopButton.className = "fa-solid fa-stop-circle action-loader-stop interactable";
+      stopButton.title = stopTooltip;
+      stopButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.stop();
+      });
+      toastContent.appendChild(stopButton);
     }
 
-    /**
-     * Disposes this handle, removing it from active handles and hiding overlay if last.
-     */
-    async #dispose() {
-        if (this.#disposed) return;
-        this.#disposed = true;
+    // Show toast with no timeout (sticky)
+    this.#toast = toastr.info($(toastContent), title, {
+      timeOut: 0,
+      extendedTimeOut: 0,
+      tapToDismiss: false,
+      escapeHtml: false,
+    });
+  }
 
-        this.#clearToast();
-        activeHandles.delete(this);
+  /**
+   * Clears the toast element for this loader.
+   */
+  #clearToast() {
+    if (this.#toast) {
+      toastr.clear(this.#toast, { force: true }); // Need to force as the toast might have focus/hover
+      this.#toast = null;
+    }
+  }
 
-        // Hide the overlay if this was the last blocking handle
-        if (this.#blocking && !hasBlockingLoaders()) {
-            await hideOverlay();
-        }
+  /**
+   * Disposes this handle, removing it from active handles and hiding overlay if last.
+   */
+  async #dispose() {
+    if (this.#disposed) return;
+    this.#disposed = true;
+
+    this.#clearToast();
+    activeHandles.delete(this);
+
+    // Hide the overlay if this was the last blocking handle
+    if (this.#blocking && !hasBlockingLoaders()) {
+      await hideOverlay();
+    }
+  }
+
+  /**
+   * The unique identifier for this loader handle.
+   * @returns {string}
+   */
+  get id() {
+    return this.#id;
+  }
+
+  /**
+   * The unique slug for this loader handle, used to identify it easily via code or CSS.
+   * @returns {string|null}
+   */
+  get slug() {
+    return this.#slug;
+  }
+
+  /**
+   * Whether this handle is still active (not disposed).
+   * @returns {boolean}
+   */
+  get isActive() {
+    return !this.#disposed;
+  }
+
+  /**
+   * Whether this loader blocks the UI with an overlay.
+   * @returns {boolean}
+   */
+  get isBlocking() {
+    return this.#blocking;
+  }
+
+  /**
+   * Triggers the stop action on this loader.
+   * Calls the custom onStop handler if provided, otherwise calls stopGeneration().
+   * Then hides this loader.
+   */
+  async stop() {
+    if (this.#disposed) return;
+
+    // Call custom stop handler or default
+    if (this.#onStop) {
+      try {
+        await this.#onStop();
+      } catch (e) {
+        console.error("Error executing onStop handler", e);
+      }
+    } else {
+      stopGeneration();
     }
 
-    /**
-     * The unique identifier for this loader handle.
-     * @returns {string}
-     */
-    get id() {
-        return this.#id;
+    // Dispose without calling onHide (stop is different from hide)
+    await this.#dispose();
+  }
+
+  /**
+   * Hides this loader and clears its toast.
+   * Calls the custom onHide handler if provided.
+   */
+  async hide() {
+    if (this.#disposed) return;
+
+    // Call custom hide handler if provided
+    if (this.#onHide) {
+      try {
+        await this.#onHide();
+      } catch (e) {
+        console.error("Error executing onHide handler", e);
+      }
     }
 
-    /**
-     * The unique slug for this loader handle, used to identify it easily via code or CSS.
-     * @returns {string|null}
-     */
-    get slug() {
-        return this.#slug;
-    }
-
-    /**
-     * Whether this handle is still active (not disposed).
-     * @returns {boolean}
-     */
-    get isActive() {
-        return !this.#disposed;
-    }
-
-    /**
-     * Whether this loader blocks the UI with an overlay.
-     * @returns {boolean}
-     */
-    get isBlocking() {
-        return this.#blocking;
-    }
-
-    /**
-     * Triggers the stop action on this loader.
-     * Calls the custom onStop handler if provided, otherwise calls stopGeneration().
-     * Then hides this loader.
-     */
-    async stop() {
-        if (this.#disposed) return;
-
-        // Call custom stop handler or default
-        if (this.#onStop) {
-            try {
-                await this.#onStop();
-            } catch (e) {
-                console.error('Error executing onStop handler', e);
-            }
-        } else {
-            stopGeneration();
-        }
-
-        // Dispose without calling onHide (stop is different from hide)
-        await this.#dispose();
-    }
-
-    /**
-     * Hides this loader and clears its toast.
-     * Calls the custom onHide handler if provided.
-     */
-    async hide() {
-        if (this.#disposed) return;
-
-        // Call custom hide handler if provided
-        if (this.#onHide) {
-            try {
-                await this.#onHide();
-            } catch (e) {
-                console.error('Error executing onHide handler', e);
-            }
-        }
-
-        await this.#dispose();
-    }
+    await this.#dispose();
+  }
 }
 
 /**
@@ -326,54 +328,54 @@ export class ActionLoaderHandle {
  * loader.hide();
  */
 export const loader = {
-    /**
-     * Shows an action loader with optional toast notification.
-     * Returns a handle to control the loader.
-     * @type {typeof showActionLoader}
-     */
-    show: showActionLoader,
+  /**
+   * Shows an action loader with optional toast notification.
+   * Returns a handle to control the loader.
+   * @type {typeof showActionLoader}
+   */
+  show: showActionLoader,
 
-    /**
-     * Hides a specific loader by handle, or all loaders if no handle provided.
-     * @type {typeof hideActionLoader}
-     */
-    hide: hideActionLoader,
+  /**
+   * Hides a specific loader by handle, or all loaders if no handle provided.
+   * @type {typeof hideActionLoader}
+   */
+  hide: hideActionLoader,
 
-    /**
-     * Gets all currently active loader handles.
-     * @type {typeof getActiveLoaderHandles}
-     */
-    active: getActiveLoaderHandles,
+  /**
+   * Gets all currently active loader handles.
+   * @type {typeof getActiveLoaderHandles}
+   */
+  active: getActiveLoaderHandles,
 
-    /**
-     * Gets a loader handle by its ID.
-     * @type {typeof getLoaderHandleById}
-     */
-    get: getLoaderHandleById,
+  /**
+   * Gets a loader handle by its ID.
+   * @type {typeof getLoaderHandleById}
+   */
+  get: getLoaderHandleById,
 
-    /**
-     * Checks if any blocking loader overlay is currently displayed.
-     * @returns {boolean} True if a blocking overlay is shown
-     */
-    isBlocking: isOverlayDisplayed,
+  /**
+   * Checks if any blocking loader overlay is currently displayed.
+   * @returns {boolean} True if a blocking overlay is shown
+   */
+  isBlocking: isOverlayDisplayed,
 
-    /**
-     * Toast display mode constants.
-     * @type {typeof ActionLoaderToastMode}
-     */
-    ToastMode: ActionLoaderToastMode,
+  /**
+   * Toast display mode constants.
+   * @type {typeof ActionLoaderToastMode}
+   */
+  ToastMode: ActionLoaderToastMode,
 
-    /**
-     * The ActionLoaderHandle class.
-     * @type {typeof ActionLoaderHandle}
-     */
-    Handle: ActionLoaderHandle,
+  /**
+   * The ActionLoaderHandle class.
+   * @type {typeof ActionLoaderHandle}
+   */
+  Handle: ActionLoaderHandle,
 
-    /**
-     * Creates a fresh default loader overlay element.
-     * @type {typeof createDefaultLoaderOverlay}
-     */
-    createOverlay: createDefaultLoaderOverlay,
+  /**
+   * Creates a fresh default loader overlay element.
+   * @type {typeof createDefaultLoaderOverlay}
+   */
+  createOverlay: createDefaultLoaderOverlay,
 };
 
 /**
@@ -421,7 +423,7 @@ export const loader = {
  * });
  */
 export function showActionLoader(options = {}) {
-    return new ActionLoaderHandle(options);
+  return new ActionLoaderHandle(options);
 }
 
 /**
@@ -430,20 +432,20 @@ export function showActionLoader(options = {}) {
  * @returns {Promise<boolean>} Whether any loader was hidden
  */
 export async function hideActionLoader(handle = null) {
-    if (handle instanceof ActionLoaderHandle) {
-        if (handle.isActive) {
-            await handle.hide();
-            return true;
-        }
-        return false;
+  if (handle instanceof ActionLoaderHandle) {
+    if (handle.isActive) {
+      await handle.hide();
+      return true;
     }
+    return false;
+  }
 
-    // No handle provided - hide all active loaders
-    const handles = getActiveLoaderHandles();
-    for (const h of handles) {
-        await (h as any).hide();
-    }
-    return handles.length > 0;
+  // No handle provided - hide all active loaders
+  const handles = getActiveLoaderHandles();
+  for (const h of handles) {
+    await (h as any).hide();
+  }
+  return handles.length > 0;
 }
 
 /**
@@ -451,7 +453,7 @@ export async function hideActionLoader(handle = null) {
  * @returns {ActionLoaderHandle[]} Array of active handles
  */
 export function getActiveLoaderHandles() {
-    return Array.from(activeHandles);
+  return Array.from(activeHandles);
 }
 
 /**
@@ -460,12 +462,12 @@ export function getActiveLoaderHandles() {
  * @returns {ActionLoaderHandle|undefined} The handle, or undefined if not found
  */
 export function getLoaderHandleById(id) {
-    for (const handle of activeHandles) {
-        if ((handle as any).id === id) {
-            return handle;
-        }
+  for (const handle of activeHandles) {
+    if ((handle as any).id === id) {
+      return handle;
     }
-    return undefined;
+  }
+  return undefined;
 }
 
 // ============================================================================
@@ -485,16 +487,16 @@ let preloaderYoinked = false;
  * @returns {HTMLDivElement} A new loader overlay element
  */
 export function createDefaultLoaderOverlay() {
-    const loaderElement = document.createElement('div');
-    loaderElement.id = 'loader';
+  const loaderElement = document.createElement("div");
+  loaderElement.id = "loader";
 
-    const spinnerElement = document.createElement('div');
-    spinnerElement.id = 'load-spinner';
-    spinnerElement.className = 'fa-solid fa-gear fa-spin fa-3x';
+  const spinnerElement = document.createElement("div");
+  spinnerElement.id = "load-spinner";
+  spinnerElement.className = "fa-solid fa-gear fa-spin fa-3x";
 
-    loaderElement.appendChild(spinnerElement);
+  loaderElement.appendChild(spinnerElement);
 
-    return loaderElement;
+  return loaderElement;
 }
 
 /**
@@ -503,15 +505,15 @@ export function createDefaultLoaderOverlay() {
  * @returns {string|HTMLElement} Content for Popup
  */
 function getOverlayContent(customContent) {
-    if (typeof customContent === 'string') {
-        return customContent;
-    }
+  if (typeof customContent === "string") {
+    return customContent;
+  }
 
-    if (customContent instanceof HTMLElement) {
-        return customContent;
-    }
+  if (customContent instanceof HTMLElement) {
+    return customContent;
+  }
 
-    return createDefaultLoaderOverlay();
+  return createDefaultLoaderOverlay();
 }
 
 /**
@@ -519,7 +521,7 @@ function getOverlayContent(customContent) {
  * @returns {boolean} True if overlay is shown
  */
 function isOverlayDisplayed() {
-    return !!loaderPopup;
+  return !!loaderPopup;
 }
 
 /**
@@ -528,23 +530,23 @@ function isOverlayDisplayed() {
  * @param {HTMLElement|string|null} [customContent] - Custom content for the overlay
  */
 function showOverlay(customContent = null) {
-    // Two loaders don't make sense. Don't await, we can overlay the old loader while it closes
-    if (loaderPopup) loaderPopup.complete(POPUP_RESULT.CANCELLED);
+  // Two loaders don't make sense. Don't await, we can overlay the old loader while it closes
+  if (loaderPopup) loaderPopup.complete(POPUP_RESULT.CANCELLED);
 
-    const content = getOverlayContent(customContent);
+  const content = getOverlayContent(customContent);
 
-    loaderPopup = new Popup(content, POPUP_TYPE.DISPLAY, null, {
-        allowEscapeClose: false,
-        transparent: true,
-        animation: 'none',
-        wide: true,
-        large: true,
-    });
+  loaderPopup = new Popup(content, POPUP_TYPE.DISPLAY, null, {
+    allowEscapeClose: false,
+    transparent: true,
+    animation: "none",
+    wide: true,
+    large: true,
+  });
 
-    // No close button, loaders are not closable
-    loaderPopup.closeButton.style.display = 'none';
+  // No close button, loaders are not closable
+  loaderPopup.closeButton.style.display = "none";
 
-    loaderPopup.show();
+  loaderPopup.show();
 }
 
 /**
@@ -553,53 +555,54 @@ function showOverlay(customContent = null) {
  * @returns {Promise<void>}
  */
 async function hideOverlay() {
-    if (!loaderPopup) {
-        return Promise.resolve();
+  if (!loaderPopup) {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve) => {
+    const loaderElement = $("#loader");
+    const spinner = $("#load-spinner");
+
+    if (!loaderElement.length) {
+      console.warn("Loader element not found, skipping animation");
+      cleanup();
+      return;
     }
 
-    return new Promise<void>((resolve) => {
-        const loaderElement = $('#loader');
-        const spinner = $('#load-spinner');
+    // Check if transitions are enabled on spinner (which has the transition property)
+    const transitionDuration = spinner.length && spinner[0] ? getComputedStyle(spinner[0]).transitionDuration : "0s";
+    const hasTransitions = parseFloat(transitionDuration) > 0;
 
-        if (!loaderElement.length) {
-            console.warn('Loader element not found, skipping animation');
-            cleanup();
-            return;
-        }
+    if (hasTransitions) {
+      Promise.race([
+        new Promise((r) => setTimeout(r, 500)), // Fallback timeout
+        new Promise((r) => loaderElement.one("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", r)),
+      ]).finally(cleanup);
+    } else {
+      cleanup();
+    }
 
-        // Check if transitions are enabled on spinner (which has the transition property)
-        const transitionDuration = spinner.length && spinner[0] ? getComputedStyle(spinner[0]).transitionDuration : '0s';
-        const hasTransitions = parseFloat(transitionDuration) > 0;
+    function cleanup() {
+      loaderElement.remove();
+      // Yoink preloader entirely; it only exists to cover up unstyled content while loading JS
+      // If it's present, we remove it once and then it's gone.
+      yoinkPreloader();
 
-        if (hasTransitions) {
-            Promise.race([
-                new Promise((r) => setTimeout(r, 500)), // Fallback timeout
-                new Promise((r) => loaderElement.one('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', r)),
-            ]).finally(cleanup);
-        } else {
-            cleanup();
-        }
-
-        function cleanup() {
-            loaderElement.remove();
-            // Yoink preloader entirely; it only exists to cover up unstyled content while loading JS
-            // If it's present, we remove it once and then it's gone.
-            yoinkPreloader();
-
-            loaderPopup.complete(POPUP_RESULT.AFFIRMATIVE)
-                .catch((err) => console.error('Error completing loaderPopup:', err))
-                .finally(() => {
-                    loaderPopup = null;
-                    resolve();
-                });
-        }
-
-        // Apply the blur styles to the entire loader element
-        loaderElement.css({
-            'filter': 'blur(15px)',
-            'opacity': '0',
+      loaderPopup
+        .complete(POPUP_RESULT.AFFIRMATIVE)
+        .catch((err) => console.error("Error completing loaderPopup:", err))
+        .finally(() => {
+          loaderPopup = null;
+          resolve();
         });
+    }
+
+    // Apply the blur styles to the entire loader element
+    loaderElement.css({
+      filter: "blur(15px)",
+      opacity: "0",
     });
+  });
 }
 
 /**
@@ -607,9 +610,9 @@ async function hideOverlay() {
  * Called once after the first loader hide.
  */
 function yoinkPreloader() {
-    if (preloaderYoinked) return;
-    document.getElementById('preloader')?.remove();
-    preloaderYoinked = true;
+  if (preloaderYoinked) return;
+  document.getElementById("preloader")?.remove();
+  preloaderYoinked = true;
 }
 
 // ============================================================================

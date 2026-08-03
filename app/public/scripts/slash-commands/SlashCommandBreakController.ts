@@ -1,7 +1,7 @@
 export class SlashCommandBreakController {
-    /**@type {boolean} */ isBreak = false;
+  /**@type {boolean} */ isBreak = false;
 
-    break() {
-        this.isBreak = true;
-    }
+  break() {
+    this.isBreak = true;
+  }
 }

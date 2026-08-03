@@ -16,12 +16,7 @@
       "/scripts/*": ["./public/scripts/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "public/**/*",
-    "*.js",
-    "*.d.ts"
-  ],
+  "include": ["src/**/*", "public/**/*", "*.js", "*.d.ts"],
   "exclude": [
     "node_modules",
     "public/dist",

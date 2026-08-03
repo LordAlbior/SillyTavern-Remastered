@@ -1,54 +1,59 @@
-import { getPreviewString, initVoiceMap, saveTtsProviderSettings } from './index.js';
-import { event_types, eventSource, getRequestHeaders } from '../../../script.js';
-import { SECRET_KEYS, secret_state } from '../../secrets.js';
-import { getBase64Async } from '../../utils.js';
+import { getPreviewString, initVoiceMap, saveTtsProviderSettings } from "./index.js";
+import { event_types, eventSource, getRequestHeaders } from "../../../script.js";
+import { SECRET_KEYS, secret_state } from "../../secrets.js";
+import { getBase64Async } from "../../utils.js";
 
 export { MiniMaxTtsProvider };
 
 class MiniMaxTtsProvider {
-    //########//
-    // Config //
-    //########//
+  //########//
+  // Config //
+  //########//
 
-    settings;
-    voices = [];
-    separator = ' . ';
-    audioElement = document.createElement('audio');
+  settings;
+  voices = [];
+  separator = " . ";
+  audioElement = document.createElement("audio");
 
-    defaultSettings = {
-        apiHost: 'https://api.minimax.io',
-        model: 'speech-02-hd',
-        voiceMap: {},
-        speed: { default: 1.0, min: 0.5, max: 2.0, step: 0.1 },
-        volume: { default: 1.0, min: 0.0, max: 10.0, step: 0.1 },
-        pitch: { default: 0, min: -12, max: 12, step: 1 },
-        audioSampleRate: 32000,
-        bitrate: 128000,
-        format: 'mp3',
-        customModels: [],
-        customVoices: [],
-        customVoiceId: '',
-    };
+  defaultSettings = {
+    apiHost: "https://api.minimax.io",
+    model: "speech-02-hd",
+    voiceMap: {},
+    speed: { default: 1.0, min: 0.5, max: 2.0, step: 0.1 },
+    volume: { default: 1.0, min: 0.0, max: 10.0, step: 0.1 },
+    pitch: { default: 0, min: -12, max: 12, step: 1 },
+    audioSampleRate: 32000,
+    bitrate: 128000,
+    format: "mp3",
+    customModels: [],
+    customVoices: [],
+    customVoiceId: "",
+  };
 
-    // MiniMax API doesn't provide a method to list user's cloned voices
-    // so users need to manually input their custom cloned voice IDs
-    static defaultVoices = [
-        { name: 'Unrestrained Young Man', voice_id: 'Chinese (Mandarin)_Unrestrained_Young_Man', lang: 'zh-CN', preview_url: null },
-    ];
+  // MiniMax API doesn't provide a method to list user's cloned voices
+  // so users need to manually input their custom cloned voice IDs
+  static defaultVoices = [
+    {
+      name: "Unrestrained Young Man",
+      voice_id: "Chinese (Mandarin)_Unrestrained_Young_Man",
+      lang: "zh-CN",
+      preview_url: null,
+    },
+  ];
 
-    // default models (by MiniMax doc)
-    static defaultModels = [
-        { id: 'speech-02-hd', name: 'Speech-02-HD (High Quality)' },
-        { id: 'speech-02-turbo', name: 'Speech-02-Turbo (Fast)' },
-        { id: 'speech-01', name: 'Speech-01 (Legacy)' },
-        { id: 'speech-01-240228', name: 'Speech-01-240228 (Legacy)' },
-    ];
+  // default models (by MiniMax doc)
+  static defaultModels = [
+    { id: "speech-02-hd", name: "Speech-02-HD (High Quality)" },
+    { id: "speech-02-turbo", name: "Speech-02-Turbo (Fast)" },
+    { id: "speech-01", name: "Speech-01 (Legacy)" },
+    { id: "speech-01-240228", name: "Speech-01-240228 (Legacy)" },
+  ];
 
-    availableModels = [];
-    availableVoices = [];
+  availableModels = [];
+  availableVoices = [];
 
-    get settingsHtml() {
-        return `
+  get settingsHtml() {
+    return `
         <div class="minimax_tts_settings">
             <div class="tts_block justifyCenter">
                 <div id="api_key_minimax" class="menu_button menu_button_icon manage-api-keys" data-key="api_key_minimax">
@@ -169,793 +174,805 @@ class MiniMaxTtsProvider {
             </div>
         </div>
         `;
+  }
+
+  constructor() {
+    this.handler = async function (/** @type {string} */ key) {
+      if (![SECRET_KEYS.MINIMAX, SECRET_KEYS.MINIMAX_GROUP_ID].includes(key)) return;
+      $("#api_key_minimax").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX]);
+      $("#minimax_group_id").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]);
+      await this.onRefreshClick();
+    }.bind(this);
+  }
+
+  dispose() {
+    [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
+      eventSource.removeListener(event, this.handler);
+    });
+  }
+
+  onSettingsChange() {
+    this.settings.apiHost = $("#minimax_tts_api_host").val();
+    this.settings.speed = parseFloat($("#minimax_tts_speed").val().toString());
+    this.settings.volume = parseFloat($("#minimax_tts_volume").val().toString());
+    this.settings.pitch = parseInt($("#minimax_tts_pitch").val().toString());
+    this.settings.model = $("#minimax_tts_model").find(":selected").val();
+    this.settings.format = $("#minimax_tts_format").find(":selected").val();
+    this.settings.customVoiceId = $("#minimax_tts_custom_voice_id").val();
+
+    $("#minimax_tts_speed_output").text(this.settings.speed.toFixed(1));
+    $("#minimax_tts_volume_output").text(this.settings.volume.toFixed(1));
+    $("#minimax_tts_pitch_output").text(this.settings.pitch);
+
+    saveTtsProviderSettings();
+  }
+
+  addCustomModel() {
+    const modelId = $("#minimax_custom_model_id").val().toString().trim();
+    const modelName = $("#minimax_custom_model_name").val().toString().trim();
+
+    if (!modelId || !modelName) {
+      toastr.error("Please enter model ID and name");
+      return;
     }
 
-    constructor() {
-        this.handler = async function (/** @type {string} */ key) {
-            if (![SECRET_KEYS.MINIMAX, SECRET_KEYS.MINIMAX_GROUP_ID].includes(key)) return;
-            $('#api_key_minimax').toggleClass('success', !!secret_state[SECRET_KEYS.MINIMAX]);
-            $('#minimax_group_id').toggleClass('success', !!secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]);
-            await this.onRefreshClick();
-        }.bind(this);
+    // Check if already exists in custom models
+    if (this.settings.customModels.find((m) => m.id === modelId)) {
+      toastr.error("Model ID already exists in custom models");
+      return;
     }
 
-    dispose() {
-        [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach(event => {
-            eventSource.removeListener(event, this.handler);
-        });
+    // Check if conflicts with default models
+    if (MiniMaxTtsProvider.defaultModels.find((m) => m.id === modelId)) {
+      toastr.error("Model ID conflicts with default model. Please use a different model ID.");
+      return;
     }
 
-    onSettingsChange() {
-        this.settings.apiHost = $('#minimax_tts_api_host').val();
-        this.settings.speed = parseFloat($('#minimax_tts_speed').val().toString());
-        this.settings.volume = parseFloat($('#minimax_tts_volume').val().toString());
-        this.settings.pitch = parseInt($('#minimax_tts_pitch').val().toString());
-        this.settings.model = $('#minimax_tts_model').find(':selected').val();
-        this.settings.format = $('#minimax_tts_format').find(':selected').val();
-        this.settings.customVoiceId = $('#minimax_tts_custom_voice_id').val();
-
-        $('#minimax_tts_speed_output').text(this.settings.speed.toFixed(1));
-        $('#minimax_tts_volume_output').text(this.settings.volume.toFixed(1));
-        $('#minimax_tts_pitch_output').text(this.settings.pitch);
-
-        saveTtsProviderSettings();
+    // Check if conflicts with default model names
+    if (MiniMaxTtsProvider.defaultModels.find((m) => m.name === modelName)) {
+      toastr.error("Model name conflicts with default model. Please use a different model name.");
+      return;
     }
 
-    addCustomModel() {
-        const modelId = $('#minimax_custom_model_id').val().toString().trim();
-        const modelName = $('#minimax_custom_model_name').val().toString().trim();
+    this.settings.customModels.push({ id: modelId, name: modelName });
+    $("#minimax_custom_model_id").val("");
+    $("#minimax_custom_model_name").val("");
 
-        if (!modelId || !modelName) {
-            toastr.error('Please enter model ID and name');
-            return;
-        }
+    this.updateCustomModelsDisplay();
+    this.updateModelSelect(this.getAllModels());
+    saveTtsProviderSettings();
+    toastr.success("Model added successfully");
+  }
 
-        // Check if already exists in custom models
-        if (this.settings.customModels.find(m => m.id === modelId)) {
-            toastr.error('Model ID already exists in custom models');
-            return;
-        }
+  removeCustomModel(modelId) {
+    this.settings.customModels = this.settings.customModels.filter((m) => m.id !== modelId);
+    this.updateCustomModelsDisplay();
+    this.updateModelSelect(this.getAllModels());
+    saveTtsProviderSettings();
 
-        // Check if conflicts with default models
-        if (MiniMaxTtsProvider.defaultModels.find(m => m.id === modelId)) {
-            toastr.error('Model ID conflicts with default model. Please use a different model ID.');
-            return;
-        }
+    toastr.success("Model removed successfully");
+  }
 
-        // Check if conflicts with default model names
-        if (MiniMaxTtsProvider.defaultModels.find(m => m.name === modelName)) {
-            toastr.error('Model name conflicts with default model. Please use a different model name.');
-            return;
-        }
+  addCustomVoice() {
+    const voiceName = $("#minimax_custom_voice_name").val().toString().trim();
+    const voiceId = $("#minimax_custom_voice_id").val().toString().trim();
+    const voiceLang = $("#minimax_custom_voice_lang").val().toString().trim();
 
-        this.settings.customModels.push({ id: modelId, name: modelName });
-        $('#minimax_custom_model_id').val('');
-        $('#minimax_custom_model_name').val('');
-
-        this.updateCustomModelsDisplay();
-        this.updateModelSelect(this.getAllModels());
-        saveTtsProviderSettings();
-        toastr.success('Model added successfully');
+    if (!voiceName || !voiceId) {
+      toastr.error("Please enter voice name and ID");
+      return;
     }
 
-    removeCustomModel(modelId) {
-        this.settings.customModels = this.settings.customModels.filter(m => m.id !== modelId);
-        this.updateCustomModelsDisplay();
-        this.updateModelSelect(this.getAllModels());
-        saveTtsProviderSettings();
-
-        toastr.success('Model removed successfully');
+    // Check if already exists in custom voices
+    if (this.settings.customVoices.find((v) => v.voice_id === voiceId)) {
+      toastr.error("Voice ID already exists in custom voices");
+      return;
     }
 
-    addCustomVoice() {
-        const voiceName = $('#minimax_custom_voice_name').val().toString().trim();
-        const voiceId = $('#minimax_custom_voice_id').val().toString().trim();
-        const voiceLang = $('#minimax_custom_voice_lang').val().toString().trim();
-
-        if (!voiceName || !voiceId) {
-            toastr.error('Please enter voice name and ID');
-            return;
-        }
-
-        // Check if already exists in custom voices
-        if (this.settings.customVoices.find(v => v.voice_id === voiceId)) {
-            toastr.error('Voice ID already exists in custom voices');
-            return;
-        }
-
-        // Check if conflicts with default voices
-        if (MiniMaxTtsProvider.defaultVoices.find(v => v.voice_id === voiceId)) {
-            toastr.error('Voice ID conflicts with default voice. Please use a different voice ID.');
-            return;
-        }
-
-        // Check if conflicts with default voice names
-        if (MiniMaxTtsProvider.defaultVoices.find(v => v.name === voiceName)) {
-            toastr.error('Voice name conflicts with default voice. Please use a different voice name.');
-            return;
-        }
-
-        // Convert display name to standard language code before saving
-        const standardLangCode = this.convertDisplayNameToLanguageCode(voiceLang);
-
-        this.settings.customVoices.push({
-            name: voiceName,
-            voice_id: voiceId,
-            lang: standardLangCode,
-            preview_url: null,
-        });
-
-        $('#minimax_custom_voice_name').val('');
-        $('#minimax_custom_voice_id').val('');
-        $('#minimax_custom_voice_lang').val('auto');
-
-        this.updateCustomVoicesDisplay();
-        initVoiceMap(); // Update TTS extension voiceMap
-        saveTtsProviderSettings();
-        toastr.success('Voice added successfully');
+    // Check if conflicts with default voices
+    if (MiniMaxTtsProvider.defaultVoices.find((v) => v.voice_id === voiceId)) {
+      toastr.error("Voice ID conflicts with default voice. Please use a different voice ID.");
+      return;
     }
 
-    // Remove custom voice
-    removeCustomVoice(voiceId) {
-        this.settings.customVoices = this.settings.customVoices.filter(v => v.voice_id !== voiceId);
-        this.updateCustomVoicesDisplay();
-        initVoiceMap(); // Update TTS extension voiceMap
-        saveTtsProviderSettings();
-        toastr.success('Voice removed successfully');
+    // Check if conflicts with default voice names
+    if (MiniMaxTtsProvider.defaultVoices.find((v) => v.name === voiceName)) {
+      toastr.error("Voice name conflicts with default voice. Please use a different voice name.");
+      return;
     }
 
-    // Helper function to escape HTML
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+    // Convert display name to standard language code before saving
+    const standardLangCode = this.convertDisplayNameToLanguageCode(voiceLang);
+
+    this.settings.customVoices.push({
+      name: voiceName,
+      voice_id: voiceId,
+      lang: standardLangCode,
+      preview_url: null,
+    });
+
+    $("#minimax_custom_voice_name").val("");
+    $("#minimax_custom_voice_id").val("");
+    $("#minimax_custom_voice_lang").val("auto");
+
+    this.updateCustomVoicesDisplay();
+    initVoiceMap(); // Update TTS extension voiceMap
+    saveTtsProviderSettings();
+    toastr.success("Voice added successfully");
+  }
+
+  // Remove custom voice
+  removeCustomVoice(voiceId) {
+    this.settings.customVoices = this.settings.customVoices.filter((v) => v.voice_id !== voiceId);
+    this.updateCustomVoicesDisplay();
+    initVoiceMap(); // Update TTS extension voiceMap
+    saveTtsProviderSettings();
+    toastr.success("Voice removed successfully");
+  }
+
+  // Helper function to escape HTML
+  escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Update custom models display
+  updateCustomModelsDisplay() {
+    const container = $("#minimax_custom_models_list");
+    container.empty();
+
+    if (this.settings.customModels.length === 0) {
+      container.append('<div class="minimax-empty-list">No custom models added</div>');
+      return;
     }
 
-    // Update custom models display
-    updateCustomModelsDisplay() {
-        const container = $('#minimax_custom_models_list');
-        container.empty();
+    this.settings.customModels.forEach((model) => {
+      const modelDiv = $("<div></div>").addClass("minimax-custom-item");
 
-        if (this.settings.customModels.length === 0) {
-            container.append('<div class="minimax-empty-list">No custom models added</div>');
-            return;
-        }
+      const modelInfo = $("<div></div>").addClass("minimax-custom-item-info");
+      const modelName = $("<div></div>").addClass("minimax-custom-item-name").text(model.name);
+      const modelId = $("<div></div>").addClass("minimax-custom-item-details").text(`(${model.id})`);
+      modelInfo.append(modelName).append(modelId);
 
-        this.settings.customModels.forEach(model => {
-            const modelDiv = $('<div></div>').addClass('minimax-custom-item');
-
-            const modelInfo = $('<div></div>').addClass('minimax-custom-item-info');
-            const modelName = $('<div></div>').addClass('minimax-custom-item-name').text(model.name);
-            const modelId = $('<div></div>').addClass('minimax-custom-item-details').text(`(${model.id})`);
-            modelInfo.append(modelName).append(modelId);
-
-            const removeBtn = $('<button></button>')
-                .addClass('menu_button minimax-custom-item-remove')
-                .text('Remove')
-                .on('click', () => {
-                    try {
-                        this.removeCustomModel(model.id);
-                    } catch (error) {
-                        console.error('MiniMax TTS: Error removing custom model:', error);
-                        toastr.error(`Failed to remove custom model: ${error.message}`);
-                    }
-                });
-
-            modelDiv.append(modelInfo).append(removeBtn);
-            container.append(modelDiv);
-        });
-    }
-
-    // Update custom voices display
-    updateCustomVoicesDisplay() {
-        const container = $('#minimax_custom_voices_list');
-        container.empty();
-
-        if (this.settings.customVoices.length === 0) {
-            container.append('<div class="minimax-empty-list">No custom voices added</div>');
-            return;
-        }
-
-        this.settings.customVoices.forEach(voice => {
-            const voiceDiv = $('<div></div>').addClass('minimax-custom-item');
-
-            const voiceInfo = $('<div></div>').addClass('minimax-custom-item-info');
-            const voiceName = $('<div></div>').addClass('minimax-custom-item-name').text(voice.name);
-            const voiceDetails = $('<div></div>').addClass('minimax-custom-item-details').text(`(${voice.voice_id}) - ${voice.lang}`);
-            voiceInfo.append(voiceName).append(voiceDetails);
-
-            const removeBtn = $('<button></button>')
-                .addClass('menu_button minimax-custom-item-remove')
-                .text('Remove')
-                .on('click', () => {
-                    try {
-                        this.removeCustomVoice(voice.voice_id);
-                    } catch (error) {
-                        console.error('MiniMax TTS: Error removing custom voice:', error);
-                        toastr.error(`Failed to remove custom voice: ${error.message}`);
-                    }
-                });
-
-            voiceDiv.append(voiceInfo).append(removeBtn);
-            container.append(voiceDiv);
-        });
-    }
-
-    // Get all models (default + custom)
-    getAllModels() {
-        return [...MiniMaxTtsProvider.defaultModels, ...this.settings.customModels];
-    }
-
-    // Get all voices (default + custom)
-    getAllVoices() {
-        return [...MiniMaxTtsProvider.defaultVoices, ...this.settings.customVoices];
-    }
-
-    /**
-     * Convert display names to standard language codes
-     * @param {string} displayName Language display name
-     * @returns {string} Standard language code
-     */
-    convertDisplayNameToLanguageCode(displayName) {
-        const displayNameToCode = {
-            'Chinese': 'zh-CN',
-            'Chinese,Yue': 'zh-TW',
-            'English': 'en-US',
-            'Japanese': 'ja-JP',
-            'Korean': 'ko-KR',
-            'French': 'fr-FR',
-            'German': 'de-DE',
-            'Spanish': 'es-ES',
-            'Portuguese': 'pt-BR',
-            'Italian': 'it-IT',
-            'Arabic': 'ar-SA',
-            'Russian': 'ru-RU',
-            'Turkish': 'tr-TR',
-            'Dutch': 'nl-NL',
-            'Ukrainian': 'uk-UA',
-            'Vietnamese': 'vi-VN',
-            'Indonesian': 'id-ID',
-            'Thai': 'th-TH',
-            'Polish': 'pl-PL',
-            'Romanian': 'ro-RO',
-            'Greek': 'el-GR',
-            'Czech': 'cs-CZ',
-            'Finnish': 'fi-FI',
-            'Hindi': 'hi-IN',
-        };
-
-        return displayNameToCode[displayName] || displayName;
-    }
-
-    updateModelSelect(models) {
-        const modelSelect = $('#minimax_tts_model');
-        const currentValue = modelSelect.val();
-
-        // Clear existing options
-        modelSelect.empty();
-
-        // Add all models
-        models.forEach(model => {
-            const option = $('<option></option>');
-            option.val(model.id);
-            option.text(model.name);
-            modelSelect.append(option);
+      const removeBtn = $("<button></button>")
+        .addClass("menu_button minimax-custom-item-remove")
+        .text("Remove")
+        .on("click", () => {
+          try {
+            this.removeCustomModel(model.id);
+          } catch (error) {
+            console.error("MiniMax TTS: Error removing custom model:", error);
+            toastr.error(`Failed to remove custom model: ${error.message}`);
+          }
         });
 
-        // Restore previous selection if it still exists
-        if (currentValue && models.find(m => m.id === currentValue)) {
-            modelSelect.val(currentValue);
-        }
+      modelDiv.append(modelInfo).append(removeBtn);
+      container.append(modelDiv);
+    });
+  }
+
+  // Update custom voices display
+  updateCustomVoicesDisplay() {
+    const container = $("#minimax_custom_voices_list");
+    container.empty();
+
+    if (this.settings.customVoices.length === 0) {
+      container.append('<div class="minimax-empty-list">No custom voices added</div>');
+      return;
     }
 
-    async loadSettings(settings) {
-        // Populate Provider UI given input settings
-        if (Object.keys(settings).length === 0) {
-            console.info('Using default MiniMax TTS Provider settings');
+    this.settings.customVoices.forEach((voice) => {
+      const voiceDiv = $("<div></div>").addClass("minimax-custom-item");
+
+      const voiceInfo = $("<div></div>").addClass("minimax-custom-item-info");
+      const voiceName = $("<div></div>").addClass("minimax-custom-item-name").text(voice.name);
+      const voiceDetails = $("<div></div>")
+        .addClass("minimax-custom-item-details")
+        .text(`(${voice.voice_id}) - ${voice.lang}`);
+      voiceInfo.append(voiceName).append(voiceDetails);
+
+      const removeBtn = $("<button></button>")
+        .addClass("menu_button minimax-custom-item-remove")
+        .text("Remove")
+        .on("click", () => {
+          try {
+            this.removeCustomVoice(voice.voice_id);
+          } catch (error) {
+            console.error("MiniMax TTS: Error removing custom voice:", error);
+            toastr.error(`Failed to remove custom voice: ${error.message}`);
+          }
+        });
+
+      voiceDiv.append(voiceInfo).append(removeBtn);
+      container.append(voiceDiv);
+    });
+  }
+
+  // Get all models (default + custom)
+  getAllModels() {
+    return [...MiniMaxTtsProvider.defaultModels, ...this.settings.customModels];
+  }
+
+  // Get all voices (default + custom)
+  getAllVoices() {
+    return [...MiniMaxTtsProvider.defaultVoices, ...this.settings.customVoices];
+  }
+
+  /**
+   * Convert display names to standard language codes
+   * @param {string} displayName Language display name
+   * @returns {string} Standard language code
+   */
+  convertDisplayNameToLanguageCode(displayName) {
+    const displayNameToCode = {
+      Chinese: "zh-CN",
+      "Chinese,Yue": "zh-TW",
+      English: "en-US",
+      Japanese: "ja-JP",
+      Korean: "ko-KR",
+      French: "fr-FR",
+      German: "de-DE",
+      Spanish: "es-ES",
+      Portuguese: "pt-BR",
+      Italian: "it-IT",
+      Arabic: "ar-SA",
+      Russian: "ru-RU",
+      Turkish: "tr-TR",
+      Dutch: "nl-NL",
+      Ukrainian: "uk-UA",
+      Vietnamese: "vi-VN",
+      Indonesian: "id-ID",
+      Thai: "th-TH",
+      Polish: "pl-PL",
+      Romanian: "ro-RO",
+      Greek: "el-GR",
+      Czech: "cs-CZ",
+      Finnish: "fi-FI",
+      Hindi: "hi-IN",
+    };
+
+    return displayNameToCode[displayName] || displayName;
+  }
+
+  updateModelSelect(models) {
+    const modelSelect = $("#minimax_tts_model");
+    const currentValue = modelSelect.val();
+
+    // Clear existing options
+    modelSelect.empty();
+
+    // Add all models
+    models.forEach((model) => {
+      const option = $("<option></option>");
+      option.val(model.id);
+      option.text(model.name);
+      modelSelect.append(option);
+    });
+
+    // Restore previous selection if it still exists
+    if (currentValue && models.find((m) => m.id === currentValue)) {
+      modelSelect.val(currentValue);
+    }
+  }
+
+  async loadSettings(settings) {
+    // Populate Provider UI given input settings
+    if (Object.keys(settings).length === 0) {
+      console.info("Using default MiniMax TTS Provider settings");
+    }
+
+    // Only accept keys defined in defaultSettings
+    this.settings = { ...this.defaultSettings };
+
+    // Flatten the settings fields with default/min/max definitions so the actual values are used
+    this.settings = Object.fromEntries(
+      Object.entries(this.defaultSettings).map(([key, value]) => {
+        if (value && typeof value === "object" && "default" in value) {
+          return [key, value.default];
         }
+        return [key, value];
+      }),
+    );
 
-        // Only accept keys defined in defaultSettings
-        this.settings = { ...this.defaultSettings };
+    for (const key in settings) {
+      if (key in this.settings) {
+        this.settings[key] = settings[key];
+      } else {
+        console.warn(`Invalid setting passed to MiniMax TTS Provider: ${key}`);
+      }
+    }
 
-        // Flatten the settings fields with default/min/max definitions so the actual values are used
-        this.settings = Object.fromEntries(
-            Object.entries(this.defaultSettings).map(([key, value]) => {
-                if (value && typeof value === 'object' && 'default' in value) {
-                    return [key, value.default];
-                }
-                return [key, value];
-            }),
-        );
+    // Ensure custom configuration arrays exist
+    if (!this.settings.customModels) this.settings.customModels = [];
+    if (!this.settings.customVoices) this.settings.customVoices = [];
 
-        for (const key in settings) {
-            if (key in this.settings) {
-                this.settings[key] = settings[key];
-            } else {
-                console.warn(`Invalid setting passed to MiniMax TTS Provider: ${key}`);
-            }
-        }
+    // # Migrate settings
+    // Pitch value changed from float to int. If it's a float, let's try to extrapolate it to the new range
+    if (!Number.isInteger(this.settings.pitch)) {
+      const oldPitch = parseFloat(this.settings.pitch);
+      if (!isNaN(oldPitch)) {
+        // map old [0.5..1.0] to [-12..0], and [1.0..2.0] to [0..12] (old default was 1.0, new default is 0)
+        const newPitch = oldPitch < 1.0 ? (oldPitch - 1.0) * 24 : (oldPitch - 1.0) * 12;
+        this.settings.pitch = Math.max(-12, Math.min(12, Math.round(newPitch)));
+        console.info(`MiniMax TTS: Migrated pitch from ${oldPitch} to ${this.settings.pitch}`);
+      } else {
+        this.settings.pitch = 0;
+        console.info(`MiniMax TTS: Migration reset pitch to default ${this.settings.pitch}`);
+      }
+    }
 
-        // Ensure custom configuration arrays exist
-        if (!this.settings.customModels) this.settings.customModels = [];
-        if (!this.settings.customVoices) this.settings.customVoices = [];
+    $("#minimax_tts_api_host").val(this.settings.apiHost || "https://api.minimax.io");
+    $("#minimax_tts_model").val(this.settings.model);
+    $("#minimax_tts_speed").val(this.settings.speed);
+    $("#minimax_tts_volume").val(this.settings.volume);
+    $("#minimax_tts_pitch").val(this.settings.pitch);
+    $("#minimax_tts_format").val(this.settings.format);
+    $("#minimax_tts_custom_voice_id").val(this.settings.customVoiceId);
 
-        // # Migrate settings
-        // Pitch value changed from float to int. If it's a float, let's try to extrapolate it to the new range
-        if (!Number.isInteger(this.settings.pitch)) {
-            const oldPitch = parseFloat(this.settings.pitch);
-            if (!isNaN(oldPitch)) {
-                // map old [0.5..1.0] to [-12..0], and [1.0..2.0] to [0..12] (old default was 1.0, new default is 0)
-                const newPitch = (oldPitch < 1.0) ? (oldPitch - 1.0) * 24 : (oldPitch - 1.0) * 12;
-                this.settings.pitch = Math.max(-12, Math.min(12, Math.round(newPitch)));
-                console.info(`MiniMax TTS: Migrated pitch from ${oldPitch} to ${this.settings.pitch}`);
-            } else {
-                this.settings.pitch = 0;
-                console.info(`MiniMax TTS: Migration reset pitch to default ${this.settings.pitch}`);
-            }
-        }
+    $("#minimax_connect").on("click", () => {
+      try {
+        this.onConnectClick();
+      } catch (error) {
+        console.error("MiniMax TTS: Error in connect click handler:", error);
+        toastr.error(`Connection failed: ${error.message}`);
+      }
+    });
+    $("#minimax_refresh").on("click", () => {
+      try {
+        this.onRefreshClick();
+      } catch (error) {
+        console.error("MiniMax TTS: Error in refresh click handler:", error);
+        toastr.error(`Refresh failed: ${error.message}`);
+      }
+    });
+    $("#minimax_tts_api_host").on("change", this.onSettingsChange.bind(this));
+    $("#minimax_tts_speed").on("input", this.onSettingsChange.bind(this));
+    $("#minimax_tts_volume").on("input", this.onSettingsChange.bind(this));
+    $("#minimax_tts_pitch").on("input", this.onSettingsChange.bind(this));
+    $("#minimax_tts_model").on("change", this.onSettingsChange.bind(this));
+    $("#minimax_tts_format").on("change", this.onSettingsChange.bind(this));
+    $("#minimax_tts_custom_voice_id").on("input", this.onSettingsChange.bind(this));
 
-        $('#minimax_tts_api_host').val(this.settings.apiHost || 'https://api.minimax.io');
-        $('#minimax_tts_model').val(this.settings.model);
-        $('#minimax_tts_speed').val(this.settings.speed);
-        $('#minimax_tts_volume').val(this.settings.volume);
-        $('#minimax_tts_pitch').val(this.settings.pitch);
-        $('#minimax_tts_format').val(this.settings.format);
-        $('#minimax_tts_custom_voice_id').val(this.settings.customVoiceId);
+    // Custom model and voice event listeners
+    $("#minimax_add_custom_model").on("click", () => {
+      try {
+        this.addCustomModel();
+      } catch (error) {
+        console.error("MiniMax TTS: Error adding custom model:", error);
+        toastr.error(`Failed to add custom model: ${error.message}`);
+      }
+    });
+    $("#minimax_add_custom_voice").on("click", () => {
+      try {
+        this.addCustomVoice();
+      } catch (error) {
+        console.error("MiniMax TTS: Error adding custom voice:", error);
+        toastr.error(`Failed to add custom voice: ${error.message}`);
+      }
+    });
 
-        $('#minimax_connect').on('click', () => {
-            try {
-                this.onConnectClick();
-            } catch (error) {
-                console.error('MiniMax TTS: Error in connect click handler:', error);
-                toastr.error(`Connection failed: ${error.message}`);
-            }
-        });
-        $('#minimax_refresh').on('click', () => {
-            try {
-                this.onRefreshClick();
-            } catch (error) {
-                console.error('MiniMax TTS: Error in refresh click handler:', error);
-                toastr.error(`Refresh failed: ${error.message}`);
-            }
-        });
-        $('#minimax_tts_api_host').on('change', this.onSettingsChange.bind(this));
-        $('#minimax_tts_speed').on('input', this.onSettingsChange.bind(this));
-        $('#minimax_tts_volume').on('input', this.onSettingsChange.bind(this));
-        $('#minimax_tts_pitch').on('input', this.onSettingsChange.bind(this));
-        $('#minimax_tts_model').on('change', this.onSettingsChange.bind(this));
-        $('#minimax_tts_format').on('change', this.onSettingsChange.bind(this));
-        $('#minimax_tts_custom_voice_id').on('input', this.onSettingsChange.bind(this));
-
-        // Custom model and voice event listeners
-        $('#minimax_add_custom_model').on('click', () => {
-            try {
-                this.addCustomModel();
-            } catch (error) {
-                console.error('MiniMax TTS: Error adding custom model:', error);
-                toastr.error(`Failed to add custom model: ${error.message}`);
-            }
-        });
-        $('#minimax_add_custom_voice').on('click', () => {
-            try {
-                this.addCustomVoice();
-            } catch (error) {
-                console.error('MiniMax TTS: Error adding custom voice:', error);
-                toastr.error(`Failed to add custom voice: ${error.message}`);
-            }
-        });
-
-        // Keyboard event listeners
-        const ENTER_KEY = 13;
-        $('#minimax_custom_model_id, #minimax_custom_model_name').on('keypress', (e) => {
-            if (e.which === ENTER_KEY) {
-                try {
-                    this.addCustomModel();
-                } catch (error) {
-                    console.error('MiniMax TTS: Error adding custom model via keyboard:', error);
-                    toastr.error(`Failed to add custom model: ${error.message}`);
-                }
-            }
-        });
-
-        $('#minimax_custom_voice_name, #minimax_custom_voice_id').on('keypress', (e) => {
-            if (e.which === ENTER_KEY) {
-                try {
-                    this.addCustomVoice();
-                } catch (error) {
-                    console.error('MiniMax TTS: Error adding custom voice via keyboard:', error);
-                    toastr.error(`Failed to add custom voice: ${error.message}`);
-                }
-            }
-        });
-
-        $('#minimax_tts_speed_output').text(this.settings.speed.toFixed(1));
-        $('#minimax_tts_volume_output').text(this.settings.volume.toFixed(1));
-        $('#minimax_tts_pitch_output').text(this.settings.pitch);
-
-        // Initialize custom configuration display
-        this.updateCustomModelsDisplay();
-        this.updateCustomVoicesDisplay();
-
-        // Update model selector to include custom models
-        this.updateModelSelect(this.getAllModels());
-
-        // Initialize voice map for character voice assignment
+    // Keyboard event listeners
+    const ENTER_KEY = 13;
+    $("#minimax_custom_model_id, #minimax_custom_model_name").on("keypress", (e) => {
+      if (e.which === ENTER_KEY) {
         try {
-            await initVoiceMap();
+          this.addCustomModel();
         } catch (error) {
-            console.debug('MiniMax: Voice map initialization failed, but continuing');
+          console.error("MiniMax TTS: Error adding custom model via keyboard:", error);
+          toastr.error(`Failed to add custom model: ${error.message}`);
         }
+      }
+    });
 
-        $('#api_key_minimax').toggleClass('success', !!secret_state[SECRET_KEYS.MINIMAX]);
-        $('#minimax_group_id').toggleClass('success', !!secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]);
-        [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach(event => {
-            eventSource.on(event, this.handler);
-        });
-
-        // Only check ready status when API credentials are available
-        if (secret_state[SECRET_KEYS.MINIMAX] && secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
-            try {
-                await this.checkReady();
-                console.debug('MiniMax TTS: Settings loaded and ready');
-            } catch (error) {
-                console.debug('MiniMax TTS: Settings loaded, but not ready:', error);
-            }
-        } else {
-            console.debug('MiniMax TTS: Settings loaded, waiting for API credentials');
-        }
-    }
-
-    // Perform a simple readiness check
-    async checkReady() {
-        if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
-            const error = new Error('API Key and Group ID are required');
-            console.error('MiniMax TTS checkReady error:', error.message);
-            throw error;
-        }
-        // Try to fetch available models and voices, but don't block connection on failure
+    $("#minimax_custom_voice_name, #minimax_custom_voice_id").on("keypress", (e) => {
+      if (e.which === ENTER_KEY) {
         try {
-            await this.updateModelsAndVoices();
+          this.addCustomVoice();
         } catch (error) {
-            console.warn('MiniMax TTS: Failed to fetch models/voices during ready check, will use all available:', error);
-            // Even if API call fails, set all available values to ensure basic functionality
-            this.availableModels = this.getAllModels();
-            this.availableVoices = this.getAllVoices();
+          console.error("MiniMax TTS: Error adding custom voice via keyboard:", error);
+          toastr.error(`Failed to add custom voice: ${error.message}`);
         }
+      }
+    });
 
-        // Ensure at least voices are available
-        if (!this.availableVoices || this.availableVoices.length === 0) {
-            this.availableVoices = this.getAllVoices();
-        }
+    $("#minimax_tts_speed_output").text(this.settings.speed.toFixed(1));
+    $("#minimax_tts_volume_output").text(this.settings.volume.toFixed(1));
+    $("#minimax_tts_pitch_output").text(this.settings.pitch);
+
+    // Initialize custom configuration display
+    this.updateCustomModelsDisplay();
+    this.updateCustomVoicesDisplay();
+
+    // Update model selector to include custom models
+    this.updateModelSelect(this.getAllModels());
+
+    // Initialize voice map for character voice assignment
+    try {
+      await initVoiceMap();
+    } catch (error) {
+      console.debug("MiniMax: Voice map initialization failed, but continuing");
     }
 
-    async onRefreshClick() {
-        try {
-            await this.updateModelsAndVoices();
-            await initVoiceMap(); // Update voice map after refresh
-            toastr.success('MiniMax TTS: Models and voices refreshed successfully');
-        } catch (error) {
-            toastr.error(`MiniMax TTS: Failed to refresh - ${error.message}`);
-        }
+    $("#api_key_minimax").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX]);
+    $("#minimax_group_id").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]);
+    [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
+      eventSource.on(event, this.handler);
+    });
+
+    // Only check ready status when API credentials are available
+    if (secret_state[SECRET_KEYS.MINIMAX] && secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+      try {
+        await this.checkReady();
+        console.debug("MiniMax TTS: Settings loaded and ready");
+      } catch (error) {
+        console.debug("MiniMax TTS: Settings loaded, but not ready:", error);
+      }
+    } else {
+      console.debug("MiniMax TTS: Settings loaded, waiting for API credentials");
+    }
+  }
+
+  // Perform a simple readiness check
+  async checkReady() {
+    if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+      const error = new Error("API Key and Group ID are required");
+      console.error("MiniMax TTS checkReady error:", error.message);
+      throw error;
+    }
+    // Try to fetch available models and voices, but don't block connection on failure
+    try {
+      await this.updateModelsAndVoices();
+    } catch (error) {
+      console.warn("MiniMax TTS: Failed to fetch models/voices during ready check, will use all available:", error);
+      // Even if API call fails, set all available values to ensure basic functionality
+      this.availableModels = this.getAllModels();
+      this.availableVoices = this.getAllVoices();
     }
 
-    async onConnectClick() {
-        try {
-            await this.checkReady();
-            await initVoiceMap(); // Update voice map after connection
-            toastr.success('MiniMax TTS: Connected successfully');
-            saveTtsProviderSettings();
-        } catch (error) {
-            toastr.error(`MiniMax TTS: ${error.message}`);
-        }
+    // Ensure at least voices are available
+    if (!this.availableVoices || this.availableVoices.length === 0) {
+      this.availableVoices = this.getAllVoices();
+    }
+  }
+
+  async onRefreshClick() {
+    try {
+      await this.updateModelsAndVoices();
+      await initVoiceMap(); // Update voice map after refresh
+      toastr.success("MiniMax TTS: Models and voices refreshed successfully");
+    } catch (error) {
+      toastr.error(`MiniMax TTS: Failed to refresh - ${error.message}`);
+    }
+  }
+
+  async onConnectClick() {
+    try {
+      await this.checkReady();
+      await initVoiceMap(); // Update voice map after connection
+      toastr.success("MiniMax TTS: Connected successfully");
+      saveTtsProviderSettings();
+    } catch (error) {
+      toastr.error(`MiniMax TTS: ${error.message}`);
+    }
+  }
+
+  async getVoice(voiceName) {
+    if (!voiceName) {
+      const error = new Error("TTS Voice name not provided");
+      console.error("MiniMax TTS getVoice error:", error.message);
+      throw error;
     }
 
-    async getVoice(voiceName) {
-        if (!voiceName) {
-            const error = new Error('TTS Voice name not provided');
-            console.error('MiniMax TTS getVoice error:', error.message);
-            throw error;
-        }
-
-        // If no available voices, try to fetch them
-        if (!this.availableVoices || this.availableVoices.length === 0) {
-            this.availableVoices = await this.fetchTtsVoiceObjects();
-        }
-
-        // Ensure at least voices are available
-        if (!this.availableVoices || this.availableVoices.length === 0) {
-            this.availableVoices = this.getAllVoices();
-        }
-
-        const voice = this.availableVoices.find(voice =>
-            voice.voice_id === voiceName || voice.name === voiceName,
-        );
-
-        if (!voice) {
-            const error = new Error(`TTS Voice not found: ${voiceName}`);
-            console.error('MiniMax TTS getVoice error:', error.message);
-            throw error;
-        }
-
-        return voice;
+    // If no available voices, try to fetch them
+    if (!this.availableVoices || this.availableVoices.length === 0) {
+      this.availableVoices = await this.fetchTtsVoiceObjects();
     }
 
-    async generateTts(text, voiceId) {
-        // If voiceId is 'customVoice', use the custom voice ID from settings
-        if (voiceId === 'customVoice') {
-            const customVoiceId = this.settings.customVoiceId;
-            if (!customVoiceId || customVoiceId.trim() === '') {
-                const error = new Error('Please enter custom voice ID in settings first');
-                console.error('MiniMax TTS generateTts error:', error.message);
-                throw error;
-            }
-            voiceId = customVoiceId.trim();
-        }
-
-        // Get the voice object to determine language
-        let language = null;
-        try {
-            const voice = await this.getVoice(voiceId);
-            if (voice && voice.lang) {
-                language = this.mapLanguageToMiniMaxFormat(voice.lang);
-                console.debug(`MiniMax TTS: Using voice language ${voice.lang}, API language: ${language}`);
-            }
-        } catch (error) {
-            console.debug('MiniMax TTS: Could not determine voice language, using default');
-        }
-
-        return await this.fetchTtsGeneration(text, voiceId, language);
+    // Ensure at least voices are available
+    if (!this.availableVoices || this.availableVoices.length === 0) {
+      this.availableVoices = this.getAllVoices();
     }
 
-    async fetchTtsVoiceObjects() {
-        try {
-            if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
-                console.warn('MiniMax TTS: API Key and Group ID required for fetching voices');
-                console.warn('Using all available voices (default + custom). Please check your API credentials');
-                return this.getAllVoices();
-            }
+    const voice = this.availableVoices.find((voice) => voice.voice_id === voiceName || voice.name === voiceName);
 
-            // MiniMax API doesn't provide a voices listing endpoint
-            // Using all available voices (default + custom)
-            console.info('MiniMax TTS: Using all available voices (default + custom)');
-            return this.getAllVoices();
-        } catch (error) {
-            console.error('Error fetching MiniMax voices:', error);
-            console.warn('Using all available voices (default + custom). Please check your API credentials');
-            return this.getAllVoices();
-        }
+    if (!voice) {
+      const error = new Error(`TTS Voice not found: ${voiceName}`);
+      console.error("MiniMax TTS getVoice error:", error.message);
+      throw error;
     }
 
-    async fetchTtsModels() {
-        // MiniMax API doesn't provide a models listing endpoint
-        // Using all available models (default + custom)
-        console.info('MiniMax TTS: Using all available models (default + custom)');
-        this.availableModels = this.getAllModels();
-        return this.getAllModels();
+    return voice;
+  }
+
+  async generateTts(text, voiceId) {
+    // If voiceId is 'customVoice', use the custom voice ID from settings
+    if (voiceId === "customVoice") {
+      const customVoiceId = this.settings.customVoiceId;
+      if (!customVoiceId || customVoiceId.trim() === "") {
+        const error = new Error("Please enter custom voice ID in settings first");
+        console.error("MiniMax TTS generateTts error:", error.message);
+        throw error;
+      }
+      voiceId = customVoiceId.trim();
     }
 
-    async updateModelsAndVoices() {
-        try {
-            // Get models list
-            this.availableModels = await this.fetchTtsModels();
-            console.info(`MiniMax TTS: Loaded ${this.availableModels.length} models`);
-
-            // Get voices list (now fetched from API)
-            this.availableVoices = await this.fetchTtsVoiceObjects();
-            console.info(`MiniMax TTS: Loaded ${this.availableVoices.length} voices`);
-
-            // Update model dropdown
-            this.updateModelSelect(this.availableModels);
-
-            return {
-                models: this.availableModels,
-                voices: this.availableVoices,
-            };
-        } catch (error) {
-            console.error('MiniMax TTS: Failed to update models and voices:', error);
-            // Set all available values to ensure basic functionality
-            this.availableModels = this.getAllModels();
-            this.availableVoices = this.getAllVoices();
-            throw error;
-        }
+    // Get the voice object to determine language
+    let language = null;
+    try {
+      const voice = await this.getVoice(voiceId);
+      if (voice && voice.lang) {
+        language = this.mapLanguageToMiniMaxFormat(voice.lang);
+        console.debug(`MiniMax TTS: Using voice language ${voice.lang}, API language: ${language}`);
+      }
+    } catch (error) {
+      console.debug("MiniMax TTS: Could not determine voice language, using default");
     }
 
-    // Get correct MIME type
-    getAudioMimeType(format) {
-        const mimeTypes = {
-            'mp3': 'audio/mpeg',
-            'wav': 'audio/wav',
-            'pcm': 'audio/pcm',
-            'flac': 'audio/flac',
-            'aac': 'audio/aac',
-        };
-        return mimeTypes[format] || 'audio/mpeg';
+    return await this.fetchTtsGeneration(text, voiceId, language);
+  }
+
+  async fetchTtsVoiceObjects() {
+    try {
+      if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+        console.warn("MiniMax TTS: API Key and Group ID required for fetching voices");
+        console.warn("Using all available voices (default + custom). Please check your API credentials");
+        return this.getAllVoices();
+      }
+
+      // MiniMax API doesn't provide a voices listing endpoint
+      // Using all available voices (default + custom)
+      console.info("MiniMax TTS: Using all available voices (default + custom)");
+      return this.getAllVoices();
+    } catch (error) {
+      console.error("Error fetching MiniMax voices:", error);
+      console.warn("Using all available voices (default + custom). Please check your API credentials");
+      return this.getAllVoices();
+    }
+  }
+
+  async fetchTtsModels() {
+    // MiniMax API doesn't provide a models listing endpoint
+    // Using all available models (default + custom)
+    console.info("MiniMax TTS: Using all available models (default + custom)");
+    this.availableModels = this.getAllModels();
+    return this.getAllModels();
+  }
+
+  async updateModelsAndVoices() {
+    try {
+      // Get models list
+      this.availableModels = await this.fetchTtsModels();
+      console.info(`MiniMax TTS: Loaded ${this.availableModels.length} models`);
+
+      // Get voices list (now fetched from API)
+      this.availableVoices = await this.fetchTtsVoiceObjects();
+      console.info(`MiniMax TTS: Loaded ${this.availableVoices.length} voices`);
+
+      // Update model dropdown
+      this.updateModelSelect(this.availableModels);
+
+      return {
+        models: this.availableModels,
+        voices: this.availableVoices,
+      };
+    } catch (error) {
+      console.error("MiniMax TTS: Failed to update models and voices:", error);
+      // Set all available values to ensure basic functionality
+      this.availableModels = this.getAllModels();
+      this.availableVoices = this.getAllVoices();
+      throw error;
+    }
+  }
+
+  // Get correct MIME type
+  getAudioMimeType(format) {
+    const mimeTypes = {
+      mp3: "audio/mpeg",
+      wav: "audio/wav",
+      pcm: "audio/pcm",
+      flac: "audio/flac",
+      aac: "audio/aac",
+    };
+    return mimeTypes[format] || "audio/mpeg";
+  }
+
+  async fetchTtsGeneration(inputText, voiceId, language = null) {
+    console.info(`Generating new MiniMax TTS for voice_id ${voiceId}`);
+
+    if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+      const error = new Error("API Key and Group ID are required");
+      console.error("MiniMax TTS fetchTtsGeneration error:", error.message);
+      throw error;
     }
 
-    async fetchTtsGeneration(inputText, voiceId, language = null) {
-        console.info(`Generating new MiniMax TTS for voice_id ${voiceId}`);
+    /** @param {number} number @param {number} lower @param {number} upper @returns {number} */
+    const clamp = (number, lower, upper) => Math.min(Math.max(number, lower), upper);
 
-        if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
-            const error = new Error('API Key and Group ID are required');
-            console.error('MiniMax TTS fetchTtsGeneration error:', error.message);
-            throw error;
-        }
+    const requestBody = {
+      text: inputText,
+      voiceId: voiceId,
+      apiHost: this.settings.apiHost,
+      model: this.settings.model || this.defaultSettings.model,
+      speed: clamp(
+        Number(this.settings.speed) || this.defaultSettings.speed.default,
+        this.defaultSettings.speed.min,
+        this.defaultSettings.speed.max,
+      ),
+      volume: clamp(
+        Number(this.settings.volume) || this.defaultSettings.volume.default,
+        this.defaultSettings.volume.min,
+        this.defaultSettings.volume.max,
+      ),
+      pitch: clamp(
+        Math.round(Number(this.settings.pitch)) || this.defaultSettings.pitch.default,
+        this.defaultSettings.pitch.min,
+        this.defaultSettings.pitch.max,
+      ),
+      audioSampleRate: Number(this.settings.audioSampleRate) || this.defaultSettings.audioSampleRate,
+      bitrate: Number(this.settings.bitrate) || this.defaultSettings.bitrate,
+      format: this.settings.format || this.defaultSettings.format,
+      language: language,
+    };
 
-        /** @param {number} number @param {number} lower @param {number} upper @returns {number} */
-        const clamp = (number, lower, upper) => Math.min(Math.max(number, lower), upper);
+    console.debug("MiniMax TTS Request:", {
+      body: { ...requestBody, voiceId: "[REDACTED]" },
+    });
 
-        const requestBody = {
-            text: inputText,
-            voiceId: voiceId,
-            apiHost: this.settings.apiHost,
-            model: this.settings.model || this.defaultSettings.model,
-            speed: clamp(Number(this.settings.speed) || this.defaultSettings.speed.default, this.defaultSettings.speed.min, this.defaultSettings.speed.max),
-            volume: clamp(Number(this.settings.volume) || this.defaultSettings.volume.default, this.defaultSettings.volume.min, this.defaultSettings.volume.max),
-            pitch: clamp(Math.round(Number(this.settings.pitch)) || this.defaultSettings.pitch.default, this.defaultSettings.pitch.min, this.defaultSettings.pitch.max),
-            audioSampleRate: Number(this.settings.audioSampleRate) || this.defaultSettings.audioSampleRate,
-            bitrate: Number(this.settings.bitrate) || this.defaultSettings.bitrate,
-            format: this.settings.format || this.defaultSettings.format,
-            language: language,
-        };
+    try {
+      const response = await fetch("/api/minimax/generate-voice", {
+        method: "POST",
+        headers: getRequestHeaders(),
+        body: JSON.stringify(requestBody),
+      });
 
-        console.debug('MiniMax TTS Request:', {
-            body: { ...requestBody, voiceId: '[REDACTED]' },
-        });
-
-        try {
-            const response = await fetch('/api/minimax/generate-voice', {
-                method: 'POST',
-                headers: getRequestHeaders(),
-                body: JSON.stringify(requestBody),
-            });
-
-            if (!response.ok) {
-                let errorMessage = `HTTP ${response.status}`;
-
-                try {
-                    // Try to parse JSON error response from backend
-                    const errorData = await response.json();
-                    console.error('MiniMax TTS backend error:', errorData);
-                    errorMessage = errorData.error || errorMessage;
-                } catch (jsonError) {
-                    // If not JSON, try to read text
-                    try {
-                        const errorText = await response.text();
-                        console.error('MiniMax TTS backend error (Text):', errorText);
-                        errorMessage = errorText || errorMessage;
-                    } catch (textError) {
-                        console.error('MiniMax TTS: Failed to read error response:', textError);
-                    }
-                }
-
-                toastr.error(`${errorMessage}`, 'MiniMax TTS Generation Failed');
-                const error = new Error(errorMessage);
-                console.error('MiniMax TTS fetchTtsGeneration error:', error.message);
-                throw error;
-            }
-
-            // Backend handles all the complex processing and returns audio data directly
-            console.debug('MiniMax TTS: Audio response received from backend');
-            return response;
-        } catch (error) {
-            console.error('Error in MiniMax TTS generation:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * Map language codes to MiniMax API supported language format
-     * @param {string} lang Language code or display name
-     * @returns {string} MiniMax API language format
-     */
-    mapLanguageToMiniMaxFormat(lang) {
-        // Convert display name to language code if needed
-        const languageCode = this.convertDisplayNameToLanguageCode(lang);
-
-        // Then map language codes to MiniMax API format
-        const languageMap = {
-            'zh-CN': 'zh_CN',
-            'zh-TW': 'zh_TW',
-            'en-US': 'en_US',
-            'en-GB': 'en_GB',
-            'en-AU': 'en_AU',
-            'en-IN': 'en_IN',
-            'ja-JP': 'ja_JP',
-            'ko-KR': 'ko_KR',
-            'fr-FR': 'fr_FR',
-            'de-DE': 'de_DE',
-            'es-ES': 'es_ES',
-            'pt-BR': 'pt_BR',
-            'it-IT': 'it_IT',
-            'ar-SA': 'ar_SA',
-            'ru-RU': 'ru_RU',
-            'tr-TR': 'tr_TR',
-            'nl-NL': 'nl_NL',
-            'uk-UA': 'uk_UA',
-            'vi-VN': 'vi_VN',
-            'id-ID': 'id_ID',
-            'th-TH': 'th_TH',
-            'pl-PL': 'pl_PL',
-            'ro-RO': 'ro_RO',
-            'el-GR': 'el_GR',
-            'cs-CZ': 'cs_CZ',
-            'fi-FI': 'fi_FI',
-            'hi-IN': 'hi_IN',
-        };
-
-        // Return mapped language or default to auto
-        return languageMap[languageCode] || 'auto';
-    }
-
-    /**
-     * Preview TTS for a given voice ID.
-     * @param {string} voiceId Voice ID
-     */
-    async previewTtsVoice(voiceId) {
-        this.audioElement.pause();
-        this.audioElement.currentTime = 0;
+      if (!response.ok) {
+        let errorMessage = `HTTP ${response.status}`;
 
         try {
-            const voice = await this.getVoice(voiceId);
-            // Get preview text based on voice language, defaulting to en-US
-            const previewLang = voice.lang || 'en-US';
-            const text = getPreviewString(previewLang);
-
-            // Map the language to MiniMax API format for the request
-            const apiLang = this.mapLanguageToMiniMaxFormat(previewLang);
-            console.debug(`MiniMax TTS: Using preview language ${previewLang}, API language: ${apiLang}`);
-
-            const response = await this.fetchTtsGeneration(text, voiceId, apiLang);
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                const error = new Error(`HTTP ${response.status}: ${errorText}`);
-                console.error('MiniMax TTS previewTtsVoice error:', error.message);
-                throw error;
-            }
-
-            const audio = await response.blob();
-            console.debug(`MiniMax TTS: Audio blob size: ${audio.size}, type: ${audio.type}`);
-
-            // Use the same method as other TTS providers - convert to base64 data URL
-            const srcUrl = await getBase64Async(audio);
-            console.debug('MiniMax TTS: Base64 data URL created');
-
-            // Clean up previous event listener to prevent memory leaks
-            this.audioElement.onended = null;
-            this.audioElement.onerror = null;
-
-            this.audioElement.src = srcUrl;
-            this.audioElement.volume = Math.min(this.settings.volume || 1.0, 1.0); // HTML audio element max is 1.0
-
-            // Add error handler for audio element
-            this.audioElement.onerror = (e) => {
-                console.error('MiniMax TTS: Audio element error:', e);
-                console.error('MiniMax TTS: Audio element error details:', {
-                    error: this.audioElement.error,
-                    networkState: this.audioElement.networkState,
-                    readyState: this.audioElement.readyState,
-                    src: this.audioElement.src,
-                });
-
-                toastr.error('Audio playback failed. The audio format may not be supported by your browser.');
-            };
-
-            try {
-                await this.audioElement.play();
-                console.debug('MiniMax TTS: Audio playback started successfully');
-            } catch (playError) {
-                console.error('MiniMax TTS: Play error:', playError);
-                throw new Error(`Audio playback failed: ${playError.message}`);
-            }
-
-            this.audioElement.onended = () => {
-                this.audioElement.onended = null;
-                this.audioElement.onerror = null;
-            };
-        } catch (error) {
-            console.error('MiniMax TTS Preview Error:', error);
-            toastr.error(`Could not generate preview: ${error.message}`);
+          // Try to parse JSON error response from backend
+          const errorData = await response.json();
+          console.error("MiniMax TTS backend error:", errorData);
+          errorMessage = errorData.error || errorMessage;
+        } catch (jsonError) {
+          // If not JSON, try to read text
+          try {
+            const errorText = await response.text();
+            console.error("MiniMax TTS backend error (Text):", errorText);
+            errorMessage = errorText || errorMessage;
+          } catch (textError) {
+            console.error("MiniMax TTS: Failed to read error response:", textError);
+          }
         }
+
+        toastr.error(`${errorMessage}`, "MiniMax TTS Generation Failed");
+        const error = new Error(errorMessage);
+        console.error("MiniMax TTS fetchTtsGeneration error:", error.message);
+        throw error;
+      }
+
+      // Backend handles all the complex processing and returns audio data directly
+      console.debug("MiniMax TTS: Audio response received from backend");
+      return response;
+    } catch (error) {
+      console.error("Error in MiniMax TTS generation:", error);
+      throw error;
     }
+  }
+
+  /**
+   * Map language codes to MiniMax API supported language format
+   * @param {string} lang Language code or display name
+   * @returns {string} MiniMax API language format
+   */
+  mapLanguageToMiniMaxFormat(lang) {
+    // Convert display name to language code if needed
+    const languageCode = this.convertDisplayNameToLanguageCode(lang);
+
+    // Then map language codes to MiniMax API format
+    const languageMap = {
+      "zh-CN": "zh_CN",
+      "zh-TW": "zh_TW",
+      "en-US": "en_US",
+      "en-GB": "en_GB",
+      "en-AU": "en_AU",
+      "en-IN": "en_IN",
+      "ja-JP": "ja_JP",
+      "ko-KR": "ko_KR",
+      "fr-FR": "fr_FR",
+      "de-DE": "de_DE",
+      "es-ES": "es_ES",
+      "pt-BR": "pt_BR",
+      "it-IT": "it_IT",
+      "ar-SA": "ar_SA",
+      "ru-RU": "ru_RU",
+      "tr-TR": "tr_TR",
+      "nl-NL": "nl_NL",
+      "uk-UA": "uk_UA",
+      "vi-VN": "vi_VN",
+      "id-ID": "id_ID",
+      "th-TH": "th_TH",
+      "pl-PL": "pl_PL",
+      "ro-RO": "ro_RO",
+      "el-GR": "el_GR",
+      "cs-CZ": "cs_CZ",
+      "fi-FI": "fi_FI",
+      "hi-IN": "hi_IN",
+    };
+
+    // Return mapped language or default to auto
+    return languageMap[languageCode] || "auto";
+  }
+
+  /**
+   * Preview TTS for a given voice ID.
+   * @param {string} voiceId Voice ID
+   */
+  async previewTtsVoice(voiceId) {
+    this.audioElement.pause();
+    this.audioElement.currentTime = 0;
+
+    try {
+      const voice = await this.getVoice(voiceId);
+      // Get preview text based on voice language, defaulting to en-US
+      const previewLang = voice.lang || "en-US";
+      const text = getPreviewString(previewLang);
+
+      // Map the language to MiniMax API format for the request
+      const apiLang = this.mapLanguageToMiniMaxFormat(previewLang);
+      console.debug(`MiniMax TTS: Using preview language ${previewLang}, API language: ${apiLang}`);
+
+      const response = await this.fetchTtsGeneration(text, voiceId, apiLang);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        const error = new Error(`HTTP ${response.status}: ${errorText}`);
+        console.error("MiniMax TTS previewTtsVoice error:", error.message);
+        throw error;
+      }
+
+      const audio = await response.blob();
+      console.debug(`MiniMax TTS: Audio blob size: ${audio.size}, type: ${audio.type}`);
+
+      // Use the same method as other TTS providers - convert to base64 data URL
+      const srcUrl = await getBase64Async(audio);
+      console.debug("MiniMax TTS: Base64 data URL created");
+
+      // Clean up previous event listener to prevent memory leaks
+      this.audioElement.onended = null;
+      this.audioElement.onerror = null;
+
+      this.audioElement.src = srcUrl;
+      this.audioElement.volume = Math.min(this.settings.volume || 1.0, 1.0); // HTML audio element max is 1.0
+
+      // Add error handler for audio element
+      this.audioElement.onerror = (e) => {
+        console.error("MiniMax TTS: Audio element error:", e);
+        console.error("MiniMax TTS: Audio element error details:", {
+          error: this.audioElement.error,
+          networkState: this.audioElement.networkState,
+          readyState: this.audioElement.readyState,
+          src: this.audioElement.src,
+        });
+
+        toastr.error("Audio playback failed. The audio format may not be supported by your browser.");
+      };
+
+      try {
+        await this.audioElement.play();
+        console.debug("MiniMax TTS: Audio playback started successfully");
+      } catch (playError) {
+        console.error("MiniMax TTS: Play error:", playError);
+        throw new Error(`Audio playback failed: ${playError.message}`);
+      }
+
+      this.audioElement.onended = () => {
+        this.audioElement.onended = null;
+        this.audioElement.onerror = null;
+      };
+    } catch (error) {
+      console.error("MiniMax TTS Preview Error:", error);
+      toastr.error(`Could not generate preview: ${error.message}`);
+    }
+  }
 }

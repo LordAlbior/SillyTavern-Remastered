@@ -1,4 +1,4 @@
-import { loader } from './action-loader.ts';
+import { loader } from "./action-loader.ts";
 
 /**
  * Handle for the legacy loader created by showLoader().
@@ -21,17 +21,17 @@ let legacyLoaderHandle = null;
  * handle.hide();
  */
 export function showLoader() {
-    // Hide any existing legacy loader first to maintain old behavior
-    if (legacyLoaderHandle && legacyLoaderHandle.isActive) {
-        legacyLoaderHandle.hide();
-    }
+  // Hide any existing legacy loader first to maintain old behavior
+  if (legacyLoaderHandle && legacyLoaderHandle.isActive) {
+    legacyLoaderHandle.hide();
+  }
 
-    // Create a blocking loader with no toast (matches old behavior)
-    legacyLoaderHandle = loader.show({
-        slug: 'legacy-loader',
-        blocking: true,
-        toastMode: loader.ToastMode.NONE,
-    });
+  // Create a blocking loader with no toast (matches old behavior)
+  legacyLoaderHandle = loader.show({
+    slug: "legacy-loader",
+    blocking: true,
+    toastMode: loader.ToastMode.NONE,
+  });
 }
 
 /**
@@ -50,11 +50,11 @@ export function showLoader() {
  * @returns {Promise<void>}
  */
 export async function hideLoader() {
-    if (!legacyLoaderHandle || !legacyLoaderHandle.isActive) {
-        console.warn('There is no loader showing to hide');
-        return Promise.resolve();
-    }
+  if (!legacyLoaderHandle || !legacyLoaderHandle.isActive) {
+    console.warn("There is no loader showing to hide");
+    return Promise.resolve();
+  }
 
-    await legacyLoaderHandle.hide();
-    legacyLoaderHandle = null;
+  await legacyLoaderHandle.hide();
+  legacyLoaderHandle = null;
 }

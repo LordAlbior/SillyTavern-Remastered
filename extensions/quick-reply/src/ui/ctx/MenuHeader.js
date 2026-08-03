@@ -1,20 +1,18 @@
-import { MenuItem } from './MenuItem.js';
+import { MenuItem } from "./MenuItem.js";
 
 export class MenuHeader extends MenuItem {
-    constructor(/**@type {String}*/label) {
-        super(null, null, label, null, null, null, []);
-    }
+  constructor(/**@type {String}*/ label) {
+    super(null, null, label, null, null, null, []);
+  }
 
-
-    render() {
-        if (!this.root) {
-            const item = document.createElement('li'); {
-                this.root = item;
-                item.classList.add('list-group-item');
-                item.classList.add('ctx-header');
-                item.append(this.label);
-            }
-        }
-        return this.root;
+  render() {
+    if (!this.root) {
+      const item = document.createElement("li");
+      this.root = item;
+      item.classList.add("list-group-item");
+      item.classList.add("ctx-header");
+      item.append(this.label);
     }
+    return this.root;
+  }
 }

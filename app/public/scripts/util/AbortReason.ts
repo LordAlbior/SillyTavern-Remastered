@@ -1,11 +1,11 @@
 export class AbortReason {
-    reason: any;
+  reason: any;
 
-    constructor(reason) {
-        this.reason = reason;
-    }
+  constructor(reason) {
+    this.reason = reason;
+  }
 
-    toString() {
-        return this.reason;
-    }
+  toString() {
+    return this.reason;
+  }
 }

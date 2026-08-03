@@ -3,16 +3,11 @@
 /** @typedef {import('chevrotain').ILexingError} ILexingError */
 /** @typedef {import('chevrotain').IRecognitionException} IRecognitionException */
 
-// @ts-ignore - no types for JS imports
-import { t } from '/scripts/i18n.ts';
-// @ts-ignore
-import { Popup, POPUP_RESULT } from '/scripts/popup.ts';
-// @ts-ignore
-import { power_user } from '/scripts/power-user.ts';
-// @ts-ignore
-import { accountStorage } from '/scripts/util/AccountStorage.ts';
-// @ts-ignore
-import { SimpleMutex } from '/scripts/util/SimpleMutex.ts';
+import { t } from "/scripts/i18n.ts";
+import { Popup, POPUP_RESULT } from "/scripts/popup.ts";
+import { power_user } from "/scripts/power-user.ts";
+import { accountStorage } from "/scripts/util/AccountStorage.ts";
+import { SimpleMutex } from "/scripts/util/SimpleMutex.ts";
 
 /**
  * @typedef {Object} MacroErrorContext
@@ -33,31 +28,37 @@ import { SimpleMutex } from '/scripts/util/SimpleMutex.ts';
  * @typedef {MacroErrorContext & { message: string, error?: any }} MacroLogOptions
  */
 
-
 async function onboardingExperimentalMacroEngineUnsafe(feature = null) {
-    // Show a popup once telling a user that they are using experimental features that only work with the new engine.
-    // Ask them if they want to turn the experimental engine on.
-    if (power_user.experimental_macro_engine) return;
+  // Show a popup once telling a user that they are using experimental features that only work with the new engine.
+  // Ask them if they want to turn the experimental engine on.
+  if (power_user.experimental_macro_engine) return;
 
-    // If already shown, do not show again
-    const shown = accountStorage.getItem('slash_command_experimental_engine_warning_shown');
-    if (shown === 'true') return;
+  // If already shown, do not show again
+  const shown = accountStorage.getItem("slash_command_experimental_engine_warning_shown");
+  if (shown === "true") return;
 
-    const result = await Popup.show.confirm(t`Experimental Macro Engine`, `
+  const result = await Popup.show.confirm(
+    t`Experimental Macro Engine`,
+    `
         <p>${t`You are using experimental macro features that require the new macro engine.`}</p>
-        ${feature ? `<div class="info-block hint">
+        ${
+          feature
+            ? `<div class="info-block hint">
                 <span>${t`Recognized Feature: `}<strong>${feature}</strong></span>
-            </div>` : ''}
+            </div>`
+            : ""
+        }
         <p>${t`For more information on the new macro engine, visit the <br />${`<a href="https://docs.sillytavern.app/usage/core-concepts/macros/">${t`Macro Documentation`}</a>`}.`}</p>
         <p>${t`You can enable the engine any time under:<br />${t`User Settings`} → ${t`Experimental Macro Engine`}`}</p>
-        <p>${t`Would you like to enable it now?`}</p>`);
-    if (result == POPUP_RESULT.AFFIRMATIVE) {
-        power_user.experimental_macro_engine = true;
-        $('#experimental_macro_engine').prop('checked', power_user.experimental_macro_engine).trigger('input');
-    }
+        <p>${t`Would you like to enable it now?`}</p>`,
+  );
+  if (result == POPUP_RESULT.AFFIRMATIVE) {
+    power_user.experimental_macro_engine = true;
+    $("#experimental_macro_engine").prop("checked", power_user.experimental_macro_engine).trigger("input");
+  }
 
-    // Only show this once
-    accountStorage.setItem('slash_command_experimental_engine_warning_shown', 'true');
+  // Only show this once
+  accountStorage.setItem("slash_command_experimental_engine_warning_shown", "true");
 }
 
 // Use mutex here so even on parallel usage without awaiting the popup, this will only show up once.
@@ -82,22 +83,22 @@ export const onboardingExperimentalMacroEngine = (...args) => onboardingExperime
  * @returns {Error}
  */
 export function createMacroRuntimeError({ message, call, def, macroName }) {
-    const inferredName = inferMacroName(call, def, macroName);
+  const inferredName = inferMacroName(call, def, macroName);
 
-    const error = new Error(message);
-    error.name = 'MacroRuntimeError';
-    // @ts-ignore - custom tagging for downstream classification
-    error.isMacroRuntimeError = true;
-    // @ts-ignore - helpful metadata for debugging
-    error.macroName = inferredName;
-    // @ts-ignore - best-effort location information
-    error.macroRange = call && call.range ? call.range : null;
-    // @ts-ignore - attach raw call/definition for convenience
-    if (call) error.macroCall = call;
-    // @ts-ignore
-    if (def) error.macroDefinition = def;
+  const error = new Error(message);
+  error.name = "MacroRuntimeError";
+  // @ts-expect-error - custom tagging for downstream classification
+  error.isMacroRuntimeError = true;
+  // @ts-expect-error - helpful metadata for debugging
+  error.macroName = inferredName;
+  // @ts-expect-error - best-effort location information
+  error.macroRange = call && call.range ? call.range : null;
+  // @ts-expect-error - attach raw call/definition for convenience
+  if (call) error.macroCall = call;
+  // @ts-expect-error
+  if (def) error.macroDefinition = def;
 
-    return error;
+  return error;
 }
 
 /**
@@ -108,8 +109,8 @@ export function createMacroRuntimeError({ message, call, def, macroName }) {
  * @param {MacroLogOptions} options
  */
 export function logMacroRuntimeWarning({ message, call, def, macroName, error }) {
-    const payload = buildMacroPayload({ call, def, macroName, error });
-    console.warn('[Macro] Warning:', message, payload);
+  const payload = buildMacroPayload({ call, def, macroName, error });
+  console.warn("[Macro] Warning:", message, payload);
 }
 
 /**
@@ -119,8 +120,8 @@ export function logMacroRuntimeWarning({ message, call, def, macroName, error })
  * @param {MacroLogOptions} options
  */
 export function logMacroInternalError({ message, call, macroName, error }) {
-    const payload = buildMacroPayload({ call, def: undefined, macroName, error });
-    console.error('[Macro] Error:', message, payload);
+  const payload = buildMacroPayload({ call, def: undefined, macroName, error });
+  console.error("[Macro] Error:", message, payload);
 }
 
 /**
@@ -129,8 +130,8 @@ export function logMacroInternalError({ message, call, macroName, error }) {
  * @param {{ message: string, macroName?: string, error?: any }} options
  */
 export function logMacroRegisterWarning({ message, macroName, error = undefined }) {
-    const payload = buildMacroPayload({ macroName, error });
-    console.warn('[Macro] Warning:', message, payload);
+  const payload = buildMacroPayload({ macroName, error });
+  console.warn("[Macro] Warning:", message, payload);
 }
 
 /**
@@ -140,8 +141,8 @@ export function logMacroRegisterWarning({ message, macroName, error = undefined 
  * @param {{ message: string, macroName?: string, error?: any }} options
  */
 export function logMacroRegisterError({ message, macroName, error = undefined }) {
-    const payload = buildMacroPayload({ macroName, error });
-    console.error('[Macro] Registration Error:', message, payload);
+  const payload = buildMacroPayload({ macroName, error });
+  console.error("[Macro] Registration Error:", message, payload);
 }
 
 /**
@@ -150,7 +151,7 @@ export function logMacroRegisterError({ message, macroName, error = undefined })
  * @param {{ message: string, error?: any }} options
  */
 export function logMacroGeneralError({ message, error }) {
-    console.error('[Macro] Error:', message, error);
+  console.error("[Macro] Error:", message, error);
 }
 
 /**
@@ -160,71 +161,78 @@ export function logMacroGeneralError({ message, error }) {
  * @param {{ phase: 'lexing', input: string, errors: ILexingError[] }|{ phase: 'parsing', input: string, errors: IRecognitionException[] }} options
  */
 export function logMacroSyntaxWarning({ phase, input, errors }) {
-    if (!errors || errors.length === 0) {
-        return;
+  if (!errors || errors.length === 0) {
+    return;
+  }
+
+  /** @type {{ message: string, line: number|null, column: number|null, length: number|null }[]} */
+  const issues = errors.map((err) => {
+    const hasOwnLine = typeof err.line === "number";
+    const hasOwnColumn = typeof err.column === "number";
+
+    const token =
+      /** @type {{ startLine?: number, startColumn?: number, startOffset?: number, endOffset?: number }|undefined} */ (
+        err.token
+      );
+
+    const line = hasOwnLine ? err.line : token && typeof token.startLine === "number" ? token.startLine : null;
+    const column = hasOwnColumn
+      ? err.column
+      : token && typeof token.startColumn === "number"
+        ? token.startColumn
+        : null;
+
+    /** @type {number|null} */
+    let length = null;
+    if (typeof err.length === "number") {
+      length = err.length;
+    } else if (token && typeof token.startOffset === "number" && typeof token.endOffset === "number") {
+      length = token.endOffset - token.startOffset + 1;
     }
 
-    /** @type {{ message: string, line: number|null, column: number|null, length: number|null }[]} */
-    const issues = errors.map((err) => {
-        const hasOwnLine = typeof err.line === 'number';
-        const hasOwnColumn = typeof err.column === 'number';
-
-        const token = /** @type {{ startLine?: number, startColumn?: number, startOffset?: number, endOffset?: number }|undefined} */ (err.token);
-
-        const line = hasOwnLine ? err.line : (token && typeof token.startLine === 'number' ? token.startLine : null);
-        const column = hasOwnColumn ? err.column : (token && typeof token.startColumn === 'number' ? token.startColumn : null);
-
-        /** @type {number|null} */
-        let length = null;
-        if (typeof err.length === 'number') {
-            length = err.length;
-        } else if (token && typeof token.startOffset === 'number' && typeof token.endOffset === 'number') {
-            length = token.endOffset - token.startOffset + 1;
-        }
-
-        return {
-            message: err.message,
-            line,
-            column,
-            length,
-        };
-    });
-
-    const label = phase === 'lexing' ? 'Lexing' : 'Parsing';
-
-    /** @type {Record<string, any>} */
-    const payload = {
-        phase,
-        count: issues.length,
-        issues,
-        input,
+    return {
+      message: err.message,
+      line,
+      column,
+      length,
     };
+  });
 
-    console.warn('[Macro] Warning:', `${label} errors detected`, payload);
+  const label = phase === "lexing" ? "Lexing" : "Parsing";
+
+  /** @type {Record<string, any>} */
+  const payload = {
+    phase,
+    count: issues.length,
+    issues,
+    input,
+  };
+
+  console.warn("[Macro] Warning:", `${label} errors detected`, payload);
 }
 
 /**
  * Builds a structured payload for macro logging.
  */
 function buildMacroPayload(ctx: any) {
-    const call: any = ctx?.call;
-    const def: any = ctx?.def;
-    const macroName: any = ctx?.macroName;
-    const error: any = ctx?.error;
-    const inferredName = inferMacroName(call, def, macroName);
+  const call: any = ctx?.call;
+  const def: any = ctx?.def;
+  const macroName: any = ctx?.macroName;
+  const error: any = ctx?.error;
+  const inferredName = inferMacroName(call, def, macroName);
 
-    /** @type {Record<string, any>} */
-    const payload: Record<string, any> = {
-        macroName: inferredName,
-    };
+  /** @type {Record<string, any>} */
+  const payload: Record<string, any> = {
+    macroName: inferredName,
+  };
 
-    if (call && call.range) payload.range = call.range;
-    if (call && typeof call.rawInner === 'string') payload.raw = call.rawInner;
-    if (call) payload.call = call;
-    if (def) payload.def = def;
-    if (error) payload.error = error;
+  if (call && call.range) payload.range = call.range;
+  if (call && typeof call.rawInner === "string") payload.raw = call.rawInner;
+  if (call) payload.call = call;
+  if (def) payload.def = def;
+  if (error) payload.error = error;
 
-    return payload;
+  return payload;
 }
 
 /**
@@ -236,14 +244,14 @@ function buildMacroPayload(ctx: any) {
  * @returns {string}
  */
 function inferMacroName(call, def, explicit) {
-    if (typeof explicit === 'string' && explicit.trim()) {
-        return explicit.trim();
-    }
-    if (call && typeof call.name === 'string' && call.name.trim()) {
-        return call.name.trim();
-    }
-    if (def && typeof def.name === 'string' && def.name.trim()) {
-        return def.name.trim();
-    }
-    return 'unknown';
+  if (typeof explicit === "string" && explicit.trim()) {
+    return explicit.trim();
+  }
+  if (call && typeof call.name === "string" && call.name.trim()) {
+    return call.name.trim();
+  }
+  if (def && typeof def.name === "string" && def.name.trim()) {
+    return def.name.trim();
+  }
+  return "unknown";
 }

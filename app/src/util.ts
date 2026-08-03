@@ -1,27 +1,27 @@
-import path from 'node:path';
-import fs from 'node:fs';
-import http2 from 'node:http2';
-import process from 'node:process';
-import { Readable } from 'node:stream';
-import { createRequire } from 'node:module';
-import { Buffer } from 'node:buffer';
-import { promises as dnsPromise } from 'node:dns';
-import os from 'node:os';
-import crypto from 'node:crypto';
-import readline from 'node:readline';
+import path from "node:path";
+import fs from "node:fs";
+import http2 from "node:http2";
+import process from "node:process";
+import { Readable } from "node:stream";
+import { createRequire } from "node:module";
+import { Buffer } from "node:buffer";
+import { promises as dnsPromise } from "node:dns";
+import os from "node:os";
+import crypto from "node:crypto";
+import readline from "node:readline";
 
-import yaml from 'yaml';
-import { sync as commandExistsSync } from 'command-exists';
-import _ from 'lodash';
-import yauzl from 'yauzl';
-import mime from 'mime-types';
-import { default as simpleGit } from 'simple-git';
-import chalk from 'chalk';
-import bytes from 'bytes';
-import { LOG_LEVELS, CHAT_COMPLETION_SOURCES, MEDIA_REQUEST_TYPE } from './constants.ts';
-import { serverDirectory } from './server-directory.ts';
-import { sync as writeFileAtomicSync } from 'write-file-atomic';
-import { isFirefox } from './express-common.ts';
+import yaml from "yaml";
+import { sync as commandExistsSync } from "command-exists";
+import _ from "lodash";
+import yauzl from "yauzl";
+import mime from "mime-types";
+import { default as simpleGit } from "simple-git";
+import chalk from "chalk";
+import bytes from "bytes";
+import { LOG_LEVELS, CHAT_COMPLETION_SOURCES, MEDIA_REQUEST_TYPE } from "./constants.ts";
+import { serverDirectory } from "./server-directory.ts";
+import { sync as writeFileAtomicSync } from "write-file-atomic";
+import { isFirefox } from "./express-common.ts";
 
 /**
  * Parsed config object.
@@ -35,17 +35,17 @@ let CONFIG_PATH = null;
  * @returns {string} Environment variable key
  * @example keyToEnv('extensions.models.speechToText') // 'SILLYTAVERN_EXTENSIONS_MODELS_SPEECHTOTEXT'
  */
-export const keyToEnv = (key) => 'SILLYTAVERN_' + String(key).toUpperCase().replace(/\./g, '_');
+export const keyToEnv = (key) => "SILLYTAVERN_" + String(key).toUpperCase().replace(/\./g, "_");
 
 /**
  * Set the config file path.
  * @param {string} configFilePath Path to the config file
  */
 export function setConfigFilePath(configFilePath) {
-    if (CONFIG_PATH !== null) {
-        console.error(color.red('Config file path already set. Please restart the server to change the config file path.'));
-    }
-    CONFIG_PATH = path.resolve(configFilePath);
+  if (CONFIG_PATH !== null) {
+    console.error(color.red("Config file path already set. Please restart the server to change the config file path."));
+  }
+  CONFIG_PATH = path.resolve(configFilePath);
 }
 
 /**
@@ -53,29 +53,33 @@ export function setConfigFilePath(configFilePath) {
  * @returns {object} Config object
  */
 export function getConfig() {
-    if (CONFIG_PATH === null) {
-        console.trace();
-        console.error(color.red('No config file path set. Please set the config file path using setConfigFilePath().'));
-        process.exit(1);
-    }
-    if (CACHED_CONFIG) {
-        return CACHED_CONFIG;
-    }
-    if (!fs.existsSync(CONFIG_PATH)) {
-        console.error(color.red('No config file found. Please create a config.yaml file. The default config file can be found in the /default folder.'));
-        console.error(color.red('The program will now exit.'));
-        process.exit(1);
-    }
+  if (CONFIG_PATH === null) {
+    console.trace();
+    console.error(color.red("No config file path set. Please set the config file path using setConfigFilePath()."));
+    process.exit(1);
+  }
+  if (CACHED_CONFIG) {
+    return CACHED_CONFIG;
+  }
+  if (!fs.existsSync(CONFIG_PATH)) {
+    console.error(
+      color.red(
+        "No config file found. Please create a config.yaml file. The default config file can be found in the /default folder.",
+      ),
+    );
+    console.error(color.red("The program will now exit."));
+    process.exit(1);
+  }
 
-    try {
-        const config = yaml.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
-        CACHED_CONFIG = config;
-        return config;
-    } catch (error) {
-        console.error(color.red('FATAL: Failed to read config.yaml. Please check the file for syntax errors.'));
-        console.error(error.message);
-        process.exit(1);
-    }
+  try {
+    const config = yaml.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
+    CACHED_CONFIG = config;
+    return config;
+  } catch (error) {
+    console.error(color.red("FATAL: Failed to read config.yaml. Please check the file for syntax errors."));
+    console.error(error.message);
+    process.exit(1);
+  }
 }
 
 /**
@@ -86,26 +90,26 @@ export function getConfig() {
  * @returns {any} Value for the given key
  */
 export function getConfigValue(key: string, defaultValue: unknown = null, typeConverter: unknown = null): any {
-    function _getValue() {
-        const envKey = keyToEnv(key);
-        if (envKey in process.env) {
-            const needsJsonParse = defaultValue && typeof defaultValue === 'object';
-            const envValue = process.env[envKey];
-            return needsJsonParse ? (tryParse(envValue) ?? defaultValue) : envValue;
-        }
-        const config = getConfig();
-        return _.get(config, key, defaultValue);
+  function _getValue() {
+    const envKey = keyToEnv(key);
+    if (envKey in process.env) {
+      const needsJsonParse = defaultValue && typeof defaultValue === "object";
+      const envValue = process.env[envKey];
+      return needsJsonParse ? (tryParse(envValue) ?? defaultValue) : envValue;
     }
+    const config = getConfig();
+    return _.get(config, key, defaultValue);
+  }
 
-    const value = _getValue();
-    switch (typeConverter) {
-        case 'number':
-            return isNaN(parseFloat(value)) ? defaultValue : parseFloat(value);
-        case 'boolean':
-            return toBoolean(value);
-        default:
-            return value;
-    }
+  const value = _getValue();
+  switch (typeConverter) {
+    case "number":
+      return isNaN(parseFloat(value)) ? defaultValue : parseFloat(value);
+    case "boolean":
+      return toBoolean(value);
+    default:
+      return value;
+  }
 }
 
 /**
@@ -115,7 +119,7 @@ export function getConfigValue(key: string, defaultValue: unknown = null, typeCo
  * @deprecated Configs are read-only. Use environment variables instead.
  */
 export function setConfigValue(_key, _value) {
-    console.trace(color.yellow('setConfigValue is deprecated and should not be used.'));
+  console.trace(color.yellow("setConfigValue is deprecated and should not be used."));
 }
 
 /**
@@ -124,8 +128,8 @@ export function setConfigValue(_key, _value) {
  * @returns {string} Basic Auth header value
  */
 export function getBasicAuthHeader(auth) {
-    const encoded = Buffer.from(`${auth}`).toString('base64');
-    return `Basic ${encoded}`;
+  const encoded = Buffer.from(`${auth}`).toString("base64");
+  return `Basic ${encoded}`;
 }
 
 /**
@@ -134,35 +138,35 @@ export function getBasicAuthHeader(auth) {
  * @returns {Promise<{agent: string, pkgVersion: string, gitRevision: string | null, gitBranch: string | null, commitDate: string | null, isLatest: boolean}>} Version info object
  */
 export async function getVersion() {
-    let pkgVersion = 'UNKNOWN';
-    let gitRevision = null;
-    let gitBranch = null;
-    let commitDate = null;
-    let isLatest = true;
+  let pkgVersion = "UNKNOWN";
+  let gitRevision = null;
+  let gitBranch = null;
+  let commitDate = null;
+  let isLatest = true;
 
-    try {
-        const require = createRequire(import.meta.url);
-        const pkgJson = require(path.join(serverDirectory, './package.json'));
-        pkgVersion = pkgJson.version;
-        if (commandExistsSync('git')) {
-            const git = simpleGit({ baseDir: serverDirectory });
-            gitRevision = await git.revparse(['--short', 'HEAD']);
-            gitBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
-            commitDate = await git.show(['-s', '--format=%ci', gitRevision]);
+  try {
+    const require = createRequire(import.meta.url);
+    const pkgJson = require(path.join(serverDirectory, "./package.json"));
+    pkgVersion = pkgJson.version;
+    if (commandExistsSync("git")) {
+      const git = simpleGit({ baseDir: serverDirectory });
+      gitRevision = await git.revparse(["--short", "HEAD"]);
+      gitBranch = await git.revparse(["--abbrev-ref", "HEAD"]);
+      commitDate = await git.show(["-s", "--format=%ci", gitRevision]);
 
-            const trackingBranch = await git.revparse(['--abbrev-ref', '@{u}']);
+      const trackingBranch = await git.revparse(["--abbrev-ref", "@{u}"]);
 
-            // Might fail, but exception is caught. Just don't run anything relevant after in this block...
-            const localLatest = await git.revparse(['HEAD']);
-            const remoteLatest = await git.revparse([trackingBranch]);
-            isLatest = localLatest === remoteLatest;
-        }
-    } catch {
-        // suppress exception
+      // Might fail, but exception is caught. Just don't run anything relevant after in this block...
+      const localLatest = await git.revparse(["HEAD"]);
+      const remoteLatest = await git.revparse([trackingBranch]);
+      isLatest = localLatest === remoteLatest;
     }
+  } catch {
+    // suppress exception
+  }
 
-    const agent = `SillyTavern:${pkgVersion}:Cohee#1207`;
-    return { agent, pkgVersion, gitRevision, gitBranch, commitDate: commitDate?.trim() ?? null, isLatest };
+  const agent = `SillyTavern:${pkgVersion}:Cohee#1207`;
+  return { agent, pkgVersion, gitRevision, gitBranch, commitDate: commitDate?.trim() ?? null, isLatest };
 }
 
 /**
@@ -171,7 +175,7 @@ export async function getVersion() {
  * @returns {Promise<void>} Promise that resolves after the given amount of milliseconds
  */
 export function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -181,12 +185,12 @@ export function delay(ms) {
  * @example getHexString(8) // 'a1b2c3d4'
  */
 export function getHexString(length) {
-    const chars = '0123456789abcdef';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return result;
+  const chars = "0123456789abcdef";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
 }
 
 /**
@@ -195,7 +199,7 @@ export function getHexString(length) {
  * @returns {string} The formatted string (e.g., "1.5 MB")
  */
 export function formatBytes(numBytes) {
-    return bytes.format(numBytes) ?? '';
+  return bytes.format(numBytes) ?? "";
 }
 
 /**
@@ -205,57 +209,57 @@ export function formatBytes(numBytes) {
  * @returns {Promise<Buffer|null>} Buffer containing the extracted file. Null if the file was not found.
  */
 export async function extractFileFromZipBuffer(archiveBuffer, fileExtension) {
-    return await new Promise((resolve) => {
-        try {
-            yauzl.fromBuffer(Buffer.from(archiveBuffer), { lazyEntries: true }, (err, zipfile) => {
-                if (err) {
-                    console.warn(`Error opening ZIP file: ${err.message}`);
-                    return resolve(null);
-                }
-
-                zipfile.readEntry();
-
-                zipfile.on('entry', (entry) => {
-                    if (entry.fileName.endsWith(fileExtension) && !entry.fileName.startsWith('__MACOSX')) {
-                        zipfile.openReadStream(entry, (err, readStream) => {
-                            if (err) {
-                                console.warn(`Error opening read stream: ${err.message}`);
-                                return zipfile.readEntry();
-                            } else {
-                                const chunks = [];
-                                readStream.on('data', (chunk) => {
-                                    chunks.push(chunk);
-                                });
-
-                                readStream.on('end', () => {
-                                    const buffer = Buffer.concat(chunks);
-                                    resolve(buffer);
-                                    zipfile.readEntry(); // Continue to the next entry
-                                });
-
-                                readStream.on('error', (err) => {
-                                    console.warn(`Error reading stream: ${err.message}`);
-                                    zipfile.readEntry();
-                                });
-                            }
-                        });
-                    } else {
-                        zipfile.readEntry();
-                    }
-                });
-
-                zipfile.on('error', (err) => {
-                    console.warn('ZIP processing error', err);
-                    resolve(null);
-                });
-
-                zipfile.on('end', () => resolve(null));
-            });
-        } catch (error) {
-            console.warn('Failed to process ZIP buffer', error);
-            resolve(null);
+  return await new Promise((resolve) => {
+    try {
+      yauzl.fromBuffer(Buffer.from(archiveBuffer), { lazyEntries: true }, (err, zipfile) => {
+        if (err) {
+          console.warn(`Error opening ZIP file: ${err.message}`);
+          return resolve(null);
         }
-    });
+
+        zipfile.readEntry();
+
+        zipfile.on("entry", (entry) => {
+          if (entry.fileName.endsWith(fileExtension) && !entry.fileName.startsWith("__MACOSX")) {
+            zipfile.openReadStream(entry, (err, readStream) => {
+              if (err) {
+                console.warn(`Error opening read stream: ${err.message}`);
+                return zipfile.readEntry();
+              } else {
+                const chunks = [];
+                readStream.on("data", (chunk) => {
+                  chunks.push(chunk);
+                });
+
+                readStream.on("end", () => {
+                  const buffer = Buffer.concat(chunks);
+                  resolve(buffer);
+                  zipfile.readEntry(); // Continue to the next entry
+                });
+
+                readStream.on("error", (err) => {
+                  console.warn(`Error reading stream: ${err.message}`);
+                  zipfile.readEntry();
+                });
+              }
+            });
+          } else {
+            zipfile.readEntry();
+          }
+        });
+
+        zipfile.on("error", (err) => {
+          console.warn("ZIP processing error", err);
+          resolve(null);
+        });
+
+        zipfile.on("end", () => resolve(null));
+      });
+    } catch (error) {
+      console.warn("Failed to process ZIP buffer", error);
+      resolve(null);
+    }
+  });
 }
 
 /**
@@ -264,28 +268,28 @@ export async function extractFileFromZipBuffer(archiveBuffer, fileExtension) {
  * @returns {string|null} Normalized path or null if invalid
  */
 export function normalizeZipEntryPath(entryName) {
-    if (typeof entryName !== 'string') {
-        return null;
-    }
+  if (typeof entryName !== "string") {
+    return null;
+  }
 
-    let normalized = entryName.replace(/\\/g, '/').trim();
+  let normalized = entryName.replace(/\\/g, "/").trim();
 
-    if (!normalized) {
-        return null;
-    }
+  if (!normalized) {
+    return null;
+  }
 
-    normalized = normalized.replace(/^\.\/+/g, '');
-    normalized = path.posix.normalize(normalized);
+  normalized = normalized.replace(/^\.\/+/g, "");
+  normalized = path.posix.normalize(normalized);
 
-    if (!normalized || normalized === '.' || normalized.startsWith('..')) {
-        return null;
-    }
+  if (!normalized || normalized === "." || normalized.startsWith("..")) {
+    return null;
+  }
 
-    if (normalized.startsWith('/')) {
-        normalized = normalized.slice(1);
-    }
+  if (normalized.startsWith("/")) {
+    normalized = normalized.slice(1);
+  }
 
-    return normalized;
+  return normalized;
 }
 
 /**
@@ -295,95 +299,95 @@ export function normalizeZipEntryPath(entryName) {
  * @returns {Promise<Map<string, Buffer>>} Map of normalized paths to their extracted buffers
  */
 export async function extractFilesFromZipBuffer(archiveBuffer, fileNames) {
-    const targets = new Map();
+  const targets = new Map();
 
-    if (Array.isArray(fileNames)) {
-        for (const fileName of fileNames) {
-            const normalized = normalizeZipEntryPath(fileName);
-            if (normalized && !targets.has(normalized)) {
-                targets.set(normalized, true);
+  if (Array.isArray(fileNames)) {
+    for (const fileName of fileNames) {
+      const normalized = normalizeZipEntryPath(fileName);
+      if (normalized && !targets.has(normalized)) {
+        targets.set(normalized, true);
+      }
+    }
+  }
+
+  if (targets.size === 0) {
+    return new Map();
+  }
+
+  return await new Promise((resolve) => {
+    const results = new Map();
+
+    try {
+      yauzl.fromBuffer(Buffer.from(archiveBuffer), { lazyEntries: true }, (err, zipfile) => {
+        if (err) {
+          console.warn(`Error opening ZIP file: ${err.message}`);
+          return resolve(results);
+        }
+
+        let finished = false;
+        const finalize = () => {
+          if (finished) {
+            return;
+          }
+          finished = true;
+          resolve(results);
+        };
+
+        zipfile.readEntry();
+
+        zipfile.on("entry", (entry) => {
+          const normalizedEntry = normalizeZipEntryPath(entry.fileName);
+          if (!normalizedEntry || !targets.has(normalizedEntry)) {
+            return zipfile.readEntry();
+          }
+
+          zipfile.openReadStream(entry, (streamErr, readStream) => {
+            if (streamErr) {
+              console.warn(`Error opening read stream: ${streamErr.message}`);
+              return zipfile.readEntry();
             }
-        }
-    }
 
-    if (targets.size === 0) {
-        return new Map();
-    }
-
-    return await new Promise((resolve) => {
-        const results = new Map();
-
-        try {
-            yauzl.fromBuffer(Buffer.from(archiveBuffer), { lazyEntries: true }, (err, zipfile) => {
-                if (err) {
-                    console.warn(`Error opening ZIP file: ${err.message}`);
-                    return resolve(results);
-                }
-
-                let finished = false;
-                const finalize = () => {
-                    if (finished) {
-                        return;
-                    }
-                    finished = true;
-                    resolve(results);
-                };
-
-                zipfile.readEntry();
-
-                zipfile.on('entry', (entry) => {
-                    const normalizedEntry = normalizeZipEntryPath(entry.fileName);
-                    if (!normalizedEntry || !targets.has(normalizedEntry)) {
-                        return zipfile.readEntry();
-                    }
-
-                    zipfile.openReadStream(entry, (streamErr, readStream) => {
-                        if (streamErr) {
-                            console.warn(`Error opening read stream: ${streamErr.message}`);
-                            return zipfile.readEntry();
-                        }
-
-                        const chunks = [];
-                        readStream.on('data', (chunk) => {
-                            chunks.push(chunk);
-                        });
-
-                        readStream.on('end', () => {
-                            results.set(normalizedEntry, Buffer.concat(chunks));
-                            targets.delete(normalizedEntry);
-
-                            if (targets.size === 0) {
-                                finalize();
-                            } else {
-                                zipfile.readEntry();
-                            }
-                        });
-
-                        readStream.on('error', (streamError) => {
-                            console.warn(`Error reading stream: ${streamError.message}`);
-                            zipfile.readEntry();
-                        });
-                    });
-                });
-
-                zipfile.on('error', (zipError) => {
-                    console.warn('ZIP processing error', zipError);
-                    finalize();
-                });
-
-                zipfile.on('close', () => {
-                    finalize();
-                });
-
-                zipfile.on('end', () => {
-                    finalize();
-                });
+            const chunks = [];
+            readStream.on("data", (chunk) => {
+              chunks.push(chunk);
             });
-        } catch (error) {
-            console.warn('Failed to process ZIP buffer', error);
-            resolve(results);
-        }
-    });
+
+            readStream.on("end", () => {
+              results.set(normalizedEntry, Buffer.concat(chunks));
+              targets.delete(normalizedEntry);
+
+              if (targets.size === 0) {
+                finalize();
+              } else {
+                zipfile.readEntry();
+              }
+            });
+
+            readStream.on("error", (streamError) => {
+              console.warn(`Error reading stream: ${streamError.message}`);
+              zipfile.readEntry();
+            });
+          });
+        });
+
+        zipfile.on("error", (zipError) => {
+          console.warn("ZIP processing error", zipError);
+          finalize();
+        });
+
+        zipfile.on("close", () => {
+          finalize();
+        });
+
+        zipfile.on("end", () => {
+          finalize();
+        });
+      });
+    } catch (error) {
+      console.warn("Failed to process ZIP buffer", error);
+      resolve(results);
+    }
+  });
 }
 
 /**
@@ -392,18 +396,18 @@ export async function extractFilesFromZipBuffer(archiveBuffer, fileNames) {
  * @returns {boolean} True if the directory exists or was created, false on error
  */
 export function ensureDirectory(dirPath) {
-    try {
-        if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
-        } else if (!fs.statSync(dirPath).isDirectory()) {
-            console.warn(`ensureDirectory: Path ${dirPath} exists and is not a directory.`);
-            return false;
-        }
-        return true;
-    } catch (error) {
-        console.error(`ensureDirectory: Failed to prepare directory ${dirPath}`, error);
-        return false;
+  try {
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    } else if (!fs.statSync(dirPath).isDirectory()) {
+      console.warn(`ensureDirectory: Path ${dirPath} exists and is not a directory.`);
+      return false;
     }
+    return true;
+  } catch (error) {
+    console.error(`ensureDirectory: Failed to prepare directory ${dirPath}`, error);
+    return false;
+  }
 }
 
 /**
@@ -412,53 +416,53 @@ export function ensureDirectory(dirPath) {
  * @returns {Promise<[string, Buffer][]>} Array of image buffers
  */
 export async function getImageBuffers(zipFilePath) {
-    return new Promise((resolve, reject) => {
-        // Check if the zip file exists
-        if (!fs.existsSync(zipFilePath)) {
-            reject(new Error('File not found'));
-            return;
-        }
+  return new Promise((resolve, reject) => {
+    // Check if the zip file exists
+    if (!fs.existsSync(zipFilePath)) {
+      reject(new Error("File not found"));
+      return;
+    }
 
-        const imageBuffers = [];
+    const imageBuffers = [];
 
-        yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
-            if (err) {
+    yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
+      if (err) {
+        reject(err);
+      } else {
+        zipfile.readEntry();
+        zipfile.on("entry", (entry) => {
+          const mimeType = mime.lookup(entry.fileName);
+          if (mimeType && mimeType.startsWith("image/") && !entry.fileName.startsWith("__MACOSX")) {
+            zipfile.openReadStream(entry, (err, readStream) => {
+              if (err) {
                 reject(err);
-            } else {
-                zipfile.readEntry();
-                zipfile.on('entry', (entry) => {
-                    const mimeType = mime.lookup(entry.fileName);
-                    if (mimeType && mimeType.startsWith('image/') && !entry.fileName.startsWith('__MACOSX')) {
-                        zipfile.openReadStream(entry, (err, readStream) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                const chunks = [];
-                                readStream.on('data', (chunk) => {
-                                    chunks.push(chunk);
-                                });
-
-                                readStream.on('end', () => {
-                                    imageBuffers.push([path.parse(entry.fileName).base, Buffer.concat(chunks)]);
-                                    zipfile.readEntry(); // Continue to the next entry
-                                });
-                            }
-                        });
-                    } else {
-                        zipfile.readEntry(); // Continue to the next entry
-                    }
+              } else {
+                const chunks = [];
+                readStream.on("data", (chunk) => {
+                  chunks.push(chunk);
                 });
 
-                zipfile.on('end', () => {
-                    resolve(imageBuffers);
+                readStream.on("end", () => {
+                  imageBuffers.push([path.parse(entry.fileName).base, Buffer.concat(chunks)]);
+                  zipfile.readEntry(); // Continue to the next entry
                 });
-
-                zipfile.on('error', (err) => {
-                    reject(err);
-                });
-            }
+              }
+            });
+          } else {
+            zipfile.readEntry(); // Continue to the next entry
+          }
         });
+
+        zipfile.on("end", () => {
+          resolve(imageBuffers);
+        });
+
+        zipfile.on("error", (err) => {
+          reject(err);
+        });
+      }
     });
+  });
 }
 
 /**
@@ -467,45 +471,45 @@ export async function getImageBuffers(zipFilePath) {
  * @returns {Promise<Buffer[]>} Array of chunks
  */
 export async function readAllChunks(readableStream) {
-    return new Promise((resolve, reject) => {
-        // Consume the readable stream
-        const chunks = [];
-        readableStream.on('data', (chunk) => {
-            chunks.push(chunk);
-        });
-
-        readableStream.on('end', () => {
-            //console.log('Finished reading the stream.');
-            resolve(chunks);
-        });
-
-        readableStream.on('error', (error) => {
-            console.error('Error while reading the stream:', error);
-            reject();
-        });
+  return new Promise((resolve, reject) => {
+    // Consume the readable stream
+    const chunks = [];
+    readableStream.on("data", (chunk) => {
+      chunks.push(chunk);
     });
+
+    readableStream.on("end", () => {
+      //console.log('Finished reading the stream.');
+      resolve(chunks);
+    });
+
+    readableStream.on("error", (error) => {
+      console.error("Error while reading the stream:", error);
+      reject();
+    });
+  });
 }
 
 function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
+  return item && typeof item === "object" && !Array.isArray(item);
 }
 
 export function deepMerge(target, source) {
-    let output = Object.assign({}, target);
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = deepMerge(target[key], source[key]);
-                }
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
-    return output;
+  const output = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) {
+          Object.assign(output, { [key]: source[key] });
+        } else {
+          output[key] = deepMerge(target[key], source[key]);
+        }
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
 }
 
 export const color = chalk;
@@ -515,20 +519,20 @@ export const color = chalk;
  * @returns {string} A UUIDv4 string
  */
 export function uuidv4() {
-    // Node v16.7.0+
-    if ('crypto' in globalThis && 'randomUUID' in globalThis.crypto) {
-        return globalThis.crypto.randomUUID();
-    }
-    // Node v14.17.0+
-    if ('randomUUID' in crypto) {
-        return crypto.randomUUID();
-    }
-    // Very insecure UUID generator, but it's better than nothing.
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+  // Node v16.7.0+
+  if ("crypto" in globalThis && "randomUUID" in globalThis.crypto) {
+    return globalThis.crypto.randomUUID();
+  }
+  // Node v14.17.0+
+  if ("randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  // Very insecure UUID generator, but it's better than nothing.
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 
 /**
@@ -537,29 +541,29 @@ export function uuidv4() {
  * @returns {string} Humanized date time string in the format `YYYY-MM-DD@HHhMMmSSsMSms`
  */
 export function humanizedDateTime(timestamp = Date.now()) {
-    const date = new Date(timestamp);
-    const dt = {
-        year: date.getFullYear(),
-        month: date.getMonth() + 1,
-        day: date.getDate(),
-        hour: date.getHours(),
-        minute: date.getMinutes(),
-        second: date.getSeconds(),
-        millisecond: date.getMilliseconds(),
-    };
-    for (const key in dt) {
-        const padLength = key === 'millisecond' ? 3 : 2;
-        dt[key] = dt[key].toString().padStart(padLength, '0');
-    }
-    return `${dt.year}-${dt.month}-${dt.day}@${dt.hour}h${dt.minute}m${dt.second}s${dt.millisecond}ms`;
+  const date = new Date(timestamp);
+  const dt = {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+    second: date.getSeconds(),
+    millisecond: date.getMilliseconds(),
+  };
+  for (const key in dt) {
+    const padLength = key === "millisecond" ? 3 : 2;
+    dt[key] = dt[key].toString().padStart(padLength, "0");
+  }
+  return `${dt.year}-${dt.month}-${dt.day}@${dt.hour}h${dt.minute}m${dt.second}s${dt.millisecond}ms`;
 }
 
 export function tryParse(str) {
-    try {
-        return JSON.parse(str);
-    } catch {
-        return undefined;
-    }
+  try {
+    return JSON.parse(str);
+  } catch {
+    return undefined;
+  }
 }
 
 /**
@@ -570,11 +574,11 @@ export function tryParse(str) {
  * @returns The relative URL path from which the client can access the file.
  */
 export function clientRelativePath(root, inputPath) {
-    if (!inputPath.startsWith(root)) {
-        throw new Error('Input path does not start with the root directory');
-    }
+  if (!inputPath.startsWith(root)) {
+    throw new Error("Input path does not start with the root directory");
+  }
 
-    return inputPath.slice(root.length).split(path.sep).join('/');
+  return inputPath.slice(root.length).split(path.sep).join("/");
 }
 
 /**
@@ -590,17 +594,17 @@ export function clientRelativePath(root, inputPath) {
  * @returns {string|null} A unique name. Null if no unique name could be found in `maxTries`.
  */
 export function getUniqueName(baseName, exists, { nameBuilder = null, maxTries = 1000, startIndex = 1 } = {}) {
-    nameBuilder ??= (baseName, i) => i === 0 ? baseName : `${baseName} (${i})`;
-    let i = startIndex;
-    let name;
-    while (i < maxTries + startIndex) {
-        name = nameBuilder(baseName, i);
-        if (!exists(name)) {
-            return name;
-        }
-        i++;
+  nameBuilder ??= (baseName, i) => (i === 0 ? baseName : `${baseName} (${i})`);
+  let i = startIndex;
+  let name;
+  while (i < maxTries + startIndex) {
+    name = nameBuilder(baseName, i);
+    if (!exists(name)) {
+      return name;
     }
-    return null;
+    i++;
+  }
+  return null;
 }
 
 /**
@@ -609,7 +613,7 @@ export function getUniqueName(baseName, exists, { nameBuilder = null, maxTries =
  * @returns {string} Safe replacement character
  */
 export function sanitizeSafeCharacterReplacements(char) {
-    return '_';
+  return "_";
 }
 
 /**
@@ -618,19 +622,19 @@ export function sanitizeSafeCharacterReplacements(char) {
  * @returns The file name, sans extension
  */
 export function removeFileExtension(filename) {
-    return filename.replace(/\.[^.]+$/, '');
+  return filename.replace(/\.[^.]+$/, "");
 }
 
 export function generateTimestamp() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
 
-    return `${year}${month}${day}-${hours}${minutes}${seconds}`;
+  return `${year}${month}${day}-${hours}${minutes}${seconds}`;
 }
 
 /**
@@ -640,22 +644,22 @@ export function generateTimestamp() {
  * @param {number?} limit Maximum number of backups to keep. If null, the limit is determined by the `backups.common.numberOfBackups` config value.
  */
 export function removeOldBackups(directory, prefix, limit = null) {
-    const MAX_BACKUPS = limit ?? Number(getConfigValue('backups.common.numberOfBackups', 50, 'number'));
+  const MAX_BACKUPS = limit ?? Number(getConfigValue("backups.common.numberOfBackups", 50, "number"));
 
-    let files = fs.readdirSync(directory).filter(f => f.startsWith(prefix));
-    if (files.length > MAX_BACKUPS) {
-        files = files.map(f => path.join(directory, f));
-        files.sort((a, b) => fs.statSync(a).mtimeMs - fs.statSync(b).mtimeMs);
+  let files = fs.readdirSync(directory).filter((f) => f.startsWith(prefix));
+  if (files.length > MAX_BACKUPS) {
+    files = files.map((f) => path.join(directory, f));
+    files.sort((a, b) => fs.statSync(a).mtimeMs - fs.statSync(b).mtimeMs);
 
-        while (files.length > MAX_BACKUPS) {
-            const oldest = files.shift();
-            if (!oldest) {
-                break;
-            }
+    while (files.length > MAX_BACKUPS) {
+      const oldest = files.shift();
+      if (!oldest) {
+        break;
+      }
 
-            fs.unlinkSync(oldest);
-        }
+      fs.unlinkSync(oldest);
     }
+  }
 }
 
 /**
@@ -665,39 +669,40 @@ export function removeOldBackups(directory, prefix, limit = null) {
  * @param {number} type Bitwise flag representing media types to include
  * @returns {string[]} List of image file names
  */
-export function getImages(directoryPath, sortBy = 'name', type = MEDIA_REQUEST_TYPE.IMAGE) {
-    function getSortFunction() {
-        switch (sortBy) {
-            case 'name':
-                return Intl.Collator().compare;
-            case 'date':
-                return (a, b) => fs.statSync(path.join(directoryPath, a)).mtimeMs - fs.statSync(path.join(directoryPath, b)).mtimeMs;
-            default:
-                return (_a, _b) => 0;
-        }
+export function getImages(directoryPath, sortBy = "name", type = MEDIA_REQUEST_TYPE.IMAGE) {
+  function getSortFunction() {
+    switch (sortBy) {
+      case "name":
+        return Intl.Collator().compare;
+      case "date":
+        return (a, b) =>
+          fs.statSync(path.join(directoryPath, a)).mtimeMs - fs.statSync(path.join(directoryPath, b)).mtimeMs;
+      default:
+        return (_a, _b) => 0;
     }
+  }
 
-    return fs
-        .readdirSync(directoryPath, { withFileTypes: true })
-        .filter(dirent => dirent.isFile())
-        .map(dirent => dirent.name)
-        .filter(file => {
-            const fileType = mime.lookup(file);
-            if (!fileType) {
-                return false;
-            }
-            if ((type & MEDIA_REQUEST_TYPE.IMAGE) && fileType.startsWith('image/')) {
-                return true;
-            }
-            if ((type & MEDIA_REQUEST_TYPE.VIDEO) && fileType.startsWith('video/')) {
-                return true;
-            }
-            if ((type & MEDIA_REQUEST_TYPE.AUDIO) && fileType.startsWith('audio/')) {
-                return true;
-            }
-            return false;
-        })
-        .sort(getSortFunction());
+  return fs
+    .readdirSync(directoryPath, { withFileTypes: true })
+    .filter((dirent) => dirent.isFile())
+    .map((dirent) => dirent.name)
+    .filter((file) => {
+      const fileType = mime.lookup(file);
+      if (!fileType) {
+        return false;
+      }
+      if (type & MEDIA_REQUEST_TYPE.IMAGE && fileType.startsWith("image/")) {
+        return true;
+      }
+      if (type & MEDIA_REQUEST_TYPE.VIDEO && fileType.startsWith("video/")) {
+        return true;
+      }
+      if (type & MEDIA_REQUEST_TYPE.AUDIO && fileType.startsWith("audio/")) {
+        return true;
+      }
+      return false;
+    })
+    .sort(getSortFunction());
 }
 
 /**
@@ -707,52 +712,52 @@ export function getImages(directoryPath, sortBy = 'name', type = MEDIA_REQUEST_T
  * @returns {Promise<void>}
  */
 export async function forwardFetchResponse(from, to) {
-    let statusCode = from.status;
-    let statusText = from.statusText;
+  let statusCode = from.status;
+  const statusText = from.statusText;
 
-    // Avoid sending 401 responses as they reset the client Basic auth.
-    // This can produce an interesting artifact as "400 Unauthorized", but it's not out of spec.
-    // https://www.rfc-editor.org/rfc/rfc9110.html#name-overview-of-status-codes
-    // "The reason phrases listed here are only recommendations -- they can be replaced by local
-    //  equivalents or left out altogether without affecting the protocol."
-    if (statusCode === 401) {
-        statusCode = 400;
+  // Avoid sending 401 responses as they reset the client Basic auth.
+  // This can produce an interesting artifact as "400 Unauthorized", but it's not out of spec.
+  // https://www.rfc-editor.org/rfc/rfc9110.html#name-overview-of-status-codes
+  // "The reason phrases listed here are only recommendations -- they can be replaced by local
+  //  equivalents or left out altogether without affecting the protocol."
+  if (statusCode === 401) {
+    statusCode = 400;
+  }
+
+  to.statusCode = statusCode;
+  to.statusMessage = statusText;
+
+  if (!from.ok) {
+    try {
+      const rawErrorText = await from.text();
+      const detail = rawErrorText || "Unknown error occurred";
+
+      console.warn(`Streaming request failed with status ${from.status} ${statusText}: ${detail}`);
+      to.end(rawErrorText, "utf-8");
+    } catch {
+      console.warn(`Streaming request failed with status ${from.status} ${statusText}: Unknown error occurred`);
+      to.end();
     }
 
-    to.statusCode = statusCode;
-    to.statusMessage = statusText;
+    return;
+  }
 
-    if (!from.ok) {
-        try {
-            const rawErrorText = await from.text();
-            const detail = rawErrorText || 'Unknown error occurred';
+  if (from.body && to.socket) {
+    from.body.pipe(to);
 
-            console.warn(`Streaming request failed with status ${from.status} ${statusText}: ${detail}`);
-            to.end(rawErrorText, 'utf-8');
-        } catch {
-            console.warn(`Streaming request failed with status ${from.status} ${statusText}: Unknown error occurred`);
-            to.end();
-        }
+    to.socket.on("close", () => {
+      if (from.body instanceof Readable) from.body.destroy(); // Close the remote stream
 
-        return;
-    }
+      to.end(); // End the Express response
+    });
 
-    if (from.body && to.socket) {
-        from.body.pipe(to);
-
-        to.socket.on('close', function () {
-            if (from.body instanceof Readable) from.body.destroy(); // Close the remote stream
-
-            to.end(); // End the Express response
-        });
-
-        from.body.on('end', function () {
-            console.info('Streaming request finished');
-            to.end();
-        });
-    } else {
-        to.end();
-    }
+    from.body.on("end", () => {
+      console.info("Streaming request finished");
+      to.end();
+    });
+  } else {
+    to.end();
+  }
 }
 
 /**
@@ -766,50 +771,50 @@ export async function forwardFetchResponse(from, to) {
  * @returns {Promise<string>} Response body
  */
 export function makeHttp2Request(endpoint, method, body, headers) {
-    return new Promise((resolve, reject) => {
-        try {
-            const url = new URL(endpoint);
-            const client = http2.connect(url.origin);
+  return new Promise((resolve, reject) => {
+    try {
+      const url = new URL(endpoint);
+      const client = http2.connect(url.origin);
 
-            const req = client.request({
-                ':method': method,
-                ':path': url.pathname,
-                ...headers,
-            });
-            req.setEncoding('utf8');
+      const req = client.request({
+        ":method": method,
+        ":path": url.pathname,
+        ...headers,
+      });
+      req.setEncoding("utf8");
 
-            req.on('response', (headers) => {
-                const status = Number(headers[':status']);
+      req.on("response", (headers) => {
+        const status = Number(headers[":status"]);
 
-                if (status < 200 || status >= 300) {
-                    reject(new Error(`Request failed with status ${status}`));
-                }
-
-                let data = '';
-
-                req.on('data', (chunk) => {
-                    data += chunk;
-                });
-
-                req.on('end', () => {
-                    console.debug(data);
-                    resolve(data);
-                });
-            });
-
-            req.on('error', (err) => {
-                reject(err);
-            });
-
-            if (body) {
-                req.write(body);
-            }
-
-            req.end();
-        } catch (e) {
-            reject(e);
+        if (status < 200 || status >= 300) {
+          reject(new Error(`Request failed with status ${status}`));
         }
-    });
+
+        let data = "";
+
+        req.on("data", (chunk) => {
+          data += chunk;
+        });
+
+        req.on("end", () => {
+          console.debug(data);
+          resolve(data);
+        });
+      });
+
+      req.on("error", (err) => {
+        reject(err);
+      });
+
+      if (body) {
+        req.write(body);
+      }
+
+      req.end();
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
 
 /**
@@ -819,25 +824,25 @@ export function makeHttp2Request(endpoint, method, body, headers) {
  * @returns
  */
 export function mergeObjectWithYaml(obj, yamlString) {
-    if (!yamlString) {
-        return;
-    }
+  if (!yamlString) {
+    return;
+  }
 
-    try {
-        const parsedObject = yaml.parse(yamlString);
+  try {
+    const parsedObject = yaml.parse(yamlString);
 
-        if (Array.isArray(parsedObject)) {
-            for (const item of parsedObject) {
-                if (typeof item === 'object' && item && !Array.isArray(item)) {
-                    Object.assign(obj, item);
-                }
-            }
-        } else if (parsedObject && typeof parsedObject === 'object') {
-            Object.assign(obj, parsedObject);
+    if (Array.isArray(parsedObject)) {
+      for (const item of parsedObject) {
+        if (typeof item === "object" && item && !Array.isArray(item)) {
+          Object.assign(obj, item);
         }
-    } catch {
-        // Do nothing
+      }
+    } else if (parsedObject && typeof parsedObject === "object") {
+      Object.assign(obj, parsedObject);
     }
+  } catch {
+    // Do nothing
+  }
 }
 
 /**
@@ -847,27 +852,27 @@ export function mergeObjectWithYaml(obj, yamlString) {
  * @returns {void} Nothing
  */
 export function excludeKeysByYaml(obj, yamlString) {
-    if (!yamlString) {
-        return;
-    }
+  if (!yamlString) {
+    return;
+  }
 
-    try {
-        const parsedObject = yaml.parse(yamlString);
+  try {
+    const parsedObject = yaml.parse(yamlString);
 
-        if (Array.isArray(parsedObject)) {
-            parsedObject.forEach(key => {
-                delete obj[key];
-            });
-        } else if (typeof parsedObject === 'object') {
-            Object.keys(parsedObject).forEach(key => {
-                delete obj[key];
-            });
-        } else if (typeof parsedObject === 'string') {
-            delete obj[parsedObject];
-        }
-    } catch {
-        // Do nothing
+    if (Array.isArray(parsedObject)) {
+      parsedObject.forEach((key) => {
+        delete obj[key];
+      });
+    } else if (typeof parsedObject === "object") {
+      Object.keys(parsedObject).forEach((key) => {
+        delete obj[key];
+      });
+    } else if (typeof parsedObject === "string") {
+      delete obj[parsedObject];
     }
+  } catch {
+    // Do nothing
+  }
 }
 
 /**
@@ -876,7 +881,9 @@ export function excludeKeysByYaml(obj, yamlString) {
  * @returns {string} Trimmed string
  */
 export function trimV1(str) {
-    return String(str ?? '').replace(/\/$/, '').replace(/\/v1$/, '');
+  return String(str ?? "")
+    .replace(/\/$/, "")
+    .replace(/\/v1$/, "");
 }
 
 /**
@@ -885,65 +892,65 @@ export function trimV1(str) {
  * @returns {string} String with trailing slash removed
  */
 export function trimTrailingSlash(str) {
-    return String(str ?? '').replace(/\/$/, '');
+  return String(str ?? "").replace(/\/$/, "");
 }
 
 /**
  * Simple TTL memory cache.
  */
 export class Cache {
-    cache: Map<string, { value: any; expiry: number }>;
-    ttl: number;
+  cache: Map<string, { value: any; expiry: number }>;
+  ttl: number;
 
-    /**
-     * @param {number} ttl Time to live in milliseconds
-     */
-    constructor(ttl) {
-        this.cache = new Map();
-        this.ttl = ttl;
+  /**
+   * @param {number} ttl Time to live in milliseconds
+   */
+  constructor(ttl) {
+    this.cache = new Map();
+    this.ttl = ttl;
+  }
+
+  /**
+   * Gets a value from the cache.
+   * @param {string} key Cache key
+   */
+  get(key) {
+    const value = this.cache.get(key);
+    if (value?.expiry > Date.now()) {
+      return value.value;
     }
 
-    /**
-     * Gets a value from the cache.
-     * @param {string} key Cache key
-     */
-    get(key) {
-        const value = this.cache.get(key);
-        if (value?.expiry > Date.now()) {
-            return value.value;
-        }
+    // Cache miss or expired, remove the key
+    this.cache.delete(key);
+    return null;
+  }
 
-        // Cache miss or expired, remove the key
-        this.cache.delete(key);
-        return null;
-    }
+  /**
+   * Sets a value in the cache.
+   * @param {string} key Key
+   * @param {object} value Value
+   */
+  set(key, value) {
+    this.cache.set(key, {
+      value: value,
+      expiry: Date.now() + this.ttl,
+    });
+  }
 
-    /**
-     * Sets a value in the cache.
-     * @param {string} key Key
-     * @param {object} value Value
-     */
-    set(key, value) {
-        this.cache.set(key, {
-            value: value,
-            expiry: Date.now() + this.ttl,
-        });
-    }
+  /**
+   * Removes a value from the cache.
+   * @param {string} key Key
+   */
+  remove(key) {
+    this.cache.delete(key);
+  }
 
-    /**
-     * Removes a value from the cache.
-     * @param {string} key Key
-     */
-    remove(key) {
-        this.cache.delete(key);
-    }
-
-    /**
-     * Clears the cache.
-     */
-    clear() {
-        this.cache.clear();
-    }
+  /**
+   * Clears the cache.
+   */
+  clear() {
+    this.cache.clear();
+  }
 }
 
 /**
@@ -952,8 +959,8 @@ export class Cache {
  * @returns {string} Text without color formatting
  */
 export function removeColorFormatting(text) {
-    // ANSI escape codes for colors are usually in the format \x1b[<codes>m
-    return text.replace(/\x1b\[\d{1,2}(;\d{1,2})*m/g, '');
+  // ANSI escape codes for colors are usually in the format \x1b[<codes>m
+  return text.replace(/\x1b\[\d{1,2}(;\d{1,2})*m/g, "");
 }
 
 /**
@@ -962,7 +969,7 @@ export function removeColorFormatting(text) {
  * @returns {string} Separator string
  */
 export function getSeparator(n) {
-    return '='.repeat(n);
+  return "=".repeat(n);
 }
 
 /**
@@ -971,12 +978,12 @@ export function getSeparator(n) {
  * @returns {boolean} If the URL is valid
  */
 export function isValidUrl(url) {
-    try {
-        new URL(url);
-        return true;
-    } catch (error) {
-        return false;
-    }
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 /**
@@ -985,13 +992,13 @@ export function isValidUrl(url) {
  * @returns {string} hostname plus the modifications
  */
 export function urlHostnameToIPv6(hostname) {
-    if (hostname.startsWith('[')) {
-        hostname = hostname.slice(1);
-    }
-    if (hostname.endsWith(']')) {
-        hostname = hostname.slice(0, -1);
-    }
-    return hostname;
+  if (hostname.startsWith("[")) {
+    hostname = hostname.slice(1);
+  }
+  if (hostname.endsWith("]")) {
+    hostname = hostname.slice(0, -1);
+  }
+  return hostname;
 }
 
 /**
@@ -1002,32 +1009,32 @@ export function urlHostnameToIPv6(hostname) {
  * @returns Promise<boolean> If the URL is valid
  */
 export async function canResolve(name, useIPv6 = true, useIPv4 = true) {
-    try {
-        let v6Resolved = false;
-        let v4Resolved = false;
+  try {
+    let v6Resolved = false;
+    let v4Resolved = false;
 
-        if (useIPv6) {
-            try {
-                await dnsPromise.resolve6(name);
-                v6Resolved = true;
-            } catch (error) {
-                v6Resolved = false;
-            }
-        }
-
-        if (useIPv4) {
-            try {
-                await dnsPromise.resolve(name);
-                v4Resolved = true;
-            } catch (error) {
-                v4Resolved = false;
-            }
-        }
-
-        return v6Resolved || v4Resolved;
-    } catch (error) {
-        return false;
+    if (useIPv6) {
+      try {
+        await dnsPromise.resolve6(name);
+        v6Resolved = true;
+      } catch (error) {
+        v6Resolved = false;
+      }
     }
+
+    if (useIPv4) {
+      try {
+        await dnsPromise.resolve(name);
+        v4Resolved = true;
+      } catch (error) {
+        v4Resolved = false;
+      }
+    }
+
+    return v6Resolved || v4Resolved;
+  } catch (error) {
+    return false;
+  }
 }
 
 /**
@@ -1041,41 +1048,40 @@ export async function canResolve(name, useIPv6 = true, useIPv4 = true) {
  * @returns {Promise<IPQueryResult>} A promise that resolves to an array containing:
  */
 export async function getHasIP() {
-    let hasIPv6Any = false;
-    let hasIPv6Local = false;
+  let hasIPv6Any = false;
+  let hasIPv6Local = false;
 
-    let hasIPv4Any = false;
-    let hasIPv4Local = false;
+  let hasIPv4Any = false;
+  let hasIPv4Local = false;
 
-    const interfaces = os.networkInterfaces();
+  const interfaces = os.networkInterfaces();
 
-    for (const iface of Object.values(interfaces)) {
-        if (iface === undefined) {
-            continue;
-        }
-
-        for (const info of iface) {
-            if (info.family === 'IPv6') {
-                hasIPv6Any = true;
-                if (info.address === '::1') {
-                    hasIPv6Local = true;
-                }
-            }
-
-            if (info.family === 'IPv4') {
-                hasIPv4Any = true;
-                if (info.address === '127.0.0.1') {
-                    hasIPv4Local = true;
-                }
-            }
-            if (hasIPv6Any && hasIPv4Any && hasIPv6Local && hasIPv4Local) break;
-        }
-        if (hasIPv6Any && hasIPv4Any && hasIPv6Local && hasIPv4Local) break;
+  for (const iface of Object.values(interfaces)) {
+    if (iface === undefined) {
+      continue;
     }
 
-    return { hasIPv6Any, hasIPv4Any, hasIPv6Local, hasIPv4Local };
-}
+    for (const info of iface) {
+      if (info.family === "IPv6") {
+        hasIPv6Any = true;
+        if (info.address === "::1") {
+          hasIPv6Local = true;
+        }
+      }
 
+      if (info.family === "IPv4") {
+        hasIPv4Any = true;
+        if (info.address === "127.0.0.1") {
+          hasIPv4Local = true;
+        }
+      }
+      if (hasIPv6Any && hasIPv4Any && hasIPv6Local && hasIPv4Local) break;
+    }
+    if (hasIPv6Any && hasIPv4Any && hasIPv6Local && hasIPv4Local) break;
+  }
+
+  return { hasIPv6Any, hasIPv4Any, hasIPv6Local, hasIPv4Local };
+}
 
 /**
  * Converts various JavaScript primitives to boolean values.
@@ -1085,18 +1091,18 @@ export async function getHasIP() {
  * @returns {boolean} - The boolean representation of the value
  */
 export function toBoolean(value) {
-    // Handle string values case-insensitively
-    if (typeof value === 'string') {
-        // Trim and convert to lowercase for case-insensitive comparison
-        const trimmedLower = value.trim().toLowerCase();
+  // Handle string values case-insensitively
+  if (typeof value === "string") {
+    // Trim and convert to lowercase for case-insensitive comparison
+    const trimmedLower = value.trim().toLowerCase();
 
-        // Handle explicit "true"/"false" strings
-        if (trimmedLower === 'true') return true;
-        if (trimmedLower === 'false') return false;
-    }
+    // Handle explicit "true"/"false" strings
+    if (trimmedLower === "true") return true;
+    if (trimmedLower === "false") return false;
+  }
 
-    // Handle all other JavaScript values based on their "truthiness"
-    return Boolean(value);
+  // Handle all other JavaScript values based on their "truthiness"
+  return Boolean(value);
 }
 
 /**
@@ -1105,206 +1111,206 @@ export function toBoolean(value) {
  * @returns {boolean|string|null} boolean else original input string or null if input is
  */
 export function stringToBool(str) {
-    if (String(str).trim().toLowerCase() === 'true') return true;
-    if (String(str).trim().toLowerCase() === 'false') return false;
-    return str;
+  if (String(str).trim().toLowerCase() === "true") return true;
+  if (String(str).trim().toLowerCase() === "false") return false;
+  return str;
 }
 
 /**
  * Setup the minimum log level
  */
 export function setupLogLevel() {
-    const logLevel = getConfigValue('logging.minLogLevel', LOG_LEVELS.DEBUG, 'number');
+  const logLevel = getConfigValue("logging.minLogLevel", LOG_LEVELS.DEBUG, "number");
 
-    globalThis.console.debug = logLevel <= LOG_LEVELS.DEBUG ? console.debug : () => { };
-    globalThis.console.info = logLevel <= LOG_LEVELS.INFO ? console.info : () => { };
-    globalThis.console.warn = logLevel <= LOG_LEVELS.WARN ? console.warn : () => { };
-    globalThis.console.error = logLevel <= LOG_LEVELS.ERROR ? console.error : () => { };
+  globalThis.console.debug = logLevel <= LOG_LEVELS.DEBUG ? console.debug : () => {};
+  globalThis.console.info = logLevel <= LOG_LEVELS.INFO ? console.info : () => {};
+  globalThis.console.warn = logLevel <= LOG_LEVELS.WARN ? console.warn : () => {};
+  globalThis.console.error = logLevel <= LOG_LEVELS.ERROR ? console.error : () => {};
 }
 
 /**
  * MemoryLimitedMap class that limits the memory usage of string values.
  */
 export class MemoryLimitedMap {
-    maxMemory: number;
-    currentMemory: number;
-    map: Map<string, string>;
-    queue: string[];
+  maxMemory: number;
+  currentMemory: number;
+  map: Map<string, string>;
+  queue: string[];
 
-    /**
-     * Creates an instance of MemoryLimitedMap.
-     * @param {string} cacheCapacity - Maximum memory usage in human-readable format (e.g., '1 GB').
-     */
-    constructor(cacheCapacity) {
-        this.maxMemory = bytes.parse(cacheCapacity) ?? 0;
-        this.currentMemory = 0;
-        this.map = new Map();
-        this.queue = [];
+  /**
+   * Creates an instance of MemoryLimitedMap.
+   * @param {string} cacheCapacity - Maximum memory usage in human-readable format (e.g., '1 GB').
+   */
+  constructor(cacheCapacity) {
+    this.maxMemory = bytes.parse(cacheCapacity) ?? 0;
+    this.currentMemory = 0;
+    this.map = new Map();
+    this.queue = [];
+  }
+
+  /**
+   * Estimates the memory usage of a string in bytes.
+   * Assumes each character occupies 2 bytes (UTF-16).
+   * @param {string} str
+   * @returns {number}
+   */
+  static estimateStringSize(str) {
+    return str ? str.length * 2 : 0;
+  }
+
+  /**
+   * Adds or updates a key-value pair in the map.
+   * If adding the new value exceeds the memory limit, evicts oldest entries.
+   * @param {string} key
+   * @param {string} value
+   */
+  set(key, value) {
+    if (this.maxMemory <= 0) {
+      return;
     }
 
-    /**
-     * Estimates the memory usage of a string in bytes.
-     * Assumes each character occupies 2 bytes (UTF-16).
-     * @param {string} str
-     * @returns {number}
-     */
-    static estimateStringSize(str) {
-        return str ? str.length * 2 : 0;
+    if (typeof key !== "string" || typeof value !== "string") {
+      return;
     }
 
-    /**
-     * Adds or updates a key-value pair in the map.
-     * If adding the new value exceeds the memory limit, evicts oldest entries.
-     * @param {string} key
-     * @param {string} value
-     */
-    set(key, value) {
-        if (this.maxMemory <= 0) {
-            return;
-        }
+    const newValueSize = MemoryLimitedMap.estimateStringSize(value);
 
-        if (typeof key !== 'string' || typeof value !== 'string') {
-            return;
-        }
-
-        const newValueSize = MemoryLimitedMap.estimateStringSize(value);
-
-        // If the new value itself exceeds the max memory, reject it
-        if (newValueSize > this.maxMemory) {
-            return;
-        }
-
-        // Check if the key already exists to adjust memory accordingly
-        if (this.map.has(key)) {
-            const oldValue = this.map.get(key);
-            const oldValueSize = MemoryLimitedMap.estimateStringSize(oldValue);
-            this.currentMemory -= oldValueSize;
-            // Remove the key from its current position in the queue
-            const index = this.queue.indexOf(key);
-            if (index > -1) {
-                this.queue.splice(index, 1);
-            }
-        }
-
-        // Evict oldest entries until there's enough space
-        while (this.currentMemory + newValueSize > this.maxMemory && this.queue.length > 0) {
-            const oldestKey = this.queue.shift();
-            const oldestValue = this.map.get(oldestKey);
-            const oldestValueSize = MemoryLimitedMap.estimateStringSize(oldestValue);
-            this.map.delete(oldestKey);
-            this.currentMemory -= oldestValueSize;
-        }
-
-        // After eviction, check again if there's enough space
-        if (this.currentMemory + newValueSize > this.maxMemory) {
-            return;
-        }
-
-        // Add the new key-value pair
-        this.map.set(key, value);
-        this.queue.push(key);
-        this.currentMemory += newValueSize;
+    // If the new value itself exceeds the max memory, reject it
+    if (newValueSize > this.maxMemory) {
+      return;
     }
 
-    /**
-     * Retrieves the value associated with the given key.
-     * @param {string} key
-     * @returns {string | undefined}
-     */
-    get(key) {
-        return this.map.get(key);
+    // Check if the key already exists to adjust memory accordingly
+    if (this.map.has(key)) {
+      const oldValue = this.map.get(key);
+      const oldValueSize = MemoryLimitedMap.estimateStringSize(oldValue);
+      this.currentMemory -= oldValueSize;
+      // Remove the key from its current position in the queue
+      const index = this.queue.indexOf(key);
+      if (index > -1) {
+        this.queue.splice(index, 1);
+      }
     }
 
-    /**
-     * Checks if the map contains the given key.
-     * @param {string} key
-     * @returns {boolean}
-     */
-    has(key) {
-        return this.map.has(key);
+    // Evict oldest entries until there's enough space
+    while (this.currentMemory + newValueSize > this.maxMemory && this.queue.length > 0) {
+      const oldestKey = this.queue.shift();
+      const oldestValue = this.map.get(oldestKey);
+      const oldestValueSize = MemoryLimitedMap.estimateStringSize(oldestValue);
+      this.map.delete(oldestKey);
+      this.currentMemory -= oldestValueSize;
     }
 
-    /**
-     * Deletes the key-value pair associated with the given key.
-     * @param {string} key
-     * @returns {boolean} - Returns true if the key was found and deleted, else false.
-     */
-    delete(key) {
-        if (!this.map.has(key)) {
-            return false;
-        }
-        const value = this.map.get(key);
-        const valueSize = MemoryLimitedMap.estimateStringSize(value);
-        this.map.delete(key);
-        this.currentMemory -= valueSize;
-
-        // Remove the key from the queue
-        const index = this.queue.indexOf(key);
-        if (index > -1) {
-            this.queue.splice(index, 1);
-        }
-
-        return true;
+    // After eviction, check again if there's enough space
+    if (this.currentMemory + newValueSize > this.maxMemory) {
+      return;
     }
 
-    /**
-     * Clears all entries from the map.
-     */
-    clear() {
-        this.map.clear();
-        this.queue = [];
-        this.currentMemory = 0;
+    // Add the new key-value pair
+    this.map.set(key, value);
+    this.queue.push(key);
+    this.currentMemory += newValueSize;
+  }
+
+  /**
+   * Retrieves the value associated with the given key.
+   * @param {string} key
+   * @returns {string | undefined}
+   */
+  get(key) {
+    return this.map.get(key);
+  }
+
+  /**
+   * Checks if the map contains the given key.
+   * @param {string} key
+   * @returns {boolean}
+   */
+  has(key) {
+    return this.map.has(key);
+  }
+
+  /**
+   * Deletes the key-value pair associated with the given key.
+   * @param {string} key
+   * @returns {boolean} - Returns true if the key was found and deleted, else false.
+   */
+  delete(key) {
+    if (!this.map.has(key)) {
+      return false;
+    }
+    const value = this.map.get(key);
+    const valueSize = MemoryLimitedMap.estimateStringSize(value);
+    this.map.delete(key);
+    this.currentMemory -= valueSize;
+
+    // Remove the key from the queue
+    const index = this.queue.indexOf(key);
+    if (index > -1) {
+      this.queue.splice(index, 1);
     }
 
-    /**
-     * Returns the number of key-value pairs in the map.
-     * @returns {number}
-     */
-    size() {
-        return this.map.size;
-    }
+    return true;
+  }
 
-    /**
-     * Returns the current memory usage in bytes.
-     * @returns {number}
-     */
-    totalMemory() {
-        return this.currentMemory;
-    }
+  /**
+   * Clears all entries from the map.
+   */
+  clear() {
+    this.map.clear();
+    this.queue = [];
+    this.currentMemory = 0;
+  }
 
-    /**
-     * Returns an iterator over the keys in the map.
-     * @returns {IterableIterator<string>}
-     */
-    keys() {
-        return this.map.keys();
-    }
+  /**
+   * Returns the number of key-value pairs in the map.
+   * @returns {number}
+   */
+  size() {
+    return this.map.size;
+  }
 
-    /**
-     * Returns an iterator over the values in the map.
-     * @returns {IterableIterator<string>}
-     */
-    values() {
-        return this.map.values();
-    }
+  /**
+   * Returns the current memory usage in bytes.
+   * @returns {number}
+   */
+  totalMemory() {
+    return this.currentMemory;
+  }
 
-    /**
-     * Iterates over the map in insertion order.
-     * @param {Function} callback - Function to execute for each element.
-     */
-    forEach(callback) {
-        this.map.forEach((value, key) => {
-            callback(value, key, this);
-        });
-    }
+  /**
+   * Returns an iterator over the keys in the map.
+   * @returns {IterableIterator<string>}
+   */
+  keys() {
+    return this.map.keys();
+  }
 
-    /**
-     * Makes the MemoryLimitedMap iterable.
-     * @returns {Iterator} - Iterator over [key, value] pairs.
-     */
-    [Symbol.iterator]() {
-        return this.map[Symbol.iterator]();
-    }
+  /**
+   * Returns an iterator over the values in the map.
+   * @returns {IterableIterator<string>}
+   */
+  values() {
+    return this.map.values();
+  }
+
+  /**
+   * Iterates over the map in insertion order.
+   * @param {Function} callback - Function to execute for each element.
+   */
+  forEach(callback) {
+    this.map.forEach((value, key) => {
+      callback(value, key, this);
+    });
+  }
+
+  /**
+   * Makes the MemoryLimitedMap iterable.
+   * @returns {Iterator} - Iterator over [key, value] pairs.
+   */
+  [Symbol.iterator]() {
+    return this.map[Symbol.iterator]();
+  }
 }
 
 /**
@@ -1313,9 +1319,9 @@ export class MemoryLimitedMap {
  * @param {Parameters<typeof fs.readFileSync>[1]} options Options object to pass through to `fs.readFileSync()` (default: `{ encoding: 'utf-8' }`).
  * @returns The contents at `filePath` if it exists, or `null` if not.
  */
-export function safeReadFileSync(filePath: string, options: any = { encoding: 'utf-8' }) {
-    if (fs.existsSync(filePath)) return fs.readFileSync(filePath, options);
-    return null;
+export function safeReadFileSync(filePath: string, options: any = { encoding: "utf-8" }) {
+  if (fs.existsSync(filePath)) return fs.readFileSync(filePath, options);
+  return null;
 }
 
 /**
@@ -1323,11 +1329,11 @@ export function safeReadFileSync(filePath: string, options: any = { encoding: 'u
  * @param {string} title Desired title for the window
  */
 export function setWindowTitle(title) {
-    if (process.platform === 'win32') {
-        process.title = title;
-    } else {
-        process.stdout.write(`\x1b]2;${title}\x1b\x5c`);
-    }
+  if (process.platform === "win32") {
+    process.title = title;
+  } else {
+    process.stdout.write(`\x1b]2;${title}\x1b\x5c`);
+  }
 }
 
 /**
@@ -1337,14 +1343,14 @@ export function setWindowTitle(title) {
  * @returns {string} Mutated JSON string
  */
 export function mutateJsonString(jsonString, mutation) {
-    try {
-        const json = JSON.parse(jsonString);
-        mutation(json);
-        return JSON.stringify(json);
-    } catch (error) {
-        console.error('Error parsing or mutating JSON:', error);
-        return jsonString;
-    }
+  try {
+    const json = JSON.parse(jsonString);
+    mutation(json);
+    return JSON.stringify(json);
+  } catch (error) {
+    console.error("Error parsing or mutating JSON:", error);
+    return jsonString;
+  }
 }
 
 /**
@@ -1352,35 +1358,35 @@ export function mutateJsonString(jsonString, mutation) {
  * @param {string} targetPath Path to the file or directory
  */
 export function setPermissionsSync(targetPath) {
-    /**
-     * Appends writable permission to the file mode.
-     * @param {string} filePath Path to the file
-     * @param {fs.Stats} stats File stats
-     */
-    function appendWritablePermission(filePath, stats) {
-        const currentMode = stats.mode;
-        const newMode = currentMode | 0o200;
-        if (newMode != currentMode) {
-            fs.chmodSync(filePath, newMode);
-        }
+  /**
+   * Appends writable permission to the file mode.
+   * @param {string} filePath Path to the file
+   * @param {fs.Stats} stats File stats
+   */
+  function appendWritablePermission(filePath, stats) {
+    const currentMode = stats.mode;
+    const newMode = currentMode | 0o200;
+    if (newMode != currentMode) {
+      fs.chmodSync(filePath, newMode);
     }
+  }
 
-    try {
-        const stats = fs.statSync(targetPath);
+  try {
+    const stats = fs.statSync(targetPath);
 
-        if (stats.isDirectory()) {
-            appendWritablePermission(targetPath, stats);
-            const files = fs.readdirSync(targetPath);
+    if (stats.isDirectory()) {
+      appendWritablePermission(targetPath, stats);
+      const files = fs.readdirSync(targetPath);
 
-            files.forEach((file) => {
-                setPermissionsSync(path.join(targetPath, file));
-            });
-        } else {
-            appendWritablePermission(targetPath, stats);
-        }
-    } catch (error) {
-        console.error(`Error setting write permissions for ${targetPath}:`, error);
+      files.forEach((file) => {
+        setPermissionsSync(path.join(targetPath, file));
+      });
+    } else {
+      appendWritablePermission(targetPath, stats);
     }
+  } catch (error) {
+    console.error(`Error setting write permissions for ${targetPath}:`, error);
+  }
 }
 
 /**
@@ -1390,12 +1396,12 @@ export function setPermissionsSync(targetPath) {
  * @returns {boolean} Returns true if the child path is under the parent path, false otherwise
  */
 export function isPathUnderParent(parentPath, childPath) {
-    const normalizedParent = path.normalize(parentPath);
-    const normalizedChild = path.normalize(childPath);
+  const normalizedParent = path.normalize(parentPath);
+  const normalizedChild = path.normalize(childPath);
 
-    const relativePath = path.relative(normalizedParent, normalizedChild);
+  const relativePath = path.relative(normalizedParent, normalizedChild);
 
-    return relativePath !== '..' && !relativePath.startsWith('..' + path.sep) && !path.isAbsolute(relativePath);
+  return relativePath !== ".." && !relativePath.startsWith(".." + path.sep) && !path.isAbsolute(relativePath);
 }
 
 /**
@@ -1404,16 +1410,16 @@ export function isPathUnderParent(parentPath, childPath) {
  * @return {boolean} Returns true if the request is a file URL, false otherwise
  */
 export function isFileURL(request) {
-    if (typeof request === 'string') {
-        return request.startsWith('file://');
-    }
-    if (request instanceof URL) {
-        return request.protocol === 'file:';
-    }
-    if (request instanceof Request) {
-        return request.url.startsWith('file://');
-    }
-    return false;
+  if (typeof request === "string") {
+    return request.startsWith("file://");
+  }
+  if (request instanceof URL) {
+    return request.protocol === "file:";
+  }
+  if (request instanceof Request) {
+    return request.url.startsWith("file://");
+  }
+  return false;
 }
 
 /**
@@ -1422,16 +1428,16 @@ export function isFileURL(request) {
  * @return {string} The URL of the request
  */
 export function getRequestURL(request) {
-    if (typeof request === 'string') {
-        return request;
-    }
-    if (request instanceof URL) {
-        return request.href;
-    }
-    if (request instanceof Request) {
-        return request.url;
-    }
-    throw new TypeError('Invalid request type');
+  if (typeof request === "string") {
+    return request;
+  }
+  if (request instanceof URL) {
+    return request.href;
+  }
+  if (request instanceof Request) {
+    return request.url;
+  }
+  throw new TypeError("Invalid request type");
 }
 
 /**
@@ -1442,53 +1448,53 @@ export function getRequestURL(request) {
  * @returns {object} The flattened and simplified schema.
  */
 export function flattenSchema(schema, api) {
-    if (!schema || typeof schema !== 'object') {
-        return schema;
+  if (!schema || typeof schema !== "object") {
+    return schema;
+  }
+
+  const schemaCopy = structuredClone(schema);
+  const isGoogleApi = [CHAT_COMPLETION_SOURCES.VERTEXAI, CHAT_COMPLETION_SOURCES.MAKERSUITE].includes(api);
+
+  const definitions = schemaCopy.$defs || {};
+  delete schemaCopy.$defs;
+
+  function resolve(obj, parents = []) {
+    if (!obj || typeof obj !== "object") {
+      return obj;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map((item) => resolve(item, parents));
     }
 
-    const schemaCopy = structuredClone(schema);
-    const isGoogleApi = [CHAT_COMPLETION_SOURCES.VERTEXAI, CHAT_COMPLETION_SOURCES.MAKERSUITE].includes(api);
-
-    const definitions = schemaCopy.$defs || {};
-    delete schemaCopy.$defs;
-
-    function resolve(obj, parents = []) {
-        if (!obj || typeof obj !== 'object') {
-            return obj;
-        }
-        if (Array.isArray(obj)) {
-            return obj.map(item => resolve(item, parents));
-        }
-
-        // 1. Resolve $refs first
-        if (obj.$ref?.startsWith('#/$defs/')) {
-            const defName = obj.$ref.split('/').pop();
-            if (parents.includes(defName)) return {}; // Prevent infinite recursion
-            if (definitions[defName]) {
-                return resolve(structuredClone(definitions[defName]), [...parents, defName]);
-            }
-            return {}; // Broken reference
-        }
-
-        // 2. Process the object's properties
-        const result = {};
-        for (const key in obj) {
-            if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
-
-            // For Google, filter unsupported top-level keywords
-            if (isGoogleApi && ['default', 'additionalProperties', 'exclusiveMinimum', 'propertyNames'].includes(key)) {
-                continue;
-            }
-
-            result[key] = resolve(obj[key], parents);
-        }
-
-        return result;
+    // 1. Resolve $refs first
+    if (obj.$ref?.startsWith("#/$defs/")) {
+      const defName = obj.$ref.split("/").pop();
+      if (parents.includes(defName)) return {}; // Prevent infinite recursion
+      if (definitions[defName]) {
+        return resolve(structuredClone(definitions[defName]), [...parents, defName]);
+      }
+      return {}; // Broken reference
     }
 
-    const flattenedSchema = resolve(schemaCopy);
-    delete flattenedSchema.$schema;
-    return flattenedSchema;
+    // 2. Process the object's properties
+    const result = {};
+    for (const key in obj) {
+      if (!Object.hasOwn(obj, key)) continue;
+
+      // For Google, filter unsupported top-level keywords
+      if (isGoogleApi && ["default", "additionalProperties", "exclusiveMinimum", "propertyNames"].includes(key)) {
+        continue;
+      }
+
+      result[key] = resolve(obj[key], parents);
+    }
+
+    return result;
+  }
+
+  const flattenedSchema = resolve(schemaCopy);
+  delete flattenedSchema.$schema;
+  return flattenedSchema;
 }
 
 /**
@@ -1497,44 +1503,44 @@ export function flattenSchema(schema, api) {
  * @param {string} data
  */
 export function tryWriteFileSync(filePath, data) {
-    const directory = path.dirname(filePath);
-    //Ensure the directory exists.
-    if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory, { recursive: true });
-    }
-    writeFileAtomicSync(filePath, data, 'utf8');
+  const directory = path.dirname(filePath);
+  //Ensure the directory exists.
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+  writeFileAtomicSync(filePath, data, "utf8");
 }
 
 /**
-* Attempts to read a file as utf8.
-* @param {string} filePath
-* @returns {string|null}
-*/
+ * Attempts to read a file as utf8.
+ * @param {string} filePath
+ * @returns {string|null}
+ */
 export function tryReadFileSync(filePath) {
-    try {
-        if (fs.existsSync(filePath)) {
-            return fs.readFileSync(filePath, 'utf8');
-        }
-    } catch (error) {
-        console.error(`Error reading ${filePath}: ${error.message}`);
+  try {
+    if (fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath, "utf8");
     }
-    return null;
+  } catch (error) {
+    console.error(`Error reading ${filePath}: ${error.message}`);
+  }
+  return null;
 }
 
 /**
-* Attempts to delete a file.
-* @param {string} filePath Target file.
-* @returns {boolean} Returns true if the file was found and deleted.
-*/
+ * Attempts to delete a file.
+ * @param {string} filePath Target file.
+ * @returns {boolean} Returns true if the file was found and deleted.
+ */
 export function tryDeleteFile(filePath) {
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        console.info(`Deleted file: ${filePath}`);
-        return true;
-    } else {
-        console.error(`File not found '${filePath}'`);
-        return false;
-    }
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+    console.info(`Deleted file: ${filePath}`);
+    return true;
+  } else {
+    console.error(`File not found '${filePath}'`);
+    return false;
+  }
 }
 
 /**
@@ -1543,30 +1549,30 @@ export function tryDeleteFile(filePath) {
  * @returns {Promise<string>} The first line of the file
  */
 export function readFirstLine(filePath) {
-    const stream = fs.createReadStream(filePath, { encoding: 'utf8' });
-    const rl = readline.createInterface({ input: stream });
-    return new Promise((resolve, reject) => {
-        let resolved = false;
-        rl.on('line', line => {
-            resolved = true;
-            rl.close();
-            stream.close();
-            resolve(line);
-        });
-
-        rl.on('error', error => {
-            resolved = true;
-            reject(error);
-        });
-
-        // Handle empty files
-        stream.on('end', () => {
-            if (!resolved) {
-                resolved = true;
-                resolve('');
-            }
-        });
+  const stream = fs.createReadStream(filePath, { encoding: "utf8" });
+  const rl = readline.createInterface({ input: stream });
+  return new Promise((resolve, reject) => {
+    let resolved = false;
+    rl.on("line", (line) => {
+      resolved = true;
+      rl.close();
+      stream.close();
+      resolve(line);
     });
+
+    rl.on("error", (error) => {
+      resolved = true;
+      reject(error);
+    });
+
+    // Handle empty files
+    stream.on("end", () => {
+      if (!resolved) {
+        resolved = true;
+        resolve("");
+      }
+    });
+  });
 }
 
 /**
@@ -1578,8 +1584,8 @@ export function readFirstLine(filePath) {
  * @param {import('express').Response} response Response object
  */
 export function invalidateFirefoxCache(file, request, response) {
-    const mimeType = isFirefox(request) && mime.lookup(file);
-    if (mimeType && mimeType.startsWith('image/')) {
-        response.setHeader('Cache-Control', 'must-understand, no-store');
-    }
+  const mimeType = isFirefox(request) && mime.lookup(file);
+  if (mimeType && mimeType.startsWith("image/")) {
+    response.setHeader("Cache-Control", "must-understand, no-store");
+  }
 }

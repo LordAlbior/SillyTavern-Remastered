@@ -1,11 +1,15 @@
-import { disableExtension, enableExtension, extensionNames, findExtension } from './extensions.ts';
-import { SlashCommand } from './slash-commands/SlashCommand.ts';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
-import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
-import { isFalseBoolean, isTrueBoolean } from './utils.ts';
+import { disableExtension, enableExtension, extensionNames, findExtension } from "./extensions.ts";
+import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import {
+  ARGUMENT_TYPE,
+  SlashCommandArgument,
+  SlashCommandNamedArgument,
+} from "./slash-commands/SlashCommandArgument.ts";
+import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure.ts";
+import { commonEnumProviders } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
+import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
+import { isFalseBoolean, isTrueBoolean } from "./utils.ts";
 
 /**
  * @param {'enable' | 'disable' | 'toggle'} action - The action to perform on the extension
@@ -13,60 +17,64 @@ import { isFalseBoolean, isTrueBoolean } from './utils.ts';
  * @returns {(args: NamedArgumentsAssignment, extensionName: string | SlashCommandClosure) => Promise<string>}
  */
 function getExtensionActionCallback(action) {
-    return async (args, extensionName) => {
-        if (args?.reload instanceof SlashCommandClosure) throw new Error('\'reload\' argument cannot be a closure.');
-        if (typeof extensionName !== 'string') throw new Error('Extension name must be a string. Closures or arrays are not allowed.');
-        if (!extensionName) {
-            toastr.warning(`Extension name must be provided as an argument to ${action} this extension.`);
-            return '';
-        }
+  return async (args, extensionName) => {
+    if (args?.reload instanceof SlashCommandClosure) throw new Error("'reload' argument cannot be a closure.");
+    if (typeof extensionName !== "string")
+      throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
+    if (!extensionName) {
+      toastr.warning(`Extension name must be provided as an argument to ${action} this extension.`);
+      return "";
+    }
 
-        const reload = !isFalseBoolean(args?.reload?.toString());
-        const extension = findExtension(extensionName);
-        if (!extension) {
-            toastr.warning(`Extension ${extensionName} does not exist.`);
-            return '';
-        }
+    const reload = !isFalseBoolean(args?.reload?.toString());
+    const extension = findExtension(extensionName);
+    if (!extension) {
+      toastr.warning(`Extension ${extensionName} does not exist.`);
+      return "";
+    }
 
-        if (action === 'enable' && extension.enabled) {
-            toastr.info(`Extension ${extension.name} is already enabled.`);
-            return extension.name;
-        }
+    if (action === "enable" && extension.enabled) {
+      toastr.info(`Extension ${extension.name} is already enabled.`);
+      return extension.name;
+    }
 
-        if (action === 'disable' && !extension.enabled) {
-            toastr.info(`Extension ${extension.name} is already disabled.`);
-            return extension.name;
-        }
+    if (action === "disable" && !extension.enabled) {
+      toastr.info(`Extension ${extension.name} is already disabled.`);
+      return extension.name;
+    }
 
-        if (action === 'toggle') {
-            action = extension.enabled ? 'disable' : 'enable';
-        }
+    if (action === "toggle") {
+      action = extension.enabled ? "disable" : "enable";
+    }
 
-        if (reload) {
-            toastr.info(`${action.charAt(0).toUpperCase() + action.slice(1)}ing extension ${extension.name} and reloading...`);
+    if (reload) {
+      toastr.info(
+        `${action.charAt(0).toUpperCase() + action.slice(1)}ing extension ${extension.name} and reloading...`,
+      );
 
-            // Clear input, so it doesn't stay because the command didn't "finish",
-            // and wait for a bit to both show the toast and let the clear bubble through.
-            $('#send_textarea').val('')[0].dispatchEvent(new Event('input', { bubbles: true }));
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
+      // Clear input, so it doesn't stay because the command didn't "finish",
+      // and wait for a bit to both show the toast and let the clear bubble through.
+      $("#send_textarea")
+        .val("")[0]
+        .dispatchEvent(new Event("input", { bubbles: true }));
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
 
-        if (action === 'enable') {
-            await enableExtension(extension.name, reload);
-        } else {
-            await disableExtension(extension.name, reload);
-        }
+    if (action === "enable") {
+      await enableExtension(extension.name, reload);
+    } else {
+      await disableExtension(extension.name, reload);
+    }
 
-        toastr.success(`Extension ${extension.name} ${action}d.`);
+    toastr.success(`Extension ${extension.name} ${action}d.`);
 
+    console.info(`Extension ${action}ed: ${extension.name}`);
+    if (!reload) {
+      console.info("Reload not requested, so page needs to be reloaded manually for changes to take effect.");
+    }
 
-        console.info(`Extension ${action}ed: ${extension.name}`);
-        if (!reload) {
-            console.info('Reload not requested, so page needs to be reloaded manually for changes to take effect.');
-        }
-
-        return extension.name;
-    };
+    return extension.name;
+  };
 }
 
 /**
@@ -75,39 +83,41 @@ function getExtensionActionCallback(action) {
  *
  * @returns {SlashCommandEnumValue[]} An array of SlashCommandEnumValue objects
  */
-const extensionNamesEnumProvider = () => extensionNames.map(name => {
-    const isThirdParty = name.startsWith('third-party/');
-    if (isThirdParty) name = name.slice('third-party/'.length);
+const extensionNamesEnumProvider = () =>
+  extensionNames.map((name) => {
+    const isThirdParty = name.startsWith("third-party/");
+    if (isThirdParty) name = name.slice("third-party/".length);
 
-    const description = isThirdParty ? 'third party extension' : null;
+    const description = isThirdParty ? "third party extension" : null;
 
     return new SlashCommandEnumValue(name, description, !isThirdParty ? enumTypes.name : enumTypes.enum);
-});
+  });
 
 export function registerExtensionSlashCommands() {
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'extension-enable',
-        callback: getExtensionActionCallback('enable'),
-        returns: 'The internal extension name',
-        namedArgumentList: [
-            SlashCommandNamedArgument.fromProps({
-                name: 'reload',
-                description: 'Whether to reload the page after enabling the extension',
-                typeList: [ARGUMENT_TYPE.BOOLEAN],
-                defaultValue: 'true',
-                enumList: commonEnumProviders.boolean('trueFalse')(),
-            }),
-        ],
-        unnamedArgumentList: [
-            SlashCommandArgument.fromProps({
-                description: 'Extension name',
-                typeList: [ARGUMENT_TYPE.STRING],
-                isRequired: true,
-                enumProvider: extensionNamesEnumProvider,
-                forceEnum: true,
-            }),
-        ],
-        helpString: `
+  SlashCommandParser.addCommandObject(
+    SlashCommand.fromProps({
+      name: "extension-enable",
+      callback: getExtensionActionCallback("enable"),
+      returns: "The internal extension name",
+      namedArgumentList: [
+        SlashCommandNamedArgument.fromProps({
+          name: "reload",
+          description: "Whether to reload the page after enabling the extension",
+          typeList: [ARGUMENT_TYPE.BOOLEAN],
+          defaultValue: "true",
+          enumList: commonEnumProviders.boolean("trueFalse")(),
+        }),
+      ],
+      unnamedArgumentList: [
+        SlashCommandArgument.fromProps({
+          description: "Extension name",
+          typeList: [ARGUMENT_TYPE.STRING],
+          isRequired: true,
+          enumProvider: extensionNamesEnumProvider,
+          forceEnum: true,
+        }),
+      ],
+      helpString: `
             <div>
                 Enables a specified extension.
             </div>
@@ -125,30 +135,32 @@ export function registerExtensionSlashCommands() {
                 </ul>
             </div>
         `,
-    }));
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'extension-disable',
-        callback: getExtensionActionCallback('disable'),
-        returns: 'The internal extension name',
-        namedArgumentList: [
-            SlashCommandNamedArgument.fromProps({
-                name: 'reload',
-                description: 'Whether to reload the page after disabling the extension',
-                typeList: [ARGUMENT_TYPE.BOOLEAN],
-                defaultValue: 'true',
-                enumList: commonEnumProviders.boolean('trueFalse')(),
-            }),
-        ],
-        unnamedArgumentList: [
-            SlashCommandArgument.fromProps({
-                description: 'Extension name',
-                typeList: [ARGUMENT_TYPE.STRING],
-                isRequired: true,
-                enumProvider: extensionNamesEnumProvider,
-                forceEnum: true,
-            }),
-        ],
-        helpString: `
+    }),
+  );
+  SlashCommandParser.addCommandObject(
+    SlashCommand.fromProps({
+      name: "extension-disable",
+      callback: getExtensionActionCallback("disable"),
+      returns: "The internal extension name",
+      namedArgumentList: [
+        SlashCommandNamedArgument.fromProps({
+          name: "reload",
+          description: "Whether to reload the page after disabling the extension",
+          typeList: [ARGUMENT_TYPE.BOOLEAN],
+          defaultValue: "true",
+          enumList: commonEnumProviders.boolean("trueFalse")(),
+        }),
+      ],
+      unnamedArgumentList: [
+        SlashCommandArgument.fromProps({
+          description: "Extension name",
+          typeList: [ARGUMENT_TYPE.STRING],
+          isRequired: true,
+          enumProvider: extensionNamesEnumProvider,
+          forceEnum: true,
+        }),
+      ],
+      helpString: `
             <div>
                 Disables a specified extension.
             </div>
@@ -166,45 +178,51 @@ export function registerExtensionSlashCommands() {
                 </ul>
             </div>
         `,
-    }));
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'extension-toggle',
-        callback: async (args, extensionName) => {
-            if (args?.state instanceof SlashCommandClosure) throw new Error('\'state\' argument cannot be a closure.');
-            if (typeof extensionName !== 'string') throw new Error('Extension name must be a string. Closures or arrays are not allowed.');
+    }),
+  );
+  SlashCommandParser.addCommandObject(
+    SlashCommand.fromProps({
+      name: "extension-toggle",
+      callback: async (args, extensionName) => {
+        if (args?.state instanceof SlashCommandClosure) throw new Error("'state' argument cannot be a closure.");
+        if (typeof extensionName !== "string")
+          throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
 
-            const action = isTrueBoolean(args?.state?.toString()) ? 'enable' :
-                isFalseBoolean(args?.state?.toString()) ? 'disable' :
-                    'toggle';
+        const action = isTrueBoolean(args?.state?.toString())
+          ? "enable"
+          : isFalseBoolean(args?.state?.toString())
+            ? "disable"
+            : "toggle";
 
-            return await getExtensionActionCallback(action)(args, extensionName);
-        },
-        returns: 'The internal extension name',
-        namedArgumentList: [
-            SlashCommandNamedArgument.fromProps({
-                name: 'reload',
-                description: 'Whether to reload the page after toggling the extension',
-                typeList: [ARGUMENT_TYPE.BOOLEAN],
-                defaultValue: 'true',
-                enumList: commonEnumProviders.boolean('trueFalse')(),
-            }),
-            SlashCommandNamedArgument.fromProps({
-                name: 'state',
-                description: 'Explicitly set the state of the extension (true to enable, false to disable). If not provided, the state will be toggled to the opposite of the current state.',
-                typeList: [ARGUMENT_TYPE.BOOLEAN],
-                enumList: commonEnumProviders.boolean('trueFalse')(),
-            }),
-        ],
-        unnamedArgumentList: [
-            SlashCommandArgument.fromProps({
-                description: 'Extension name',
-                typeList: [ARGUMENT_TYPE.STRING],
-                isRequired: true,
-                enumProvider: extensionNamesEnumProvider,
-                forceEnum: true,
-            }),
-        ],
-        helpString: `
+        return await getExtensionActionCallback(action)(args, extensionName);
+      },
+      returns: "The internal extension name",
+      namedArgumentList: [
+        SlashCommandNamedArgument.fromProps({
+          name: "reload",
+          description: "Whether to reload the page after toggling the extension",
+          typeList: [ARGUMENT_TYPE.BOOLEAN],
+          defaultValue: "true",
+          enumList: commonEnumProviders.boolean("trueFalse")(),
+        }),
+        SlashCommandNamedArgument.fromProps({
+          name: "state",
+          description:
+            "Explicitly set the state of the extension (true to enable, false to disable). If not provided, the state will be toggled to the opposite of the current state.",
+          typeList: [ARGUMENT_TYPE.BOOLEAN],
+          enumList: commonEnumProviders.boolean("trueFalse")(),
+        }),
+      ],
+      unnamedArgumentList: [
+        SlashCommandArgument.fromProps({
+          description: "Extension name",
+          typeList: [ARGUMENT_TYPE.STRING],
+          isRequired: true,
+          enumProvider: extensionNamesEnumProvider,
+          forceEnum: true,
+        }),
+      ],
+      helpString: `
             <div>
                 Toggles the state of a specified extension.
             </div>
@@ -225,30 +243,33 @@ export function registerExtensionSlashCommands() {
                 </ul>
             </div>
         `,
-    }));
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'extension-state',
-        callback: async (_, extensionName) => {
-            if (typeof extensionName !== 'string') throw new Error('Extension name must be a string. Closures or arrays are not allowed.');
-            const extension = findExtension(extensionName);
-            if (!extension) {
-                toastr.warning(`Extension ${extensionName} does not exist.`);
-                return '';
-            }
+    }),
+  );
+  SlashCommandParser.addCommandObject(
+    SlashCommand.fromProps({
+      name: "extension-state",
+      callback: async (_, extensionName) => {
+        if (typeof extensionName !== "string")
+          throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
+        const extension = findExtension(extensionName);
+        if (!extension) {
+          toastr.warning(`Extension ${extensionName} does not exist.`);
+          return "";
+        }
 
-            return String(extension.enabled);
-        },
-        returns: 'The state of the extension, whether it is enabled.',
-        unnamedArgumentList: [
-            SlashCommandArgument.fromProps({
-                description: 'Extension name',
-                typeList: [ARGUMENT_TYPE.STRING],
-                isRequired: true,
-                enumProvider: extensionNamesEnumProvider,
-                forceEnum: true,
-            }),
-        ],
-        helpString: `
+        return String(extension.enabled);
+      },
+      returns: "The state of the extension, whether it is enabled.",
+      unnamedArgumentList: [
+        SlashCommandArgument.fromProps({
+          description: "Extension name",
+          typeList: [ARGUMENT_TYPE.STRING],
+          isRequired: true,
+          enumProvider: extensionNamesEnumProvider,
+          forceEnum: true,
+        }),
+      ],
+      helpString: `
             <div>
                 Returns the state of a specified extension (true if enabled, false if disabled).
             </div>
@@ -261,25 +282,28 @@ export function registerExtensionSlashCommands() {
                 </ul>
             </div>
         `,
-    }));
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'extension-exists',
-        aliases: ['extension-installed'],
-        callback: async (_, extensionName) => {
-            if (typeof extensionName !== 'string') throw new Error('Extension name must be a string. Closures or arrays are not allowed.');
-            const extension = findExtension(extensionName);
-            return extension !== null ? 'true' : 'false';
-        },
-        returns: 'Whether the extension exists and is installed.',
-        unnamedArgumentList: [
-            SlashCommandArgument.fromProps({
-                description: 'Extension name',
-                typeList: [ARGUMENT_TYPE.STRING],
-                isRequired: true,
-                enumProvider: extensionNamesEnumProvider,
-            }),
-        ],
-        helpString: `
+    }),
+  );
+  SlashCommandParser.addCommandObject(
+    SlashCommand.fromProps({
+      name: "extension-exists",
+      aliases: ["extension-installed"],
+      callback: async (_, extensionName) => {
+        if (typeof extensionName !== "string")
+          throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
+        const extension = findExtension(extensionName);
+        return extension !== null ? "true" : "false";
+      },
+      returns: "Whether the extension exists and is installed.",
+      unnamedArgumentList: [
+        SlashCommandArgument.fromProps({
+          description: "Extension name",
+          typeList: [ARGUMENT_TYPE.STRING],
+          isRequired: true,
+          enumProvider: extensionNamesEnumProvider,
+        }),
+      ],
+      helpString: `
             <div>
                 Checks if a specified extension exists.
             </div>
@@ -292,15 +316,18 @@ export function registerExtensionSlashCommands() {
                 </ul>
             </div>
         `,
-    }));
+    }),
+  );
 
-    SlashCommandParser.addCommandObject(SlashCommand.fromProps({
-        name: 'reload-page',
-        callback: async () => {
-            toastr.info('Reloading the page...');
-            location.reload();
-            return '';
-        },
-        helpString: 'Reloads the current page. All further commands will not be processed.',
-    }));
+  SlashCommandParser.addCommandObject(
+    SlashCommand.fromProps({
+      name: "reload-page",
+      callback: async () => {
+        toastr.info("Reloading the page...");
+        location.reload();
+        return "";
+      },
+      helpString: "Reloads the current page. All further commands will not be processed.",
+    }),
+  );
 }

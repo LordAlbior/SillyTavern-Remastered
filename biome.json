@@ -7,15 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "./.github",
-      "./colab",
-      "./default",
-      "./docker",
-      "./docs",
-      "./public",
-      "./js-to-ts-migration"
-    ]
+    "includes": ["**", "!.github", "!colab", "!default", "!docker", "!docs", "!public", "!js-to-ts-migration"]
   },
   "formatter": {
     "enabled": true,
@@ -56,15 +48,21 @@
         "useNodejsImportProtocol": "off",
         "noNonNullAssertion": "warn",
         "useConst": "error",
-        "useShorthandArrayType": "error",
-        "useTemplate": "warn",
-        "noVar": "error"
+        "useConsistentArrayType": "error",
+        "useTemplate": "warn"
       },
       "suspicious": {
         "noExplicitAny": "off",
         "noDoubleEquals": "error",
         "noSparseArray": "error",
-        "noRedundantUseStrict": "error"
+        "noRedundantUseStrict": "error",
+        "noVar": "error",
+        "noImportCycles": {
+          "level": "error",
+          "options": {
+            "ignoreTypes": true
+          }
+        }
       }
     }
   },
@@ -102,5 +100,3 @@
     }
   }
 }
-
-

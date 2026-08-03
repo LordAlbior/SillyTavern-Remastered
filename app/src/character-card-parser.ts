@@ -1,9 +1,9 @@
-import fs from 'node:fs';
-import { Buffer } from 'node:buffer';
+import fs from "node:fs";
+import { Buffer } from "node:buffer";
 
-import encode from './png/encode.ts';
-import extract from 'png-chunks-extract';
-import PNGtext from 'png-chunk-text';
+import encode from "./png/encode.ts";
+import extract from "png-chunks-extract";
+import PNGtext from "png-chunk-text";
 
 /**
  * Writes Character metadata to a PNG image buffer.
@@ -14,35 +14,35 @@ import PNGtext from 'png-chunk-text';
  * @returns PNG image buffer with metadata
  */
 export const write = (image: Buffer, data: string): Buffer => {
-    const chunks = extract(new Uint8Array(image));
-    const tEXtChunks = chunks.filter(chunk => chunk.name === 'tEXt');
+  const chunks = extract(new Uint8Array(image));
+  const tEXtChunks = chunks.filter((chunk) => chunk.name === "tEXt");
 
-    // Remove existing tEXt chunks
-    for (const tEXtChunk of tEXtChunks) {
-        const data = PNGtext.decode(tEXtChunk.data);
-        if (data.keyword.toLowerCase() === 'chara' || data.keyword.toLowerCase() === 'ccv3') {
-            chunks.splice(chunks.indexOf(tEXtChunk), 1);
-        }
+  // Remove existing tEXt chunks
+  for (const tEXtChunk of tEXtChunks) {
+    const data = PNGtext.decode(tEXtChunk.data);
+    if (data.keyword.toLowerCase() === "chara" || data.keyword.toLowerCase() === "ccv3") {
+      chunks.splice(chunks.indexOf(tEXtChunk), 1);
     }
+  }
 
-    // Add new v2 chunk before the IEND chunk
-    const base64EncodedData = Buffer.from(data, 'utf8').toString('base64');
-    chunks.splice(-1, 0, PNGtext.encode('chara', base64EncodedData));
+  // Add new v2 chunk before the IEND chunk
+  const base64EncodedData = Buffer.from(data, "utf8").toString("base64");
+  chunks.splice(-1, 0, PNGtext.encode("chara", base64EncodedData));
 
-    // Try adding v3 chunk before the IEND chunk
-    try {
-        //change v2 format to v3
-        const v3Data = JSON.parse(data) as { spec: string; spec_version: string };
-        v3Data.spec = 'chara_card_v3';
-        v3Data.spec_version = '3.0';
+  // Try adding v3 chunk before the IEND chunk
+  try {
+    //change v2 format to v3
+    const v3Data = JSON.parse(data) as { spec: string; spec_version: string };
+    v3Data.spec = "chara_card_v3";
+    v3Data.spec_version = "3.0";
 
-        const base64EncodedData = Buffer.from(JSON.stringify(v3Data), 'utf8').toString('base64');
-        chunks.splice(-1, 0, PNGtext.encode('ccv3', base64EncodedData));
-    } catch {
-        // Ignore errors when adding v3 chunk
-    }
+    const base64EncodedData = Buffer.from(JSON.stringify(v3Data), "utf8").toString("base64");
+    chunks.splice(-1, 0, PNGtext.encode("ccv3", base64EncodedData));
+  } catch {
+    // Ignore errors when adding v3 chunk
+  }
 
-    return Buffer.from(encode(chunks));
+  return Buffer.from(encode(chunks));
 };
 
 /**
@@ -53,29 +53,29 @@ export const write = (image: Buffer, data: string): Buffer => {
  * @returns Character data
  */
 export const read = (image: Buffer): string => {
-    const chunks = extract(new Uint8Array(image));
+  const chunks = extract(new Uint8Array(image));
 
-    const textChunks = chunks.filter((chunk) => chunk.name === 'tEXt').map((chunk) => PNGtext.decode(chunk.data));
+  const textChunks = chunks.filter((chunk) => chunk.name === "tEXt").map((chunk) => PNGtext.decode(chunk.data));
 
-    if (textChunks.length === 0) {
-        console.error('PNG metadata does not contain any text chunks.');
-        throw new Error('No PNG metadata.');
-    }
+  if (textChunks.length === 0) {
+    console.error("PNG metadata does not contain any text chunks.");
+    throw new Error("No PNG metadata.");
+  }
 
-    const ccv3Index = textChunks.findIndex((chunk) => chunk.keyword.toLowerCase() === 'ccv3');
+  const ccv3Index = textChunks.findIndex((chunk) => chunk.keyword.toLowerCase() === "ccv3");
 
-    if (ccv3Index > -1) {
-        return Buffer.from(textChunks[ccv3Index].text, 'base64').toString('utf8');
-    }
+  if (ccv3Index > -1) {
+    return Buffer.from(textChunks[ccv3Index].text, "base64").toString("utf8");
+  }
 
-    const charaIndex = textChunks.findIndex((chunk) => chunk.keyword.toLowerCase() === 'chara');
+  const charaIndex = textChunks.findIndex((chunk) => chunk.keyword.toLowerCase() === "chara");
 
-    if (charaIndex > -1) {
-        return Buffer.from(textChunks[charaIndex].text, 'base64').toString('utf8');
-    }
+  if (charaIndex > -1) {
+    return Buffer.from(textChunks[charaIndex].text, "base64").toString("utf8");
+  }
 
-    console.error('PNG metadata does not contain any character data.');
-    throw new Error('No PNG metadata.');
+  console.error("PNG metadata does not contain any character data.");
+  throw new Error("No PNG metadata.");
 };
 
 /**
@@ -86,14 +86,14 @@ export const read = (image: Buffer): string => {
  * @returns Character data
  */
 export const parse = async (cardUrl: string, format?: string): Promise<string> => {
-    const fileFormat = format === undefined ? 'png' : format;
+  const fileFormat = format === undefined ? "png" : format;
 
-    switch (fileFormat) {
-        case 'png': {
-            const buffer = fs.readFileSync(cardUrl);
-            return read(buffer);
-        }
+  switch (fileFormat) {
+    case "png": {
+      const buffer = fs.readFileSync(cardUrl);
+      return read(buffer);
     }
+  }
 
-    throw new Error('Unsupported format');
+  throw new Error("Unsupported format");
 };

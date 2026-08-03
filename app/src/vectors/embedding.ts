@@ -1,5 +1,5 @@
-import { getPipeline } from '../transformers.ts';
-const TASK = 'feature-extraction';
+import { getPipeline } from "../transformers.ts";
+const TASK = "feature-extraction";
 
 /**
  * Gets the vectorized text in form of an array of numbers.
@@ -7,10 +7,10 @@ const TASK = 'feature-extraction';
  * @returns {Promise<number[]>} - The vectorized text in form of an array of numbers
  */
 export async function getTransformersVector(text) {
-    const pipe = await getPipeline(TASK);
-    const result = await pipe(text, { pooling: 'mean', normalize: true });
-    const vector = Array.from(result.data);
-    return vector;
+  const pipe = await getPipeline(TASK);
+  const result = await pipe(text, { pooling: "mean", normalize: true });
+  const vector = Array.from(result.data);
+  return vector;
 }
 
 /**
@@ -19,9 +19,9 @@ export async function getTransformersVector(text) {
  * @returns {Promise<number[][]>} - The vectorized texts in form of an array of arrays of numbers
  */
 export async function getTransformersBatchVector(texts) {
-    const result = [];
-    for (const text of texts) {
-        result.push(await getTransformersVector(text));
-    }
-    return result;
+  const result = [];
+  for (const text of texts) {
+    result.push(await getTransformersVector(text));
+  }
+  return result;
 }

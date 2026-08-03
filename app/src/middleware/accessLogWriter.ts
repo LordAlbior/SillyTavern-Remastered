@@ -1,29 +1,29 @@
-import path from 'node:path';
-import fs from 'node:fs';
-import { getIpAddress } from '../express-common.ts';
-import { color, getConfigValue } from '../util.ts';
+import path from "node:path";
+import fs from "node:fs";
+import { getIpAddress } from "../express-common.ts";
+import { color, getConfigValue } from "../util.ts";
 
-const enableAccessLog = getConfigValue('logging.enableAccessLog', true, 'boolean');
+const enableAccessLog = getConfigValue("logging.enableAccessLog", true, "boolean");
 
 const knownIPs = new Set();
 
-export const getAccessLogPath = () => path.join(globalThis.DATA_ROOT, 'access.log');
+export const getAccessLogPath = () => path.join(globalThis.DATA_ROOT, "access.log");
 
 export function migrateAccessLog() {
-    try {
-        if (!fs.existsSync('access.log')) {
-            return;
-        }
-        const logPath = getAccessLogPath();
-        if (fs.existsSync(logPath)) {
-            return;
-        }
-        fs.renameSync('access.log', logPath);
-        console.log(color.yellow('Migrated access.log to new location:'), logPath);
-    } catch (e) {
-        console.error('Failed to migrate access log:', e);
-        console.info('Please move access.log to the data directory manually.');
+  try {
+    if (!fs.existsSync("access.log")) {
+      return;
     }
+    const logPath = getAccessLogPath();
+    if (fs.existsSync(logPath)) {
+      return;
+    }
+    fs.renameSync("access.log", logPath);
+    console.log(color.yellow("Migrated access.log to new location:"), logPath);
+  } catch (e) {
+    console.error("Failed to migrate access log:", e);
+    console.info("Please move access.log to the data directory manually.");
+  }
 }
 
 /**
@@ -31,29 +31,29 @@ export function migrateAccessLog() {
  * @returns {import('express').RequestHandler}
  */
 export default function accessLoggerMiddleware() {
-    return function (req, res, next) {
-        const clientIp = getIpAddress(req, true);
-        const userAgent = req.headers['user-agent'];
+  return (req, res, next) => {
+    const clientIp = getIpAddress(req, true);
+    const userAgent = req.headers["user-agent"];
 
-        if (!knownIPs.has(clientIp)) {
-            // Log new connection
-            knownIPs.add(clientIp);
+    if (!knownIPs.has(clientIp)) {
+      // Log new connection
+      knownIPs.add(clientIp);
 
-            // Write to access log if enabled
-            if (enableAccessLog) {
-                console.info(color.yellow(`New connection from ${clientIp}; User Agent: ${userAgent}\n`));
-                const logPath = getAccessLogPath();
-                const timestamp = new Date().toISOString();
-                const log = `${timestamp} ${clientIp} ${userAgent}\n`;
+      // Write to access log if enabled
+      if (enableAccessLog) {
+        console.info(color.yellow(`New connection from ${clientIp}; User Agent: ${userAgent}\n`));
+        const logPath = getAccessLogPath();
+        const timestamp = new Date().toISOString();
+        const log = `${timestamp} ${clientIp} ${userAgent}\n`;
 
-                fs.appendFile(logPath, log, (err) => {
-                    if (err) {
-                        console.error('Failed to write access log:', err);
-                    }
-                });
-            }
-        }
+        fs.appendFile(logPath, log, (err) => {
+          if (err) {
+            console.error("Failed to write access log:", err);
+          }
+        });
+      }
+    }
 
-        next();
-    };
+    next();
+  };
 }

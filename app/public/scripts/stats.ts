@@ -1,10 +1,10 @@
 // statsHelper.js
-import { moment } from '../lib.js';
-import { getRequestHeaders, characters, this_chid } from '../script.ts';
-import { humanizeGenTime } from './RossAscends-mods.ts';
-import { callGenericPopup, POPUP_TYPE } from './popup.ts';
-import { registerDebugFunction } from './power-user.ts';
-import { t, translate } from './i18n.ts';
+import { moment } from "../lib.js";
+import { getRequestHeaders, characters, this_chid } from "../script.ts";
+import { humanizeGenTime } from "./RossAscends-mods.ts";
+import { callGenericPopup, POPUP_TYPE } from "./popup.ts";
+import { registerDebugFunction } from "./power-user.ts";
+import { t, translate } from "./i18n.ts";
 
 let charStats: Record<string, any> = {};
 
@@ -16,7 +16,7 @@ let charStats: Record<string, any> = {};
  * @returns {string} - An HTML string representing the stat block.
  */
 function createStatBlock(statName, statValue) {
-    return `<div class="rm_stat_block">
+  return `<div class="rm_stat_block">
                 <div class="rm_stat_name">${statName}:</div>
                 <div class="rm_stat_value">${statValue}</div>
             </div>`;
@@ -29,7 +29,7 @@ function createStatBlock(statName, statValue) {
  * @returns {number} - The stat value if it is a number, otherwise 0.
  */
 function verifyStatValue(stat) {
-    return isNaN(Number(stat)) ? 0 : Number(stat);
+  return isNaN(Number(stat)) ? 0 : Number(stat);
 }
 
 /**
@@ -38,46 +38,34 @@ function verifyStatValue(stat) {
  * @returns {Object} - Object containing total statistics.
  */
 function calculateTotalStats() {
-    let totalStats = {
-        total_gen_time: 0,
-        user_msg_count: 0,
-        non_user_msg_count: 0,
-        user_word_count: 0,
-        non_user_word_count: 0,
-        total_swipe_count: 0,
-        date_last_chat: 0,
-        date_first_chat: new Date('9999-12-31T23:59:59.999Z').getTime(),
-    };
+  const totalStats = {
+    total_gen_time: 0,
+    user_msg_count: 0,
+    non_user_msg_count: 0,
+    user_word_count: 0,
+    non_user_word_count: 0,
+    total_swipe_count: 0,
+    date_last_chat: 0,
+    date_first_chat: new Date("9999-12-31T23:59:59.999Z").getTime(),
+  };
 
-    for (let stats of Object.values(charStats)) {
-        totalStats.total_gen_time += verifyStatValue(stats.total_gen_time);
-        totalStats.user_msg_count += verifyStatValue(stats.user_msg_count);
-        totalStats.non_user_msg_count += verifyStatValue(
-            stats.non_user_msg_count,
-        );
-        totalStats.user_word_count += verifyStatValue(stats.user_word_count);
-        totalStats.non_user_word_count += verifyStatValue(
-            stats.non_user_word_count,
-        );
-        totalStats.total_swipe_count += verifyStatValue(
-            stats.total_swipe_count,
-        );
+  for (const stats of Object.values(charStats)) {
+    totalStats.total_gen_time += verifyStatValue(stats.total_gen_time);
+    totalStats.user_msg_count += verifyStatValue(stats.user_msg_count);
+    totalStats.non_user_msg_count += verifyStatValue(stats.non_user_msg_count);
+    totalStats.user_word_count += verifyStatValue(stats.user_word_count);
+    totalStats.non_user_word_count += verifyStatValue(stats.non_user_word_count);
+    totalStats.total_swipe_count += verifyStatValue(stats.total_swipe_count);
 
-        if (verifyStatValue(stats.date_last_chat) != 0) {
-            totalStats.date_last_chat = Math.max(
-                totalStats.date_last_chat,
-                stats.date_last_chat,
-            );
-        }
-        if (verifyStatValue(stats.date_first_chat) != 0) {
-            totalStats.date_first_chat = Math.min(
-                totalStats.date_first_chat,
-                stats.date_first_chat,
-            );
-        }
+    if (verifyStatValue(stats.date_last_chat) != 0) {
+      totalStats.date_last_chat = Math.max(totalStats.date_last_chat, stats.date_last_chat);
     }
+    if (verifyStatValue(stats.date_first_chat) != 0) {
+      totalStats.date_first_chat = Math.min(totalStats.date_first_chat, stats.date_first_chat);
+    }
+  }
 
-    return totalStats;
+  return totalStats;
 }
 
 /**
@@ -99,48 +87,43 @@ function calculateTotalStats() {
  *      total_swipe_count - total swipe count
  */
 function createHtml(statsType, stats) {
-    // Get time string
-    let timeStirng = humanizeGenTime(stats.total_gen_time);
-    let chatAge = 'Never';
-    if (stats.date_first_chat < Date.now()) {
-        chatAge = moment
-            .duration(stats.date_last_chat - stats.date_first_chat)
-            .humanize();
-    }
-    let statsTypeTranslated = translate(statsType, `stats_header_${statsType}`);
+  // Get time string
+  const timeStirng = humanizeGenTime(stats.total_gen_time);
+  let chatAge = "Never";
+  if (stats.date_first_chat < Date.now()) {
+    chatAge = moment.duration(stats.date_last_chat - stats.date_first_chat).humanize();
+  }
+  const statsTypeTranslated = translate(statsType, `stats_header_${statsType}`);
 
-    // Create popup HTML with stats
-    let html = '<h3>' + t`${statsTypeTranslated} Stats` + '</h3>';
-    if (statsType === 'User') {
-        html += createStatBlock(t`Chatting Since`, `${chatAge} ago`);
-    } else {
-        html += createStatBlock(t`First Interaction`, `${chatAge} ago`);
-    }
-    html += createStatBlock(t`Chat Time`, timeStirng);
-    html += createStatBlock(t`User Messages`, stats.user_msg_count);
-    html += createStatBlock(
-        t`Character Messages`,
-        stats.non_user_msg_count - stats.total_swipe_count,
-    );
-    html += createStatBlock(t`User Words`, stats.user_word_count);
-    html += createStatBlock(t`Character Words`, stats.non_user_word_count);
-    html += createStatBlock(t`Swipes`, stats.total_swipe_count);
+  // Create popup HTML with stats
+  let html = "<h3>" + t`${statsTypeTranslated} Stats` + "</h3>";
+  if (statsType === "User") {
+    html += createStatBlock(t`Chatting Since`, `${chatAge} ago`);
+  } else {
+    html += createStatBlock(t`First Interaction`, `${chatAge} ago`);
+  }
+  html += createStatBlock(t`Chat Time`, timeStirng);
+  html += createStatBlock(t`User Messages`, stats.user_msg_count);
+  html += createStatBlock(t`Character Messages`, stats.non_user_msg_count - stats.total_swipe_count);
+  html += createStatBlock(t`User Words`, stats.user_word_count);
+  html += createStatBlock(t`Character Words`, stats.non_user_word_count);
+  html += createStatBlock(t`Swipes`, stats.total_swipe_count);
 
-    return callGenericPopup(html, POPUP_TYPE.TEXT);
+  return callGenericPopup(html, POPUP_TYPE.TEXT);
 }
 
 /**
  * Handles the user stats by getting them from the server, calculating the total and generating the HTML report.
  */
 async function userStatsHandler() {
-    // Get stats from server
-    await getStats();
+  // Get stats from server
+  await getStats();
 
-    // Calculate total stats
-    let totalStats = calculateTotalStats();
+  // Calculate total stats
+  const totalStats = calculateTotalStats();
 
-    // Create HTML with stats
-    createHtml('User', totalStats);
+  // Create HTML with stats
+  createHtml("User", totalStats);
 }
 
 /**
@@ -150,44 +133,44 @@ async function userStatsHandler() {
  * @param {string} this_chid - The character id.
  */
 async function characterStatsHandler(characters, this_chid) {
-    // Get stats from server
-    await getStats();
-    // Get character stats
-    let myStats = charStats[characters[this_chid].avatar];
-    if (myStats === undefined) {
-        myStats = {
-            total_gen_time: 0,
-            user_msg_count: 0,
-            non_user_msg_count: 0,
-            user_word_count: 0,
-            non_user_word_count: countWords(characters[this_chid].first_mes),
-            total_swipe_count: 0,
-            date_last_chat: 0,
-            date_first_chat: new Date('9999-12-31T23:59:59.999Z').getTime(),
-        };
-        charStats[characters[this_chid].avatar] = myStats;
-        updateStats();
-    }
-    // Create HTML with stats
-    createHtml('Character', myStats);
+  // Get stats from server
+  await getStats();
+  // Get character stats
+  let myStats = charStats[characters[this_chid].avatar];
+  if (myStats === undefined) {
+    myStats = {
+      total_gen_time: 0,
+      user_msg_count: 0,
+      non_user_msg_count: 0,
+      user_word_count: 0,
+      non_user_word_count: countWords(characters[this_chid].first_mes),
+      total_swipe_count: 0,
+      date_last_chat: 0,
+      date_first_chat: new Date("9999-12-31T23:59:59.999Z").getTime(),
+    };
+    charStats[characters[this_chid].avatar] = myStats;
+    updateStats();
+  }
+  // Create HTML with stats
+  createHtml("Character", myStats);
 }
 
 /**
  * Fetches the character stats from the server.
  */
 async function getStats() {
-    const response = await fetch('/api/stats/get', {
-        method: 'POST',
-        headers: getRequestHeaders(),
-        body: JSON.stringify({}),
-        cache: 'no-cache',
-    });
+  const response = await fetch("/api/stats/get", {
+    method: "POST",
+    headers: getRequestHeaders(),
+    body: JSON.stringify({}),
+    cache: "no-cache",
+  });
 
-    if (!response.ok) {
-        toastr.error('Stats could not be loaded. Try reloading the page.');
-        throw new Error('Error getting stats');
-    }
-    charStats = await response.json();
+  if (!response.ok) {
+    toastr.error("Stats could not be loaded. Try reloading the page.");
+    throw new Error("Error getting stats");
+  }
+  charStats = await response.json();
 }
 
 /**
@@ -199,21 +182,20 @@ async function getStats() {
  * @throws {Error} If the request to recreate stats is unsuccessful.
  */
 async function recreateStats() {
-    const response = await fetch('/api/stats/recreate', {
-        method: 'POST',
-        headers: getRequestHeaders(),
-        body: JSON.stringify({}),
-        cache: 'no-cache',
-    });
+  const response = await fetch("/api/stats/recreate", {
+    method: "POST",
+    headers: getRequestHeaders(),
+    body: JSON.stringify({}),
+    cache: "no-cache",
+  });
 
-    if (!response.ok) {
-        toastr.error('Stats could not be loaded. Try reloading the page.');
-        throw new Error('Error getting stats');
-    } else {
-        toastr.success('Stats file recreated successfully!');
-    }
+  if (!response.ok) {
+    toastr.error("Stats could not be loaded. Try reloading the page.");
+    throw new Error("Error getting stats");
+  } else {
+    toastr.success("Stats file recreated successfully!");
+  }
 }
-
 
 /**
  * Calculates the generation time based on start and finish times.
@@ -223,28 +205,28 @@ async function recreateStats() {
  * @returns {number} - The difference in time in milliseconds.
  */
 function calculateGenTime(gen_started, gen_finished) {
-    if (gen_started === undefined || gen_finished === undefined) {
-        return 0;
-    }
-    let startDate = new Date(gen_started);
-    let endDate = new Date(gen_finished);
-    return endDate.getTime() - startDate.getTime();
+  if (gen_started === undefined || gen_finished === undefined) {
+    return 0;
+  }
+  const startDate = new Date(gen_started);
+  const endDate = new Date(gen_finished);
+  return endDate.getTime() - startDate.getTime();
 }
 
 /**
  * Sends a POST request to the server to update the statistics.
  */
 async function updateStats() {
-    const response = await fetch('/api/stats/update', {
-        method: 'POST',
-        headers: getRequestHeaders(),
-        body: JSON.stringify(charStats),
-    });
+  const response = await fetch("/api/stats/update", {
+    method: "POST",
+    headers: getRequestHeaders(),
+    body: JSON.stringify(charStats),
+  });
 
-    if (response.status !== 200) {
-        console.error('Failed to update stats');
-        console.log(response.status);
-    }
+  if (response.status !== 200) {
+    console.error("Failed to update stats");
+    console.log(response.status);
+  }
 }
 
 /**
@@ -255,8 +237,8 @@ async function updateStats() {
  * @returns {number} - Number of words.
  */
 function countWords(str) {
-    const match = str.match(/\b\w+\b/g);
-    return match ? match.length : 0;
+  const match = str.match(/\b\w+\b/g);
+  return match ? match.length : 0;
 }
 
 /**
@@ -269,66 +251,65 @@ function countWords(str) {
  * @param {string} oldMessage - The old message that's being processed.
  */
 async function statMesProcess(line, type, characters, this_chid, oldMessage) {
-    if (this_chid === undefined || characters[this_chid] === undefined) {
-        return;
-    }
-    await getStats();
+  if (this_chid === undefined || characters[this_chid] === undefined) {
+    return;
+  }
+  await getStats();
 
-    let stat = charStats[characters[this_chid].avatar];
+  let stat = charStats[characters[this_chid].avatar];
 
-    if (!stat) {
-        stat = {
-            total_gen_time: 0,
-            user_word_count: 0,
-            non_user_msg_count: 0,
-            user_msg_count: 0,
-            total_swipe_count: 0,
-            date_first_chat: Date.now(),
-            date_last_chat: Date.now(),
-        };
-    }
+  if (!stat) {
+    stat = {
+      total_gen_time: 0,
+      user_word_count: 0,
+      non_user_msg_count: 0,
+      user_msg_count: 0,
+      total_swipe_count: 0,
+      date_first_chat: Date.now(),
+      date_last_chat: Date.now(),
+    };
+  }
 
-    stat.total_gen_time += calculateGenTime(
-        line.gen_started,
-        line.gen_finished,
-    );
-    if (line.is_user) {
-        if (type != 'append' && type != 'continue' && type != 'appendFinal') {
-            stat.user_msg_count++;
-            stat.user_word_count += countWords(line.mes);
-        } else {
-            let oldLen = oldMessage.split(' ').length;
-            stat.user_word_count += countWords(line.mes) - oldLen;
-        }
+  stat.total_gen_time += calculateGenTime(line.gen_started, line.gen_finished);
+  if (line.is_user) {
+    if (type != "append" && type != "continue" && type != "appendFinal") {
+      stat.user_msg_count++;
+      stat.user_word_count += countWords(line.mes);
     } else {
-        // if continue, don't add a message, get the last message and subtract it from the word count of
-        // the new message
-        if (type != 'append' && type != 'continue' && type != 'appendFinal') {
-            stat.non_user_msg_count++;
-            stat.non_user_word_count += countWords(line.mes);
-        } else {
-            let oldLen = oldMessage.split(' ').length;
-            stat.non_user_word_count += countWords(line.mes) - oldLen;
-        }
+      const oldLen = oldMessage.split(" ").length;
+      stat.user_word_count += countWords(line.mes) - oldLen;
     }
+  } else {
+    // if continue, don't add a message, get the last message and subtract it from the word count of
+    // the new message
+    if (type != "append" && type != "continue" && type != "appendFinal") {
+      stat.non_user_msg_count++;
+      stat.non_user_word_count += countWords(line.mes);
+    } else {
+      const oldLen = oldMessage.split(" ").length;
+      stat.non_user_word_count += countWords(line.mes) - oldLen;
+    }
+  }
 
-    if (type === 'swipe') {
-        stat.total_swipe_count++;
-    }
-    stat.date_last_chat = Date.now();
-    stat.date_first_chat = Math.min(
-        stat.date_first_chat ?? new Date('9999-12-31T23:59:59.999Z').getTime(),
-        Date.now(),
-    );
-    updateStats();
+  if (type === "swipe") {
+    stat.total_swipe_count++;
+  }
+  stat.date_last_chat = Date.now();
+  stat.date_first_chat = Math.min(stat.date_first_chat ?? new Date("9999-12-31T23:59:59.999Z").getTime(), Date.now());
+  updateStats();
 }
 
 export function initStats() {
-    $('.rm_stats_button').on('click', function () {
-        characterStatsHandler(characters, this_chid);
-    });
-    // Wait for debug functions to load, then add the refresh stats function
-    registerDebugFunction('refreshStats', 'Refresh Stat File', 'Recreates the stats file based on existing chat files', recreateStats);
+  $(".rm_stats_button").on("click", () => {
+    characterStatsHandler(characters, this_chid);
+  });
+  // Wait for debug functions to load, then add the refresh stats function
+  registerDebugFunction(
+    "refreshStats",
+    "Refresh Stat File",
+    "Recreates the stats file based on existing chat files",
+    recreateStats,
+  );
 }
 
 export { userStatsHandler, characterStatsHandler, getStats, statMesProcess, charStats };

@@ -10,7 +10,7 @@ import { getContext } from './extensions.ts';
 import { characters, getRequestHeaders, processDroppedFiles, this_chid, user_avatar } from '../script.ts';
 import { isMobile } from './RossAscends-mods.ts';
 import { collapseNewlines, power_user } from './power-user.ts';
-import { debounce_timeout } from './constants.ts';
+import { compareIgnoreCaseAndAccents, debounce_timeout, sortIgnoreCaseAndAccents } from './constants.ts';
 import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
 import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
 import { getTagsList } from './tags.ts';
@@ -316,9 +316,7 @@ export function onlyUnique(value, index, array) {
  * @param {any[]} array The array being processed.
  * @returns {boolean} True if the value is unique, false otherwise.
  */
-export function onlyUniqueJson(value, index, array) {
-    return array.map(v => JSON.stringify(v)).indexOf(JSON.stringify(value)) === index;
-}
+export { onlyUniqueJson } from "./constants.ts";
 
 /**
  * Removes the first occurrence of a specified item from an array
@@ -2248,16 +2246,7 @@ export function runAfterAnimation(control, callback, timeout = 500) {
  * @returns {T} - The result of the comparison.
  * @template T
  */
-export function compareIgnoreCaseAndAccents(a, b, comparisonFunction) {
-    if (!a || !b) return comparisonFunction(a, b); // Return the comparison result if either string is empty
-
-    // Normalize and remove diacritics, then convert to lower case
-    const normalizedA = a.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    const normalizedB = b.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
-    // Check if the normalized strings are equal
-    return comparisonFunction(normalizedA, normalizedB);
-}
+export { compareIgnoreCaseAndAccents, sortIgnoreCaseAndAccents };
 
 /**
  * Performs a case-insensitive and accent-insensitive substring search.
@@ -2281,16 +2270,6 @@ export function includesIgnoreCaseAndAccents(text, searchTerm) {
  */
 export function equalsIgnoreCaseAndAccents(a, b) {
     return compareIgnoreCaseAndAccents(a, b, (a, b) => a === b);
-}
-
-/**
- * Performs a case-insensitive and accent-insensitive sort.
- * @param {string} a - The first string to compare
- * @param {string} b - The second string to compare
- * @returns {number} -1 if a < b, 1 if a > b, 0 if a === b
- */
-export function sortIgnoreCaseAndAccents(a, b) {
-    return compareIgnoreCaseAndAccents(a, b, (a, b) => a?.localeCompare(b));
 }
 
 /**

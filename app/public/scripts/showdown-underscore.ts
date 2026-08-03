@@ -9,7 +9,7 @@ export const markdownUnderscoreExt = () => {
         return [{
             type: 'output',
             regex: new RegExp('(<code(?:\\s+[^>]*)?>[\\s\\S]*?<\\/code>|<style(?:\\s+[^>]*)?>[\\s\\S]*?<\\/style>)|\\b(?<!_)_(?!_)(.*?)(?<!_)_(?!_)\\b', 'gi'),
-            replace: function (match, tagContent, italicContent) {
+            replace: (match, tagContent, italicContent) => {
                 if (tagContent) {
                     // If it's inside <code> or <style> tags, return unchanged
                     return match;
@@ -29,7 +29,7 @@ export const markdownUnderscoreExt = () => {
 
 function canUseNegativeLookbehind() {
     try {
-        new RegExp('(?<!_)');
+        /(?<!_)/;
         return true;
     } catch (e) {
         return false;

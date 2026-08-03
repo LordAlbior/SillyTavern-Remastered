@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
-import { getGoogleApiConfig } from '../endpoints/google.ts';
+import fetch from "node-fetch";
+import { getGoogleApiConfig } from "../endpoints/google.ts";
 
 /**
  * Gets the vector for the given text from Google AI Studio
@@ -9,34 +9,34 @@ import { getGoogleApiConfig } from '../endpoints/google.ts';
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
 export async function getMakerSuiteBatchVector(texts, model, request) {
-    const { url, headers, apiName } = await getGoogleApiConfig(request, model, 'batchEmbedContents');
+  const { url, headers, apiName } = await getGoogleApiConfig(request, model, "batchEmbedContents");
 
-    const body = {
-        requests: texts.map(text => ({
-            model: `models/${model}`,
-            content: { parts: [{ text }] },
-        })),
-    };
+  const body = {
+    requests: texts.map((text) => ({
+      model: `models/${model}`,
+      content: { parts: [{ text }] },
+    })),
+  };
 
-    const response = await fetch(url, {
-        body: JSON.stringify(body),
-        method: 'POST',
-        headers: headers,
-    });
+  const response = await fetch(url, {
+    body: JSON.stringify(body),
+    method: "POST",
+    headers: headers,
+  });
 
-    if (!response.ok) {
-        const text = await response.text();
-        console.warn(`${apiName} batch request failed`, response.statusText, text);
-        throw new Error(`${apiName} batch request failed`);
-    }
+  if (!response.ok) {
+    const text = await response.text();
+    console.warn(`${apiName} batch request failed`, response.statusText, text);
+    throw new Error(`${apiName} batch request failed`);
+  }
 
-        const data: any = await response.json();
-    if (!Array.isArray(data?.embeddings)) {
-        throw new Error(`${apiName} did not return an array`);
-    }
+  const data: any = await response.json();
+  if (!Array.isArray(data?.embeddings)) {
+    throw new Error(`${apiName} did not return an array`);
+  }
 
-    const embeddings = data.embeddings.map(embedding => embedding.values);
-    return embeddings;
+  const embeddings = data.embeddings.map((embedding) => embedding.values);
+  return embeddings;
 }
 
 /**
@@ -47,31 +47,31 @@ export async function getMakerSuiteBatchVector(texts, model, request) {
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
 export async function getVertexBatchVector(texts, model, request) {
-    const { url, headers, apiName } = await getGoogleApiConfig(request, model, 'predict');
+  const { url, headers, apiName } = await getGoogleApiConfig(request, model, "predict");
 
-    const body = {
-        instances: texts.map(text => ({ content: text })),
-    };
+  const body = {
+    instances: texts.map((text) => ({ content: text })),
+  };
 
-    const response = await fetch(url, {
-        body: JSON.stringify(body),
-        method: 'POST',
-        headers: headers,
-    });
+  const response = await fetch(url, {
+    body: JSON.stringify(body),
+    method: "POST",
+    headers: headers,
+  });
 
-    if (!response.ok) {
-        const text = await response.text();
-        console.warn(`${apiName} batch request failed`, response.statusText, text);
-        throw new Error(`${apiName} batch request failed`);
-    }
+  if (!response.ok) {
+    const text = await response.text();
+    console.warn(`${apiName} batch request failed`, response.statusText, text);
+    throw new Error(`${apiName} batch request failed`);
+  }
 
-        const data: any = await response.json();
-    if (!Array.isArray(data?.predictions)) {
-        throw new Error(`${apiName} did not return an array`);
-    }
+  const data: any = await response.json();
+  if (!Array.isArray(data?.predictions)) {
+    throw new Error(`${apiName} did not return an array`);
+  }
 
-    const embeddings = data.predictions.map(p => p.embeddings.values);
-    return embeddings;
+  const embeddings = data.predictions.map((p) => p.embeddings.values);
+  return embeddings;
 }
 
 /**
@@ -82,8 +82,8 @@ export async function getVertexBatchVector(texts, model, request) {
  * @returns {Promise<number[]>} - The vector for the text
  */
 export async function getMakerSuiteVector(text, model, request) {
-    const [embedding] = await getMakerSuiteBatchVector([text], model, request);
-    return embedding;
+  const [embedding] = await getMakerSuiteBatchVector([text], model, request);
+  return embedding;
 }
 
 /**
@@ -94,6 +94,6 @@ export async function getMakerSuiteVector(text, model, request) {
  * @returns {Promise<number[]>} - The vector for the text
  */
 export async function getVertexVector(text, model, request) {
-    const [embedding] = await getVertexBatchVector([text], model, request);
-    return embedding;
+  const [embedding] = await getVertexBatchVector([text], model, request);
+  return embedding;
 }

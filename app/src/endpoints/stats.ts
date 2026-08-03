@@ -1,30 +1,30 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import crypto from 'node:crypto';
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
 
-import express from 'express';
-import writeFileAtomic from 'write-file-atomic';
+import express from "express";
+import writeFileAtomic from "write-file-atomic";
 
 const readFile = fs.promises.readFile;
 const readdir = fs.promises.readdir;
 
-import { getAllUserHandles, getUserDirectories } from '../users.ts';
+import { getAllUserHandles, getUserDirectories } from "../users.ts";
 
-const STATS_FILE = 'stats.json';
+const STATS_FILE = "stats.json";
 
 const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 /**
@@ -60,60 +60,72 @@ const TIMESTAMPS = new Map();
  * parseTimestamp("January 1, 2021 12:00am");
  */
 function parseTimestamp(timestamp) {
-    if (!timestamp) {
-        return 0;
-    }
-
-    // Date object
-    if (timestamp instanceof Date) {
-        return timestamp.getTime();
-    }
-
-    // Unix time
-    if (typeof timestamp === 'number' || /^\d+$/.test(timestamp)) {
-        const unixTime = Number(timestamp);
-        const isValid = Number.isFinite(unixTime) && !Number.isNaN(unixTime) && unixTime >= 0;
-        if (!isValid) return 0;
-        return new Date(unixTime).getTime();
-    }
-
-    // ISO 8601 format
-    const isoPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
-    if (isoPattern.test(timestamp)) {
-        return new Date(timestamp).getTime();
-    }
-
-    let dateFormats = [];
-
-    // meridiem-based format
-    const convertFromMeridiemBased = (_, month, day, year, hour, minute, meridiem) => {
-        const monthNum = monthNames.indexOf(month) + 1;
-        const hour24 = meridiem.toLowerCase() === 'pm' ? (parseInt(hour, 10) % 12) + 12 : parseInt(hour, 10) % 12;
-        return `${year}-${monthNum}-${day.padStart(2, '0')}T${hour24.toString().padStart(2, '0')}:${minute.padStart(2, '0')}:00`;
-    };
-    // June 19, 2023 2:20pm
-    dateFormats.push({ callback: convertFromMeridiemBased, pattern: /(\w+)\s(\d{1,2}),\s(\d{4})\s(\d{1,2}):(\d{1,2})(am|pm)/i });
-
-    // ST "humanized" format patterns
-    const convertFromHumanized = (_, year, month, day, hour, min, sec, ms) => {
-        ms = typeof ms !== 'undefined' ? `.${ms.padStart(3, '0')}` : '';
-        return `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${min.padStart(2, '0')}:${sec.padStart(2, '0')}${ms}Z`;
-    };
-    // 2024-07-12@01h31m37s123ms
-    dateFormats.push({ callback: convertFromHumanized, pattern: /(\d{4})-(\d{1,2})-(\d{1,2})@(\d{1,2})h(\d{1,2})m(\d{1,2})s(\d{1,3})ms/ });
-    // 2024-7-12@01h31m37s
-    dateFormats.push({ callback: convertFromHumanized, pattern: /(\d{4})-(\d{1,2})-(\d{1,2})@(\d{1,2})h(\d{1,2})m(\d{1,2})s/ });
-    // 2024-6-5 @14h 56m 50s 682ms
-    dateFormats.push({ callback: convertFromHumanized, pattern: /(\d{4})-(\d{1,2})-(\d{1,2}) @(\d{1,2})h (\d{1,2})m (\d{1,2})s (\d{1,3})ms/ });
-
-    for (const x of dateFormats) {
-        const rgxMatch = timestamp.match(x.pattern);
-        if (!rgxMatch) continue;
-        const isoTimestamp = x.callback(...rgxMatch);
-        return new Date(isoTimestamp).getTime();
-    }
-
+  if (!timestamp) {
     return 0;
+  }
+
+  // Date object
+  if (timestamp instanceof Date) {
+    return timestamp.getTime();
+  }
+
+  // Unix time
+  if (typeof timestamp === "number" || /^\d+$/.test(timestamp)) {
+    const unixTime = Number(timestamp);
+    const isValid = Number.isFinite(unixTime) && !Number.isNaN(unixTime) && unixTime >= 0;
+    if (!isValid) return 0;
+    return new Date(unixTime).getTime();
+  }
+
+  // ISO 8601 format
+  const isoPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+  if (isoPattern.test(timestamp)) {
+    return new Date(timestamp).getTime();
+  }
+
+  const dateFormats = [];
+
+  // meridiem-based format
+  const convertFromMeridiemBased = (_, month, day, year, hour, minute, meridiem) => {
+    const monthNum = monthNames.indexOf(month) + 1;
+    const hour24 = meridiem.toLowerCase() === "pm" ? (parseInt(hour, 10) % 12) + 12 : parseInt(hour, 10) % 12;
+    return `${year}-${monthNum}-${day.padStart(2, "0")}T${hour24.toString().padStart(2, "0")}:${minute.padStart(2, "0")}:00`;
+  };
+  // June 19, 2023 2:20pm
+  dateFormats.push({
+    callback: convertFromMeridiemBased,
+    pattern: /(\w+)\s(\d{1,2}),\s(\d{4})\s(\d{1,2}):(\d{1,2})(am|pm)/i,
+  });
+
+  // ST "humanized" format patterns
+  const convertFromHumanized = (_, year, month, day, hour, min, sec, ms) => {
+    ms = typeof ms !== "undefined" ? `.${ms.padStart(3, "0")}` : "";
+    return `${year.padStart(4, "0")}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${hour.padStart(2, "0")}:${min.padStart(2, "0")}:${sec.padStart(2, "0")}${ms}Z`;
+  };
+  // 2024-07-12@01h31m37s123ms
+  dateFormats.push({
+    callback: convertFromHumanized,
+    pattern: /(\d{4})-(\d{1,2})-(\d{1,2})@(\d{1,2})h(\d{1,2})m(\d{1,2})s(\d{1,3})ms/,
+  });
+  // 2024-7-12@01h31m37s
+  dateFormats.push({
+    callback: convertFromHumanized,
+    pattern: /(\d{4})-(\d{1,2})-(\d{1,2})@(\d{1,2})h(\d{1,2})m(\d{1,2})s/,
+  });
+  // 2024-6-5 @14h 56m 50s 682ms
+  dateFormats.push({
+    callback: convertFromHumanized,
+    pattern: /(\d{4})-(\d{1,2})-(\d{1,2}) @(\d{1,2})h (\d{1,2})m (\d{1,2})s (\d{1,3})ms/,
+  });
+
+  for (const x of dateFormats) {
+    const rgxMatch = timestamp.match(x.pattern);
+    if (!rgxMatch) continue;
+    const isoTimestamp = x.callback(...rgxMatch);
+    return new Date(isoTimestamp).getTime();
+  }
+
+  return 0;
 }
 
 /**
@@ -124,22 +136,20 @@ function parseTimestamp(timestamp) {
  * @returns {Promise<Object>} The aggregated stats object.
  */
 async function collectAndCreateStats(chatsPath, charactersPath) {
-    const files = await readdir(charactersPath);
+  const files = await readdir(charactersPath);
 
-    const pngFiles = files.filter((file) => file.endsWith('.png'));
+  const pngFiles = files.filter((file) => file.endsWith(".png"));
 
-    let processingPromises = pngFiles.map((file) =>
-        calculateStats(chatsPath, file),
-    );
-    const statsArr = await Promise.all(processingPromises);
+  const processingPromises = pngFiles.map((file) => calculateStats(chatsPath, file));
+  const statsArr = await Promise.all(processingPromises);
 
-    let finalStats: any = {};
-    for (let stat of statsArr) {
-        finalStats = { ...finalStats, ...stat };
-    }
-    // tag with timestamp on when stats were generated
-    finalStats.timestamp = Date.now();
-    return finalStats;
+  let finalStats: any = {};
+  for (const stat of statsArr) {
+    finalStats = { ...finalStats, ...stat };
+  }
+  // tag with timestamp on when stats were generated
+  finalStats.timestamp = Date.now();
+  return finalStats;
 }
 
 /**
@@ -149,10 +159,10 @@ async function collectAndCreateStats(chatsPath, charactersPath) {
  * @param {string} charactersPath Path to the directory containing the character files.
  */
 export async function recreateStats(handle, chatsPath, charactersPath) {
-    console.info('Collecting and creating stats for user:', handle);
-    const stats = await collectAndCreateStats(chatsPath, charactersPath);
-    STATS.set(handle, stats);
-    await saveStatsToFile();
+  console.info("Collecting and creating stats for user:", handle);
+  const stats = await collectAndCreateStats(chatsPath, charactersPath);
+  STATS.set(handle, stats);
+  await saveStatsToFile();
 }
 
 /**
@@ -160,51 +170,51 @@ export async function recreateStats(handle, chatsPath, charactersPath) {
  * initializes stats by collecting and creating them for each character.
  */
 export async function init() {
-    try {
-        const userHandles = await getAllUserHandles();
-        for (const handle of userHandles) {
-            const directories = getUserDirectories(handle);
-            try {
-                const statsFilePath = path.join(directories.root, STATS_FILE);
-                const statsFileContent = await readFile(statsFilePath, 'utf-8');
-                STATS.set(handle, JSON.parse(statsFileContent));
-            } catch (err) {
-                // If the file doesn't exist or is invalid, initialize stats
-                if (err.code === 'ENOENT' || err instanceof SyntaxError) {
-                    await recreateStats(handle, directories.chats, directories.characters);
-                } else {
-                    throw err; // Rethrow the error if it's something we didn't expect
-                }
-            }
+  try {
+    const userHandles = await getAllUserHandles();
+    for (const handle of userHandles) {
+      const directories = getUserDirectories(handle);
+      try {
+        const statsFilePath = path.join(directories.root, STATS_FILE);
+        const statsFileContent = await readFile(statsFilePath, "utf-8");
+        STATS.set(handle, JSON.parse(statsFileContent));
+      } catch (err) {
+        // If the file doesn't exist or is invalid, initialize stats
+        if (err.code === "ENOENT" || err instanceof SyntaxError) {
+          await recreateStats(handle, directories.chats, directories.characters);
+        } else {
+          throw err; // Rethrow the error if it's something we didn't expect
         }
-    } catch (err) {
-        console.error('Failed to initialize stats:', err);
+      }
     }
-    // Save stats every 5 minutes
-    setInterval(saveStatsToFile, 5 * 60 * 1000);
+  } catch (err) {
+    console.error("Failed to initialize stats:", err);
+  }
+  // Save stats every 5 minutes
+  setInterval(saveStatsToFile, 5 * 60 * 1000);
 }
 /**
  * Saves the current state of charStats to a file, only if the data has changed since the last save.
  */
 async function saveStatsToFile() {
-    const userHandles = await getAllUserHandles();
-    for (const handle of userHandles) {
-        if (!STATS.has(handle)) {
-            continue;
-        }
-        const charStats = STATS.get(handle);
-        const lastSaveTimestamp = TIMESTAMPS.get(handle) || 0;
-        if (charStats.timestamp > lastSaveTimestamp) {
-            try {
-                const directories = getUserDirectories(handle);
-                const statsFilePath = path.join(directories.root, STATS_FILE);
-                await writeFileAtomic(statsFilePath, JSON.stringify(charStats));
-                TIMESTAMPS.set(handle, Date.now());
-            } catch (error) {
-                console.error('Failed to save stats to file.', error);
-            }
-        }
+  const userHandles = await getAllUserHandles();
+  for (const handle of userHandles) {
+    if (!STATS.has(handle)) {
+      continue;
     }
+    const charStats = STATS.get(handle);
+    const lastSaveTimestamp = TIMESTAMPS.get(handle) || 0;
+    if (charStats.timestamp > lastSaveTimestamp) {
+      try {
+        const directories = getUserDirectories(handle);
+        const statsFilePath = path.join(directories.root, STATS_FILE);
+        await writeFileAtomic(statsFilePath, JSON.stringify(charStats));
+        TIMESTAMPS.set(handle, Date.now());
+      } catch (error) {
+        console.error("Failed to save stats to file.", error);
+      }
+    }
+  }
 }
 
 /**
@@ -212,11 +222,11 @@ async function saveStatsToFile() {
  * If an error occurs during the file write, it logs the error before exiting.
  */
 export async function onExit() {
-    try {
-        await saveStatsToFile();
-    } catch (err) {
-        console.error('Failed to write stats to file:', err);
-    }
+  try {
+    await saveStatsToFile();
+  } catch (err) {
+    console.error("Failed to write stats to file:", err);
+  }
 }
 
 /**
@@ -227,14 +237,14 @@ export async function onExit() {
  * @throws Will throw an error if the file cannot be read.
  */
 function readAndParseFile(filepath) {
-    try {
-        let file = fs.readFileSync(filepath, 'utf8');
-        let lines = file.split('\n');
-        return lines;
-    } catch (error) {
-        console.error(`Error reading file at ${filepath}: ${error}`);
-        return [];
-    }
+  try {
+    const file = fs.readFileSync(filepath, "utf8");
+    const lines = file.split("\n");
+    return lines;
+  } catch (error) {
+    console.error(`Error reading file at ${filepath}: ${error}`);
+    return [];
+  }
 }
 
 /**
@@ -245,9 +255,9 @@ function readAndParseFile(filepath) {
  * @returns {number} - The difference in time in milliseconds.
  */
 function calculateGenTime(gen_started, gen_finished) {
-    let startDate = new Date(gen_started);
-    let endDate = new Date(gen_finished);
-    return Number(endDate) - Number(startDate);
+  const startDate = new Date(gen_started);
+  const endDate = new Date(gen_finished);
+  return Number(endDate) - Number(startDate);
 }
 
 /**
@@ -257,8 +267,8 @@ function calculateGenTime(gen_started, gen_finished) {
  * @returns {number} - The number of words in the string.
  */
 function countWordsInString(str) {
-    const match = str.match(/\b\w+\b/g);
-    return match ? match.length : 0;
+  const match = str.match(/\b\w+\b/g);
+  return match ? match.length : 0;
 }
 
 /**
@@ -269,51 +279,41 @@ function countWordsInString(str) {
  * @return {object}          An object containing the calculated statistics.
  */
 const calculateStats = (chatsPath, item) => {
-    const chatDir = path.join(chatsPath, item.replace('.png', ''));
-    const stats = {
-        total_gen_time: 0,
-        user_word_count: 0,
-        non_user_word_count: 0,
-        user_msg_count: 0,
-        non_user_msg_count: 0,
-        total_swipe_count: 0,
-        chat_size: 0,
-        date_last_chat: 0,
-        date_first_chat: new Date('9999-12-31T23:59:59.999Z').getTime(),
-    };
-    let uniqueGenStartTimes = new Set();
+  const chatDir = path.join(chatsPath, item.replace(".png", ""));
+  const stats = {
+    total_gen_time: 0,
+    user_word_count: 0,
+    non_user_word_count: 0,
+    user_msg_count: 0,
+    non_user_msg_count: 0,
+    total_swipe_count: 0,
+    chat_size: 0,
+    date_last_chat: 0,
+    date_first_chat: new Date("9999-12-31T23:59:59.999Z").getTime(),
+  };
+  const uniqueGenStartTimes = new Set();
 
-    if (fs.existsSync(chatDir)) {
-        const chats = fs.readdirSync(chatDir);
-        if (Array.isArray(chats) && chats.length) {
-            for (const chat of chats) {
-                const result = calculateTotalGenTimeAndWordCount(
-                    chatDir,
-                    chat,
-                    uniqueGenStartTimes,
-                );
-                stats.total_gen_time += result.totalGenTime || 0;
-                stats.user_word_count += result.userWordCount || 0;
-                stats.non_user_word_count += result.nonUserWordCount || 0;
-                stats.user_msg_count += result.userMsgCount || 0;
-                stats.non_user_msg_count += result.nonUserMsgCount || 0;
-                stats.total_swipe_count += result.totalSwipeCount || 0;
+  if (fs.existsSync(chatDir)) {
+    const chats = fs.readdirSync(chatDir);
+    if (Array.isArray(chats) && chats.length) {
+      for (const chat of chats) {
+        const result = calculateTotalGenTimeAndWordCount(chatDir, chat, uniqueGenStartTimes);
+        stats.total_gen_time += result.totalGenTime || 0;
+        stats.user_word_count += result.userWordCount || 0;
+        stats.non_user_word_count += result.nonUserWordCount || 0;
+        stats.user_msg_count += result.userMsgCount || 0;
+        stats.non_user_msg_count += result.nonUserMsgCount || 0;
+        stats.total_swipe_count += result.totalSwipeCount || 0;
 
-                const chatStat = fs.statSync(path.join(chatDir, chat));
-                stats.chat_size += chatStat.size;
-                stats.date_last_chat = Math.max(
-                    stats.date_last_chat,
-                    Math.floor(chatStat.mtimeMs),
-                );
-                stats.date_first_chat = Math.min(
-                    stats.date_first_chat,
-                    result.firstChatTime,
-                );
-            }
-        }
+        const chatStat = fs.statSync(path.join(chatDir, chat));
+        stats.chat_size += chatStat.size;
+        stats.date_last_chat = Math.max(stats.date_last_chat, Math.floor(chatStat.mtimeMs));
+        stats.date_first_chat = Math.min(stats.date_first_chat, result.firstChatTime);
+      }
     }
+  }
 
-    return { [item]: stats };
+  return { [item]: stats };
 };
 
 /**
@@ -322,8 +322,8 @@ const calculateStats = (chatsPath, item) => {
  * @param {Object} stats - The new charStats object.
  **/
 function setCharStats(handle, stats) {
-    stats.timestamp = Date.now();
-    STATS.set(handle, stats);
+  stats.timestamp = Date.now();
+  STATS.set(handle, stats);
 }
 
 /**
@@ -334,106 +334,89 @@ function setCharStats(handle, stats) {
  * @returns {Object} - An object containing the total generation time, user word count, and non-user word count.
  * @throws Will throw an error if the file cannot be read or parsed.
  */
-function calculateTotalGenTimeAndWordCount(
-    chatDir,
-    chat,
-    uniqueGenStartTimes,
-) {
-    let filepath = path.join(chatDir, chat);
-    let lines = readAndParseFile(filepath);
+function calculateTotalGenTimeAndWordCount(chatDir, chat, uniqueGenStartTimes) {
+  const filepath = path.join(chatDir, chat);
+  const lines = readAndParseFile(filepath);
 
-    let totalGenTime = 0;
-    let userWordCount = 0;
-    let nonUserWordCount = 0;
-    let nonUserMsgCount = 0;
-    let userMsgCount = 0;
-    let totalSwipeCount = 0;
-    let firstChatTime = new Date('9999-12-31T23:59:59.999Z').getTime();
+  let totalGenTime = 0;
+  let userWordCount = 0;
+  let nonUserWordCount = 0;
+  let nonUserMsgCount = 0;
+  let userMsgCount = 0;
+  let totalSwipeCount = 0;
+  let firstChatTime = new Date("9999-12-31T23:59:59.999Z").getTime();
 
-    for (let line of lines) {
-        if (line.length) {
-            try {
-                let json = JSON.parse(line);
-                if (json.mes) {
-                    let hash = crypto
-                        .createHash('sha256')
-                        .update(json.mes)
-                        .digest('hex');
-                    if (uniqueGenStartTimes.has(hash)) {
-                        continue;
-                    }
-                    if (hash) {
-                        uniqueGenStartTimes.add(hash);
-                    }
-                }
-
-                if (json.gen_started && json.gen_finished) {
-                    let genTime = calculateGenTime(
-                        json.gen_started,
-                        json.gen_finished,
-                    );
-                    totalGenTime += genTime;
-
-                    if (json.swipes && !json.swipe_info) {
-                        // If there are swipes but no swipe_info, estimate the genTime
-                        totalGenTime += genTime * json.swipes.length;
-                    }
-                }
-
-                if (json.mes) {
-                    let wordCount = countWordsInString(json.mes);
-                    json.is_user
-                        ? (userWordCount += wordCount)
-                        : (nonUserWordCount += wordCount);
-                    json.is_user ? userMsgCount++ : nonUserMsgCount++;
-                }
-
-                if (json.swipes && json.swipes.length > 1) {
-                    totalSwipeCount += json.swipes.length - 1; // Subtract 1 to not count the first swipe
-                    for (let i = 1; i < json.swipes.length; i++) {
-                        // Start from the second swipe
-                        let swipeText = json.swipes[i];
-
-                        let wordCount = countWordsInString(swipeText);
-                        json.is_user
-                            ? (userWordCount += wordCount)
-                            : (nonUserWordCount += wordCount);
-                        json.is_user ? userMsgCount++ : nonUserMsgCount++;
-                    }
-                }
-
-                if (json.swipe_info && json.swipe_info.length > 1) {
-                    for (let i = 1; i < json.swipe_info.length; i++) {
-                        // Start from the second swipe
-                        let swipe = json.swipe_info[i];
-                        if (swipe.gen_started && swipe.gen_finished) {
-                            totalGenTime += calculateGenTime(
-                                swipe.gen_started,
-                                swipe.gen_finished,
-                            );
-                        }
-                    }
-                }
-
-                // If this is the first user message, set the first chat time
-                if (json.is_user) {
-                    //get min between firstChatTime and timestampToMoment(json.send_date)
-                    firstChatTime = Math.min(parseTimestamp(json.send_date), firstChatTime);
-                }
-            } catch (error) {
-                console.error(`Error parsing line ${line}: ${error}`);
-            }
+  for (const line of lines) {
+    if (line.length) {
+      try {
+        const json = JSON.parse(line);
+        if (json.mes) {
+          const hash = crypto.createHash("sha256").update(json.mes).digest("hex");
+          if (uniqueGenStartTimes.has(hash)) {
+            continue;
+          }
+          if (hash) {
+            uniqueGenStartTimes.add(hash);
+          }
         }
+
+        if (json.gen_started && json.gen_finished) {
+          const genTime = calculateGenTime(json.gen_started, json.gen_finished);
+          totalGenTime += genTime;
+
+          if (json.swipes && !json.swipe_info) {
+            // If there are swipes but no swipe_info, estimate the genTime
+            totalGenTime += genTime * json.swipes.length;
+          }
+        }
+
+        if (json.mes) {
+          const wordCount = countWordsInString(json.mes);
+          json.is_user ? (userWordCount += wordCount) : (nonUserWordCount += wordCount);
+          json.is_user ? userMsgCount++ : nonUserMsgCount++;
+        }
+
+        if (json.swipes && json.swipes.length > 1) {
+          totalSwipeCount += json.swipes.length - 1; // Subtract 1 to not count the first swipe
+          for (let i = 1; i < json.swipes.length; i++) {
+            // Start from the second swipe
+            const swipeText = json.swipes[i];
+
+            const wordCount = countWordsInString(swipeText);
+            json.is_user ? (userWordCount += wordCount) : (nonUserWordCount += wordCount);
+            json.is_user ? userMsgCount++ : nonUserMsgCount++;
+          }
+        }
+
+        if (json.swipe_info && json.swipe_info.length > 1) {
+          for (let i = 1; i < json.swipe_info.length; i++) {
+            // Start from the second swipe
+            const swipe = json.swipe_info[i];
+            if (swipe.gen_started && swipe.gen_finished) {
+              totalGenTime += calculateGenTime(swipe.gen_started, swipe.gen_finished);
+            }
+          }
+        }
+
+        // If this is the first user message, set the first chat time
+        if (json.is_user) {
+          //get min between firstChatTime and timestampToMoment(json.send_date)
+          firstChatTime = Math.min(parseTimestamp(json.send_date), firstChatTime);
+        }
+      } catch (error) {
+        console.error(`Error parsing line ${line}: ${error}`);
+      }
     }
-    return {
-        totalGenTime,
-        userWordCount,
-        nonUserWordCount,
-        userMsgCount,
-        nonUserMsgCount,
-        totalSwipeCount,
-        firstChatTime,
-    };
+  }
+  return {
+    totalGenTime,
+    userWordCount,
+    nonUserWordCount,
+    userMsgCount,
+    nonUserMsgCount,
+    totalSwipeCount,
+    firstChatTime,
+  };
 }
 
 export const router = express.Router();
@@ -441,29 +424,33 @@ export const router = express.Router();
 /**
  * Handle a POST request to get the stats object
  */
-router.post('/get', function (request, response) {
-    const stats = STATS.get(request.user.profile.handle) || {};
-    response.send(stats);
+router.post("/get", (request, response) => {
+  const stats = STATS.get(request.user.profile.handle) || {};
+  response.send(stats);
 });
 
 /**
  * Triggers the recreation of statistics from chat files.
  */
-router.post('/recreate', async function (request, response) {
-    try {
-        await recreateStats(request.user.profile.handle, request.user.directories.chats, request.user.directories.characters);
-        return response.sendStatus(200);
-    } catch (error) {
-        console.error(error);
-        return response.sendStatus(500);
-    }
+router.post("/recreate", async (request, response) => {
+  try {
+    await recreateStats(
+      request.user.profile.handle,
+      request.user.directories.chats,
+      request.user.directories.characters,
+    );
+    return response.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    return response.sendStatus(500);
+  }
 });
 
 /**
  * Handle a POST request to update the stats object
-*/
-router.post('/update', function (request, response) {
-    if (!request.body) return response.sendStatus(400);
-    setCharStats(request.user.profile.handle, request.body);
-    return response.sendStatus(200);
+ */
+router.post("/update", (request, response) => {
+  if (!request.body) return response.sendStatus(400);
+  setCharStats(request.user.profile.handle, request.body);
+  return response.sendStatus(200);
 });

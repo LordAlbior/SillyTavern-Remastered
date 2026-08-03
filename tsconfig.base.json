@@ -13,6 +13,6 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": true
   }
 }

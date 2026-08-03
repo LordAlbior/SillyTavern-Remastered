@@ -7,21 +7,21 @@
  */
 
 // Engine singletons and enums
-import { MacroEngine } from './engine/MacroEngine.ts';
-import { MacroRegistry, MacroCategory, MacroValueType } from './engine/MacroRegistry.ts';
-import { MacroLexer } from './engine/MacroLexer.ts';
-import { MacroParser } from './engine/MacroParser.ts';
-import { MacroCstWalker } from './engine/MacroCstWalker.ts';
-import { MacroEnvBuilder } from './engine/MacroEnvBuilder.ts';
+import { MacroEngine } from "./engine/MacroEngine.ts";
+import { MacroRegistry, MacroCategory, MacroValueType } from "./engine/MacroRegistry.ts";
+import { MacroLexer } from "./engine/MacroLexer.ts";
+import { MacroParser } from "./engine/MacroParser.ts";
+import { MacroCstWalker } from "./engine/MacroCstWalker.ts";
+import { MacroEnvBuilder } from "./engine/MacroEnvBuilder.ts";
 
 // Macro definition groups
-import { registerCoreMacros } from './definitions/core-macros.ts';
-import { registerEnvMacros } from './definitions/env-macros.ts';
-import { registerStateMacros } from './definitions/state-macros.ts';
-import { registerChatMacros } from './definitions/chat-macros.ts';
-import { registerTimeMacros } from './definitions/time-macros.ts';
-import { registerVariableMacros } from './definitions/variable-macros.ts';
-import { registerInstructMacros } from './definitions/instruct-macros.ts';
+import { registerCoreMacros } from "./definitions/core-macros.ts";
+import { registerEnvMacros } from "./definitions/env-macros.ts";
+import { registerStateMacros } from "./definitions/state-macros.ts";
+import { registerChatMacros } from "./definitions/chat-macros.ts";
+import { registerTimeMacros } from "./definitions/time-macros.ts";
+import { registerVariableMacros } from "./definitions/variable-macros.ts";
+import { registerInstructMacros } from "./definitions/instruct-macros.ts";
 
 // Re-export the category enum for external use
 export { MacroCategory, MacroValueType };
@@ -42,20 +42,20 @@ export { MacroCategory, MacroValueType };
 /** @typedef {import('./engine/MacroEnv.types.js').MacroEnvFunctions} MacroEnvFunctions */
 
 export const macros = {
-    // engine singletons
-    engine: MacroEngine,
-    registry: MacroRegistry,
-    envBuilder: MacroEnvBuilder,
-    lexer: MacroLexer,
-    parser: MacroParser,
-    cstWalker: MacroCstWalker,
+  // engine singletons
+  engine: MacroEngine,
+  registry: MacroRegistry,
+  envBuilder: MacroEnvBuilder,
+  lexer: MacroLexer,
+  parser: MacroParser,
+  cstWalker: MacroCstWalker,
 
-    // enums
-    category: MacroCategory,
+  // enums
+  category: MacroCategory,
 
-    // shorthand functions (lazy to avoid circular dependency TDZ)
-    register: (...args) => MacroRegistry.registerMacro(...args),
-    registerAlias: (...args) => MacroRegistry.registerMacroAlias(...args),
+  // shorthand functions (lazy to avoid circular dependency TDZ)
+  register: (...args) => MacroRegistry.registerMacro(...args),
+  registerAlias: (...args) => MacroRegistry.registerMacroAlias(...args),
 };
 
 /**
@@ -63,22 +63,22 @@ export const macros = {
  * Intended to be called once during app initialization.
  */
 export function initRegisterMacros() {
-    // Core utilities and generic helpers
-    registerCoreMacros();
+  // Core utilities and generic helpers
+  registerCoreMacros();
 
-    // Env / character / system / extras
-    registerEnvMacros();
+  // Env / character / system / extras
+  registerEnvMacros();
 
-    // Runtime state tracking (eventSource etc.)
-    registerStateMacros();
+  // Runtime state tracking (eventSource etc.)
+  registerStateMacros();
 
-    // Chat/history inspection macros
-    registerChatMacros();
+  // Chat/history inspection macros
+  registerChatMacros();
 
-    // Time / date / durations
-    registerTimeMacros();
+  // Time / date / durations
+  registerTimeMacros();
 
-    // Variable and instruct macros
-    registerVariableMacros();
-    registerInstructMacros();
+  // Variable and instruct macros
+  registerVariableMacros();
+  registerInstructMacros();
 }
