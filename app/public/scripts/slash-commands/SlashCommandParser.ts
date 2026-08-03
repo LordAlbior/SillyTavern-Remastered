@@ -38,7 +38,7 @@ export const PARSER_FLAG = {
 };
 
 export class SlashCommandParser {
-  /** @type {Object.<string, SlashCommand>} */ static commands = {};
+  /** @type {Record<string, SlashCommand>} */ static commands = {};
 
   /**
    * @deprecated Use SlashCommandParser.addCommandObject() instead.
@@ -107,7 +107,7 @@ export class SlashCommandParser {
     }
   }
 
-  get commands() {
+  /** @returns {Record<string, SlashCommand>} */ get commands() {
     return SlashCommandParser.commands;
   }
   /** @type {Object.<string, string>} */ helpStrings = {};

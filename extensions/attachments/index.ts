@@ -1,22 +1,22 @@
-import { event_types, eventSource, saveSettingsDebounced } from "../../../script.js";
+import { event_types, eventSource, saveSettingsDebounced } from "/script.js";
 import {
   deleteAttachment,
   getDataBankAttachments,
   getDataBankAttachmentsForSource,
   getFileAttachment,
   uploadFileAttachmentToServer,
-} from "../../chats.js";
-import { extension_settings, renderExtensionTemplateAsync } from "../../extensions.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/scripts/chats.js";
+import { extension_settings, renderExtensionTemplateAsync } from "/scripts/extensions.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { SlashCommandClosure } from "../../slash-commands/SlashCommandClosure.js";
-import { enumIcons } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandEnumValue, enumTypes } from "../../slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure.js";
+import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
 
 /**
  * List of attachment sources
@@ -28,7 +28,7 @@ const FIELDS = ["name", "url"];
 /**
  * Get attachments from the data bank. Includes disabled attachments.
  * @param {string} [source] Source for the attachments
- * @returns {import('../../chats').FileAttachment[]} List of attachments
+ * @returns {import("/scripts/chats").FileAttachment[]} List of attachments
  */
 function getAttachments(source) {
   if (!source || !TYPES.includes(source)) {
@@ -40,9 +40,9 @@ function getAttachments(source) {
 
 /**
  * Get attachment by a single name or URL.
- * @param {import('../../chats').FileAttachment[]} attachments List of attachments
+ * @param {import("/scripts/chats").FileAttachment[]} attachments List of attachments
  * @param {string} value Name or URL of the attachment
- * @returns {import('../../chats').FileAttachment} Attachment
+ * @returns {import("/scripts/chats").FileAttachment} Attachment
  */
 function getAttachmentByField(attachments, value) {
   const match = (a) => String(a).trim().toLowerCase() === String(value).trim().toLowerCase();
@@ -53,7 +53,7 @@ function getAttachmentByField(attachments, value) {
 
 /**
  * Get attachment by multiple fields.
- * @param {import('../../chats').FileAttachment[]} attachments List of attachments
+ * @param {import("/scripts/chats").FileAttachment[]} attachments List of attachments
  * @param {string[]} values Name and URL of the attachment to search for
  * @returns
  */
@@ -209,8 +209,7 @@ async function enableDataBankAttachment(args, value) {
 function cleanUpAttachments() {
   let shouldSaveSettings = false;
   if (extension_settings.character_attachments) {
-    Object.values(extension_settings.character_attachments)
-      .flat()
+    (Object.values(extension_settings.character_attachments).flat() as any[])
       .filter((a) => a.text)
       .forEach((a) => {
         shouldSaveSettings = true;

@@ -4,7 +4,7 @@ import {
   getFileExtension,
   isTrueBoolean,
   saveBase64AsFile,
-} from "../../utils.js";
+} from "/scripts/utils.js";
 import {
   getContext,
   getApiUrl,
@@ -12,7 +12,7 @@ import {
   extension_settings,
   modules,
   renderExtensionTemplateAsync,
-} from "../../extensions.js";
+} from "/scripts/extensions.js";
 import {
   appendMediaToMessage,
   chat_metadata,
@@ -22,22 +22,22 @@ import {
   saveChatConditional,
   saveSettingsDebounced,
   substituteParams,
-} from "../../../script.js";
-import { getMessageTimeStamp } from "../../RossAscends-mods.js";
-import { SECRET_KEYS, secret_state } from "../../secrets.js";
-import { oai_settings } from "../../openai.js";
-import { getMultimodalCaption } from "../shared.js";
-import { textgen_types, textgenerationwebui_settings } from "../../textgen-settings.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/script.js";
+import { getMessageTimeStamp } from "/scripts/RossAscends-mods.js";
+import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
+import { oai_settings } from "/scripts/openai.js";
+import { getMultimodalCaption } from "/scripts/extensions/shared.js";
+import { textgen_types, textgenerationwebui_settings } from "/scripts/textgen-settings.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { commonEnumProviders } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { callGenericPopup, Popup, POPUP_TYPE } from "../../popup.js";
-import { debounce_timeout, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR } from "../../constants.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup.js";
+import { debounce_timeout, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR } from "/scripts/constants.js";
 export { MODULE_NAME };
 
 const MODULE_NAME = "caption";
@@ -395,7 +395,7 @@ async function getCaptionForFile(file, prompt, quiet) {
 
     setSpinnerIcon();
     const context = getContext();
-    const fileData = await getBase64Async(await ensureImageFormatSupported(file));
+    const fileData = (await getBase64Async(await ensureImageFormatSupported(file))) as string;
     const extension = getFileExtension(file);
     const base64Data = fileData.split(",")[1];
     const { caption } = await doCaptionRequest(base64Data, fileData, prompt);

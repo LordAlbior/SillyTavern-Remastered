@@ -1,4 +1,4 @@
-import { Fuse } from "../../../lib.js";
+import { Fuse } from "/lib.js";
 
 import {
   characters,
@@ -13,8 +13,8 @@ import {
   substituteParamsExtended,
   system_message_types,
   this_chid,
-} from "../../../script.js";
-import { dragElement, isMobile } from "../../RossAscends-mods.js";
+} from "/script.js";
+import { dragElement, isMobile } from "/scripts/RossAscends-mods.js";
 import {
   getContext,
   getApiUrl,
@@ -23,8 +23,8 @@ import {
   ModuleWorkerWrapper,
   doExtrasFetch,
   renderExtensionTemplateAsync,
-} from "../../extensions.js";
-import { loadMovingUIState, performFuzzySearch, power_user } from "../../power-user.js";
+} from "/scripts/extensions.js";
+import { loadMovingUIState, performFuzzySearch, power_user } from "/scripts/power-user.js";
 import {
   onlyUnique,
   debounce,
@@ -35,24 +35,24 @@ import {
   findChar,
   isFalseBoolean,
   includesIgnoreCaseAndAccents,
-} from "../../utils.js";
-import { hideMutedSprites, selected_group } from "../../group-chats.js";
-import { isJsonSchemaSupported } from "../../textgen-settings.js";
-import { debounce_timeout } from "../../constants.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/scripts/utils.js";
+import { hideMutedSprites, selected_group } from "/scripts/group-chats.js";
+import { isJsonSchemaSupported } from "/scripts/textgen-settings.js";
+import { debounce_timeout } from "/scripts/constants.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { SlashCommandEnumValue, enumTypes } from "../../slash-commands/SlashCommandEnumValue.js";
-import { commonEnumProviders } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { slashCommandReturnHelper } from "../../slash-commands/SlashCommandReturnHelper.js";
-import { generateWebLlmChatPrompt, isWebLlmSupported } from "../shared.js";
-import { Popup, POPUP_RESULT } from "../../popup.js";
-import { t } from "../../i18n.js";
-import { removeReasoningFromString } from "../../reasoning.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { slashCommandReturnHelper } from "/scripts/slash-commands/SlashCommandReturnHelper.js";
+import { generateWebLlmChatPrompt, isWebLlmSupported } from "/scripts/extensions/shared.js";
+import { Popup, POPUP_RESULT } from "/scripts/popup.js";
+import { t } from "/scripts/i18n.js";
+import { removeReasoningFromString } from "/scripts/reasoning.js";
 export { MODULE_NAME };
 
 /**
@@ -161,7 +161,7 @@ function isVisualNovelMode() {
 
 async function forceUpdateVisualNovelMode() {
   if (isVisualNovelMode()) {
-    await updateVisualNovelMode();
+    await (updateVisualNovelMode as any)();
   }
 }
 
@@ -192,8 +192,8 @@ async function visualNovelRemoveInactive(container) {
 
   // remove inactive characters after 1 second
   container.find(".expression-holder").each((_, current) => {
-    const promise = new Promise((resolve) => {
-      const element = $(current);
+const promise = new Promise<void>((resolve) => {
+        const element = $(current);
       const avatar = element.data("avatar");
 
       if (!group.members.includes(avatar) || group.disabled_members.includes(avatar)) {
@@ -282,7 +282,7 @@ async function visualNovelSetCharacterSprites(vnContainer, spriteFolderName, exp
       template.toggleClass("hidden", !spriteFile);
       img = template.find("img");
       await setImage(img, spriteFile?.imageSrc || "");
-      const fadeInPromise = new Promise((resolve) => {
+      const fadeInPromise = new Promise<void>((resolve) => {
         template.fadeIn(250, () => resolve());
       });
       setSpritePromises.push(fadeInPromise);
@@ -416,7 +416,7 @@ export async function visualNovelUpdateLayers(container) {
     element.css("z-index", layerIndex);
     element.show();
 
-    const promise = new Promise((resolve) => {
+    const promise = new Promise<void>((resolve) => {
       if (power_user.reduced_motion) {
         element.css("left", currentPosition + "px");
         requestAnimationFrame(() => resolve());
@@ -454,7 +454,7 @@ async function setImage(img, path) {
     });
     */
 
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     const prevExpressionSrc = img.attr("src");
     const expressionClone = img.clone();
     const originalId = img.data("filename");
@@ -902,7 +902,7 @@ function setFallBackExpressionSlashCommand(args, expressionName) {
 
   if (!expressionName) return extension_settings?.expressions?.fallback_expression || "";
 
-  const select = /** @type {HTMLSelectElement} */ (document.getElementById("expression_fallback"));
+  const select = document.getElementById("expression_fallback") as HTMLSelectElement;
   const fallbackExpressions = Array.from(select?.options || [])
     .map((option) => option.value)
     .filter((expression) => expression?.length > 0);
@@ -1397,7 +1397,7 @@ async function drawSpritesList(spriteFolderName, labels, sprites) {
  * @param {boolean} [args.isCustom=false] If expression is added by user
  * @returns {Promise<string>} Rendered list item template
  */
-async function getListItem(expression, { images, isCustom = false } = {}) {
+async function getListItem(expression, { images, isCustom = false } = {} as any) {
   return renderExtensionTemplateAsync(MODULE_NAME, "list-item", { expression, images, isCustom: isCustom ?? false });
 }
 
@@ -2028,7 +2028,7 @@ async function onClickExpressionUpload(event) {
         // If it's a valid filename and there's no existing file with the same name, we just take it
         spriteName = fileNameWithoutExtension;
       } else {
-        /** @type {import('../../popup.js').CustomPopupButton[]} */
+        /** @type {import("/scripts/popup.js").CustomPopupButton[]} */
         const customButtons = [];
         if (clickedFileName) {
           customButtons.push({
@@ -2640,7 +2640,7 @@ export async function init() {
       /** @type {(args: {return: string, filter: string}) => Promise<string>} */
       callback: async (args) => {
         const returnType =
-          /** @type {import('../../slash-commands/SlashCommandReturnHelper.js').SlashCommandReturnType} */
+          /** @type {import("/scripts/slash-commands/SlashCommandReturnHelper.js").SlashCommandReturnType} */
           (args.return);
 
         const list = await getExpressionsList({ filterAvailable: !isFalseBoolean(args.filter) });

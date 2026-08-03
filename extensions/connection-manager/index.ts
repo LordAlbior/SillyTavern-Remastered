@@ -1,4 +1,4 @@
-import { DOMPurify, Fuse } from "../../../lib.js";
+import { DOMPurify, Fuse } from "/lib.js";
 
 import {
   activateSendButtons,
@@ -8,22 +8,22 @@ import {
   main_api,
   online_status,
   saveSettingsDebounced,
-} from "../../../script.js";
-import { extension_settings, getContext, renderExtensionTemplateAsync } from "../../extensions.js";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "../../popup.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
-import { SlashCommandAbortController } from "../../slash-commands/SlashCommandAbortController.js";
+} from "/script.js";
+import { extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions.js";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "/scripts/popup.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+import { SlashCommandAbortController } from "/scripts/slash-commands/SlashCommandAbortController.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { commonEnumProviders, enumIcons } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandDebugController } from "../../slash-commands/SlashCommandDebugController.js";
-import { enumTypes, SlashCommandEnumValue } from "../../slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandClosure } from "../../slash-commands/SlashCommandClosure.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { SlashCommandScope } from "../../slash-commands/SlashCommandScope.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { commonEnumProviders, enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { SlashCommandDebugController } from "/scripts/slash-commands/SlashCommandDebugController.js";
+import { enumTypes, SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue.js";
+import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
 import {
   collapseSpaces,
   getUniqueName,
@@ -31,12 +31,12 @@ import {
   isTrueBoolean,
   uuidv4,
   waitUntilCondition,
-} from "../../utils.js";
-import { t } from "../../i18n.js";
-import { getSecretLabelById } from "../../secrets.js";
+} from "/scripts/utils.js";
+import { t } from "/scripts/i18n.js";
+import { getSecretLabelById } from "/scripts/secrets.js";
 import { performFuzzySearch } from "/scripts/power-user.js";
 import { StreamingDisplay } from "/scripts/streaming-display.js";
-import { ConnectionManagerRequestService } from "../shared.js";
+import { ConnectionManagerRequestService } from "/scripts/extensions/shared.js";
 import { formatReasoning } from "/scripts/reasoning.js";
 
 const MODULE_NAME = "connection-manager";
@@ -121,7 +121,6 @@ class ConnectionManagerSpinner {
   abortController = new AbortController();
 
   constructor() {
-    // @ts-expect-error
     this.spinnerElement = document.getElementById("connection_profile_spinner");
     this.abortController = new AbortController();
   }
@@ -156,7 +155,7 @@ class ConnectionManagerSpinner {
 function getNamedArguments(args = {}) {
   // None of the commands here use underscored args, but better safe than sorry
   return {
-    _scope: new SlashCommandScope(),
+    _scope: new (SlashCommandScope as any)(),
     _abortController: new SlashCommandAbortController(),
     _debugController: new SlashCommandDebugController(),
     _parserFlags: {},
@@ -275,12 +274,11 @@ async function readProfileFromCommands(mode, profile, cleanUp = false) {
 async function createConnectionProfile(forceName = null) {
   const mode = main_api === "openai" ? "cc" : "tc";
   const id = uuidv4();
-  /** @type {ConnectionProfile} */
   const profile = {
     id,
     mode,
     exclude: [],
-  };
+  } as any;
 
   await readProfileFromCommands(mode, profile);
 
@@ -488,7 +486,7 @@ async function renderDetailsContent(detailsContent) {
   const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
   if (profile) {
     const profileForDisplay = makeFancyProfile(profile);
-    const templateParams = { profile: profileForDisplay };
+    const templateParams = { profile: profileForDisplay } as { profile: any; omitted?: string };
     if (Array.isArray(profile.exclude) && profile.exclude.length > 0) {
       templateParams.omitted = profile.exclude.map((e) => FANCY_NAMES[e]).join(", ");
     }
@@ -632,7 +630,7 @@ async function generateStreamCallback(args, value) {
         effectiveProfileId,
         messages,
         maxTokens,
-        { extractData: true, includePreset: true, stream: true, signal: abortController?.signal ?? undefined },
+        { extractData: true, includePreset: true, stream: true, signal: abortController?.signal ?? undefined } as any,
       );
 
       if (typeof streamResponse === "function") {
@@ -668,9 +666,9 @@ async function generateStreamCallback(args, value) {
         extractData: true,
         includePreset: true,
         stream: false,
-      });
+      } as any);
 
-      const extracted = /** @type {import('../../custom-request.js').ExtractedData} */ (response);
+      const extracted = /** @type {import("/scripts/custom-request.js").ExtractedData} */ (response);
       finalText = extracted?.content || "";
       finalReasoning = extracted?.reasoning || "";
 
@@ -729,9 +727,7 @@ export async function init() {
   const settings = await renderExtensionTemplateAsync(MODULE_NAME, "settings");
   container.insertAdjacentHTML("afterbegin", settings);
 
-  /** @type {HTMLSelectElement} */
-  // @ts-expect-error
-  const profiles = document.getElementById("connection_profiles");
+  const profiles = document.getElementById("connection_profiles") as HTMLSelectElement;
   renderConnectionProfiles(profiles);
 
   function toggleProfileSpecificButtons() {

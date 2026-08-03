@@ -7,19 +7,19 @@ import {
   reloadCurrentChat,
   saveSettingsDebounced,
   this_chid,
-} from "../../../script.js";
-import { extension_settings, renderExtensionTemplateAsync } from "../../extensions.js";
-import { selected_group } from "../../group-chats.js";
-import { callGenericPopup, Popup, POPUP_TYPE } from "../../popup.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/script.js";
+import { extension_settings, renderExtensionTemplateAsync } from "/scripts/extensions.js";
+import { selected_group } from "/scripts/group-chats.js";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { commonEnumProviders, enumIcons } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandEnumValue, enumTypes } from "../../slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { commonEnumProviders, enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
 import {
   download,
   equalsIgnoreCaseAndAccents,
@@ -31,7 +31,7 @@ import {
   regexFromString,
   setInfoBlock,
   uuidv4,
-} from "../../utils.js";
+} from "/scripts/utils.js";
 import {
   allowPresetScripts,
   allowScopedScripts,
@@ -51,9 +51,9 @@ import {
   SCRIPT_TYPES,
   substitute_find_regex,
 } from "/scripts/regex-engine.js";
-import { t } from "../../i18n.js";
-import { accountStorage } from "../../util/AccountStorage.js";
-import { getPresetManager } from "../../preset-manager.js";
+import { t } from "/scripts/i18n.js";
+import { accountStorage } from "/scripts/util/AccountStorage.js";
+import { getPresetManager } from "/scripts/preset-manager.js";
 
 // Re-exports for legacy extensions
 export { getRegexScripts };
@@ -61,7 +61,7 @@ export { getRegexScripts };
 const sanitizeFileName = (name) => name.replace(/[\s.<>:"/\\|?*\x00-\x1F\x7F]/g, "_").toLowerCase();
 
 /**
- * @typedef {import('../../char-data.js').RegexScriptData} RegexScript
+ * @typedef {import("/scripts/char-data.js").RegexScriptData} RegexScript
  */
 
 /**
@@ -560,7 +560,7 @@ function setMoveButtonsVisibility() {
 
 /**
  * Saves a regex script to the extension settings or character data.
- * @param {import('../../char-data.js').RegexScriptData} regexScript
+ * @param {import("/scripts/char-data.js").RegexScriptData} regexScript
  * @param {number} existingScriptIndex Index of the existing script
  * @param {SCRIPT_TYPES} scriptType Type of the script
  * @param {boolean} [saveSettings=true] Whether to save the settings immediately
@@ -660,7 +660,7 @@ async function deleteRegexScript(id, scriptType, saveSettings = true) {
 
 /**
  * Move a regex script from one type to another
- * @param {import('../../char-data.js').RegexScriptData} script The script to move
+ * @param {import("/scripts/char-data.js").RegexScriptData} script The script to move
  * @param {SCRIPT_TYPES} toType Target type
  * @param {SCRIPT_TYPES|null} fromType Source type, if null it will be determined automatically
  * @param {boolean} saveSettings Whether to save the settings immediately
@@ -692,7 +692,7 @@ async function loadRegexScripts() {
   /**
    * Renders a script to the UI.
    * @param {string} container Container to render the script to
-   * @param {import('../../char-data.js').RegexScriptData} script Script data
+   * @param {import("/scripts/char-data.js").RegexScriptData} script Script data
    * @param {SCRIPT_TYPES} scriptType Type of the script
    * @param {number} index Index of the script in the array
    */
@@ -1166,15 +1166,12 @@ function populateDebuggerRuleList(container) {
   allScripts.forEach((script) => {
     const scriptCopy = structuredClone(script); // Use structuredClone for deep copy
     if (globalScriptIds.has(script.id)) {
-      // @ts-expect-error
       scriptCopy.type = SCRIPT_TYPES.GLOBAL;
       globalScripts.push(scriptCopy);
     } else if (scopedScriptIds.has(script.id)) {
-      // @ts-expect-error
       scriptCopy.type = SCRIPT_TYPES.SCOPED;
       scopedScripts.push(scriptCopy);
     } else if (presetScriptIds.has(script.id)) {
-      // @ts-expect-error
       scriptCopy.type = SCRIPT_TYPES.PRESET;
       presetScripts.push(scriptCopy);
     }
@@ -1188,10 +1185,8 @@ function populateDebuggerRuleList(container) {
     const ruleElement = ruleElementContent.find(".regex-debugger-rule");
 
     ruleElement.attr("data-id", script.id);
-    // @ts-expect-error
     ruleElement.find(".rule-name").text(script.scriptName);
     ruleElement.find(".rule-regex").text(script.findRegex);
-    // @ts-expect-error
     ruleElement.find(".rule-scope").text(
       {
         [SCRIPT_TYPES.SCOPED]: t`Scoped`,
@@ -1200,7 +1195,6 @@ function populateDebuggerRuleList(container) {
       }[script.type],
     );
     ruleElement.find(".rule-enabled").prop("checked", !script.disabled);
-    // @ts-expect-error
     ruleElement.find(".edit_rule").on("click", () => onRegexEditorOpenClick(script.id, script.type));
 
     ruleElement.on("click", function (event) {
@@ -1677,7 +1671,7 @@ async function onRegexImportFileChange(file, scriptType) {
   }
 
   try {
-    const regexScripts = JSON.parse(await getFileText(file));
+    const regexScripts = JSON.parse((await getFileText(file)) as string);
     if (Array.isArray(regexScripts)) {
       for (const regexScript of regexScripts) {
         await onRegexImportObjectChange(regexScript, scriptType);
@@ -2074,7 +2068,6 @@ export async function init() {
     },
   ];
   for (const { selector, setter, getter } of sortableDatas) {
-    // @ts-expect-error
     $(selector).sortable({
       delay: getSortableDelay(),
       handle: ".drag-handle",
@@ -2140,13 +2133,12 @@ export async function init() {
   });
 
   await loadRegexScripts();
-  // @ts-expect-error
   $("#saved_regex_scripts").sortable("enable");
 
   /**
    * @typedef {object} ScriptDecorators
    * @property {string} typename
-   * @property {import('../../slash-commands/SlashCommandEnumValue.js').EnumType} color
+   * @property {import("/scripts/slash-commands/SlashCommandEnumValue.js").EnumType} color
    * @property {string} icon
    */
 

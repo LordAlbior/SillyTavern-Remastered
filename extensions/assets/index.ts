@@ -3,8 +3,8 @@ TODO:
 */
 //const DEBUG_TONY_SAMA_FORK_MODE = true
 
-import { DOMPurify } from "../../../lib.js";
-import { getRequestHeaders, processDroppedFiles, eventSource, event_types } from "../../../script.js";
+import { DOMPurify } from "/lib.js";
+import { getRequestHeaders, processDroppedFiles, eventSource, event_types } from "/script.js";
 import {
   deleteExtension,
   EMPTY_AUTHOR,
@@ -14,11 +14,11 @@ import {
   installExtension,
   renderExtensionTemplateAsync,
   isOfficialExtension,
-} from "../../extensions.js";
-import { POPUP_TYPE, Popup, callGenericPopup } from "../../popup.js";
-import { accountStorage } from "../../util/AccountStorage.js";
-import { escapeHtml, flashHighlight, getStringHash, isValidUrl } from "../../utils.js";
-import { t, translate } from "../../i18n.js";
+} from "/scripts/extensions.js";
+import { POPUP_TYPE, Popup, callGenericPopup } from "/scripts/popup.js";
+import { accountStorage } from "/scripts/util/AccountStorage.js";
+import { escapeHtml, flashHighlight, getStringHash, isValidUrl } from "/scripts/utils.js";
+import { t, translate } from "/scripts/i18n.js";
 import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
 export { MODULE_NAME };
 
@@ -71,8 +71,12 @@ const KNOWN_TYPES = {
 };
 
 /**
+ * @typedef {{id: string, url?: string, title?: string, name?: string, description?: string, author?: string}} AssetData
+ */
+
+/**
  * Creates the download/delete button element for a single asset, with all interaction handlers attached.
- * @param {object} asset The asset data object, containing at least id, name, description and url fields
+ * @param {AssetData} asset The asset data object, containing at least id, name, description and url fields
  * @param {string} assetType Asset type, e.g. 'extension', 'character', 'ambient', 'bgm', 'blip'
  * @param {number} index Index of the asset in the list of available assets of the same type, used to create a unique element ID
  * @returns {JQuery} The button element
@@ -117,7 +121,7 @@ function createAssetButton(asset, assetType, index) {
   const assetDelete = async () => {
     if (assetType === "character") {
       toastr.error("Go to the characters menu to delete a character.", "Character deletion not supported");
-      await SlashCommandParser.commands.go.callback(null, asset.id);
+      await SlashCommandParser.commands["go"].callback(null, asset.id);
       return;
     }
     element.off("click");
@@ -157,7 +161,7 @@ function createAssetButton(asset, assetType, index) {
 
 /**
  * Creates the full visual block element for a single asset.
- * @param {object} asset The asset data object, containing at least id, name, description and url fields
+ * @param {AssetData} asset The asset data object, containing at least id, name, description and url fields
  * @param {string} assetType Asset type, e.g. 'extension', 'character', 'ambient', 'bgm', 'blip'
  * @param {JQuery} element The button element from createAssetButton
  * @returns {JQuery} The asset block element
@@ -520,7 +524,7 @@ async function openCharacterBrowser(forceDefault) {
 
     checkMark.toggle(isInstalled).on("click", async () => {
       toastr.error("Go to the characters menu to delete a character.", "Character deletion not supported");
-      await SlashCommandParser.commands.go.callback(null, character.id);
+      await SlashCommandParser.commands["go"].callback(null, character.id);
     });
 
     listElement.append(characterElement);

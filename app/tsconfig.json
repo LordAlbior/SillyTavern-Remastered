@@ -13,6 +13,7 @@
     "paths": {
       "/script.js": ["./public/script.ts"],
       "/script.ts": ["./public/script.ts"],
+      "/lib.js": ["./public/lib.ts"],
       "/scripts/*": ["./public/scripts/*"]
     }
   },

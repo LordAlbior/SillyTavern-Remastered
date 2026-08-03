@@ -28,11 +28,12 @@ export function setRequestCompressionConfig(config) {
  * @returns {{ promise: Promise<Uint8Array<ArrayBuffer>>, terminate: () => void }} Gzip-compressed Uint8Array promise and a terminate function.
  */
 function gzipBuffer(input) {
-    let terminate = () => {};
+    let terminate = /** @type {() => void} */ (() => {});
     // @ts-ignore - runtime path, no type declarations
     const promise = import('/lib.js').then(({ gzip }) => {
         return new Promise((resolve, reject) => {
             try {
+                // @ts-ignore - fflate gzip returns void; original code stored it as the cancel fn
                 terminate = gzip(input, (error, compressed) => {
                     if (error) {
                         reject(error);

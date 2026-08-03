@@ -8,21 +8,21 @@ import {
   saveSettingsDebounced,
   substituteParams,
   updateMessageBlock,
-} from "../../../script.js";
-import { extension_settings, getContext, renderExtensionTemplateAsync } from "../../extensions.js";
-import { POPUP_TYPE, callGenericPopup } from "../../popup.js";
-import { updateReasoningUI } from "../../reasoning.js";
-import { secret_state } from "../../secrets.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/script.js";
+import { extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions.js";
+import { POPUP_TYPE, callGenericPopup } from "/scripts/popup.js";
+import { updateReasoningUI } from "/scripts/reasoning.js";
+import { secret_state } from "/scripts/secrets.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { enumIcons } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { enumTypes, SlashCommandEnumValue } from "../../slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { splitRecursive } from "../../utils.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { enumTypes, SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { splitRecursive } from "/scripts/utils.js";
 
 export const autoModeOptions = {
   NONE: "none",
@@ -350,7 +350,7 @@ async function translateProviderLingva(text, lang) {
  * @returns {Promise<string>} Translated text
  */
 async function translateProviderDeepl(text, lang) {
-  if (!secret_state.deepl) {
+  if (!(secret_state as { deepl?: string }).deepl) {
     throw new Error("No DeepL API key");
   }
 

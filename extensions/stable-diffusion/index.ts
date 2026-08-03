@@ -1,4 +1,4 @@
-import { Popper } from "../../../lib.js";
+import { Popper } from "/lib.js";
 import {
   animation_duration,
   appendMediaToMessage,
@@ -16,7 +16,7 @@ import {
   systemUserName,
   this_chid,
   user_avatar,
-} from "../../../script.js";
+} from "/script.js";
 import {
   doExtrasFetch,
   extension_settings,
@@ -25,8 +25,8 @@ import {
   modules,
   renderExtensionTemplateAsync,
   writeExtensionField,
-} from "../../extensions.js";
-import { selected_group } from "../../group-chats.js";
+} from "/scripts/extensions.js";
+import { selected_group } from "/scripts/group-chats.js";
 import {
   clamp,
   debounce,
@@ -40,18 +40,18 @@ import {
   resetScrollHeight,
   saveBase64AsFile,
   stringFormat,
-} from "../../utils.js";
-import { getMessageTimeStamp, humanizedDateTime } from "../../RossAscends-mods.js";
-import { SECRET_KEYS, secret_state } from "../../secrets.js";
-import { getNovelAnlas, getNovelUnlimitedImageGeneration, loadNovelSubscriptionData } from "../../nai-settings.js";
-import { getMultimodalCaption } from "../shared.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/scripts/utils.js";
+import { getMessageTimeStamp, humanizedDateTime } from "/scripts/RossAscends-mods.js";
+import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
+import { getNovelAnlas, getNovelUnlimitedImageGeneration, loadNovelSubscriptionData } from "/scripts/nai-settings.js";
+import { getMultimodalCaption } from "/scripts/extensions/shared.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
 import {
   debounce_timeout,
   IMAGE_OVERSWIPE,
@@ -61,14 +61,14 @@ import {
   SCROLL_BEHAVIOR,
   SWIPE_DIRECTION,
   VIDEO_EXTENSIONS,
-} from "../../constants.js";
-import { SlashCommandEnumValue } from "../../slash-commands/SlashCommandEnumValue.js";
-import { callGenericPopup, Popup, POPUP_TYPE } from "../../popup.js";
-import { commonEnumProviders } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { ToolManager } from "../../tool-calling.js";
-import { macros, MacroCategory } from "../../macros/macro-system.js";
-import { t, translate } from "../../i18n.js";
-import { oai_settings } from "../../openai.js";
+} from "/scripts/constants.js";
+import { SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue.js";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup.js";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { ToolManager } from "/scripts/tool-calling.js";
+import { macros, MacroCategory } from "/scripts/macros/macro-system.js";
+import { t, translate } from "/scripts/i18n.js";
+import { oai_settings } from "/scripts/openai.js";
 import { power_user } from "/scripts/power-user.js";
 import { MacrosParser } from "/scripts/macros.js";
 import { ActionLoaderHandle, loader } from "/scripts/action-loader.js";
@@ -453,7 +453,7 @@ function processTriggers(chat, _, abort, type) {
     }
 
     abort(true);
-    setTimeout(() => generatePicture(initiators.interactive, {}, subject, message), 1);
+    setTimeout(() => (generatePicture as any)(initiators.interactive, {}, subject, message), 1);
   } catch {
     console.log("SD: Failed to process triggers.");
   }
@@ -649,7 +649,7 @@ function addPromptTemplates() {
       .addClass("textarea_compact text_pole")
       .attr("id", `sd_prompt_${name}`)
       .attr("rows", 3)
-      .val(prompt)
+      .val(prompt as string)
       .on("input", () => {
         extension_settings.sd.prompts[name] = textarea.val();
         saveSettingsDebounced();
@@ -838,7 +838,7 @@ async function onRenameStyleClick() {
  */
 async function refinePrompt(prompt, args = null) {
   if (extension_settings.sd.refine_mode) {
-    /** @type {import('../../popup.js').CustomPopupInput[]} */
+    /** @type {import("/scripts/popup.js").CustomPopupInput[]} */
     const customInputs = [];
 
     if (args?.negative) {
@@ -1155,7 +1155,7 @@ const resolutionOptions = {
 };
 
 function onResolutionChange() {
-  const selectedOption = $("#sd_resolution").val();
+  const selectedOption = $("#sd_resolution").val() as string;
   const selectedResolution = resolutionOptions[selectedOption];
 
   if (!selectedResolution) {
@@ -2957,7 +2957,7 @@ function getQuietPrompt(mode, trigger) {
     return trigger;
   }
 
-  return stringFormat(extension_settings.sd.prompts[mode], trigger);
+  return (stringFormat as any)(extension_settings.sd.prompts[mode], trigger);
 }
 
 /**
@@ -3037,8 +3037,7 @@ function getRawLastMessage() {
  * @returns {void}
  */
 function ensureSelectionExists(setting, selector) {
-  /** @type {HTMLSelectElement} */
-  const selectElement = document.querySelector(selector);
+  const selectElement = document.querySelector(selector) as HTMLSelectElement;
   if (!selectElement) {
     return;
   }
@@ -4013,7 +4012,7 @@ async function generateSdcppImage(prompt, negativePrompt, signal) {
     height: extension_settings.sd.height,
     batch_size: 1,
     seed: extension_settings.sd.seed >= 0 ? extension_settings.sd.seed : undefined,
-  };
+  } as any;
 
   if (extension_settings.sd.sampler && extension_settings.sd.sampler !== "N/A") {
     payload.sampler_name = extension_settings.sd.sampler;
@@ -4318,7 +4317,7 @@ async function generateAimlapiImage(prompt, signal) {
   const isSdLike =
     model.startsWith("flux/") || model.startsWith("stable") || model === "recraft-v3" || model === "triposr";
 
-  const body = { prompt, model };
+  const body = { prompt, model } as any;
   if (isSdLike) {
     body.steps = clamp(extension_settings.sd.steps, 1, 50);
     body.guidance = clamp(extension_settings.sd.scale, 1.5, 5);
@@ -4391,7 +4390,7 @@ async function generateComfyImageCommon(prompt, negativePrompt, signal, basePath
     const response = await fetch(getUserAvatarUrl());
     if (response.ok) {
       const avatarBlob = await response.blob();
-      const avatarBase64DataUrl = await getBase64Async(avatarBlob);
+      const avatarBase64DataUrl = (await getBase64Async(avatarBlob)) as string;
       const avatarBase64 = avatarBase64DataUrl.split(",")[1];
       workflow = workflow.replaceAll('"%user_avatar%"', JSON.stringify(avatarBase64));
     } else {
@@ -4402,7 +4401,7 @@ async function generateComfyImageCommon(prompt, negativePrompt, signal, basePath
     const response = await fetch(getCharacterAvatarUrl());
     if (response.ok) {
       const avatarBlob = await response.blob();
-      const avatarBase64DataUrl = await getBase64Async(avatarBlob);
+      const avatarBase64DataUrl = (await getBase64Async(avatarBlob)) as string;
       const avatarBase64 = avatarBase64DataUrl.split(",")[1];
       workflow = workflow.replaceAll('"%char_avatar%"', JSON.stringify(avatarBase64));
     } else {
@@ -4775,7 +4774,7 @@ async function generateGoogleImage(prompt, negativePrompt, signal) {
 async function generateZaiImage(prompt, signal) {
   // Video generation models (CogVideoX, Viduq1)
   if (/(cogvideox|vidu)/.test(extension_settings.sd.model)) {
-    const videoParams = {};
+    const videoParams = {} as { quality?: string; size?: string; aspect_ratio?: string };
     if (/cogvideox/.test(extension_settings.sd.model)) {
       const cogVideoSizes = ["1280x720", "720x1280", "1024x1024", "1080x1920", "2048x1080", "3840x2160"];
       videoParams.quality = extension_settings.sd.openai_quality === "hd" ? "quality" : "speed";
@@ -5226,7 +5225,7 @@ async function addSDGenButtons() {
 
     if (param) {
       console.log("doing /sd " + param);
-      generatePicture(initiators.wand, {}, param);
+      (generatePicture as any)(initiators.wand, {}, param);
     }
   });
 }
@@ -5307,7 +5306,7 @@ const buttonAbortControllers = new WeakMap();
  * @param {boolean} [options.animate] Whether to animate the media during generation.
  * @returns {Promise<void>} A promise that resolves when the image generation process is complete.
  */
-async function sdMessageButton($icon, { animate } = {}) {
+async function sdMessageButton($icon, { animate } = {} as any) {
   /**
    * Sets the icon to indicate busy or idle state.
    * @param {boolean} isBusy Whether the icon should indicate a busy state.
@@ -5443,12 +5442,11 @@ async function generateMediaSwipe(
   extension_settings.sd.original_seed = extension_settings.sd.seed;
   extension_settings.sd.seed = extension_settings.sd.seed >= 0 ? Math.round(Math.random() * (2 ** 32 - 1)) : -1;
 
-  /** @type {MediaAttachment} */
   const result = {
     url: "",
     type: MEDIA_TYPE.IMAGE,
     source: MEDIA_SOURCE.GENERATED,
-  };
+  } as any;
 
   let loaderHandle = ActionLoaderHandle.EMPTY;
 
@@ -5561,8 +5559,8 @@ async function onImageSwiped({ message, element, direction }) {
 
 /**
  * Applies the command arguments to the extension settings.
- * @typedef {import('../../slash-commands/SlashCommand.js').NamedArguments} NamedArguments
- * @typedef {import('../../slash-commands/SlashCommand.js').NamedArgumentsCapture} NamedArgumentsCapture
+ * @typedef {import("/scripts/slash-commands/SlashCommand.js").NamedArguments} NamedArguments
+ * @typedef {import("/scripts/slash-commands/SlashCommand.js").NamedArgumentsCapture} NamedArgumentsCapture
  * @param {NamedArguments | NamedArgumentsCapture} args - Command arguments
  * @returns {Record<string, any>} - Current settings before applying the command arguments
  */
@@ -5661,10 +5659,10 @@ function registerFunctionTool() {
       if (!isValidState()) throw new Error("Image generation is not configured.");
       if (!args) throw new Error("Missing arguments");
       if (!args.prompt) throw new Error("Missing prompt");
-      const url = await generatePicture(initiators.tool, {}, args.prompt);
+      const url = await (generatePicture as any)(initiators.tool, {}, args.prompt);
       return encodeURI(url);
     },
-  });
+  } as any);
 }
 
 export async function init() {
@@ -5683,7 +5681,7 @@ export async function init() {
         const currentSettings = applyCommandArguments(args);
 
         try {
-          const url = await generatePicture(initiators.command, args, String(trigger));
+          const url = await (generatePicture as any)(initiators.command, args, String(trigger));
 
           // Save override width/height into a message result
           if (

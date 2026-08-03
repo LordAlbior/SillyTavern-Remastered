@@ -1,4 +1,4 @@
-import { getStringHash, debounce, waitUntilCondition, extractAllWords, isTrueBoolean } from "../../utils.js";
+import { getStringHash, debounce, waitUntilCondition, extractAllWords, isTrueBoolean } from "/scripts/utils.js";
 import {
   getContext,
   getApiUrl,
@@ -6,7 +6,7 @@ import {
   doExtrasFetch,
   modules,
   renderExtensionTemplateAsync,
-} from "../../extensions.js";
+} from "/scripts/extensions.js";
 import {
   activateSendButtons,
   deactivateSendButtons,
@@ -24,23 +24,23 @@ import {
   setExtensionPrompt,
   streamingProcessor,
   animation_easing,
-} from "../../../script.js";
-import { is_group_generating, selected_group } from "../../group-chats.js";
-import { loadMovingUIState, power_user } from "../../power-user.js";
-import { dragElement } from "../../RossAscends-mods.js";
-import { getTextTokens, getTokenCountAsync, tokenizers } from "../../tokenizers.js";
-import { debounce_timeout } from "../../constants.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
+} from "/script.js";
+import { is_group_generating, selected_group } from "/scripts/group-chats.js";
+import { loadMovingUIState, power_user } from "/scripts/power-user.js";
+import { dragElement } from "/scripts/RossAscends-mods.js";
+import { getTextTokens, getTokenCountAsync, tokenizers } from "/scripts/tokenizers.js";
+import { debounce_timeout } from "/scripts/constants.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../slash-commands/SlashCommandArgument.js";
-import { macros, MacroCategory } from "../../macros/macro-system.js";
-import { countWebLlmTokens, generateWebLlmChatPrompt, getWebLlmContextSize, isWebLlmSupported } from "../shared.js";
-import { commonEnumProviders } from "../../slash-commands/SlashCommandCommonEnumsProvider.js";
-import { removeReasoningFromString } from "../../reasoning.js";
+} from "/scripts/slash-commands/SlashCommandArgument.js";
+import { macros, MacroCategory } from "/scripts/macros/macro-system.js";
+import { countWebLlmTokens, generateWebLlmChatPrompt, getWebLlmContextSize, isWebLlmSupported } from "/scripts/extensions/shared.js";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
+import { removeReasoningFromString } from "/scripts/reasoning.js";
 import { MacrosParser } from "/scripts/macros.js";
 export { MODULE_NAME };
 
@@ -708,7 +708,7 @@ async function summarizeChatWebLLM(context, force) {
     { role: "user", content: rawPrompt },
   ];
 
-  const params = {};
+  const params = {} as { max_tokens?: number };
 
   if (extension_settings.memory.overrideResponseLength > 0) {
     params.max_tokens = extension_settings.memory.overrideResponseLength;
@@ -749,7 +749,7 @@ async function summarizeChatMain(context, force, skipWIAN) {
   if (prompt_builders.DEFAULT === extension_settings.memory.prompt_builder) {
     try {
       inApiCall = true;
-      /** @type {import('../../../script.js').GenerateQuietPromptParams} */
+      /** @type {import("/script.js").GenerateQuietPromptParams} */
       const params = {
         quietPrompt: prompt,
         skipWIAN: skipWIAN,
@@ -781,7 +781,7 @@ async function summarizeChatMain(context, force, skipWIAN) {
         return null;
       }
 
-      /** @type {import('../../../script.js').GenerateRawParams} */
+      /** @type {import("/script.js").GenerateRawParams} */
       const params = {
         prompt: rawPrompt,
         systemPrompt: prompt,
