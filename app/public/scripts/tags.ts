@@ -278,12 +278,19 @@ const ACTIONABLE_TAGS = {
 /**
  * Map of tag IDs to their corresponding filter types.
  * Used for actionable tags (Favorites, Groups, Folders).
+ * Lazy: built on first access to avoid TDZ on FILTER_TYPES during cyclic module init.
  */
-const TAG_ID_TO_FILTER_TYPE = new Map([
-    [ACTIONABLE_TAGS.FAV.id, FILTER_TYPES.FAV],
-    [ACTIONABLE_TAGS.GROUP.id, FILTER_TYPES.GROUP],
-    [ACTIONABLE_TAGS.FOLDER.id, FILTER_TYPES.FOLDER],
-]);
+let _tagIdToFilterType = null;
+function getTagIdToFilterType() {
+    if (!_tagIdToFilterType) {
+        _tagIdToFilterType = new Map([
+            [ACTIONABLE_TAGS.FAV.id, FILTER_TYPES.FAV],
+            [ACTIONABLE_TAGS.GROUP.id, FILTER_TYPES.GROUP],
+            [ACTIONABLE_TAGS.FOLDER.id, FILTER_TYPES.FOLDER],
+        ]);
+    }
+    return _tagIdToFilterType;
+}
 
 /** @type {{[key: string]: Tag}} An optional list of actionables that can be utilized by extensions */
 const InListActionable = {
@@ -562,7 +569,7 @@ function applyActionableTagFilter(filterHelper, tag, filterType, storageKey) {
 function determineTagFilterState(filterHelper, tag, isFilterActionable) {
     if (isFilterActionable) {
         // For actionable tags: read from filter helper (which is loaded from storage)
-        const filterType = TAG_ID_TO_FILTER_TYPE.get(tag.id) || null;
+        const filterType = getTagIdToFilterType().get(tag.id) || null;
         if (filterType) {
             return filterHelper.getFilterData(filterType) || DEFAULT_FILTER_STATE;
         }

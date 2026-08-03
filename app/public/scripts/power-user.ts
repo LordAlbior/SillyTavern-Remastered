@@ -251,8 +251,8 @@ export const power_user: Record<string, any> = {
         example_separator: defaultExampleSeparator,
         use_stop_strings: true,
         names_as_stop_strings: true,
-        story_string_position: extension_prompt_types.IN_PROMPT,
-        story_string_role: extension_prompt_roles.SYSTEM,
+    story_string_position: 0, // extension_prompt_types.IN_PROMPT (inline: avoids TDZ on cyclic import)
+    story_string_role: 0, // extension_prompt_roles.SYSTEM (inline: avoids TDZ on cyclic import)
         story_string_depth: 1,
     },
 
@@ -358,9 +358,9 @@ const contextControls = [
     { id: 'context_chat_start', property: 'chat_start', isCheckbox: false, isGlobalSetting: false },
     { id: 'context_use_stop_strings', property: 'use_stop_strings', isCheckbox: true, isGlobalSetting: false, defaultValue: false },
     { id: 'context_names_as_stop_strings', property: 'names_as_stop_strings', isCheckbox: true, isGlobalSetting: false, defaultValue: true },
-    { id: 'context_story_string_position', property: 'story_string_position', isCheckbox: false, isGlobalSetting: false, defaultValue: extension_prompt_types.IN_PROMPT, trigger: true },
+    { id: 'context_story_string_position', property: 'story_string_position', isCheckbox: false, isGlobalSetting: false, defaultValue: 0, trigger: true }, // extension_prompt_types.IN_PROMPT (inline: avoids TDZ on cyclic import)
     { id: 'context_story_string_depth', property: 'story_string_depth', isCheckbox: false, isGlobalSetting: false, defaultValue: 1 },
-    { id: 'context_story_string_role', property: 'story_string_role', isCheckbox: false, isGlobalSetting: false, defaultValue: extension_prompt_roles.SYSTEM },
+    { id: 'context_story_string_role', property: 'story_string_role', isCheckbox: false, isGlobalSetting: false, defaultValue: 0 }, // extension_prompt_roles.SYSTEM (inline: avoids TDZ on cyclic import)
 
     // Existing power user settings
     { id: 'always-force-name2-checkbox', property: 'always_force_name2', isCheckbox: true, isGlobalSetting: true, defaultValue: true },

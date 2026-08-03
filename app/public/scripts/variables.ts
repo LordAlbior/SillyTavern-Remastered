@@ -1,10 +1,8 @@
-import { getCurrentChatId, saveSettingsDebounced } from '../script.ts';
+import { getCurrentChatId, saveSettingsDebounced, chat_metadata } from '../script.ts';
 import { extension_settings, saveMetadataDebounced } from './extensions.ts';
 import { executeSlashCommandsWithOptions } from './slash-commands.ts';
 import { SlashCommand } from './slash-commands/SlashCommand.ts';
 import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.ts';
-
-const chat_metadata: Record<string, any> = (await import('../script.js')).chat_metadata; // ponytail: widen type, fix when script.ts exports typed chat_metadata
 import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
 import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.ts';
 import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';

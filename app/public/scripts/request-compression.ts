@@ -1,6 +1,3 @@
-// @ts-ignore - runtime path, no type declarations
-import { gzip } from '/lib.js';
-
 /**
  * @type {RequestCompressionConfig}
  *
@@ -32,19 +29,22 @@ export function setRequestCompressionConfig(config) {
  */
 function gzipBuffer(input) {
     let terminate = () => {};
-    const promise = new Promise((resolve, reject) => {
-        try {
-            terminate = gzip(input, (error, compressed) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
+    // @ts-ignore - runtime path, no type declarations
+    const promise = import('/lib.js').then(({ gzip }) => {
+        return new Promise((resolve, reject) => {
+            try {
+                terminate = gzip(input, (error, compressed) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
 
-                resolve(new Uint8Array(compressed));
-            });
-        } catch (error) {
-            reject(error);
-        }
+                    resolve(new Uint8Array(compressed));
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
     });
     return { promise, terminate };
 }
