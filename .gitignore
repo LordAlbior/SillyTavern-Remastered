@@ -71,7 +71,10 @@ pnpm-lock.yaml
 opencode.json
 opencode.json.openchamber.backup
 AGENTS.md
-
+DEBT.md
+/.kilo
+/.reflex
+/.cortexkit
 # Build artifacts (transpiled TypeScript frontend)
 /app/public/dist/
 
