@@ -15,7 +15,7 @@ browserLaunch:
   avoidLocalhost: false
 port: 8000
 heartbeatInterval: 0
-enableKeepAlive: false
+enableKeepAlive: true
 ssl:
   enabled: false
   certPath: ./certs/cert.pem

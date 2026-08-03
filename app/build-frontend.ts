@@ -47,6 +47,7 @@ const libResult = await Bun.build({
     outdir: distDir,
     target: 'browser',
     format: 'esm',
+    minify: true,
     plugins: [resolveEdgeCases],
 });
 
@@ -65,6 +66,7 @@ const scriptResult = await Bun.build({
     outdir: distDir,
     target: 'browser',
     format: 'esm',
+    minify: true,
     plugins: [resolveEdgeCases],
 });
 
@@ -84,6 +86,7 @@ const loginResult = await Bun.build({
     outdir: path.join(distDir, 'scripts'),
     target: 'browser',
     format: 'esm',
+    minify: true,
     plugins: [resolveEdgeCases],
 });
 
