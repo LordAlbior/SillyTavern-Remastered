@@ -78,3 +78,6 @@ DEBT.md
 # Build artifacts (transpiled TypeScript frontend)
 /app/public/dist/
 
+
+# Generated extension bundles (TS source is committed; index.js is build output)
+extensions/*/index.js

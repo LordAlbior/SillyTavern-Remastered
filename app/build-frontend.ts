@@ -97,4 +97,65 @@ if (!loginResult.success) {
 }
 console.log(`  → dist/scripts/login.js (${(loginResult.outputs[0].size / 1024).toFixed(0)} KB)`);
 
+// 4. Bundle TypeScript extensions in place (extensions/<name>/index.ts → index.js)
+//    Legacy .js / webpack-built extensions (no index.ts) are left untouched.
+//    Imports that resolve OUTSIDE the extension folder (app modules like
+//    ../../../script.js, ../../extensions.js) are kept external — the browser
+//    resolves them at runtime against the served URLs. Internal submodule
+//    imports (./src/foo.ts) are inlined to cut HTTP requests.
+console.log('[4/4] Bundling extensions...');
+const extensionsDir = path.join(path.dirname(path.dirname(publicDir)), 'extensions');
+let bundledExtensions = 0;
+if (fs.existsSync(extensionsDir)) {
+    for (const entry of fs.readdirSync(extensionsDir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        if (entry.name === 'third-party') continue;
+        const extDir = path.join(extensionsDir, entry.name);
+        const entryTs = path.join(extDir, 'index.ts');
+        if (!fs.existsSync(entryTs)) continue; // legacy JS / webpack extension
+
+        const externalizeOutsideExt = {
+            name: 'externalize-outside-extension',
+            setup(build: any) {
+                build.onResolve({ filter: /^\.\.?\// }, (args: any) => {
+                    const resolved = path.resolve(args.resolveDir, args.path);
+                    // Keep the original specifier so it resolves at runtime
+                    // (e.g. ../../../script.js → /script.js from the served URL).
+                    if (!resolved.startsWith(extDir + path.sep)) {
+                        return { path: args.path, external: true };
+                    }
+                    return undefined; // internal → bundle
+                });
+                // Absolute app imports (/script.js, /scripts/...) stay external —
+                // the browser fetches them from the served URLs.
+                build.onResolve({ filter: /^\/(script|lib)\.js$/ }, (args: any) => ({
+                    path: args.path,
+                    external: true,
+                }));
+                build.onResolve({ filter: /^\/scripts\// }, (args: any) => ({
+                    path: args.path,
+                    external: true,
+                }));
+            },
+        };
+
+        const extResult = await Bun.build({
+            entrypoints: [entryTs],
+            outdir: extDir,
+            target: 'browser',
+            format: 'esm',
+            minify: true,
+            plugins: [externalizeOutsideExt, resolveEdgeCases],
+        });
+        if (!extResult.success) {
+            console.error(`Extension bundle FAILED: ${entry.name}`);
+            for (const log of extResult.logs) console.error(log);
+            process.exit(1);
+        }
+        bundledExtensions++;
+        console.log(`  → extensions/${entry.name}/index.js (${(extResult.outputs[0].size / 1024).toFixed(0)} KB)`);
+    }
+}
+if (bundledExtensions === 0) console.log('  → no TS extensions to bundle');
+
 console.log('===== Build complete =====');
