@@ -706,7 +706,7 @@ function charaFormatData(data, directories) {
  */
 function convertWorldInfoToCharacterBook(name, entries) {
   /** @type {{ entries: object[]; name: string }} */
-  const result = { entries: [], name };
+  const result = { entries: [] as any[], name };
 
   for (const index in entries) {
     const entry = entries[index];
@@ -899,7 +899,7 @@ async function importFromByaf(uploadPath, { request }, preservedFileName) {
       }
     }
 
-    const chats = [];
+    const chats: string[] = [];
     // Create chats for each scenario
     if (Array.isArray(byafData.scenarios)) {
       for (const scenario of byafData.scenarios) {
@@ -1334,7 +1334,7 @@ function processUnsetSentinels(target, source) {
  * @param {((data: any) => boolean) | null} [shouldSkip] Optional function to determine if a character should be skipped based on its original data (used for bulk merge filtering)
  * @returns {Promise<{ok: boolean, error?: string, skipped?: boolean}>} Result of the merge operation, including any validation error
  */
-async function mergeCharacterUpdate(avatarPath, avatar, updateData, request, shouldSkip = null) {
+async function mergeCharacterUpdate(avatarPath, avatar, updateData, request, shouldSkip: ((data: any) => boolean) | null = null) {
   const pngStringData = await readCharacterData(avatarPath);
   if (!pngStringData) {
     return { ok: false, error: "Invalid character file" };
@@ -1415,9 +1415,9 @@ router.post("/merge-attributes", getFileNameValidationFunction("avatar"), async 
         targetAvatars = files.filter((file) => path.extname(file).toLowerCase() === ".png");
       }
 
-      const updated = [];
-      const skipped = [];
-      const failed = [];
+const updated: string[] = [];
+  const skipped: string[] = [];
+  const failed: string[] = [];
 
       /**
        * Process a single character in bulk: read, filter, merge, validate, write.

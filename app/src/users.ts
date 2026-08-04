@@ -417,7 +417,7 @@ export async function migrateUserData() {
     fs.mkdirSync(backupDirectory, { recursive: true });
   }
 
-  const errors = [];
+  const errors: string[] = [];
 
   for (const migration of dataMigrationMap) {
     console.log(`Migrating ${migration.old} to ${migration.new}...`);
@@ -488,7 +488,7 @@ export async function migrateSystemPrompts() {
       fs.mkdirSync(backupsPath, { recursive: true });
       const defaultPrompts = await getDefaultSystemPrompts();
       const instucts = fs.readdirSync(directory.instruct);
-      let migratedPrompts = [];
+      let migratedPrompts: any[] = [];
       for (const instruct of instucts) {
         const instructPath = path.join(directory.instruct, instruct);
         const sysPromptPath = path.join(directory.sysprompt, instruct);

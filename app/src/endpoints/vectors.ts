@@ -111,7 +111,7 @@ async function getBatchVector(source, sourceSettings, texts, isQuery, directorie
     .fill(undefined)
     .map((_, i) => texts.slice(i * batchSize, i * batchSize + batchSize));
 
-  const results = [];
+  const results: any[] = [];
   for (const batch of batches) {
     switch (source) {
       case "nomicai":
@@ -425,7 +425,7 @@ async function queryCollection(directories, collectionId, source, sourceSettings
  */
 async function multiQueryCollection(directories, collectionIds, source, sourceSettings, searchText, topK, threshold) {
   const vector = await getVector(source, sourceSettings, searchText, true, directories);
-  const results = [];
+  const results: any[] = [];
 
   for (const collectionId of collectionIds) {
     const store = await getIndex(directories, collectionId, source, sourceSettings);

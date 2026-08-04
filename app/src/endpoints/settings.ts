@@ -57,7 +57,7 @@ function readAndParseFromDirectory(directoryPath, fileExtension = ".json") {
     .filter((x) => path.parse(x).ext == fileExtension)
     .sort();
 
-  const parsedFiles = [];
+  const parsedFiles: any[] = [];
 
   files.forEach((item) => {
     try {
@@ -96,8 +96,8 @@ function readPresetsFromDirectory(directoryPath: string, options: any = {}) {
     .readdirSync(directoryPath)
     .sort(sortFunction)
     .filter((x) => path.parse(x).ext == fileExtension);
-  const fileContents = [];
-  const fileNames = [];
+  const fileContents: string[] = [];
+  const fileNames: string[] = [];
 
   files.forEach((item) => {
     try {

@@ -57,7 +57,7 @@ export function validateAssetFileName(inputFilename) {
  * @param {string[]} files - The array of files to return
  * @returns {string[]} - The array of files
  */
-function getFiles(dir, files = []) {
+function getFiles(dir, files: string[] = []) {
   if (!fs.existsSync(dir)) return files;
 
   // Get an array of all files and directories in the passed directory using fs.readdirSync
@@ -203,7 +203,7 @@ router.post("/download", async (request, response) => {
     }
 
     // Check category
-    let category = null;
+    let category: string | null = null;
     for (const i of VALID_CATEGORIES) if (i == inputCategory) category = i;
 
     if (category === null) {
@@ -265,7 +265,7 @@ router.post("/delete", async (request, response) => {
   const inputCategory = request.body.category;
 
   // Check category
-  let category = null;
+  let category: string | null = null;
   for (const i of VALID_CATEGORIES) if (i == inputCategory) category = i;
 
   if (category === null) {
@@ -312,7 +312,7 @@ router.post("/character", async (request, response) => {
   const inputCategory = request.query.category;
 
   // Check category
-  let category = null;
+  let category: string | null = null;
   for (const i of VALID_CATEGORIES) if (i == inputCategory) category = i;
 
   if (category === null) {
@@ -322,7 +322,7 @@ router.post("/character", async (request, response) => {
 
   const folderPath = path.join(request.user.directories.characters, name, category);
 
-  const output = [];
+  const output: string[] = [];
   try {
     if (fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory()) {
       // Live2d assets

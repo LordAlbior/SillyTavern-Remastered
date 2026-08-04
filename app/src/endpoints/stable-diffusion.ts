@@ -1580,7 +1580,7 @@ falai.post("/models", async (_request, response) => {
     let page = 1;
     /** @type {any} */
     let modelsResponse;
-    let models = [];
+    let models: any[] = [];
 
     do {
       modelsUrl.searchParams.set("page", page.toString());

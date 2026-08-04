@@ -218,7 +218,7 @@ export function convertClaudePrompt(
  * @returns {{messages: object[], systemPrompt: object[]}} Prompt for Anthropic
  */
 export function convertClaudeMessages(messages, prefillString, useSysPrompt, useTools, names) {
-  const systemPrompt = [];
+  const systemPrompt: any[] = [];
   if (useSysPrompt) {
     // Collect all the system messages up until the first instance of a non-system message, and then remove them from the messages array.
     let i;
@@ -368,7 +368,7 @@ export function convertClaudeMessages(messages, prefillString, useSysPrompt, use
 
   // Since the messaging endpoint only supports user assistant roles in turns, we have to merge messages with the same role if they follow eachother
   // Also handle multi-modality, holy slop.
-  const mergedMessages = [];
+  const mergedMessages: any[] = [];
   messages.forEach((message) => {
     if (mergedMessages.length > 0 && mergedMessages[mergedMessages.length - 1].role === message.role) {
       mergedMessages[mergedMessages.length - 1].content.push(...message.content);
@@ -459,7 +459,7 @@ export function convertCohereMessages(messages, names) {
  * @returns {{contents: *[], system_instruction: {parts: {text: string}[]}}} Prompt for Google MakerSuite models
  */
 export function convertGooglePrompt(messages, model, useSysPrompt, names) {
-  const sysPrompt = [];
+  const sysPrompt: any[] = [];
 
   if (useSysPrompt) {
     while (messages.length > 1 && messages[0].role === "system") {
@@ -482,7 +482,7 @@ export function convertGooglePrompt(messages, model, useSysPrompt, names) {
   const system_instruction = { parts: sysPrompt.map((text) => ({ text })) };
   const toolNameMap = {};
 
-  const contents = [];
+  const contents: any[] = [];
   messages.forEach((message, index) => {
     // fix the roles
     if (message.role === "system" || message.role === "tool") {
@@ -535,17 +535,17 @@ export function convertGooglePrompt(messages, model, useSysPrompt, names) {
     }
 
     //create the prompt parts
-    const parts = [];
+    const parts: any[] = [];
     message.content.forEach((part) => {
       const addDataUrlPart = (
         /** @type {string} */ url,
         /** @type {string} */ defaultMimeType,
-        /** @type {string?} */ detail = null,
+        detail: string | null = null,
       ) => {
         if (url && url.startsWith("data:")) {
           const [header, base64Data] = url.split(",");
           const mimeType = header.match(/data:([^;]+)/)?.[1] || defaultMimeType;
-          const mediaResolution = GEMINI_MEDIA_RESOLUTION[detail] || null;
+          const mediaResolution = detail ? GEMINI_MEDIA_RESOLUTION[detail] || null : null;
 
           const part = {
             inlineData: {
@@ -718,7 +718,7 @@ export function convertAI21Messages(messages, names) {
   });
 
   // Since the messaging endpoint only supports alternating turns, we have to merge messages with the same role if they follow each other
-  const mergedMessages = [];
+  const mergedMessages: any[] = [];
   messages.forEach((message) => {
     if (mergedMessages.length > 0 && mergedMessages[mergedMessages.length - 1].role === message.role) {
       mergedMessages[mergedMessages.length - 1].content += "\n\n" + message.content;
@@ -878,7 +878,7 @@ export function mergeMessages(
   names,
   { strict = false, placeholders = false, single = false, tools = false } = {},
 ) {
-  const mergedMessages = [];
+  const mergedMessages: any[] = [];
 
   /** @type {Map<string,object>} */
   const contentTokens = new Map();
@@ -982,7 +982,7 @@ export function mergeMessages(
 
       if (hasValidToken) {
         const splitContent = message.content.split("\n\n");
-        const mergedContent = [];
+        const mergedContent: any[] = [];
 
         splitContent.forEach((content) => {
           if (contentTokens.has(content)) {
@@ -1031,7 +1031,7 @@ export function convertTextCompletionPrompt(messages) {
     return messages;
   }
 
-  const messageStrings = [];
+  const messageStrings: string[] = [];
   messages.forEach((m) => {
     if (m.role === "system" && m.name === undefined) {
       messageStrings.push("System: " + m.content);
@@ -1139,7 +1139,7 @@ export function cachingAtDepthForOpenRouterClaude(messages, cachingAtDepth, ttl)
  * @param {object[]} messages Array of messages
  * @param {string} [ttl] TTL value (optional)
  */
-export function cachingSystemPromptForOpenRouter(messages, ttl = undefined) {
+export function cachingSystemPromptForOpenRouter(messages, ttl: string | undefined = undefined) {
   if (!Array.isArray(messages) || messages.length === 0) {
     return;
   }
@@ -1482,7 +1482,7 @@ export function addOpenRouterSignatures(messages, model) {
   }
 
   for (const message of messages) {
-    const details = [];
+    const details: any[] = [];
     const addDetail = (data, id) => {
       if (typeof data !== "string" || data.length === 0) {
         return;

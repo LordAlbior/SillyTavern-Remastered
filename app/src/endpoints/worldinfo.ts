@@ -39,7 +39,7 @@ export const router = express.Router();
 
 router.post("/list", async (request, response) => {
   try {
-    const data = [];
+    const data: any[] = [];
     const jsonFiles = (await fs.promises.readdir(request.user.directories.worlds, { withFileTypes: true }))
       .filter((file) => file.isFile() && path.extname(file.name).toLowerCase() === ".json")
       .sort((a, b) => a.name.localeCompare(b.name));
@@ -102,7 +102,7 @@ router.post("/import", (request, response) => {
 
   const filename = `${path.parse(sanitize(request.file.originalname)).name}.json`;
 
-  let fileContents = null;
+  let fileContents: string | null = null;
 
   if (request.body.convertedData) {
     fileContents = request.body.convertedData;
@@ -113,7 +113,7 @@ router.post("/import", (request, response) => {
   }
 
   try {
-    const worldContent = JSON.parse(fileContents);
+    const worldContent = JSON.parse(fileContents as string);
     if (!("entries" in worldContent)) {
       throw new Error("File must contain a world info entries list");
     }
@@ -128,7 +128,7 @@ router.post("/import", (request, response) => {
     return response.status(400).send("World file must have a name");
   }
 
-  writeFileAtomicSync(pathToNewFile, fileContents);
+  writeFileAtomicSync(pathToNewFile, fileContents as string);
   return response.send({ name: worldName });
 });
 

@@ -5,9 +5,10 @@
     "checkJs": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noImplicitAny": false,
+"noImplicitAny": false,
     "noImplicitThis": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "useUnknownInCatchVariables": false,
     "types": ["node", "jquery", "toastr"],
     "paths": {

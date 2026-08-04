@@ -83,7 +83,7 @@ function parseTimestamp(timestamp) {
     return new Date(timestamp).getTime();
   }
 
-  const dateFormats = [];
+  const dateFormats: { callback: (...args: any[]) => string; pattern: RegExp }[] = [];
 
   // meridiem-based format
   const convertFromMeridiemBased = (_, month, day, year, hour, minute, meridiem) => {

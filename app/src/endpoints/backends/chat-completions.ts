@@ -110,7 +110,7 @@ const enableAdaptiveThinking = getConfigValue("claude.enableAdaptiveThinking", t
  * Cache for cacheable (writing) OpenRouter model IDs.
  * @type {string[]}
  */
-const openRouterCacheableModels = [];
+const openRouterCacheableModels: string[] = [];
 
 /**
  * Checks if an OpenRouter model supports prompt cache writing.
@@ -178,7 +178,7 @@ function getOpenRouterTransforms(request) {
  * @returns {any[]} OpenRouter plugins
  */
 function getOpenRouterPlugins(request) {
-  const plugins = [];
+  const plugins: any[] = [];
 
   if (request.body.enable_web_search) {
     plugins.push({ id: "web" });
@@ -255,7 +255,7 @@ async function sendClaudeRequest(request, response) {
     const noSamplingModel = /^claude-(opus-4-7)/.test(request.body.model);
     let fixThinkingPrefill = false;
     // Add custom stop sequences
-    const stopSequences = [];
+    const stopSequences: any[] = [];
     if (Array.isArray(request.body.stop)) {
       stopSequences.push(...request.body.stop);
     }
@@ -565,13 +565,13 @@ async function sendMakerSuiteRequest(request, response) {
 
     const useSystemPrompt = !enableImageModality && !isGemma3 && request.body.use_sysprompt;
 
-    const tools = [];
+    const tools: any[] = [];
     const prompt = convertGooglePrompt(request.body.messages, model, useSystemPrompt, getPromptNames(request));
     const safetySettings = [...GEMINI_SAFETY, ...(useVertexAi ? VERTEX_SAFETY : [])];
 
     if (Array.isArray(request.body.tools) && request.body.tools.length > 0 && !enableImageModality && !isGemma3) {
-      const functionDeclarations = [];
-      const customTools = [];
+      const functionDeclarations: any[] = [];
+      const customTools: any[] = [];
       for (const tool of request.body.tools) {
         if (tool.type === "function") {
           if (tool.function.parameters?.$schema) {
@@ -1000,7 +1000,7 @@ async function sendCohereRequest(request, response) {
 
   try {
     const convertedHistory = convertCohereMessages(request.body.messages, getPromptNames(request));
-    const tools = [];
+    const tools: any[] = [];
 
     if (Array.isArray(request.body.tools) && request.body.tools.length > 0) {
       tools.push(...request.body.tools);
@@ -2135,7 +2135,7 @@ router.post("/status", async (request, statusResponse) => {
       }
 
       if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.OPENROUTER && Array.isArray(data?.data)) {
-        const models = [];
+        const models: any[] = [];
 
         data.data.forEach((model) => {
           const context_length = model.context_length;

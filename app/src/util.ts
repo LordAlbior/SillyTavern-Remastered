@@ -27,7 +27,7 @@ import { isFirefox } from "./express-common.ts";
  * Parsed config object.
  */
 let CACHED_CONFIG = null;
-let CONFIG_PATH = null;
+let CONFIG_PATH: string | null = null;
 
 /**
  * Converts a configuration key to an environment variable key.
@@ -139,9 +139,9 @@ export function getBasicAuthHeader(auth) {
  */
 export async function getVersion() {
   let pkgVersion = "UNKNOWN";
-  let gitRevision = null;
-  let gitBranch = null;
-  let commitDate = null;
+  let gitRevision: string | null = null;
+  let gitBranch: string | null = null;
+  let commitDate: string | null = null;
   let isLatest = true;
 
   try {
@@ -226,7 +226,7 @@ export async function extractFileFromZipBuffer(archiveBuffer, fileExtension) {
                 console.warn(`Error opening read stream: ${err.message}`);
                 return zipfile.readEntry();
               } else {
-                const chunks = [];
+                const chunks: Buffer[] = [];
                 readStream.on("data", (chunk) => {
                   chunks.push(chunk);
                 });
@@ -347,7 +347,7 @@ export async function extractFilesFromZipBuffer(archiveBuffer, fileNames) {
               return zipfile.readEntry();
             }
 
-            const chunks = [];
+            const chunks: Buffer[] = [];
             readStream.on("data", (chunk) => {
               chunks.push(chunk);
             });
@@ -423,7 +423,7 @@ export async function getImageBuffers(zipFilePath) {
       return;
     }
 
-    const imageBuffers = [];
+    const imageBuffers: [string, Buffer][] = [];
 
     yauzl.open(zipFilePath, { lazyEntries: true }, (err, zipfile) => {
       if (err) {
@@ -437,7 +437,7 @@ export async function getImageBuffers(zipFilePath) {
               if (err) {
                 reject(err);
               } else {
-                const chunks = [];
+                const chunks: Buffer[] = [];
                 readStream.on("data", (chunk) => {
                   chunks.push(chunk);
                 });
@@ -473,7 +473,7 @@ export async function getImageBuffers(zipFilePath) {
 export async function readAllChunks(readableStream) {
   return new Promise((resolve, reject) => {
     // Consume the readable stream
-    const chunks = [];
+    const chunks: Buffer[] = [];
     readableStream.on("data", (chunk) => {
       chunks.push(chunk);
     });
@@ -593,7 +593,19 @@ export function clientRelativePath(root, inputPath) {
  *        When set to 0, the intention is to also check if the basename (without applied index) is free.
  * @returns {string|null} A unique name. Null if no unique name could be found in `maxTries`.
  */
-export function getUniqueName(baseName, exists, { nameBuilder = null, maxTries = 1000, startIndex = 1 } = {}) {
+export function getUniqueName(
+  baseName,
+  exists,
+  {
+    nameBuilder = null,
+    maxTries = 1000,
+    startIndex = 1,
+  }: {
+    nameBuilder?: ((baseName: string, i: number) => string) | null;
+    maxTries?: number;
+    startIndex?: number;
+  } = {},
+) {
   nameBuilder ??= (baseName, i) => (i === 0 ? baseName : `${baseName} (${i})`);
   let i = startIndex;
   let name;
@@ -643,7 +655,7 @@ export function generateTimestamp() {
  * @param {string} prefix File prefix to filter backups by.
  * @param {number?} limit Maximum number of backups to keep. If null, the limit is determined by the `backups.common.numberOfBackups` config value.
  */
-export function removeOldBackups(directory, prefix, limit = null) {
+export function removeOldBackups(directory, prefix, limit: number | null = null) {
   const MAX_BACKUPS = limit ?? Number(getConfigValue("backups.common.numberOfBackups", 50, "number"));
 
   let files = fs.readdirSync(directory).filter((f) => f.startsWith(prefix));
@@ -916,7 +928,7 @@ export class Cache {
    */
   get(key) {
     const value = this.cache.get(key);
-    if (value?.expiry > Date.now()) {
+    if (value?.expiry && value.expiry > Date.now()) {
       return value.value;
     }
 
@@ -1194,7 +1206,7 @@ export class MemoryLimitedMap {
 
     // Evict oldest entries until there's enough space
     while (this.currentMemory + newValueSize > this.maxMemory && this.queue.length > 0) {
-      const oldestKey = this.queue.shift();
+      const oldestKey = this.queue.shift() as string;
       const oldestValue = this.map.get(oldestKey);
       const oldestValueSize = MemoryLimitedMap.estimateStringSize(oldestValue);
       this.map.delete(oldestKey);
@@ -1458,7 +1470,7 @@ export function flattenSchema(schema, api) {
   const definitions = schemaCopy.$defs || {};
   delete schemaCopy.$defs;
 
-  function resolve(obj, parents = []) {
+  function resolve(obj, parents: string[] = []) {
     if (!obj || typeof obj !== "object") {
       return obj;
     }

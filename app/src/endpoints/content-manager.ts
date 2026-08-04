@@ -83,7 +83,7 @@ function getScopeByType(type) {
 export function getDefaultPresets(directories) {
   try {
     const contentIndex = getContentIndex(CONTENT_SCOPE.USER);
-    const presets = [];
+    const presets: any[] = [];
 
     for (const contentItem of contentIndex) {
       if (
@@ -132,7 +132,7 @@ export function getDefaultPresetFile(filename) {
  * @param {string[]} [forceCategories] List of categories to force check (even if content check is skipped)
  * @returns {boolean} Whether any content was added
  */
-function seedContent(contentIndex, contentLogPath, resolveTarget, forceCategories = undefined) {
+function seedContent(contentIndex, contentLogPath, resolveTarget, forceCategories: string[] | undefined = undefined) {
   let anyContentAdded = false;
   const contentLog = getContentLog(contentLogPath);
 
@@ -212,7 +212,7 @@ async function seedGlobalContent(contentIndex) {
  * @param {string[]} forceCategories List of categories to force check (even if content check is skipped)
  * @returns {Promise<void>}
  */
-export async function checkForNewContent(directoriesList, forceCategories = []) {
+export async function checkForNewContent(directoriesList, forceCategories: string[] = []) {
   try {
     const contentCheckSkip = getConfigValue("skipContentCheck", false, "boolean");
     if (contentCheckSkip && forceCategories?.length === 0) {
@@ -254,7 +254,7 @@ export async function checkForNewContent(directoriesList, forceCategories = []) 
  * @returns {ContentItem[]} Array of content index
  */
 function getContentIndex(scope = CONTENT_SCOPE.USER) {
-  const result = [];
+  const result: any[] = [];
 
   if (fs.existsSync(scaffoldIndexPath)) {
     const scaffoldIndexText = fs.readFileSync(scaffoldIndexPath, "utf8");
@@ -293,7 +293,7 @@ function getContentIndex(scope = CONTENT_SCOPE.USER) {
 export function getContentOfType(type, format, scope = CONTENT_SCOPE.USER) {
   const contentIndex = getContentIndex(scope);
   const indexItems = contentIndex.filter((item) => item.type === type && item.folder);
-  const files = [];
+  const files: any[] = [];
   for (const item of indexItems) {
     if (!item.folder) {
       continue;
@@ -389,7 +389,7 @@ export function getGlobalTargetByType(type) {
  * @param {string} contentLogPath Path to the content log file
  * @returns {string[]} Array of content log lines
  */
-function getContentLog(contentLogPath) {
+function getContentLog(contentLogPath): string[] {
   if (!fs.existsSync(contentLogPath)) {
     return [];
   }

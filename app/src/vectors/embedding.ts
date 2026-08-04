@@ -19,9 +19,9 @@ export async function getTransformersVector(text) {
  * @returns {Promise<number[][]>} - The vectorized texts in form of an array of arrays of numbers
  */
 export async function getTransformersBatchVector(texts) {
-  const result = [];
+  const result: number[][] = [];
   for (const text of texts) {
-    result.push(await getTransformersVector(text));
+    result.push((await getTransformersVector(text)) as number[]);
   }
   return result;
 }

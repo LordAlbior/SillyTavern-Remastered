@@ -14,7 +14,7 @@ export const router = express.Router();
 
 router.post("/caption-image", async (request, response) => {
   try {
-    let key = "";
+    let key: string | null | undefined = "";
     const headers = {};
     const bodyParams: any = {};
 

@@ -400,7 +400,7 @@ async function countSentencepieceArrayTokens(tokenizer, array) {
 
 async function getTiktokenChunks(tokenizer, ids) {
   const decoder = new TextDecoder();
-  const chunks = [];
+  const chunks: string[] = [];
 
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i];
@@ -419,7 +419,7 @@ async function getTiktokenChunks(tokenizer, ids) {
  * @returns {string[]} Token chunks
  */
 function getWebTokenizersChunks(tokenizer, ids) {
-  const chunks = [];
+  const chunks: string[] = [];
 
   for (let i = 0, lastProcessed = 0; i < ids.length; i++) {
     const chunkIds = ids.slice(lastProcessed, i + 1);

@@ -176,7 +176,7 @@ export function addMissingConfigValues(configPath) {
     let config = yaml.parse(fs.readFileSync(configPath, "utf8"));
 
     // Migrate old keys to new keys
-    const migratedKeys = [];
+    const migratedKeys: { oldKey: string; newKey?: string; oldValue?: any; newValue?: any }[] = [];
     for (const { oldKey, newKey, migrate, remove } of keyMigrationMap) {
       // Migrate environment variables
       const oldEnvKey = keyToEnv(oldKey);

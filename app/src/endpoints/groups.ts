@@ -115,7 +115,7 @@ export async function migrateGroupChatsMetadataFormat(userDirectories) {
 }
 
 router.post("/all", (request, response) => {
-  const groups = [];
+  const groups: any[] = [];
 
   if (!fs.existsSync(request.user.directories.groups)) {
     fs.mkdirSync(request.user.directories.groups);

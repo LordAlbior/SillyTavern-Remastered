@@ -232,7 +232,7 @@ const eratoLogitBiasExp = [
 ];
 
 function getBadWordsList(model) {
-  let list = [];
+  let list: number[][] = [];
 
   if (model.includes("hypebot")) {
     list = hypeBotBadWordsList;
@@ -251,7 +251,7 @@ function getBadWordsList(model) {
 }
 
 function getLogitBiasList(model) {
-  let list = [];
+  let list: any[] = [];
 
   if (model.includes("erato")) {
     list = eratoLogitBiasExp;

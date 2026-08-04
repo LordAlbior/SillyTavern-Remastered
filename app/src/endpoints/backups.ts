@@ -8,7 +8,7 @@ export const router = express.Router();
 
 router.post("/chat/get", async (request, response) => {
   try {
-    const backupModels = [];
+    const backupModels: any[] = [];
     const backupFiles = await fsPromises
       .readdir(request.user.directories.backups, { withFileTypes: true })
       .then((d) =>

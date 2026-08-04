@@ -40,7 +40,7 @@ router.post("/models/providers", async (req, res) => {
  * @param {((model: any) => any) | null} [mapFn=null] - Optional mapping function to transform the results
  * @returns {Promise<any[]>} Filtered and/or mapped models
  */
-async function fetchModelsByModality(endpoint, inputModality, outputModality, mapFn = null) {
+async function fetchModelsByModality(endpoint, inputModality, outputModality, mapFn: ((model: any) => any) | null = null) {
   const response = await fetch(`${API_OPENROUTER}${endpoint}?output_modalities=${encodeURIComponent(outputModality)}`, {
     method: "GET",
     headers: { Accept: "application/json" },

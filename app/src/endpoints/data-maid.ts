@@ -170,7 +170,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose user images
    */
   async #collectImages() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const messages = await this.#parseAllChats(
@@ -250,7 +250,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose user files
    */
   async #collectFiles() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const messages = await this.#parseAllChats(
@@ -331,7 +331,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose character chats
    */
   async #collectChats() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const knownChatFolders = new Set<string>();
@@ -367,7 +367,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose group chats
    */
   async #collectGroupChats() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const groups = await fs.promises.readdir(this.directories.groups, { withFileTypes: true });
@@ -411,7 +411,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose avatar thumbnails
    */
   async #collectAvatarThumbnails() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const knownAvatars = new Set<string>();
@@ -439,7 +439,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose background thumbnails
    */
   async #collectBackgroundThumbnails() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const knownBackgrounds = new Set<string>();
@@ -467,7 +467,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to loose persona thumbnails
    */
   async #collectPersonaThumbnails() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const knownPersonas = new Set<string>();
@@ -495,7 +495,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to chat backups
    */
   async #collectChatBackups() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const prefix = CHAT_BACKUPS_PREFIX;
@@ -517,7 +517,7 @@ export class DataMaidService {
    * @returns {Promise<string[]>} List of paths to settings backups
    */
   async #collectSettingsBackups() {
-    const result = [];
+    const result: string[] = [];
 
     try {
       const prefix = getSettingsBackupFilePrefix(this.handle);
@@ -542,7 +542,7 @@ export class DataMaidService {
    */
   async #parseAllChats(filterFn) {
     try {
-      const allChats = [];
+      const allChats: any[] = [];
 
       const groupChats = await fs.promises.readdir(this.directories.groupChats, { withFileTypes: true });
       for (const file of groupChats) {
@@ -584,7 +584,7 @@ export class DataMaidService {
    */
   async #parseAllMetadata(filterFn) {
     try {
-      const allMetadata = [];
+      const allMetadata: any[] = [];
 
       const groups = await fs.promises.readdir(this.directories.groups, { withFileTypes: true });
       for (const file of groups) {

@@ -314,7 +314,7 @@ export async function renameMetadata(userDataRoot, oldRelativePath, newRelativeP
  */
 export async function cleanupOrphanedMetadata(userDataRoot) {
   const index = await readMetadataIndex(userDataRoot);
-  const orphanedPaths = [];
+  const orphanedPaths: string[] = [];
 
   for (const relativePath of Object.keys(index.images)) {
     const fullPath = path.resolve(userDataRoot, relativePath);
@@ -662,8 +662,8 @@ router.post("/", async (request, response) => {
     // Handle multiple paths
     if (paths && Array.isArray(paths)) {
       /** @type {Object.<string, ImageMetadata|{error: string}>} */
-      const results = {};
-      const validPaths = [];
+      const results: Record<string, any> = {};
+      const validPaths: string[] = [];
 
       // Validate all paths first
       for (const relativePath of paths) {

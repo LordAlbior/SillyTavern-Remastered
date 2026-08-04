@@ -372,7 +372,12 @@ async function checkChatIntegrity(filePath, integritySlug) {
  *
  * @typedef {(textArray: string[]) => boolean} ChatMatchFunction
  */
-export async function getChatInfo(pathToFile, additionalData = {}, withMetadata = false, matcher = null) {
+export async function getChatInfo(
+  pathToFile,
+  additionalData = {},
+  withMetadata = false,
+  matcher: ((textArray: string[]) => boolean) | null = null,
+) {
   return new Promise(async (res) => {
     const parsedPath = path.parse(pathToFile);
     const stats = await fs.promises.stat(pathToFile);
@@ -403,7 +408,7 @@ export async function getChatInfo(pathToFile, additionalData = {}, withMetadata 
     let lastLine;
     let itemCounter = 0;
     let hasAnyMatch = false;
-    let matchBuffer = [];
+    let matchBuffer: string[] = [];
     rl.on("line", (line) => {
       if (withMetadata && itemCounter === 0) {
         const jsonData = tryParse(line);
@@ -416,7 +421,7 @@ export async function getChatInfo(pathToFile, additionalData = {}, withMetadata 
         const jsonData = tryParse(line);
         if (jsonData) {
           matchBuffer.push(jsonData.mes || "");
-          if (matcher(matchBuffer)) {
+          if (matcher?.(matchBuffer)) {
             hasAnyMatch = true;
             matchBuffer = [];
           }
@@ -518,7 +523,7 @@ router.post("/save", validateAvatarUrlMiddleware, async (request, response) => {
  * @returns {Array}} If the chatFilePath cannot be read, this will return [].
  */
 export function getChatData(chatFilePath) {
-  let chatData = [];
+  let chatData: any[] = [];
 
   const chatJSON = tryReadFileSync(chatFilePath) ?? "";
   if (chatJSON.length > 0) {
@@ -718,7 +723,7 @@ router.post("/import", validateAvatarUrlMiddleware, (request, response) => {
   const avatarUrl = request.body.avatar_url.replace(".png", "");
   const characterName = sanitize(request.body.character_name) || "Character";
   const userName = sanitize(request.body.user_name) || "User";
-  const fileNames = [];
+  const fileNames: string[] = [];
 
   if (!request.file) {
     return response.sendStatus(400);
@@ -907,7 +912,7 @@ router.post("/search", validateAvatarUrlMiddleware, async (request, response) =>
     const { query, avatar_url, group_id } = request.body;
 
     /** @type {string[]} */
-    let chatFiles = [];
+    let chatFiles: string[] = [];
 
     if (group_id) {
       // Find group's chat IDs first
@@ -960,7 +965,7 @@ router.post("/search", validateAvatarUrlMiddleware, async (request, response) =>
      * @property {number|string} [last_mes] - The timestamp of the last message
      * @property {string} [preview_message] - A preview of the last message
      */
-    const results = [];
+    const results: any[] = [];
 
     /** @type {string[]} */
     const fragments = query
@@ -1023,7 +1028,7 @@ router.post("/recent", async (request, response) => {
   try {
     /** @typedef {{pngFile?: string, groupId?: string, filePath: string, mtime: number}} ChatFile */
     /** @type {ChatFile[]} */
-    const allChatFiles = [];
+    const allChatFiles: any[] = [];
     /** @type {import('../../public/scripts/welcome-screen.js').PinnedChat[]} */
     const pinnedChats = Array.isArray(request.body.pinned) ? request.body.pinned : [];
 
