@@ -78,10 +78,9 @@ class SimpleGitClient implements GitClient {
    * @param {GitCloneOptions} [options]
    * @returns {Promise<void>}
    */
-  async clone(url, localPath, options = {}) {
+  async clone(url: string, localPath: string, options: GitCloneOptions = {}) {
     const { depth, branch } = normalizeCloneOptions(options);
-    /** @type {Record<string, any>} */
-    const cloneOptions = {};
+    const cloneOptions: Record<string, any> = {};
 
     if (depth !== undefined) {
       cloneOptions["--depth"] = depth;
@@ -106,7 +105,7 @@ class IsomorphicGitClient implements GitClient {
    * @param {GitCloneOptions} [options]
    * @returns {Promise<void>}
    */
-  async clone(url, localPath, options = {}) {
+  async clone(url: string, localPath: string, options: GitCloneOptions = {}) {
     const { depth, branch } = normalizeCloneOptions(options);
 
     await git.clone({

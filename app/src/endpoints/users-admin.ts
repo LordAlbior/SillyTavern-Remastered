@@ -29,7 +29,7 @@ export const router = express.Router();
  * @param {string} text Text to slugify
  * @returns {string} Slugified text
  */
-function slugify(text) {
+function slugify(text: string) {
   return lodash
     .deburr(
       String(text ?? "")

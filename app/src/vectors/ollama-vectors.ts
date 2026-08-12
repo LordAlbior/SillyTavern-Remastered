@@ -11,7 +11,7 @@ import { TEXTGEN_TYPES } from "../constants.ts";
  * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getOllamaBatchVector(texts, apiUrl, model, keep, directories) {
+export async function getOllamaBatchVector(texts: string[], apiUrl: string, model: string, keep: boolean, directories: import('../users.js').UserDirectoryList) {
   const url = new URL(apiUrl);
   url.pathname = "/api/embed";
 
@@ -55,7 +55,7 @@ export async function getOllamaBatchVector(texts, apiUrl, model, keep, directori
  * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getOllamaVector(text, apiUrl, model, keep, directories) {
+export async function getOllamaVector(text: string, apiUrl: string, model: string, keep: boolean, directories: import('../users.js').UserDirectoryList) {
   const vectors = await getOllamaBatchVector([text], apiUrl, model, keep, directories);
   return vectors[0];
 }

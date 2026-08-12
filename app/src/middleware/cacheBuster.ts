@@ -28,7 +28,7 @@ class CacheBuster {
    * @param {import('express').Response} response Express response object.
    * @returns {boolean} Whether the cache should be busted.
    */
-  shouldBust(request, response) {
+  shouldBust(request: import('express').Request, response: import('express').Response) {
     // If disabled with config, don't do anything
     if (!this.#isEnabled) {
       return false;
@@ -55,7 +55,7 @@ class CacheBuster {
    * Middleware to bust the browser cache for the current user.
    * @type {import('express').RequestHandler}
    */
-  #middleware(request, response, next) {
+  #middleware(request: import('express').Request, response: import('express').Response, next: import('express').NextFunction) {
     const handle = request.user?.profile?.handle || DEFAULT_USER.handle;
     const userAgent = request.headers["user-agent"] || "";
     const hash = crypto.createHash("sha256").update(userAgent).digest("hex");
@@ -84,7 +84,7 @@ class CacheBuster {
    * @param {import('express').Response} response Express response object.
    * @returns {void}
    */
-  bust(request, response) {
+  bust(request: import('express').Request, response: import('express').Response) {
     if (this.shouldBust(request, response)) {
       response.setHeader("Clear-Site-Data", '"cache"');
     }

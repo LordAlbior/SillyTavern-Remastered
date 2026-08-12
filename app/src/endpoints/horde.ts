@@ -75,7 +75,7 @@ async function getHordeClient(): Promise<any> {
  * @param {string} prompt Prompt to sanitize
  * @returns {string} Sanitized prompt
  */
-function sanitizeHordeImagePrompt(prompt) {
+function sanitizeHordeImagePrompt(prompt: string) {
   if (!prompt) {
     return "";
   }
@@ -132,8 +132,8 @@ async function getHordeTextModelMetadata() {
   return await response.json();
 }
 
-async function mergeModelsAndMetadata(models, metadata) {
-  return models.map((model) => {
+async function mergeModelsAndMetadata(models: any[], metadata: Record<string, any>) {
+  return models.map((model: any) => {
     const metadataModel = metadata[model.name];
     if (!metadataModel) {
       return { ...model, is_whitelisted: false };
@@ -161,7 +161,7 @@ router.post("/text-models", async (request, response) => {
     // attempt to fetch and merge models metadata
     try {
       const metadata = await getHordeTextModelMetadata();
-      data = await mergeModelsAndMetadata(data, metadata);
+      data = await mergeModelsAndMetadata(data as any[], metadata as unknown as Record<string, any>);
     } catch (error) {
       console.error("Failed to fetch metadata:", error);
     }

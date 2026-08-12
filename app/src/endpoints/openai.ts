@@ -210,9 +210,9 @@ router.post("/caption-image", async (request, response) => {
 
     // Handle video inlining for Z.AI
     if (request.body.api === "zai" && /data:video\/\w+;base64,/.test(request.body.image)) {
-      const message = body.messages.find((msg) => Array.isArray(msg.content));
+      const message = body.messages.find((msg: any) => Array.isArray(msg.content));
       if (message) {
-        const imgContent = message.content.find((c) => c.type === "image_url");
+        const imgContent = message.content.find((c: any) => c.type === "image_url");
         if (imgContent) {
           imgContent.type = "video_url" as any;
           (imgContent as any).video_url = imgContent.image_url;
@@ -617,7 +617,7 @@ router.post("/workers-ai/models/embedding", async (request, response) => {
       return response.sendStatus(500);
     }
 
-    return response.json(data.result.map((m) => ({ ...m, id: m.name })));
+    return response.json(data.result.map((m: any) => ({ ...m, id: m.name })));
   } catch (error) {
     console.error("Workers AI embedding models fetch failed", error);
     response.sendStatus(500);
@@ -809,8 +809,8 @@ router.use("/custom", custom);
  * @param {string} config.providerName - Display name for logging
  * @returns {import('express').RequestHandler} Express request handler
  */
-function createTranscribeHandler({ secretKey, apiUrl, providerName }) {
-  return async (request, response) => {
+function createTranscribeHandler({ secretKey, apiUrl, providerName }: { secretKey: any, apiUrl: string, providerName: string }) {
+  return async (request: import('express').Request, response: import('express').Response) => {
     try {
       const key = readSecret(request.user.directories, secretKey);
 

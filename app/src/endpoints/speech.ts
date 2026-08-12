@@ -16,7 +16,7 @@ export const router = express.Router();
  * @param {string} audio Base64-encoded audio
  * @returns {Float64Array} Audio data
  */
-function getWaveFile(audio) {
+function getWaveFile(audio: string) {
   const wav: any = new wavefile.WaveFile();
   wav.fromDataURI(audio);
   wav.toBitDepth("32f");

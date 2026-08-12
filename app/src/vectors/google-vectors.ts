@@ -8,11 +8,11 @@ import { getGoogleApiConfig } from "../endpoints/google.ts";
  * @param {import('express').Request} request - The request object to get API key and URL
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getMakerSuiteBatchVector(texts, model, request) {
+export async function getMakerSuiteBatchVector(texts: string[], model: string, request: import('express').Request) {
   const { url, headers, apiName } = await getGoogleApiConfig(request, model, "batchEmbedContents");
 
   const body = {
-    requests: texts.map((text) => ({
+    requests: texts.map((text: string) => ({
       model: `models/${model}`,
       content: { parts: [{ text }] },
     })),
@@ -35,7 +35,7 @@ export async function getMakerSuiteBatchVector(texts, model, request) {
     throw new Error(`${apiName} did not return an array`);
   }
 
-  const embeddings = data.embeddings.map((embedding) => embedding.values);
+  const embeddings = data.embeddings.map((embedding: any) => embedding.values);
   return embeddings;
 }
 
@@ -46,11 +46,11 @@ export async function getMakerSuiteBatchVector(texts, model, request) {
  * @param {import('express').Request} request - The request object to get API key and URL
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getVertexBatchVector(texts, model, request) {
+export async function getVertexBatchVector(texts: string[], model: string, request: import('express').Request) {
   const { url, headers, apiName } = await getGoogleApiConfig(request, model, "predict");
 
   const body = {
-    instances: texts.map((text) => ({ content: text })),
+    instances: texts.map((text: string) => ({ content: text })),
   };
 
   const response = await fetch(url, {
@@ -70,7 +70,7 @@ export async function getVertexBatchVector(texts, model, request) {
     throw new Error(`${apiName} did not return an array`);
   }
 
-  const embeddings = data.predictions.map((p) => p.embeddings.values);
+  const embeddings = data.predictions.map((p: any) => p.embeddings.values);
   return embeddings;
 }
 
@@ -81,7 +81,7 @@ export async function getVertexBatchVector(texts, model, request) {
  * @param {import('express').Request} request - The request object to get API key and URL
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getMakerSuiteVector(text, model, request) {
+export async function getMakerSuiteVector(text: string, model: string, request: import('express').Request) {
   const [embedding] = await getMakerSuiteBatchVector([text], model, request);
   return embedding;
 }
@@ -93,7 +93,7 @@ export async function getMakerSuiteVector(text, model, request) {
  * @param {import('express').Request} request - The request object to get API key and URL
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getVertexVector(text, model, request) {
+export async function getVertexVector(text: string, model: string, request: import('express').Request) {
   const [embedding] = await getVertexBatchVector([text], model, request);
   return embedding;
 }

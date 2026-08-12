@@ -59,7 +59,7 @@ const TIMESTAMPS = new Map();
  * // Date string
  * parseTimestamp("January 1, 2021 12:00am");
  */
-function parseTimestamp(timestamp) {
+function parseTimestamp(timestamp: string | number | Date): number {
   if (!timestamp) {
     return 0;
   }
@@ -86,7 +86,7 @@ function parseTimestamp(timestamp) {
   const dateFormats: { callback: (...args: any[]) => string; pattern: RegExp }[] = [];
 
   // meridiem-based format
-  const convertFromMeridiemBased = (_, month, day, year, hour, minute, meridiem) => {
+  const convertFromMeridiemBased = (_: string, month: string, day: string, year: string, hour: string, minute: string, meridiem: string) => {
     const monthNum = monthNames.indexOf(month) + 1;
     const hour24 = meridiem.toLowerCase() === "pm" ? (parseInt(hour, 10) % 12) + 12 : parseInt(hour, 10) % 12;
     return `${year}-${monthNum}-${day.padStart(2, "0")}T${hour24.toString().padStart(2, "0")}:${minute.padStart(2, "0")}:00`;
@@ -98,7 +98,7 @@ function parseTimestamp(timestamp) {
   });
 
   // ST "humanized" format patterns
-  const convertFromHumanized = (_, year, month, day, hour, min, sec, ms) => {
+  const convertFromHumanized = (_: string, year: string, month: string, day: string, hour: string, min: string, sec: string, ms: string) => {
     ms = typeof ms !== "undefined" ? `.${ms.padStart(3, "0")}` : "";
     return `${year.padStart(4, "0")}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T${hour.padStart(2, "0")}:${min.padStart(2, "0")}:${sec.padStart(2, "0")}${ms}Z`;
   };
@@ -135,7 +135,7 @@ function parseTimestamp(timestamp) {
  * @param {string} charactersPath - The path to the directory containing the character files.
  * @returns {Promise<Object>} The aggregated stats object.
  */
-async function collectAndCreateStats(chatsPath, charactersPath) {
+async function collectAndCreateStats(chatsPath: string, charactersPath: string): Promise<Record<string, any>> {
   const files = await readdir(charactersPath);
 
   const pngFiles = files.filter((file) => file.endsWith(".png"));
@@ -158,7 +158,7 @@ async function collectAndCreateStats(chatsPath, charactersPath) {
  * @param {string} chatsPath Path to the directory containing the chat files.
  * @param {string} charactersPath Path to the directory containing the character files.
  */
-export async function recreateStats(handle, chatsPath, charactersPath) {
+export async function recreateStats(handle: string, chatsPath: string, charactersPath: string): Promise<void> {
   console.info("Collecting and creating stats for user:", handle);
   const stats = await collectAndCreateStats(chatsPath, charactersPath);
   STATS.set(handle, stats);
@@ -236,7 +236,7 @@ export async function onExit() {
  * @returns {Array<string>} - The lines in the file.
  * @throws Will throw an error if the file cannot be read.
  */
-function readAndParseFile(filepath) {
+function readAndParseFile(filepath: string): string[] {
   try {
     const file = fs.readFileSync(filepath, "utf8");
     const lines = file.split("\n");
@@ -254,7 +254,7 @@ function readAndParseFile(filepath) {
  * @param {string} gen_finished - The finish time in ISO 8601 format.
  * @returns {number} - The difference in time in milliseconds.
  */
-function calculateGenTime(gen_started, gen_finished) {
+function calculateGenTime(gen_started: string, gen_finished: string): number {
   const startDate = new Date(gen_started);
   const endDate = new Date(gen_finished);
   return Number(endDate) - Number(startDate);
@@ -266,7 +266,7 @@ function calculateGenTime(gen_started, gen_finished) {
  * @param {string} str - The string to count words in.
  * @returns {number} - The number of words in the string.
  */
-function countWordsInString(str) {
+function countWordsInString(str: string): number {
   const match = str.match(/\b\w+\b/g);
   return match ? match.length : 0;
 }
@@ -278,7 +278,7 @@ function countWordsInString(str) {
  * @param  {string} item     The name of the character.
  * @return {object}          An object containing the calculated statistics.
  */
-const calculateStats = (chatsPath, item) => {
+const calculateStats = (chatsPath: string, item: string): Record<string, any> => {
   const chatDir = path.join(chatsPath, item.replace(".png", ""));
   const stats = {
     total_gen_time: 0,
@@ -291,7 +291,7 @@ const calculateStats = (chatsPath, item) => {
     date_last_chat: 0,
     date_first_chat: new Date("9999-12-31T23:59:59.999Z").getTime(),
   };
-  const uniqueGenStartTimes = new Set();
+  const uniqueGenStartTimes = new Set<string>();
 
   if (fs.existsSync(chatDir)) {
     const chats = fs.readdirSync(chatDir);
@@ -321,7 +321,7 @@ const calculateStats = (chatsPath, item) => {
  * @param {string} handle - The user handle.
  * @param {Object} stats - The new charStats object.
  **/
-function setCharStats(handle, stats) {
+function setCharStats(handle: string, stats: any): void {
   stats.timestamp = Date.now();
   STATS.set(handle, stats);
 }
@@ -334,7 +334,7 @@ function setCharStats(handle, stats) {
  * @returns {Object} - An object containing the total generation time, user word count, and non-user word count.
  * @throws Will throw an error if the file cannot be read or parsed.
  */
-function calculateTotalGenTimeAndWordCount(chatDir, chat, uniqueGenStartTimes) {
+function calculateTotalGenTimeAndWordCount(chatDir: string, chat: string, uniqueGenStartTimes: Set<string>): Record<string, any> {
   const filepath = path.join(chatDir, chat);
   const lines = readAndParseFile(filepath);
 

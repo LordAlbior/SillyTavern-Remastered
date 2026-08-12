@@ -15,7 +15,7 @@ import { getImageBuffers } from "../util.ts";
  * @param {boolean} isSubfolder - Whether the name contains a subfolder
  * @returns {string | null} The path to the sprites folder. Null if the name is invalid.
  */
-function getSpritesPath(directories, name, isSubfolder) {
+function getSpritesPath(directories: import("../users.js").UserDirectoryList, name: string, isSubfolder: boolean) {
   if (isSubfolder) {
     const nameParts = name.split("/");
     const characterName = sanitize(nameParts[0]);
@@ -45,7 +45,7 @@ function getSpritesPath(directories, name, isSubfolder) {
  * @param {object} data RisuAI character data
  * @returns {void}
  */
-export function importRisuSprites(directories, data) {
+export function importRisuSprites(directories: import("../users.js").UserDirectoryList, data: any) {
   try {
     const name = data?.data?.name;
     const risuData = data?.data?.extensions?.risuai;

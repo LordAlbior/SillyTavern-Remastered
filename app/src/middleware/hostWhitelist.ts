@@ -24,7 +24,7 @@ const validationMiddleware = hostValidationMiddleware({
  * @param {import('express').Response} res Response
  * @param {import('express').NextFunction} next Next middleware
  */
-export default function hostWhitelistMiddleware(req, res, next) {
+export default function hostWhitelistMiddleware(req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) {
   const hostValue = req.headers.host;
   if (
     hostWhitelistScan &&

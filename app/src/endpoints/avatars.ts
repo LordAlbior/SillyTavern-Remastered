@@ -43,7 +43,7 @@ router.post("/upload", getFileNameValidationFunction("overwrite_name"), async (r
 
   try {
     const pathToUpload = path.join(request.file.destination, request.file.filename);
-    const crop = tryParse(request.query.crop);
+    const crop = tryParse(String(request.query.crop));
     const rawImg = await Jimp.read(pathToUpload);
     const image = await applyAvatarCropResize(rawImg, crop);
 

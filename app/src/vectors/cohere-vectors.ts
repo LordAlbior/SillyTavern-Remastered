@@ -9,7 +9,7 @@ import { SECRET_KEYS, readSecret } from "../endpoints/secrets.ts";
  * @param {string} model - The model to use for the embedding
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getCohereBatchVector(texts, isQuery, directories, model) {
+export async function getCohereBatchVector(texts: string[], isQuery: boolean, directories: import('../users.js').UserDirectoryList, model: string) {
   const key = readSecret(directories, SECRET_KEYS.COHERE);
 
   if (!key) {
@@ -55,7 +55,7 @@ export async function getCohereBatchVector(texts, isQuery, directories, model) {
  * @param {string} model - The model to use for the embedding
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getCohereVector(text, isQuery, directories, model) {
+export async function getCohereVector(text: string, isQuery: boolean, directories: import('../users.js').UserDirectoryList, model: string) {
   const vectors = await getCohereBatchVector([text], isQuery, directories, model);
   return vectors[0];
 }

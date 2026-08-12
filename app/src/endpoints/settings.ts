@@ -33,7 +33,7 @@ const AUTOSAVE_FUNCTIONS = new Map();
  * @param {string} handle User handle
  * @returns {void}
  */
-function triggerAutoSave(handle) {
+function triggerAutoSave(handle: string) {
   if (!AUTOSAVE_FUNCTIONS.has(handle)) {
     const throttledAutoSave = _.throttle(() => backupUserSettings(handle, true), AUTOSAVE_INTERVAL);
     AUTOSAVE_FUNCTIONS.set(handle, throttledAutoSave);
@@ -51,7 +51,7 @@ function triggerAutoSave(handle) {
  * @param {string} fileExtension File extension
  * @returns {Array} Parsed files
  */
-function readAndParseFromDirectory(directoryPath, fileExtension = ".json") {
+function readAndParseFromDirectory(directoryPath: string, fileExtension = ".json") {
   const files = fs
     .readdirSync(directoryPath)
     .filter((x) => path.parse(x).ext == fileExtension)
@@ -76,8 +76,8 @@ function readAndParseFromDirectory(directoryPath, fileExtension = ".json") {
  * @param {*} _
  * @returns {(a: string, b: string) => number} Sort function
  */
-function sortByName(_) {
-  return (a, b) => a.localeCompare(b);
+function sortByName(_: string) {
+  return (a: string, b: string) => a.localeCompare(b);
 }
 
 /**
@@ -85,7 +85,7 @@ function sortByName(_) {
  * @param {string} handle User handle
  * @returns {string} File prefix
  */
-export function getSettingsBackupFilePrefix(handle) {
+export function getSettingsBackupFilePrefix(handle: string) {
   return `settings_${handle}_`;
 }
 
@@ -132,7 +132,7 @@ async function backupSettings() {
  * @param {boolean} preventDuplicates Prevent duplicate backups
  * @returns {void}
  */
-function backupUserSettings(handle, preventDuplicates) {
+function backupUserSettings(handle: string, preventDuplicates: boolean) {
   const userDirectories = getUserDirectories(handle);
 
   if (!fs.existsSync(userDirectories.root)) {
@@ -163,7 +163,7 @@ function backupUserSettings(handle, preventDuplicates) {
  * @param {string} sourceFile Source file path
  * @returns {boolean} True if the backup is a duplicate
  */
-function isDuplicateBackup(handle, sourceFile) {
+function isDuplicateBackup(handle: string, sourceFile: string) {
   const latestBackup = getLatestBackup(handle);
   if (!latestBackup) {
     return false;
@@ -176,7 +176,7 @@ function isDuplicateBackup(handle, sourceFile) {
  * @param {string} file1 File path
  * @param {string} file2 File path
  */
-function areFilesEqual(file1, file2) {
+function areFilesEqual(file1: string, file2: string) {
   if (!fs.existsSync(file1) || !fs.existsSync(file2)) {
     return false;
   }
@@ -191,7 +191,7 @@ function areFilesEqual(file1, file2) {
  * @param {string} handle User handle
  * @returns {string|null} Latest backup file. Null if no backup exists.
  */
-function getLatestBackup(handle) {
+function getLatestBackup(handle: string) {
   const userDirectories = getUserDirectories(handle);
   const backupFiles = fs
     .readdirSync(userDirectories.backups)

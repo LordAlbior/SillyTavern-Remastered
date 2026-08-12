@@ -6,7 +6,7 @@ import _ from "lodash";
 import { serverDirectory } from "./server-directory.ts";
 import { keyToEnv, setConfigFilePath } from "./util.ts";
 
-const keyMigrationMap = [
+const keyMigrationMap: { oldKey: string; newKey: string; migrate: (value: any) => any; remove?: boolean }[] = [
   {
     oldKey: "disableThumbnails",
     newKey: "thumbnails.enabled",
@@ -142,12 +142,12 @@ const keyMigrationMap = [
  * @param {string} prefix Prefix to prepend to all keys
  * @returns {string[]} Array of all keys in the object
  */
-function getAllKeys(obj, prefix = "") {
+function getAllKeys(obj: any, prefix: string = ""): string[] {
   if (typeof obj !== "object" || Array.isArray(obj) || obj === null) {
     return [];
   }
 
-  return _.flatMap(Object.keys(obj), (key) => {
+  return _.flatMap(Object.keys(obj), (key: string): string[] => {
     const newPrefix = prefix ? `${prefix}.${key}` : key;
     if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
       return getAllKeys(obj[key], newPrefix);
@@ -161,7 +161,7 @@ function getAllKeys(obj, prefix = "") {
  * Compares the current config.yaml with the default config.yaml and adds any missing values.
  * @param {string} configPath Path to config.yaml
  */
-export function addMissingConfigValues(configPath) {
+export function addMissingConfigValues(configPath: string) {
   try {
     const defaultConfig = yaml.parse(fs.readFileSync(path.join(serverDirectory, "./default/config.yaml"), "utf8"));
 
@@ -252,7 +252,7 @@ export function addMissingConfigValues(configPath) {
  * Performs early initialization tasks before the server starts.
  * @param {string} configPath Path to config.yaml
  */
-export function initConfig(configPath) {
+export function initConfig(configPath: string) {
   console.log("Using config path:", color.green(configPath));
   setConfigFilePath(configPath);
   addMissingConfigValues(configPath);

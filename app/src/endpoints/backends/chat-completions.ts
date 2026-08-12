@@ -118,7 +118,7 @@ const openRouterCacheableModels: string[] = [];
  * @param {string} modelId - The OpenRouter model ID
  * @returns {Promise<boolean>} `true` if the model supports writing cache
  */
-async function isOpenRouterModelCacheable(modelId) {
+async function isOpenRouterModelCacheable(modelId: string) {
   if (openRouterCacheableModels.includes(modelId)) {
     return true;
   }
@@ -142,7 +142,7 @@ async function isOpenRouterModelCacheable(modelId) {
       return false;
     }
 
-    const model = data.data.find((m) => m.id === modelId);
+    const model = data.data.find((m: any) => m.id === modelId);
     const supportsCache = model?.pricing?.input_cache_write != null;
 
     if (supportsCache) {
@@ -161,7 +161,7 @@ async function isOpenRouterModelCacheable(modelId) {
  * @param {import('express').Request} request Express request
  * @returns {string[] | undefined} OpenRouter transforms
  */
-function getOpenRouterTransforms(request) {
+function getOpenRouterTransforms(request: import('express').Request) {
   switch (request.body.middleout) {
     case "on":
       return ["middle-out"];
@@ -177,7 +177,7 @@ function getOpenRouterTransforms(request) {
  * @param {import('express').Request} request
  * @returns {any[]} OpenRouter plugins
  */
-function getOpenRouterPlugins(request) {
+function getOpenRouterPlugins(request: import('express').Request) {
   const plugins: any[] = [];
 
   if (request.body.enable_web_search) {
@@ -193,7 +193,7 @@ function getOpenRouterPlugins(request) {
  * @param {object[]} messages Array of messages
  * @param {object} jsonSchema JSON schema object
  */
-function setJsonObjectFormat(bodyParams, messages, jsonSchema) {
+function setJsonObjectFormat(bodyParams: Record<string, any>, messages: any[], jsonSchema: any) {
   bodyParams["response_format"] = {
     type: "json_object",
   };
@@ -209,7 +209,7 @@ function setJsonObjectFormat(bodyParams, messages, jsonSchema) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendClaudeRequest(request, response) {
+async function sendClaudeRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = new URL(request.body.reverse_proxy || API_CLAUDE).toString();
   const apiKey = request.body.reverse_proxy
     ? request.body.proxy_password
@@ -291,9 +291,9 @@ async function sendClaudeRequest(request, response) {
       betaHeaders.push("tools-2024-05-16");
       requestBody.tool_choice = { type: request.body.tool_choice };
       requestBody.tools = request.body.tools
-        .filter((tool) => tool.type === "function")
-        .map((tool) => tool.function)
-        .map((fn) => ({
+        .filter((tool: any) => tool.type === "function")
+        .map((tool: any) => tool.function)
+        .map((fn: any) => ({
           name: fn.name,
           description: fn.description,
           input_schema: flattenSchema(fn.parameters, request.body.chat_completion_source),
@@ -457,7 +457,7 @@ async function sendClaudeRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendMakerSuiteRequest(request, response) {
+async function sendMakerSuiteRequest(request: import('express').Request, response: import('express').Response) {
   const useVertexAi = request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.VERTEXAI;
   const apiName = useVertexAi ? "Google Vertex AI" : "Google AI Studio";
   let apiUrl;
@@ -532,9 +532,9 @@ async function sendMakerSuiteRequest(request, response) {
       "gemini-3.1-flash-image-preview",
     ];
 
-    const isThinkingConfigModel = (m) =>
+    const isThinkingConfigModel = (m: string) =>
       (/^gemini-2.5-(flash|pro)/.test(m) && !/-image(-preview)?$/.test(m)) || /^gemini-3[.\d]*-(flash|pro)/.test(m);
-    const isImageSizeModel = (m) => /^gemini-3/.test(m);
+    const isImageSizeModel = (m: string) => /^gemini-3/.test(m);
 
     const noSearchModels = [
       "gemini-2.0-flash-lite",
@@ -683,7 +683,7 @@ async function sendMakerSuiteRequest(request, response) {
     const responseType = stream ? "streamGenerateContent" : "generateContent";
 
     let url;
-    const headers = {
+    const headers: Record<string, any> = {
       "Content-Type": "application/json",
     };
 
@@ -776,16 +776,16 @@ async function sendMakerSuiteRequest(request, response) {
       }
 
       const responseContent = candidates[0].content ?? candidates[0].output;
-      const functionCall = (candidates?.[0]?.content?.parts ?? []).some((part) => part.functionCall);
-      const inlineData = (candidates?.[0]?.content?.parts ?? []).some((part) => part.inlineData);
+      const functionCall = (candidates?.[0]?.content?.parts ?? []).some((part: any) => part.functionCall);
+      const inlineData = (candidates?.[0]?.content?.parts ?? []).some((part: any) => part.inlineData);
       console.debug(`${apiName} response:`, util.inspect(generateResponseJson, { depth: 5, colors: true }));
 
       const responseText =
         typeof responseContent === "string"
           ? responseContent
           : responseContent?.parts
-              ?.filter((part) => !part.thought)
-              ?.map((part) => part.text)
+              ?.filter((part: any) => !part.thought)
+              ?.map((part: any) => part.text)
               ?.join("\n\n");
       if (!responseText && !functionCall && !inlineData) {
         const message = `${apiName} Candidate text empty`;
@@ -810,7 +810,7 @@ async function sendMakerSuiteRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendAI21Request(request, response) {
+async function sendAI21Request(request: import('express').Request, response: import('express').Response) {
   if (!request.body) return response.sendStatus(400);
 
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.AI21, request.body.secret_id);
@@ -891,7 +891,7 @@ async function sendAI21Request(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendMistralAIRequest(request, response) {
+async function sendMistralAIRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = new URL(request.body.reverse_proxy || API_MISTRAL).toString();
   const apiKey = request.body.reverse_proxy
     ? request.body.proxy_password
@@ -910,7 +910,7 @@ async function sendMistralAIRequest(request, response) {
       controller.abort();
     });
 
-    const requestBody = {
+    const requestBody: Record<string, any> = {
       model: request.body.model,
       messages: messages,
       temperature: request.body.temperature,
@@ -985,7 +985,7 @@ async function sendMistralAIRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendCohereRequest(request, response) {
+async function sendCohereRequest(request: import('express').Request, response: import('express').Response) {
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.COHERE, request.body.secret_id);
   const controller = new AbortController();
   request.socket.removeAllListeners("close");
@@ -1087,7 +1087,7 @@ async function sendCohereRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendDeepSeekRequest(request, response) {
+async function sendDeepSeekRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = new URL(request.body.reverse_proxy || API_DEEPSEEK).toString();
   const apiKey = request.body.reverse_proxy
     ? request.body.proxy_password
@@ -1116,7 +1116,7 @@ async function sendDeepSeekRequest(request, response) {
       bodyParams["tool_choice"] = request.body.tool_choice;
 
       // DeepSeek doesn't permit empty required arrays
-      bodyParams.tools.forEach((tool) => {
+      bodyParams.tools.forEach((tool: any) => {
         const required = tool?.function?.parameters?.required;
         if (Array.isArray(required) && required.length === 0) {
           delete tool.function.parameters.required;
@@ -1206,7 +1206,7 @@ async function sendDeepSeekRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendXaiRequest(request, response) {
+async function sendXaiRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = new URL(request.body.reverse_proxy || API_XAI).toString();
   const apiKey = request.body.reverse_proxy
     ? request.body.proxy_password
@@ -1316,7 +1316,7 @@ async function sendXaiRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendAimlapiRequest(request, response) {
+async function sendAimlapiRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = API_AIMLAPI;
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.AIMLAPI, request.body.secret_id);
 
@@ -1422,7 +1422,7 @@ async function sendAimlapiRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendElectronHubRequest(request, response) {
+async function sendElectronHubRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = API_ELECTRONHUB;
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.ELECTRONHUB, request.body.secret_id);
 
@@ -1533,7 +1533,7 @@ async function sendElectronHubRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendChutesRequest(request, response) {
+async function sendChutesRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = API_CHUTES;
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.CHUTES, request.body.secret_id);
 
@@ -1633,7 +1633,7 @@ async function sendChutesRequest(request, response) {
  * @param {express.Request} request Express request
  * @param {express.Response} response Express response
  */
-async function sendMinimaxRequest(request, response) {
+async function sendMinimaxRequest(request: import('express').Request, response: import('express').Response) {
   const apiUrl = request.body.minimax_endpoint === MINIMAX_ENDPOINT.CN ? API_MINIMAX_CN : API_MINIMAX;
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.MINIMAX, request.body.secret_id);
 
@@ -1715,7 +1715,7 @@ async function sendMinimaxRequest(request, response) {
  * @param {express.Request} request Express request object (contains request.body with all generate_data)
  * @param {express.Response} response Express response object
  */
-async function sendAzureOpenAIRequest(request, response) {
+async function sendAzureOpenAIRequest(request: import('express').Request, response: import('express').Response) {
   // 1. GATHER & VALIDATE SETTINGS
   const { azure_base_url, azure_deployment_name, azure_api_version } = request.body;
   const apiKey = readSecret(request.user.directories, SECRET_KEYS.AZURE_OPENAI, request.body.secret_id);
@@ -1761,8 +1761,8 @@ async function sendAzureOpenAIRequest(request, response) {
 
   // Do not send reasoning effort to models which do not support it
   apiRequestBody["reasoning_effort"] = OPENAI_REASONING_EFFORT_MODELS.includes(request.body.model)
-    ? (OPENAI_FIXED_REASONING_EFFORT[request.body.model] ??
-      OPENAI_REASONING_EFFORT_MAP[request.body.reasoning_effort] ??
+    ? ((OPENAI_FIXED_REASONING_EFFORT as Record<string, string | undefined>)[request.body.model] ??
+      (OPENAI_REASONING_EFFORT_MAP as Record<string, string | undefined>)[request.body.reasoning_effort] ??
       request.body.reasoning_effort)
     : undefined;
 
@@ -1920,15 +1920,15 @@ router.post("/status", async (request, statusResponse) => {
           // Transform Google AI Studio models to OpenAI format
           const models =
             data.models
-              ?.filter((model) => model.supportedGenerationMethods?.includes("generateContent"))
-              ?.map((model) => ({
+              ?.filter((model: any) => model.supportedGenerationMethods?.includes("generateContent"))
+              ?.map((model: any) => ({
                 ...model,
                 id: model.name.replace("models/", ""),
               })) || [];
 
           console.info(
             "Available Google AI Studio models:",
-            models.map((m) => m.id),
+            models.map((m: any) => m.id),
           );
           return statusResponse.send({ data: models });
         } else {
@@ -1986,7 +1986,7 @@ router.post("/status", async (request, statusResponse) => {
           );
 
           const defaultMessage = `Azure Models endpoint error: ${apiConfigTest.statusText}`;
-          const message = azureStatusErrorMap[apiConfigTest.status] ?? defaultMessage;
+          const message = (azureStatusErrorMap as Record<number, string>)[apiConfigTest.status] ?? defaultMessage;
           return statusResponse.status(apiConfigTest.status).send({ error: true, message });
         }
 
@@ -2061,11 +2061,11 @@ router.post("/status", async (request, statusResponse) => {
 
         if (response.ok) {
           const data: any = (await response.json()) as any;
-          const models = Array.isArray(data?.result) ? data.result.map((model) => ({ ...model, id: model.name })) : [];
+          const models = Array.isArray(data?.result) ? data.result.map((model: any) => ({ ...model, id: model.name })) : [];
 
           console.debug(
             "Available Cloudflare Workers AI models:",
-            models.map((m) => m.id),
+            models.map((m: any) => m.id),
           );
           return statusResponse.send({ data: models });
         } else {
@@ -2112,8 +2112,8 @@ router.post("/status", async (request, statusResponse) => {
 
       if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.CHUTES && Array.isArray(data?.data)) {
         data.data = data.data
-          .filter((model) => model?.id)
-          .map((model) => {
+          .filter((model: any) => model?.id)
+          .map((model: any) => {
             if (model.pricing?.prompt !== undefined && model.pricing?.completion !== undefined) {
               return {
                 ...model,
@@ -2131,13 +2131,13 @@ router.post("/status", async (request, statusResponse) => {
       statusResponse.send(data);
 
       if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.COHERE && Array.isArray(data?.models)) {
-        data.data = data.models.map((model) => ({ id: model.name, ...model }));
+        data.data = data.models.map((model: any) => ({ id: model.name, ...model }));
       }
 
       if (request.body.chat_completion_source === CHAT_COMPLETION_SOURCES.OPENROUTER && Array.isArray(data?.data)) {
         const models: any[] = [];
 
-        data.data.forEach((model) => {
+        data.data.forEach((model: any) => {
           const context_length = model.context_length;
           const tokens_dollar = Number(1 / (1000 * model.pricing?.prompt));
           const tokens_rounded = (Math.round(tokens_dollar * 1000) / 1000).toFixed(0);
@@ -2200,7 +2200,7 @@ router.post("/bias", async (request, response) => {
         console.error("Tokenizer not initialized:", model);
         return response.send({});
       }
-      encodeFunction = (text) => new Uint32Array(instance.encodeIds(text));
+      encodeFunction = (text: string) => new Uint32Array(instance.encodeIds(text));
     } else if (webTokenizers.includes(model)) {
       const tokenizer = getWebTokenizer(model);
       const instance = await tokenizer?.get();
@@ -2208,7 +2208,7 @@ router.post("/bias", async (request, response) => {
         console.warn("Tokenizer not initialized:", model);
         return response.send({});
       }
-      encodeFunction = (text) => new Uint32Array(instance.encode(text));
+      encodeFunction = (text: string) => new Uint32Array(instance.encode(text));
     } else {
       const tokenizer = getTiktokenTokenizer(model);
       encodeFunction = tokenizer.encode.bind(tokenizer);
@@ -2240,7 +2240,7 @@ router.post("/bias", async (request, response) => {
      * @param {(string) => Uint32Array} encode Function to encode text to token ids
      * @returns {Uint32Array} Array of token ids
      */
-    function getEntryTokens(text, encode) {
+    function getEntryTokens(text: string, encode: (text: string) => Uint32Array) {
       // Get raw token ids from JSON array
       if (text.trim().startsWith("[") && text.trim().endsWith("]")) {
         try {
@@ -2308,10 +2308,10 @@ router.post("/generate", async (request, response) => {
         return await sendAzureOpenAIRequest(request, response);
     }
 
-    let apiUrl;
-    let apiKey;
-    let headers;
-    let bodyParams;
+    let apiUrl: any;
+    let apiKey: any;
+    let headers: any;
+    let bodyParams: Record<string, any>;
     const isTextCompletion =
       Boolean(request.body.model && TEXT_COMPLETION_MODELS.includes(request.body.model)) ||
       typeof request.body.messages === "string";
@@ -2531,7 +2531,7 @@ router.post("/generate", async (request, response) => {
         bodyParams["repetition_penalty"] = request.body.repetition_penalty;
       }
       if (request.body.reasoning_effort) {
-        const effort = NANOGPT_REASONING_EFFORT_MAP[request.body.reasoning_effort];
+        const effort = (NANOGPT_REASONING_EFFORT_MAP as Record<string, string>)[request.body.reasoning_effort];
         bodyParams["reasoning"] = { effort: effort };
       }
 
@@ -2637,8 +2637,8 @@ router.post("/generate", async (request, response) => {
     ) {
       if (OPENAI_REASONING_EFFORT_MODELS.includes(request.body.model)) {
         bodyParams["reasoning_effort"] =
-          OPENAI_FIXED_REASONING_EFFORT[request.body.model] ??
-          OPENAI_REASONING_EFFORT_MAP[request.body.reasoning_effort] ??
+          (OPENAI_FIXED_REASONING_EFFORT as Record<string, string | undefined>)[request.body.model] ??
+          (OPENAI_REASONING_EFFORT_MAP as Record<string, string | undefined>)[request.body.reasoning_effort] ??
           request.body.reasoning_effort;
       }
       if (
@@ -2821,8 +2821,8 @@ multimodalModels.post("/aimlapi", async (_req, res) => {
     }
 
     const multimodalModels = data.data
-      .filter((m) => m?.features?.includes("openai/chat-completion.vision"))
-      .map((m) => m.id);
+      .filter((m: any) => m?.features?.includes("openai/chat-completion.vision"))
+      .map((m: any) => m.id);
     return res.json(multimodalModels);
   } catch (error) {
     console.error(error);
@@ -2844,7 +2844,7 @@ multimodalModels.post("/nanogpt", async (_req, res) => {
       return res.json([]);
     }
 
-    const multimodalModels = data.data.filter((m) => m?.capabilities?.vision).map((m) => m.id);
+    const multimodalModels = data.data.filter((m: any) => m?.capabilities?.vision).map((m: any) => m.id);
     return res.json(multimodalModels);
   } catch (error) {
     console.error(error);
@@ -2861,7 +2861,7 @@ multimodalModels.post("/electronhub", async (_req, res) => {
     }
 
     const data: any = (await response.json()) as any;
-    const multimodalModels = data.data.filter((m) => m.metadata?.vision).map((m) => m.id);
+    const multimodalModels = data.data.filter((m: any) => m.metadata?.vision).map((m: any) => m.id);
     return res.json(multimodalModels);
   } catch (error) {
     console.error(error);
@@ -2890,7 +2890,7 @@ multimodalModels.post("/chutes", async (req, res) => {
     const data = (await response.json()) as any;
 
     const modelsData = /** @type {{object: string, data: Array<{id: string, input_modalities?: string[]}>}} */ (data);
-    const multimodalModels = modelsData.data.filter((m) => m.input_modalities?.includes("image")).map((m) => m.id);
+    const multimodalModels = modelsData.data.filter((m: any) => m.input_modalities?.includes("image")).map((m: any) => m.id);
     return res.json(multimodalModels);
   } catch (error) {
     console.error(error);
@@ -2917,7 +2917,7 @@ multimodalModels.post("/mistral", async (req, res) => {
     }
 
     const data: any = (await response.json()) as any;
-    const multimodalModels = data.data.filter((m) => m.capabilities?.vision).map((m) => m.id);
+    const multimodalModels = data.data.filter((m: any) => m.capabilities?.vision).map((m: any) => m.id);
     return res.json(multimodalModels);
   } catch (error) {
     console.error(error);
@@ -2945,7 +2945,7 @@ multimodalModels.post("/xai", async (req, res) => {
     }
 
     const data: any = (await response.json()) as any;
-    const multimodalModels = data.models.filter((m) => m.input_modalities?.includes("image")).map((m) => m.id);
+    const multimodalModels = data.models.filter((m: any) => m.input_modalities?.includes("image")).map((m: any) => m.id);
     if (!multimodalModels.includes("grok-4-0709")) {
       // The endpoint says it doesn't support images, but it does
       multimodalModels.push("grok-4-0709");
@@ -2977,7 +2977,7 @@ multimodalModels.post("/moonshot", async (req, res) => {
 
     const data: any = (await response.json()) as any;
 
-    const multimodalModels = data.data.filter((m) => m.supports_image_in).map((m) => m.id);
+    const multimodalModels = data.data.filter((m: any) => m.supports_image_in).map((m: any) => m.id);
     return res.json(multimodalModels);
   } catch (error) {
     console.error(error);
@@ -3008,10 +3008,10 @@ multimodalModels.post("/workers_ai", async (req, res) => {
     const models = Array.isArray(data?.result)
       ? data.result
           .filter(
-            (m) =>
-              Array.isArray(m.properties) && m.properties.some((p) => p.property_id === "vision" && p.value === "true"),
+            (m: any) =>
+              Array.isArray(m.properties) && m.properties.some((p: any) => p.property_id === "vision" && p.value === "true"),
           )
-          .map((m) => m.name)
+          .map((m: any) => m.name)
       : [];
     return res.json(models);
   } catch (error) {

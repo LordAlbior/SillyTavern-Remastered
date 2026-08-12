@@ -56,7 +56,7 @@ const tasks = {
  * @param {string} image Base64-encoded image
  * @returns {Promise<RawImage|null>} Object representing the image
  */
-export async function getRawImage(image) {
+export async function getRawImage(image: string) {
   try {
     const buffer = Buffer.from(image, "base64");
     const byteArray = new Uint8Array(buffer);
@@ -74,11 +74,11 @@ export async function getRawImage(image) {
  * @param {string} task The task to get the model for
  * @returns {string} The model to use for the given task
  */
-function getModelForTask(task) {
-  const defaultModel = tasks[task].defaultModel;
+function getModelForTask(task: string) {
+  const defaultModel = (tasks as any)[task].defaultModel;
 
   try {
-    const model = getConfigValue(tasks[task].configField, null);
+    const model = getConfigValue((tasks as any)[task].configField, null);
     return model || defaultModel;
   } catch (error) {
     console.warn("Failed to read config.yaml, using default classification model.");
@@ -122,15 +122,15 @@ async function migrateCacheToDataDir() {
  * @param {string} forceModel The model to use for the pipeline, if any
  * @returns {Promise<import('sillytavern-transformers').Pipeline>} The transformers.js pipeline
  */
-export async function getPipeline(task, forceModel = "") {
+export async function getPipeline(task: string, forceModel: string = "") {
   await migrateCacheToDataDir();
 
-  if (tasks[task].pipeline) {
-    if (forceModel === "" || tasks[task].currentModel === forceModel) {
-      return tasks[task].pipeline;
+  if ((tasks as any)[task].pipeline) {
+    if (forceModel === "" || (tasks as any)[task].currentModel === forceModel) {
+      return (tasks as any)[task].pipeline;
     }
-    console.log("Disposing transformers.js pipeline for for task", task, "with model", tasks[task].currentModel);
-    await tasks[task].pipeline.dispose();
+    console.log("Disposing transformers.js pipeline for for task", task, "with model", (tasks as any)[task].currentModel);
+    await (tasks as any)[task].pipeline.dispose();
   }
 
   const cacheDir = path.join(globalThis.DATA_ROOT, "_cache");
@@ -139,11 +139,11 @@ export async function getPipeline(task, forceModel = "") {
   console.log("Initializing transformers.js pipeline for task", task, "with model", model);
   const instance = await pipeline(task, model, {
     cache_dir: cacheDir,
-    quantized: tasks[task].quantized ?? true,
+    quantized: (tasks as any)[task].quantized ?? true,
     local_files_only: localOnly,
   });
-  tasks[task].pipeline = instance;
-  tasks[task].currentModel = model;
+  (tasks as any)[task].pipeline = instance;
+  (tasks as any)[task].currentModel = model;
 
   return instance;
 }

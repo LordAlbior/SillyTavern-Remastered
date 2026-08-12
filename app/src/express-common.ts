@@ -3,7 +3,7 @@ import ipMatching from "ip-matching";
 import { RateLimiterRes } from "rate-limiter-flexible";
 import { getConfigValue } from "./util.ts";
 
-const noopMiddleware = (_req, _res, next) => next();
+const noopMiddleware = (_req: any, _res: any, next: any) => next();
 /** @deprecated Do not use. A global middleware is provided at the application level. */
 export const jsonParser = noopMiddleware;
 /** @deprecated Do not use. A global middleware is provided at the application level. */
@@ -14,7 +14,7 @@ export const urlencodedParser = noopMiddleware;
  * @param {import('express').Request} req Request object
  * @returns {string} IP address of the client
  */
-export function getIpFromRequest(req) {
+export function getIpFromRequest(req: import('express').Request) {
   let clientIp = req.socket.remoteAddress;
   if (!clientIp) {
     return "unknown";
@@ -35,7 +35,7 @@ export function getIpFromRequest(req) {
  * @param {import('express').Request} req Express request object
  * @returns {string|undefined} The client IP address
  */
-export function getRealOrForwardedIp(req) {
+export function getRealOrForwardedIp(req: import('express').Request) {
   const xRealIpEnabled = !!getConfigValue("forwardedHeaders.xRealIp", true, "boolean");
   const cfConnectingIpEnabled = !!getConfigValue("forwardedHeaders.cfConnectingIp", false, "boolean");
   const xForwardedForEnabled = !!getConfigValue("forwardedHeaders.xForwardedFor", true, "boolean");
@@ -55,7 +55,7 @@ export function getRealOrForwardedIp(req) {
     const ipList = req.headers["x-forwarded-for"]
       .toString()
       .split(",")
-      .map((ip) => ip.trim());
+      .map((ip: string) => ip.trim());
     return ipList[0];
   }
 
@@ -70,7 +70,7 @@ export function getRealOrForwardedIp(req) {
  * @param {boolean} includeHeaderIp Whether to include the real/forwarded IP from headers
  * @returns {string} IP address of the client (will include "forwarded" info if includeHeaderIp is true and headers are present)
  */
-export function getIpAddress(request, includeHeaderIp) {
+export function getIpAddress(request: import('express').Request, includeHeaderIp: boolean) {
   const socketIp = getIpFromRequest(request);
   const forwardedIp = includeHeaderIp && getRealOrForwardedIp(request);
   return forwardedIp ? `${socketIp} (forwarded: ${forwardedIp})` : socketIp;
@@ -81,7 +81,7 @@ export function getIpAddress(request, includeHeaderIp) {
  * @param {import('express').Request} req Request object
  * @returns {boolean} True if the request is from Firefox, false otherwise.
  */
-export function isFirefox(req) {
+export function isFirefox(req: import('express').Request) {
   const userAgent = req.headers["user-agent"] || "";
   return /firefox/i.test(userAgent);
 }
@@ -92,7 +92,7 @@ export function isFirefox(req) {
  * @param {(entry: string, message: string) => string} formatLog - The function to format the warning message for invalid entries
  * @returns {string[]} The list of valid IP patterns
  */
-export function filterValidIpPatterns(entries, formatLog) {
+export function filterValidIpPatterns(entries: string[], formatLog: (entry: string, message: string) => string) {
   const validEntries: string[] = [];
 
   if (!Array.isArray(entries)) {
@@ -120,7 +120,7 @@ export function filterValidIpPatterns(entries, formatLog) {
  * @param {RateLimiterRes} rateLimit The rate limit information from rate-limiter-flexible
  * @returns {import('express').Response} The response object with the Retry-After header set if applicable
  */
-export function retryAfter(response, rateLimit) {
+export function retryAfter(response: import('express').Response, rateLimit: RateLimiterRes) {
   if (response.headersSent || !(rateLimit instanceof RateLimiterRes)) {
     return response;
   }

@@ -231,7 +231,7 @@ const eratoLogitBiasExp = [
   { sequence: [128041], bias: -0.08, ensure_sequence_finish: false, generate_once: false },
 ];
 
-function getBadWordsList(model) {
+function getBadWordsList(model: string) {
   let list: number[][] = [];
 
   if (model.includes("hypebot")) {
@@ -250,7 +250,7 @@ function getBadWordsList(model) {
   return list.slice();
 }
 
-function getLogitBiasList(model) {
+function getLogitBiasList(model: string) {
   let list: any[] = [];
 
   if (model.includes("erato")) {
@@ -264,7 +264,7 @@ function getLogitBiasList(model) {
   return list.slice();
 }
 
-function getRepPenaltyWhitelist(model) {
+function getRepPenaltyWhitelist(model: string) {
   if (model.includes("clio") || model.includes("kayra")) {
     return repPenaltyAllowList.flat();
   }
@@ -276,7 +276,7 @@ function getRepPenaltyWhitelist(model) {
   return null;
 }
 
-function calculateSkipCfgAboveSigma(width, height, modelName) {
+function calculateSkipCfgAboveSigma(width: number, height: number, modelName: string) {
   const magicConstant = modelName?.includes("nai-diffusion-4-5") ? SIGMA_MAGIC_NUMBER_V4_5 : SIGMA_MAGIC_NUMBER;
 
   const pixelCount = width * height;

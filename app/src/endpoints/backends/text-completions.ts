@@ -26,14 +26,14 @@ export const router = express.Router();
  * @param {import('express').Response} response Express response
  * @returns {Promise<any>} Nothing valuable
  */
-async function parseOllamaStream(jsonStream, request, response) {
+async function parseOllamaStream(jsonStream: any, request: import('express').Request, response: import('express').Response) {
   try {
     if (!jsonStream.body) {
       throw new Error("No body in the response");
     }
 
     let partialData = "";
-    jsonStream.body.on("data", (data) => {
+    jsonStream.body.on("data", (data: any) => {
       const chunk = data.toString();
       partialData += chunk;
       while (true) {
@@ -77,7 +77,7 @@ async function parseOllamaStream(jsonStream, request, response) {
  * @param {string} url Server base URL
  * @returns {Promise<void>} Promise resolving when we are done
  */
-async function abortKoboldCppRequest(request, url) {
+async function abortKoboldCppRequest(request: import('express').Request, url: string) {
   try {
     console.info("Aborting Kobold generation...");
     const args = {
@@ -162,11 +162,11 @@ router.post("/status", async (request, response) => {
 
     // Rewrap to OAI-like response
     if (apiType === TEXTGEN_TYPES.TOGETHERAI && Array.isArray(data)) {
-      data = { data: data.map((x) => ({ id: x.name, ...x })) };
+      data = { data: data.map((x: any) => ({ id: x.name, ...x })) };
     }
 
     if (apiType === TEXTGEN_TYPES.OLLAMA && Array.isArray(data.models)) {
-      data = { data: data.models.map((x) => ({ id: x.name, ...x })) };
+      data = { data: data.models.map((x: any) => ({ id: x.name, ...x })) };
     }
 
     if (apiType === TEXTGEN_TYPES.HUGGINGFACE) {
@@ -178,7 +178,7 @@ router.post("/status", async (request, response) => {
       return response.sendStatus(400);
     }
 
-    const modelIds = data.data.map((x) => x.id);
+    const modelIds = data.data.map((x: any) => x.id);
     console.info("Models available:", modelIds);
 
     // Set result to the first model ID
@@ -412,7 +412,7 @@ router.post("/generate", async (request, response) => {
 
         // Map InfermaticAI response to OAI completions format
         if (apiType === TEXTGEN_TYPES.INFERMATICAI) {
-          data.choices = (data?.choices || []).map((choice) => ({
+          data.choices = (data?.choices || []).map((choice: any) => ({
             text: choice?.message?.content || choice.text,
             logprobs: choice?.logprobs,
             index: choice?.index,

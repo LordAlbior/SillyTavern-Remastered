@@ -20,8 +20,8 @@ const basicAuthLimiter = new RateLimiterMemory({
   duration: 60,
 });
 
-const basicAuthMiddleware = async (request, response, callback) => {
-  const unauthorizedResponse = (res) => {
+const basicAuthMiddleware = async (request: import("express").Request, response: import("express").Response, callback: () => void) => {
+  const unauthorizedResponse = (res: import("express").Response) => {
     const unauthorizedWebpage = safeReadFileSync(path.join(globalThis.DATA_ROOT, "_errors", "unauthorized.html")) ?? "";
     res.set("WWW-Authenticate", 'Basic realm="SillyTavern", charset="UTF-8"');
     return res.status(401).send(unauthorizedWebpage);

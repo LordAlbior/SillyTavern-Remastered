@@ -89,7 +89,7 @@ router.post("/google", async (request, response) => {
     console.debug("Input text: " + text);
 
     const translator = new Translator({ to: lang, requestFunction: fetch });
-    const translatedText = await translator.translate(text).then((result) => result.text);
+    const translatedText = await translator.translate(text).then((result: any) => result.text);
 
     response.setHeader("Content-Type", "text/plain; charset=utf-8");
     console.debug("Translated text: " + translatedText);

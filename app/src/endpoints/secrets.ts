@@ -97,6 +97,25 @@ export const SECRET_KEYS = {
  * @typedef {{[key: string]: string}} FlatSecretKeys
  */
 
+interface SecretValue {
+  id: string;
+  value: string;
+  label: string;
+  active: boolean;
+}
+
+interface SecretState {
+  id: string;
+  value: string;
+  label: string;
+  active: boolean;
+}
+
+type SecretStateMap = Record<string, SecretState[] | null>;
+
+type SecretKeys = { [key: string]: SecretValue[] };
+type FlatSecretKeys = { [key: string]: string };
+
 // These are the keys that are safe to expose, even if allowKeysExposure is false
 const EXPORTABLE_KEYS = [
   SECRET_KEYS.LIBRE_URL,
@@ -148,19 +167,17 @@ export class SecretManager {
   /**
    * Writes secrets to the file atomically
    * @private
-   * @param {SecretKeys} secrets
    */
-  _writeSecretsFile(secrets) {
+  _writeSecretsFile(secrets: SecretKeys) {
     writeFileAtomicSync(this.filePath, JSON.stringify(secrets, null, 4), "utf-8");
   }
 
   /**
    * Deactivates all secrets for a given key
    * @private
-   * @param {SecretValue[]} secretArray
    */
-  _deactivateAllSecrets(secretArray) {
-    secretArray.forEach((secret) => {
+  _deactivateAllSecrets(secretArray: SecretValue[]) {
+    secretArray.forEach((secret: SecretValue) => {
       secret.active = false;
     });
   }
@@ -168,21 +185,15 @@ export class SecretManager {
   /**
    * Validates that the secret key exists and has valid structure
    * @private
-   * @param {SecretKeys} secrets
-   * @param {string} key
-   * @returns {boolean}
    */
-  _validateSecretKey(secrets, key) {
+  _validateSecretKey(secrets: SecretKeys, key: string): boolean {
     return Object.hasOwn(secrets, key) && Array.isArray(secrets[key]);
   }
 
   /**
    * Masks a secret value with asterisks in the middle
-   * @param {string} value The secret value to mask
-   * @param {string} key The secret key
-   * @returns {string} A masked version of the value for peeking
    */
-  getMaskedValue(value, key) {
+  getMaskedValue(value: string, key: string): string {
     // No masking if exposure is allowed
     if (allowKeysExposure || EXPORTABLE_KEYS.includes(key)) {
       return value;
@@ -205,7 +216,7 @@ export class SecretManager {
    * @param {string} label Label for the secret
    * @returns {string} The ID of the newly created secret
    */
-  writeSecret(key, value, label = "Unlabeled") {
+  writeSecret(key: string, value: string, label: string = "Unlabeled"): string {
     const secrets = this._readSecretsFile();
 
     if (!Array.isArray(secrets[key])) {
@@ -231,7 +242,7 @@ export class SecretManager {
    * @param {string} key Secret key
    * @param {string?} id Secret ID to delete
    */
-  deleteSecret(key, id) {
+  deleteSecret(key: string, id: string | null | undefined) {
     if (!fs.existsSync(this.filePath)) {
       return;
     }
@@ -243,7 +254,7 @@ export class SecretManager {
     }
 
     const secretArray = secrets[key];
-    const targetIndex = secretArray.findIndex((s) => (id ? s.id === id : s.active));
+    const targetIndex = secretArray.findIndex((s: SecretValue) => (id ? s.id === id : s.active));
 
     // Delete the secret if found
     if (targetIndex !== -1) {
@@ -251,7 +262,7 @@ export class SecretManager {
     }
 
     // Reactivate the first secret if none are active
-    if (secretArray.length && !secretArray.some((s) => s.active)) {
+    if (secretArray.length && !secretArray.some((s: SecretValue) => s.active)) {
       secretArray[0].active = true;
     }
 
@@ -269,7 +280,7 @@ export class SecretManager {
    * @param {string?} id ID of the secret to read (optional)
    * @returns {string} Secret value or empty string if not found
    */
-  readSecret(key, id) {
+  readSecret(key: string, id: string | null | undefined): string {
     if (!fs.existsSync(this.filePath)) {
       return "";
     }
@@ -278,7 +289,7 @@ export class SecretManager {
     const secretArray = secrets[key];
 
     if (Array.isArray(secretArray) && secretArray.length > 0) {
-      const activeSecret = secretArray.find((s) => (id ? s.id === id : s.active));
+      const activeSecret = secretArray.find((s: SecretValue) => (id ? s.id === id : s.active));
       return activeSecret?.value || "";
     }
 
@@ -290,7 +301,7 @@ export class SecretManager {
    * @param {string} key Secret key to rotate
    * @param {string} id ID of the secret to activate
    */
-  rotateSecret(key, id) {
+  rotateSecret(key: string, id: string) {
     if (!fs.existsSync(this.filePath)) {
       return;
     }
@@ -302,7 +313,7 @@ export class SecretManager {
     }
 
     const secretArray = secrets[key];
-    const targetIndex = secretArray.findIndex((s) => s.id === id);
+    const targetIndex = secretArray.findIndex((s: SecretValue) => s.id === id);
 
     if (targetIndex === -1) {
       console.warn(`Secret with ID ${id} not found for key ${key}`);
@@ -321,7 +332,7 @@ export class SecretManager {
    * @param {string} id ID of the secret to rename
    * @param {string} label New label for the secret
    */
-  renameSecret(key, id, label) {
+  renameSecret(key: string, id: string, label: string) {
     const secrets = this._readSecretsFile();
 
     if (!this._validateSecretKey(secrets, key)) {
@@ -329,7 +340,7 @@ export class SecretManager {
     }
 
     const secretArray = secrets[key];
-    const targetIndex = secretArray.findIndex((s) => s.id === id);
+    const targetIndex = secretArray.findIndex((s: SecretValue) => s.id === id);
 
     if (targetIndex === -1) {
       console.warn(`Secret with ID ${id} not found for key ${key}`);
@@ -344,10 +355,9 @@ export class SecretManager {
    * Gets the state of all secrets (whether they exist or not)
    * @returns {SecretStateMap} Secret state
    */
-  getSecretState() {
+  getSecretState(): SecretStateMap {
     const secrets = this._readSecretsFile();
-    /** @type {SecretStateMap} */
-    const state = {};
+    const state: SecretStateMap = {};
 
     for (const key of Object.values(SECRET_KEYS)) {
       // Skip migration marker
@@ -356,7 +366,7 @@ export class SecretManager {
       }
       const value = secrets[key];
       if (value && Array.isArray(value) && value.length > 0) {
-        state[key] = value.map((secret) => ({
+        state[key] = value.map((secret: SecretValue) => ({
           id: secret.id,
           value: this.getMaskedValue(secret.value, key),
           label: secret.label,
@@ -396,8 +406,7 @@ export class SecretManager {
       return;
     }
 
-    /** @type {SecretKeys} */
-    const migratedSecrets = {};
+    const migratedSecrets: SecretKeys = {};
 
     for (const [key, value] of Object.entries(secrets)) {
       if (typeof value === "string" && value.trim()) {
@@ -431,7 +440,11 @@ export class SecretManager {
  * @param {string} key Secret key
  * @param {string} value Secret value
  */
-export function writeSecret(directories, key, value) {
+export function writeSecret(
+  directories: import("../users.js").UserDirectoryList,
+  key: string,
+  value: string,
+): string {
   return new SecretManager(directories).writeSecret(key, value);
 }
 
@@ -440,7 +453,10 @@ export function writeSecret(directories, key, value) {
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @param {string} key Secret key
  */
-export function deleteSecret(directories, key) {
+export function deleteSecret(
+  directories: import("../users.js").UserDirectoryList,
+  key: string,
+): void {
   return new SecretManager(directories).deleteSecret(key, null);
 }
 
@@ -464,15 +480,18 @@ export function readSecret(
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns {Record<string, boolean>} Secret state
  */
-export function readSecretState(directories) {
+export function readSecretState(
+  directories: import("../users.js").UserDirectoryList,
+): Record<string, boolean> {
   const state = new SecretManager(directories).getSecretState();
-  const result = /** @type {Record<string, boolean>} */ ({});
+  const result: Record<string, boolean> = {};
   for (const key of Object.values(SECRET_KEYS)) {
     // Skip migration marker
     if (key === SECRET_KEYS._MIGRATED) {
       continue;
     }
-    result[key] = Array.isArray(state[key]) && state[key].length > 0;
+    const entry = state[key];
+    result[key] = Array.isArray(entry) && entry.length > 0;
   }
   return result;
 }
@@ -482,16 +501,18 @@ export function readSecretState(directories) {
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns {Record<string, string>} Secrets
  */
-export function getAllSecrets(directories) {
+export function getAllSecrets(
+  directories: import("../users.js").UserDirectoryList,
+): Record<string, string> {
   const secrets = new SecretManager(directories).getAllSecrets();
-  const result = /** @type {Record<string, string>} */ ({});
+  const result: Record<string, string> = {};
   for (const [key, values] of Object.entries(secrets)) {
     // Skip migration marker
     if (key === SECRET_KEYS._MIGRATED) {
       continue;
     }
     if (Array.isArray(values) && values.length > 0) {
-      const activeSecret = values.find((secret) => secret.active);
+      const activeSecret = values.find((secret: SecretValue) => secret.active);
       if (activeSecret) {
         result[key] = activeSecret.value;
       }
@@ -505,7 +526,9 @@ export function getAllSecrets(directories) {
  * Migrates legacy flat secrets format to the new format for all user directories
  * @param {import('../users.js').UserDirectoryList[]} directoriesList User directories
  */
-export function migrateFlatSecrets(directoriesList) {
+export function migrateFlatSecrets(
+  directoriesList: import("../users.js").UserDirectoryList[],
+): void {
   for (const directories of directoriesList) {
     try {
       const manager = new SecretManager(directories);
@@ -583,7 +606,7 @@ router.post("/find", (request, response) => {
     const manager = new SecretManager(request.user.directories);
     const state = manager.getSecretState();
 
-    if (!state[key]) {
+    if (!state[key as string]) {
       return response.sendStatus(404);
     }
 

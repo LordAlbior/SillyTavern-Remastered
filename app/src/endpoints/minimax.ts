@@ -5,7 +5,7 @@ import { readSecret, SECRET_KEYS } from "./secrets.ts";
 export const router = express.Router();
 
 // Audio format MIME type mapping
-const getAudioMimeType = (format) => {
+const getAudioMimeType = (format: string) => {
   const mimeTypes = {
     mp3: "audio/mpeg",
     wav: "audio/wav",
@@ -13,7 +13,7 @@ const getAudioMimeType = (format) => {
     flac: "audio/flac",
     aac: "audio/aac",
   };
-  return mimeTypes[format] || "audio/mpeg";
+  return (mimeTypes as Record<string, string>)[format] || "audio/mpeg";
 };
 
 router.post("/generate-voice", async (request, response) => {
@@ -124,8 +124,7 @@ router.post("/generate-voice", async (request, response) => {
     }
 
     // Parse the response
-    /** @type {any} */
-    let responseData;
+    let responseData: any;
     try {
       responseData = await apiResponse.json();
       console.debug("MiniMax TTS Response received");

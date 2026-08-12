@@ -19,7 +19,7 @@ import { AIMLAPI_HEADERS } from "../constants.ts";
  * @param {import('../users.js').UserDirectoryList} directories
  * @returns {string[]} List of comfy workflows
  */
-function getComfyWorkflows(directories) {
+function getComfyWorkflows(directories: import("../users.js").UserDirectoryList): string[] {
   return fs
     .readdirSync(directories.comfyWorkflows)
     .filter((file) => file[0] !== "." && file.toLowerCase().endsWith(".json"))
@@ -69,7 +69,7 @@ router.post("/upscalers", async (request, response) => {
       }
 
       const data: any = await result.json();
-      return data.map((x) => x.name);
+      return data.map((x: any) => x.name);
     }
 
     async function getLatentUpscalers() {
@@ -88,7 +88,7 @@ router.post("/upscalers", async (request, response) => {
       }
 
       const data: any = await result.json();
-      return data.map((x) => x.name);
+      return data.map((x: any) => x.name);
     }
 
     const [upscalers, latentUpscalers] = await Promise.all([getUpscalerModels(), getLatentUpscalers()]);
@@ -127,7 +127,7 @@ router.post("/vaes", async (request, response) => {
       throw new Error("SD WebUI returned an error.");
     }
 
-    const names = data.map((x) => x.model_name);
+    const names = data.map((x: any) => x.model_name);
     return response.send(names);
   } catch (error) {
     console.error(error);
@@ -152,7 +152,7 @@ router.post("/samplers", async (request, response) => {
     }
 
     const data: any = await result.json();
-    const names = data.map((x) => x.name);
+    const names = data.map((x: any) => x.name);
     return response.send(names);
   } catch (error) {
     console.error(error);
@@ -177,7 +177,7 @@ router.post("/schedulers", async (request, response) => {
     }
 
     const data: any = await result.json();
-    const names = data.map((x) => x.name);
+    const names = data.map((x: any) => x.name);
     return response.send(names);
   } catch (error) {
     console.error(error);
@@ -202,7 +202,7 @@ router.post("/models", async (request, response) => {
     }
 
     const data: any = await result.json();
-    const models = data.map((x) => ({ value: x.title, text: x.title }));
+    const models = data.map((x: any) => ({ value: x.title, text: x.title }));
     return response.send(models);
   } catch (error) {
     console.error(error);
@@ -371,7 +371,7 @@ router.post("/sd-next/upscalers", async (request, response) => {
     ];
 
     const data: any = await result.json();
-    const names = data.map((x) => x.name);
+    const names = data.map((x: any) => x.name);
 
     // 0 = None, then Latent Upscalers, then Upscalers
     names.splice(1, 0, ...latentUpscalers);
@@ -428,16 +428,16 @@ comfy.post("/models", async (request, response) => {
     }
     const data: any = await result.json();
 
-    const ckpts = data.CheckpointLoaderSimple.input.required.ckpt_name[0].map((it) => ({ value: it, text: it })) || [];
-    const unets = data.UNETLoader.input.required.unet_name[0].map((it) => ({ value: it, text: `UNet: ${it}` })) || [];
+    const ckpts = data.CheckpointLoaderSimple.input.required.ckpt_name[0].map((it: any) => ({ value: it, text: it })) || [];
+    const unets = data.UNETLoader.input.required.unet_name[0].map((it: any) => ({ value: it, text: `UNet: ${it}` })) || [];
 
     // load list of GGUF unets from diffusion_models if the loader node is available
     const ggufs =
-      data.UnetLoaderGGUF?.input.required.unet_name[0].map((it) => ({ value: it, text: `GGUF: ${it}` })) || [];
+      data.UnetLoaderGGUF?.input.required.unet_name[0].map((it: any) => ({ value: it, text: `GGUF: ${it}` })) || [];
     const models = [...ckpts, ...unets, ...ggufs];
 
     // make the display names of the models somewhat presentable
-    models.forEach((it) => (it.text = it.text.replace(/\.[^.]*$/, "").replace(/_/g, " ")));
+    models.forEach((it: any) => (it.text = it.text.replace(/\.[^.]*$/, "").replace(/_/g, " ")));
 
     return response.send(models);
   } catch (error) {
@@ -564,7 +564,7 @@ comfy.post(
 
 comfy.post("/generate", async (request, response) => {
   try {
-    let item;
+    let item: any;
     const url = new URL(urlJoin(request.body.url, "/prompt"));
 
     const controller = new AbortController();
@@ -605,15 +605,15 @@ comfy.post("/generate", async (request, response) => {
       // Report node tracebacks if available
       const errorMessages =
         item.status?.messages
-          ?.filter((it) => it[0] === "execution_error")
-          .map((it) => it[1])
-          .map((it) => `${it.node_type} [${it.node_id}] ${it.exception_type}: ${it.exception_message}`)
+          ?.filter((it: any) => it[0] === "execution_error")
+          .map((it: any) => it[1])
+          .map((it: any) => `${it.node_type} [${it.node_id}] ${it.exception_type}: ${it.exception_message}`)
           .join("\n") || "";
       throw new Error(`ComfyUI generation did not succeed.\n\n${errorMessages}`.trim());
     }
-    const outputs = Object.keys(item.outputs).map((it) => item.outputs[it]);
+    const outputs = Object.keys(item.outputs).map((it: string) => item.outputs[it]);
     console.debug("ComfyUI outputs:", outputs);
-    const imgInfo = outputs.flatMap((it) => it.images)[0] ?? outputs.flatMap((it) => it.gifs)[0];
+    const imgInfo = outputs.flatMap((it: any) => it.images)[0] ?? outputs.flatMap((it: any) => it.gifs)[0];
     if (!imgInfo) {
       throw new Error("ComfyUI did not return any recognizable outputs.");
     }
@@ -674,8 +674,8 @@ comfyRunPod.post("/generate", async (request, response) => {
       return response.sendStatus(400);
     }
 
-    let jobId;
-    let item;
+    let jobId: any;
+    let item: any;
     const url = new URL(urlJoin(request.body.url, "/run"));
 
     const controller = new AbortController();
@@ -863,7 +863,7 @@ sdcpp.post("/generate", async (request, response) => {
   try {
     const url = new URL(urlJoin(request.body.url, "/sdapi/v1/txt2img"));
 
-    const payload = {
+    const payload: Record<string, any> = {
       model: request.body.model,
       prompt: request.body.prompt,
       negative_prompt: request.body.negative_prompt,
@@ -1204,8 +1204,8 @@ electronhub.post("/models", async (request, response) => {
     }
 
     const models = data.data
-      .filter((x) => x && Array.isArray(x.endpoints) && x.endpoints.includes("/v1/images/generations"))
-      .map((x) => ({ ...x, value: x.id, text: x.name }));
+      .filter((x: any) => x && Array.isArray(x.endpoints) && x.endpoints.includes("/v1/images/generations"))
+      .map((x: any) => ({ ...x, value: x.id, text: x.name }));
     return response.send(models);
   } catch (error) {
     console.error(error);
@@ -1483,13 +1483,13 @@ bfl.post("/generate", async (request, response) => {
       output_format: "jpeg",
     };
 
-    function getClosestAspectRatio(width, height) {
+    function getClosestAspectRatio(width: number, height: number): string {
       const minAspect = 9 / 21;
       const maxAspect = 21 / 9;
       const currentAspect = width / height;
 
-      const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
-      const simplifyRatio = (w, h) => {
+      const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+      const simplifyRatio = (w: number, h: number): string => {
         const divisor = gcd(w, h);
         return `${w / divisor}:${h / divisor}`;
       };
@@ -1578,8 +1578,7 @@ falai.post("/models", async (_request, response) => {
   try {
     const modelsUrl = new URL("https://fal.ai/api/models?categories=text-to-image");
     let page = 1;
-    /** @type {any} */
-    let modelsResponse;
+    let modelsResponse: any;
     let models: any[] = [];
 
     do {
@@ -1599,7 +1598,7 @@ falai.post("/models", async (_request, response) => {
 
       models = models.concat(
         modelsResponse.items.filter(
-          (x) =>
+          (x: any) =>
             !x.title.toLowerCase().includes("inpainting") &&
             !x.title.toLowerCase().includes("control") &&
             !x.title.toLowerCase().includes("upscale") &&
@@ -1611,9 +1610,9 @@ falai.post("/models", async (_request, response) => {
     } while (modelsResponse != null && page < modelsResponse.pages);
 
     const modelOptions = models
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .map((x) => ({ value: x.modelUrl.split("fal-ai/")[1], text: x.title }))
-      .map((x) => ({ ...x, text: `${x.text} (${x.value})` }));
+      .sort((a: any, b: any) => a.title.localeCompare(b.title))
+      .map((x: any) => ({ value: x.modelUrl.split("fal-ai/")[1], text: x.title }))
+      .map((x: any) => ({ ...x, text: `${x.text} (${x.value})` }));
     return response.send(modelOptions);
   } catch (error) {
     console.error(error);
@@ -1797,8 +1796,8 @@ aimlapi.post("/models", async (request, response) => {
 
     const data: any = await modelsResponse.json();
     const models = (data.data || [])
-      .filter((model) => model.type === "image" && model.id !== "triposr" && model.id !== "flux/dev/image-to-image")
-      .map((model) => ({
+      .filter((model: any) => model.type === "image" && model.id !== "triposr" && model.id !== "flux/dev/image-to-image")
+      .map((model: any) => ({
         value: model.id,
         text: model.info?.name || model.id,
       }));
@@ -2070,7 +2069,7 @@ workersai.post("/models", async (request, response) => {
       return response.sendStatus(500);
     }
 
-    const models = data.result.map((x) => ({ value: x.name, text: x.name }));
+    const models = data.result.map((x: any) => ({ value: x.name, text: x.name }));
     return response.send(models);
   } catch (error) {
     console.error(error);
@@ -2101,7 +2100,7 @@ workersai.post("/generate", async (request, response) => {
 
     const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(accountId)}/ai/run/${model}`;
 
-    const body = {
+    const body: Record<string, any> = {
       prompt: request.body.prompt,
       negative_prompt: request.body.negative_prompt || undefined,
       width: request.body.width ? Number(request.body.width) : undefined,

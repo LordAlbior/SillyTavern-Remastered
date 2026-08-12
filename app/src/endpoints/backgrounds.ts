@@ -58,8 +58,8 @@ router.post("/folders", async (request, response) => {
     const folders = index.folders || [];
 
     // Build a slim map of image → folderIds for the frontend
-    /** @type {Object.<string, string[]>} */
-    const imageFolderMap = {};
+    /** @type {Record<string, string[]>} */
+    const imageFolderMap: Record<string, string[]> = {};
     for (const [relativePath, meta] of Object.entries(index.images)) {
       const entry = meta as any;
       if (Array.isArray(entry.folderIds) && entry.folderIds.length > 0) {

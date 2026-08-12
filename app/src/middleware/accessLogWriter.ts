@@ -31,7 +31,7 @@ export function migrateAccessLog() {
  * @returns {import('express').RequestHandler}
  */
 export default function accessLoggerMiddleware() {
-  return (req, res, next) => {
+  return (req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => {
     const clientIp = getIpAddress(req, true);
     const userAgent = req.headers["user-agent"];
 

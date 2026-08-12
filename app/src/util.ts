@@ -26,7 +26,7 @@ import { isFirefox } from "./express-common.ts";
 /**
  * Parsed config object.
  */
-let CACHED_CONFIG = null;
+let CACHED_CONFIG: any = null;
 let CONFIG_PATH: string | null = null;
 
 /**
@@ -35,13 +35,13 @@ let CONFIG_PATH: string | null = null;
  * @returns {string} Environment variable key
  * @example keyToEnv('extensions.models.speechToText') // 'SILLYTAVERN_EXTENSIONS_MODELS_SPEECHTOTEXT'
  */
-export const keyToEnv = (key) => "SILLYTAVERN_" + String(key).toUpperCase().replace(/\./g, "_");
+export const keyToEnv = (key: string) => "SILLYTAVERN_" + String(key).toUpperCase().replace(/\./g, "_");
 
 /**
  * Set the config file path.
  * @param {string} configFilePath Path to the config file
  */
-export function setConfigFilePath(configFilePath) {
+export function setConfigFilePath(configFilePath: string) {
   if (CONFIG_PATH !== null) {
     console.error(color.red("Config file path already set. Please restart the server to change the config file path."));
   }
@@ -118,7 +118,7 @@ export function getConfigValue(key: string, defaultValue: unknown = null, typeCo
  * @param {any} _value Unused
  * @deprecated Configs are read-only. Use environment variables instead.
  */
-export function setConfigValue(_key, _value) {
+export function setConfigValue(_key: any, _value: any) {
   console.trace(color.yellow("setConfigValue is deprecated and should not be used."));
 }
 
@@ -127,7 +127,7 @@ export function setConfigValue(_key, _value) {
  * @param {string} auth username:password
  * @returns {string} Basic Auth header value
  */
-export function getBasicAuthHeader(auth) {
+export function getBasicAuthHeader(auth: string) {
   const encoded = Buffer.from(`${auth}`).toString("base64");
   return `Basic ${encoded}`;
 }
@@ -174,7 +174,7 @@ export async function getVersion() {
  * @param {number} ms Milliseconds to wait
  * @returns {Promise<void>} Promise that resolves after the given amount of milliseconds
  */
-export function delay(ms) {
+export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -184,7 +184,7 @@ export function delay(ms) {
  * @returns {string} Random hex string
  * @example getHexString(8) // 'a1b2c3d4'
  */
-export function getHexString(length) {
+export function getHexString(length: number) {
   const chars = "0123456789abcdef";
   let result = "";
   for (let i = 0; i < length; i++) {
@@ -198,7 +198,7 @@ export function getHexString(length) {
  * @param {number} numBytes - The size in bytes to format
  * @returns {string} The formatted string (e.g., "1.5 MB")
  */
-export function formatBytes(numBytes) {
+export function formatBytes(numBytes: number) {
   return bytes.format(numBytes) ?? "";
 }
 
@@ -208,7 +208,7 @@ export function formatBytes(numBytes) {
  * @param {string} fileExtension File extension to look for
  * @returns {Promise<Buffer|null>} Buffer containing the extracted file. Null if the file was not found.
  */
-export async function extractFileFromZipBuffer(archiveBuffer, fileExtension) {
+export async function extractFileFromZipBuffer(archiveBuffer: ArrayBufferLike, fileExtension: string) {
   return await new Promise((resolve) => {
     try {
       yauzl.fromBuffer(Buffer.from(archiveBuffer), { lazyEntries: true }, (err, zipfile) => {
@@ -267,7 +267,7 @@ export async function extractFileFromZipBuffer(archiveBuffer, fileExtension) {
  * @param {string} entryName The entry name from the ZIP archive
  * @returns {string|null} Normalized path or null if invalid
  */
-export function normalizeZipEntryPath(entryName) {
+export function normalizeZipEntryPath(entryName: string) {
   if (typeof entryName !== "string") {
     return null;
   }
@@ -298,7 +298,7 @@ export function normalizeZipEntryPath(entryName) {
  * @param {string[]} fileNames Array of file paths to extract
  * @returns {Promise<Map<string, Buffer>>} Map of normalized paths to their extracted buffers
  */
-export async function extractFilesFromZipBuffer(archiveBuffer, fileNames) {
+export async function extractFilesFromZipBuffer(archiveBuffer: ArrayBufferLike, fileNames: string[]) {
   const targets = new Map();
 
   if (Array.isArray(fileNames)) {
@@ -395,7 +395,7 @@ export async function extractFilesFromZipBuffer(archiveBuffer, fileNames) {
  * @param {string} dirPath Path to the directory
  * @returns {boolean} True if the directory exists or was created, false on error
  */
-export function ensureDirectory(dirPath) {
+export function ensureDirectory(dirPath: string) {
   try {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
@@ -415,7 +415,7 @@ export function ensureDirectory(dirPath) {
  * @param {string} zipFilePath Path to the ZIP archive
  * @returns {Promise<[string, Buffer][]>} Array of image buffers
  */
-export async function getImageBuffers(zipFilePath) {
+export async function getImageBuffers(zipFilePath: string) {
   return new Promise((resolve, reject) => {
     // Check if the zip file exists
     if (!fs.existsSync(zipFilePath)) {
@@ -470,11 +470,11 @@ export async function getImageBuffers(zipFilePath) {
  * @param {any} readableStream Readable stream to read from
  * @returns {Promise<Buffer[]>} Array of chunks
  */
-export async function readAllChunks(readableStream) {
+export async function readAllChunks(readableStream: any) {
   return new Promise((resolve, reject) => {
     // Consume the readable stream
     const chunks: Buffer[] = [];
-    readableStream.on("data", (chunk) => {
+    readableStream.on("data", (chunk: Buffer) => {
       chunks.push(chunk);
     });
 
@@ -483,18 +483,18 @@ export async function readAllChunks(readableStream) {
       resolve(chunks);
     });
 
-    readableStream.on("error", (error) => {
+    readableStream.on("error", (error: any) => {
       console.error("Error while reading the stream:", error);
       reject();
     });
   });
 }
 
-function isObject(item) {
+function isObject(item: any) {
   return item && typeof item === "object" && !Array.isArray(item);
 }
 
-export function deepMerge(target, source) {
+export function deepMerge(target: any, source: any) {
   const output = Object.assign({}, target);
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach((key) => {
@@ -553,14 +553,14 @@ export function humanizedDateTime(timestamp = Date.now()) {
   };
   for (const key in dt) {
     const padLength = key === "millisecond" ? 3 : 2;
-    dt[key] = dt[key].toString().padStart(padLength, "0");
+    (dt as Record<string, any>)[key] = (dt as Record<string, any>)[key].toString().padStart(padLength, "0");
   }
   return `${dt.year}-${dt.month}-${dt.day}@${dt.hour}h${dt.minute}m${dt.second}s${dt.millisecond}ms`;
 }
 
-export function tryParse(str) {
+export function tryParse(str: string | undefined) {
   try {
-    return JSON.parse(str);
+    return JSON.parse(str ?? "");
   } catch {
     return undefined;
   }
@@ -573,7 +573,7 @@ export function tryParse(str) {
  * @param {string} inputPath The path to be converted.
  * @returns The relative URL path from which the client can access the file.
  */
-export function clientRelativePath(root, inputPath) {
+export function clientRelativePath(root: string, inputPath: string) {
   if (!inputPath.startsWith(root)) {
     throw new Error("Input path does not start with the root directory");
   }
@@ -594,8 +594,8 @@ export function clientRelativePath(root, inputPath) {
  * @returns {string|null} A unique name. Null if no unique name could be found in `maxTries`.
  */
 export function getUniqueName(
-  baseName,
-  exists,
+  baseName: string,
+  exists: (name: string) => boolean,
   {
     nameBuilder = null,
     maxTries = 1000,
@@ -624,7 +624,7 @@ export function getUniqueName(
  * @param {string} char Character to sanitize
  * @returns {string} Safe replacement character
  */
-export function sanitizeSafeCharacterReplacements(char) {
+export function sanitizeSafeCharacterReplacements(char: string) {
   return "_";
 }
 
@@ -633,7 +633,7 @@ export function sanitizeSafeCharacterReplacements(char) {
  * @param {string} filename The file name to remove the extension from.
  * @returns The file name, sans extension
  */
-export function removeFileExtension(filename) {
+export function removeFileExtension(filename: string) {
   return filename.replace(/\.[^.]+$/, "");
 }
 
@@ -655,7 +655,7 @@ export function generateTimestamp() {
  * @param {string} prefix File prefix to filter backups by.
  * @param {number?} limit Maximum number of backups to keep. If null, the limit is determined by the `backups.common.numberOfBackups` config value.
  */
-export function removeOldBackups(directory, prefix, limit: number | null = null) {
+export function removeOldBackups(directory: string, prefix: string, limit: number | null = null) {
   const MAX_BACKUPS = limit ?? Number(getConfigValue("backups.common.numberOfBackups", 50, "number"));
 
   let files = fs.readdirSync(directory).filter((f) => f.startsWith(prefix));
@@ -681,16 +681,16 @@ export function removeOldBackups(directory, prefix, limit: number | null = null)
  * @param {number} type Bitwise flag representing media types to include
  * @returns {string[]} List of image file names
  */
-export function getImages(directoryPath, sortBy = "name", type = MEDIA_REQUEST_TYPE.IMAGE) {
+export function getImages(directoryPath: string, sortBy: string = "name", type: number = MEDIA_REQUEST_TYPE.IMAGE) {
   function getSortFunction() {
     switch (sortBy) {
       case "name":
         return Intl.Collator().compare;
       case "date":
-        return (a, b) =>
+        return (a: string, b: string) =>
           fs.statSync(path.join(directoryPath, a)).mtimeMs - fs.statSync(path.join(directoryPath, b)).mtimeMs;
       default:
-        return (_a, _b) => 0;
+        return (_a: string, _b: string) => 0;
     }
   }
 
@@ -723,7 +723,7 @@ export function getImages(directoryPath, sortBy = "name", type = MEDIA_REQUEST_T
  * @param {import('express').Response} to The Express response to pipe to.
  * @returns {Promise<void>}
  */
-export async function forwardFetchResponse(from, to) {
+export async function forwardFetchResponse(from: any, to: any) {
   let statusCode = from.status;
   const statusText = from.statusText;
 
@@ -782,7 +782,7 @@ export async function forwardFetchResponse(from, to) {
  * @param {object} headers Request headers
  * @returns {Promise<string>} Response body
  */
-export function makeHttp2Request(endpoint, method, body, headers) {
+export function makeHttp2Request(endpoint: string, method: string, body: string, headers: any) {
   return new Promise((resolve, reject) => {
     try {
       const url = new URL(endpoint);
@@ -835,7 +835,7 @@ export function makeHttp2Request(endpoint, method, body, headers) {
  * @param {string} yamlString YAML-serialized object
  * @returns
  */
-export function mergeObjectWithYaml(obj, yamlString) {
+export function mergeObjectWithYaml(obj: any, yamlString: string) {
   if (!yamlString) {
     return;
   }
@@ -863,7 +863,7 @@ export function mergeObjectWithYaml(obj, yamlString) {
  * @param {string} yamlString YAML-serialized array
  * @returns {void} Nothing
  */
-export function excludeKeysByYaml(obj, yamlString) {
+export function excludeKeysByYaml(obj: any, yamlString: string) {
   if (!yamlString) {
     return;
   }
@@ -892,7 +892,7 @@ export function excludeKeysByYaml(obj, yamlString) {
  * @param {string} str Input string
  * @returns {string} Trimmed string
  */
-export function trimV1(str) {
+export function trimV1(str: string) {
   return String(str ?? "")
     .replace(/\/$/, "")
     .replace(/\/v1$/, "");
@@ -903,7 +903,7 @@ export function trimV1(str) {
  * @param {string} str Input string
  * @returns {string} String with trailing slash removed
  */
-export function trimTrailingSlash(str) {
+export function trimTrailingSlash(str: string) {
   return String(str ?? "").replace(/\/$/, "");
 }
 
@@ -917,7 +917,7 @@ export class Cache {
   /**
    * @param {number} ttl Time to live in milliseconds
    */
-  constructor(ttl) {
+  constructor(ttl: number) {
     this.cache = new Map();
     this.ttl = ttl;
   }
@@ -926,7 +926,7 @@ export class Cache {
    * Gets a value from the cache.
    * @param {string} key Cache key
    */
-  get(key) {
+  get(key: string) {
     const value = this.cache.get(key);
     if (value?.expiry && value.expiry > Date.now()) {
       return value.value;
@@ -942,7 +942,7 @@ export class Cache {
    * @param {string} key Key
    * @param {object} value Value
    */
-  set(key, value) {
+  set(key: string, value: any) {
     this.cache.set(key, {
       value: value,
       expiry: Date.now() + this.ttl,
@@ -953,7 +953,7 @@ export class Cache {
    * Removes a value from the cache.
    * @param {string} key Key
    */
-  remove(key) {
+  remove(key: string) {
     this.cache.delete(key);
   }
 
@@ -970,7 +970,7 @@ export class Cache {
  * @param {string} text Text with color formatting
  * @returns {string} Text without color formatting
  */
-export function removeColorFormatting(text) {
+export function removeColorFormatting(text: string) {
   // ANSI escape codes for colors are usually in the format \x1b[<codes>m
   return text.replace(/\x1b\[\d{1,2}(;\d{1,2})*m/g, "");
 }
@@ -980,7 +980,7 @@ export function removeColorFormatting(text) {
  * @param {number} n Number of times to repeat the separator
  * @returns {string} Separator string
  */
-export function getSeparator(n) {
+export function getSeparator(n: number) {
   return "=".repeat(n);
 }
 
@@ -989,7 +989,7 @@ export function getSeparator(n) {
  * @param {string} url String to check
  * @returns {boolean} If the URL is valid
  */
-export function isValidUrl(url) {
+export function isValidUrl(url: string) {
   try {
     new URL(url);
     return true;
@@ -1003,7 +1003,7 @@ export function isValidUrl(url) {
  * @param {string} hostname hostname to use
  * @returns {string} hostname plus the modifications
  */
-export function urlHostnameToIPv6(hostname) {
+export function urlHostnameToIPv6(hostname: string) {
   if (hostname.startsWith("[")) {
     hostname = hostname.slice(1);
   }
@@ -1020,7 +1020,7 @@ export function urlHostnameToIPv6(hostname) {
  * @param {boolean} useIPv4 If use IPv4
  * @returns Promise<boolean> If the URL is valid
  */
-export async function canResolve(name, useIPv6 = true, useIPv4 = true) {
+export async function canResolve(name: string, useIPv6 = true, useIPv4 = true) {
   try {
     let v6Resolved = false;
     let v4Resolved = false;
@@ -1102,7 +1102,7 @@ export async function getHasIP() {
  * @param {any} value - The value to convert to boolean
  * @returns {boolean} - The boolean representation of the value
  */
-export function toBoolean(value) {
+export function toBoolean(value: any) {
   // Handle string values case-insensitively
   if (typeof value === "string") {
     // Trim and convert to lowercase for case-insensitive comparison
@@ -1122,7 +1122,7 @@ export function toBoolean(value) {
  * @param {string|null} str Input string or null
  * @returns {boolean|string|null} boolean else original input string or null if input is
  */
-export function stringToBool(str) {
+export function stringToBool(str: string | null) {
   if (String(str).trim().toLowerCase() === "true") return true;
   if (String(str).trim().toLowerCase() === "false") return false;
   return str;
@@ -1153,7 +1153,7 @@ export class MemoryLimitedMap {
    * Creates an instance of MemoryLimitedMap.
    * @param {string} cacheCapacity - Maximum memory usage in human-readable format (e.g., '1 GB').
    */
-  constructor(cacheCapacity) {
+  constructor(cacheCapacity: string) {
     this.maxMemory = bytes.parse(cacheCapacity) ?? 0;
     this.currentMemory = 0;
     this.map = new Map();
@@ -1166,7 +1166,7 @@ export class MemoryLimitedMap {
    * @param {string} str
    * @returns {number}
    */
-  static estimateStringSize(str) {
+  static estimateStringSize(str: string | undefined) {
     return str ? str.length * 2 : 0;
   }
 
@@ -1176,7 +1176,7 @@ export class MemoryLimitedMap {
    * @param {string} key
    * @param {string} value
    */
-  set(key, value) {
+  set(key: string, value: string) {
     if (this.maxMemory <= 0) {
       return;
     }
@@ -1229,7 +1229,7 @@ export class MemoryLimitedMap {
    * @param {string} key
    * @returns {string | undefined}
    */
-  get(key) {
+  get(key: string) {
     return this.map.get(key);
   }
 
@@ -1238,7 +1238,7 @@ export class MemoryLimitedMap {
    * @param {string} key
    * @returns {boolean}
    */
-  has(key) {
+  has(key: string) {
     return this.map.has(key);
   }
 
@@ -1247,7 +1247,7 @@ export class MemoryLimitedMap {
    * @param {string} key
    * @returns {boolean} - Returns true if the key was found and deleted, else false.
    */
-  delete(key) {
+  delete(key: string) {
     if (!this.map.has(key)) {
       return false;
     }
@@ -1310,7 +1310,7 @@ export class MemoryLimitedMap {
    * Iterates over the map in insertion order.
    * @param {Function} callback - Function to execute for each element.
    */
-  forEach(callback) {
+  forEach(callback: (value: string, key: string, map: MemoryLimitedMap) => void) {
     this.map.forEach((value, key) => {
       callback(value, key, this);
     });
@@ -1340,7 +1340,7 @@ export function safeReadFileSync(filePath: string, options: any = { encoding: "u
  * Set the title of the terminal window
  * @param {string} title Desired title for the window
  */
-export function setWindowTitle(title) {
+export function setWindowTitle(title: string) {
   if (process.platform === "win32") {
     process.title = title;
   } else {
@@ -1354,7 +1354,7 @@ export function setWindowTitle(title) {
  * @param {function(any): void} mutation Mutation function to apply to the parsed JSON object
  * @returns {string} Mutated JSON string
  */
-export function mutateJsonString(jsonString, mutation) {
+export function mutateJsonString(jsonString: string, mutation: (data: any) => void) {
   try {
     const json = JSON.parse(jsonString);
     mutation(json);
@@ -1369,13 +1369,13 @@ export function mutateJsonString(jsonString, mutation) {
  * Sets the permissions of a file or directory to be writable.
  * @param {string} targetPath Path to the file or directory
  */
-export function setPermissionsSync(targetPath) {
+export function setPermissionsSync(targetPath: string) {
   /**
    * Appends writable permission to the file mode.
    * @param {string} filePath Path to the file
    * @param {fs.Stats} stats File stats
    */
-  function appendWritablePermission(filePath, stats) {
+  function appendWritablePermission(filePath: string, stats: fs.Stats) {
     const currentMode = stats.mode;
     const newMode = currentMode | 0o200;
     if (newMode != currentMode) {
@@ -1407,7 +1407,7 @@ export function setPermissionsSync(targetPath) {
  * @param {string} childPath Child path
  * @returns {boolean} Returns true if the child path is under the parent path, false otherwise
  */
-export function isPathUnderParent(parentPath, childPath) {
+export function isPathUnderParent(parentPath: string, childPath: string) {
   const normalizedParent = path.normalize(parentPath);
   const normalizedChild = path.normalize(childPath);
 
@@ -1421,7 +1421,7 @@ export function isPathUnderParent(parentPath, childPath) {
  * @param {string | URL | Request} request The request to check
  * @return {boolean} Returns true if the request is a file URL, false otherwise
  */
-export function isFileURL(request) {
+export function isFileURL(request: string | URL | Request) {
   if (typeof request === "string") {
     return request.startsWith("file://");
   }
@@ -1439,7 +1439,7 @@ export function isFileURL(request) {
  * @param {string | URL | Request} request The request to get the URL from
  * @return {string} The URL of the request
  */
-export function getRequestURL(request) {
+export function getRequestURL(request: string | URL | Request) {
   if (typeof request === "string") {
     return request;
   }
@@ -1459,7 +1459,7 @@ export function getRequestURL(request) {
  * @param {string} api The API source.
  * @returns {object} The flattened and simplified schema.
  */
-export function flattenSchema(schema, api) {
+export function flattenSchema(schema: any, api: string) {
   if (!schema || typeof schema !== "object") {
     return schema;
   }
@@ -1470,7 +1470,7 @@ export function flattenSchema(schema, api) {
   const definitions = schemaCopy.$defs || {};
   delete schemaCopy.$defs;
 
-  function resolve(obj, parents: string[] = []) {
+  function resolve(obj: any, parents: string[] = []): any {
     if (!obj || typeof obj !== "object") {
       return obj;
     }
@@ -1489,7 +1489,7 @@ export function flattenSchema(schema, api) {
     }
 
     // 2. Process the object's properties
-    const result = {};
+    const result: Record<string, any> = {};
     for (const key in obj) {
       if (!Object.hasOwn(obj, key)) continue;
 
@@ -1514,7 +1514,7 @@ export function flattenSchema(schema, api) {
  * @param {string} filePath
  * @param {string} data
  */
-export function tryWriteFileSync(filePath, data) {
+export function tryWriteFileSync(filePath: string, data: string) {
   const directory = path.dirname(filePath);
   //Ensure the directory exists.
   if (!fs.existsSync(directory)) {
@@ -1528,7 +1528,7 @@ export function tryWriteFileSync(filePath, data) {
  * @param {string} filePath
  * @returns {string|null}
  */
-export function tryReadFileSync(filePath) {
+export function tryReadFileSync(filePath: string): string | null {
   try {
     if (fs.existsSync(filePath)) {
       return fs.readFileSync(filePath, "utf8");
@@ -1544,7 +1544,7 @@ export function tryReadFileSync(filePath) {
  * @param {string} filePath Target file.
  * @returns {boolean} Returns true if the file was found and deleted.
  */
-export function tryDeleteFile(filePath) {
+export function tryDeleteFile(filePath: string): boolean {
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
     console.info(`Deleted file: ${filePath}`);
@@ -1560,7 +1560,7 @@ export function tryDeleteFile(filePath) {
  * @param {string} filePath Path to the file
  * @returns {Promise<string>} The first line of the file
  */
-export function readFirstLine(filePath) {
+export function readFirstLine(filePath: string): Promise<string> {
   const stream = fs.createReadStream(filePath, { encoding: "utf8" });
   const rl = readline.createInterface({ input: stream });
   return new Promise((resolve, reject) => {
@@ -1595,7 +1595,7 @@ export function readFirstLine(filePath) {
  * @param {import('express').Request} request Request object
  * @param {import('express').Response} response Response object
  */
-export function invalidateFirefoxCache(file, request, response) {
+export function invalidateFirefoxCache(file: string, request: import('express').Request, response: import('express').Response) {
   const mimeType = isFirefox(request) && mime.lookup(file);
   if (mimeType && mimeType.startsWith("image/")) {
     response.setHeader("Cache-Control", "must-understand, no-store");

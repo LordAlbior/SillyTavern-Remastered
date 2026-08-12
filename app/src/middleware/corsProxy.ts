@@ -6,7 +6,7 @@ import { forwardFetchResponse } from "../util.ts";
  * @param {import('express').Request} req Express request object
  * @param {import('express').Response} res Express response object
  */
-export default async function corsProxyMiddleware(req, res) {
+export default async function corsProxyMiddleware(req: import("express").Request, res: import("express").Response) {
   const url = req.params.url; // get the url from the request path
 
   // Disallow circular requests

@@ -5,7 +5,7 @@
     "checkJs": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-"noImplicitAny": false,
+"noImplicitAny": true,
     "noImplicitThis": false,
     "strictNullChecks": true,
     "strictFunctionTypes": true,

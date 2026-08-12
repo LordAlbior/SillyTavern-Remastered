@@ -14,7 +14,7 @@ import { MEDIA_EXTENSIONS, MEDIA_REQUEST_TYPE } from "../constants.ts";
  *
  * @param {string} filePath - The full path of the file for which the directory should be ensured.
  */
-function ensureDirectoryExistence(filePath) {
+function ensureDirectoryExistence(filePath: string) {
   const dirname = path.dirname(filePath);
   if (fs.existsSync(dirname)) {
     return true;

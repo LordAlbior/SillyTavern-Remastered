@@ -169,24 +169,24 @@ app.use(setUserDataMiddleware);
 // CSRF Protection //
 if (!cliArgs.disableCsrf) {
   const csrfSyncProtection = csrfSync({
-    getTokenFromState: (req) => {
+    getTokenFromState: (req: any) => {
       if (!req.session) {
         console.error("(CSRF error) getTokenFromState: Session object not initialized");
         return;
       }
       return req.session.csrfToken;
     },
-    getTokenFromRequest: (req) => {
+    getTokenFromRequest: (req: any) => {
       return req.headers["x-csrf-token"]?.toString();
     },
-    storeTokenInState: (req, token) => {
+    storeTokenInState: (req: any, token: string) => {
       if (!req.session) {
         console.error("(CSRF error) storeTokenInState: Session object not initialized");
         return;
       }
       req.session.csrfToken = token;
     },
-    skipCsrfProtection: (req) => {
+    skipCsrfProtection: (req: any) => {
       return cliArgs.enableCorsProxy ? /^\/proxy\//.test(req.path) : false;
     },
     size: 32,
@@ -387,7 +387,7 @@ async function preSetupTasks() {
  * @param {import('./server-startup.js').ServerStartupResult} result The result of the server startup
  * @returns {Promise<void>}
  */
-async function postSetupTasks(result) {
+async function postSetupTasks(result: any) {
   const browserLaunchHostname = await cliArgs.getBrowserLaunchHostname(result);
   const browserLaunchUrl = cliArgs.getBrowserLaunchUrl(browserLaunchHostname);
   const browserLaunchApp = String(getConfigValue("browserLaunch.browser", "default") ?? "");
@@ -412,7 +412,7 @@ async function postSetupTasks(result) {
       }
 
       const validBrowsers = getBrowsers();
-      const appName = validBrowsers[browserLaunchApp.trim().toLowerCase()];
+      const appName = (validBrowsers as Record<string, any>)[browserLaunchApp.trim().toLowerCase()];
       const openOptions = appName ? { app: { name: appName } } : {};
 
       console.log(`Launching in a browser: ${browserLaunchApp}...`);

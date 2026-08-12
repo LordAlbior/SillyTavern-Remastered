@@ -21,7 +21,7 @@ const OPTIONS = Object.freeze({ timeout: { block: 5 * 60 * 1000 } });
  * @param {string} extensionPath - The path of the extension folder
  * @returns {Promise<Object>} - Returns the manifest data as an object
  */
-async function getManifest(extensionPath) {
+async function getManifest(extensionPath: string) {
   const manifestPath = path.join(extensionPath, "manifest.json");
 
   // Check if manifest.json exists
@@ -38,7 +38,7 @@ async function getManifest(extensionPath) {
  * @param {string} extensionPath - The path of the extension folder
  * @returns {Promise<Object>} - Returns the extension information as an object
  */
-async function checkIfRepoIsUpToDate(extensionPath) {
+async function checkIfRepoIsUpToDate(extensionPath: string) {
   const git = simpleGit({ baseDir: extensionPath, ...OPTIONS });
   await git.fetch("origin");
   const currentBranch = await git.branch();
@@ -69,7 +69,7 @@ export const router = express.Router();
  * Feature flag guard: don't allow calling any of the endpoints if extensions are disabled
  * @type {import('express').RequestHandler}
  */
-export const extensionsEnabledFeatureGuard = (_, response, next) => {
+export const extensionsEnabledFeatureGuard = (_: import("express").Request, response: import("express").Response, next: import("express").NextFunction) => {
   const enabled = !!getConfigValue("extensions.enabled", true, "boolean");
   if (!enabled) {
     response.sendStatus(404);

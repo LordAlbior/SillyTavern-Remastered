@@ -70,7 +70,7 @@ export const CONTENT_SCOPE = {
  * @param {CONTENT_TYPES} type Content type
  * @returns {CONTENT_SCOPE} Resolved content scope
  */
-function getScopeByType(type) {
+function getScopeByType(type: string) {
   const globalTypes = [CONTENT_TYPES.ERROR_PAGE, CONTENT_TYPES.STYLESHEET];
   return globalTypes.includes(type) ? CONTENT_SCOPE.GLOBAL : CONTENT_SCOPE.USER;
 }
@@ -80,7 +80,7 @@ function getScopeByType(type) {
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns {object[]} Array of default presets
  */
-export function getDefaultPresets(directories) {
+export function getDefaultPresets(directories: import("../users.js").UserDirectoryList) {
   try {
     const contentIndex = getContentIndex(CONTENT_SCOPE.USER);
     const presets: any[] = [];
@@ -108,7 +108,7 @@ export function getDefaultPresets(directories) {
  * @param {string} filename Name of the file to get
  * @returns {object | null} JSON object or null if the file doesn't exist
  */
-export function getDefaultPresetFile(filename) {
+export function getDefaultPresetFile(filename: string) {
   try {
     const contentPath = path.join(contentDirectory, filename);
 
@@ -132,7 +132,7 @@ export function getDefaultPresetFile(filename) {
  * @param {string[]} [forceCategories] List of categories to force check (even if content check is skipped)
  * @returns {boolean} Whether any content was added
  */
-function seedContent(contentIndex, contentLogPath, resolveTarget, forceCategories: string[] | undefined = undefined) {
+function seedContent(contentIndex: any[], contentLogPath: string, resolveTarget: (type: string) => string | null, forceCategories: string[] | undefined = undefined) {
   let anyContentAdded = false;
   const contentLog = getContentLog(contentLogPath);
 
@@ -187,7 +187,7 @@ function seedContent(contentIndex, contentLogPath, resolveTarget, forceCategorie
  * @param {string[]} forceCategories List of categories to force check (even if content check is skipped)
  * @returns {Promise<boolean>} Whether any content was added
  */
-async function seedContentForUser(contentIndex, directories, forceCategories) {
+async function seedContentForUser(contentIndex: any[], directories: import("../users.js").UserDirectoryList, forceCategories: string[]) {
   if (!fs.existsSync(directories.root)) {
     fs.mkdirSync(directories.root, { recursive: true });
   }
@@ -201,7 +201,7 @@ async function seedContentForUser(contentIndex, directories, forceCategories) {
  * @param {ContentItem[]} contentIndex Content index
  * @returns {Promise<boolean>} Whether any content was added
  */
-async function seedGlobalContent(contentIndex) {
+async function seedGlobalContent(contentIndex: any[]) {
   const contentLogPath = path.join(globalThis.DATA_ROOT, "content.log");
   return seedContent(contentIndex, contentLogPath, getGlobalTargetByType);
 }
@@ -212,7 +212,7 @@ async function seedGlobalContent(contentIndex) {
  * @param {string[]} forceCategories List of categories to force check (even if content check is skipped)
  * @returns {Promise<void>}
  */
-export async function checkForNewContent(directoriesList, forceCategories: string[] = []) {
+export async function checkForNewContent(directoriesList: import("../users.js").UserDirectoryList[], forceCategories: string[] = []) {
   try {
     const contentCheckSkip = getConfigValue("skipContentCheck", false, "boolean");
     if (contentCheckSkip && forceCategories?.length === 0) {
@@ -290,7 +290,7 @@ function getContentIndex(scope = CONTENT_SCOPE.USER) {
  * @param {CONTENT_SCOPE} scope Scope of content to get
  * @returns {string[]|Buffer[]} Array of content
  */
-export function getContentOfType(type, format, scope = CONTENT_SCOPE.USER) {
+export function getContentOfType(type: string, format: string, scope = CONTENT_SCOPE.USER) {
   const contentIndex = getContentIndex(scope);
   const indexItems = contentIndex.filter((item) => item.type === type && item.folder);
   const files: any[] = [];
@@ -325,7 +325,7 @@ export function getContentOfType(type, format, scope = CONTENT_SCOPE.USER) {
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns {string | null} Target directory
  */
-export function getUserTargetByType(type, directories) {
+export function getUserTargetByType(type: string, directories: import("../users.js").UserDirectoryList) {
   switch (type) {
     case CONTENT_TYPES.SETTINGS:
       return directories.root;
@@ -373,7 +373,7 @@ export function getUserTargetByType(type, directories) {
  * @param {CONTENT_TYPES} type Content type
  * @returns {string | null} Target directory
  */
-export function getGlobalTargetByType(type) {
+export function getGlobalTargetByType(type: string) {
   switch (type) {
     case CONTENT_TYPES.ERROR_PAGE:
       return path.join(globalThis.DATA_ROOT, "_errors");
@@ -389,7 +389,7 @@ export function getGlobalTargetByType(type) {
  * @param {string} contentLogPath Path to the content log file
  * @returns {string[]} Array of content log lines
  */
-function getContentLog(contentLogPath): string[] {
+function getContentLog(contentLogPath: string): string[] {
   if (!fs.existsSync(contentLogPath)) {
     return [];
   }
@@ -398,7 +398,7 @@ function getContentLog(contentLogPath): string[] {
   return contentLogText.split("\n");
 }
 
-async function downloadChubLorebook(id) {
+async function downloadChubLorebook(id: string) {
   const [lorebooks, creatorName, projectName] = id.split("/");
   const result = await fetch(`https://api.chub.ai/api/${lorebooks}/${creatorName}/${projectName}`, {
     method: "GET",
@@ -438,7 +438,7 @@ async function downloadChubLorebook(id) {
   return { buffer, fileName, fileType };
 }
 
-async function downloadChubCharacter(id) {
+async function downloadChubCharacter(id: string) {
   const [creatorName, projectName] = id.split("/");
   const result = await fetch(`https://api.chub.ai/api/characters/${creatorName}/${projectName}?full=true`, {
     method: "GET",
@@ -503,7 +503,7 @@ async function downloadChubCharacter(id) {
  * @param {string} id UUID of the character
  * @returns {Promise<{buffer: Buffer, fileName: string, fileType: string}>}
  */
-async function downloadPygmalionCharacter(id) {
+async function downloadPygmalionCharacter(id: string) {
   const result = await fetch(`https://server.pygmalion.chat/api/export/character/${id}/v2`);
 
   if (!result.ok) {
@@ -553,7 +553,7 @@ async function downloadPygmalionCharacter(id) {
  * @param {String} str
  * @returns { { id: string, type: "character" | "lorebook" } | null }
  */
-function parseChubUrl(str) {
+function parseChubUrl(str: string) {
   const splitStr = str.split("/");
   const length = splitStr.length;
 
@@ -563,7 +563,7 @@ function parseChubUrl(str) {
 
   let domainIndex = -1;
 
-  splitStr.forEach((part, index) => {
+  splitStr.forEach((part: string, index: number) => {
     if (
       part === "www.chub.ai" ||
       part === "chub.ai" ||
@@ -596,7 +596,7 @@ function parseChubUrl(str) {
 }
 
 // Warning: Some characters might not exist in JannyAI.me
-async function downloadJannyCharacter(uuid) {
+async function downloadJannyCharacter(uuid: string) {
   // This endpoint is being guarded behind Bot Fight Mode of Cloudflare
   // So hosted ST on Azure/AWS/GCP/Collab might get blocked by IP
   // Should work normally on self-host PC/Android
@@ -628,7 +628,7 @@ async function downloadJannyCharacter(uuid) {
 }
 
 //Download Character Cards from AICharactersCards.com (AICC) API.
-async function downloadAICCCharacter(id) {
+async function downloadAICCCharacter(id: string) {
   const apiURL = `https://aicharactercards.com/wp-json/pngapi/v1/image/${id}`;
   try {
     const response = await fetch(apiURL);
@@ -656,7 +656,7 @@ async function downloadAICCCharacter(id) {
  * @param {string} url URL to parse
  * @returns {string | null} AICC path
  */
-function parseAICC(url) {
+function parseAICC(url: string) {
   try {
     if (isValidUrl(url)) {
       const urlObj = new URL(url);
@@ -683,7 +683,7 @@ function parseAICC(url) {
  * Download character card from generic url.
  * @param {String} url
  */
-async function downloadGenericPng(url) {
+async function downloadGenericPng(url: string) {
   try {
     const result = await fetch(url);
 
@@ -722,7 +722,7 @@ async function downloadGenericPng(url) {
  * @param {string} url Risu Realm URL
  * @returns {string | null} UUID of the character
  */
-function parseRisuUrl(url) {
+function parseRisuUrl(url: string) {
   // Example: https://realm.risuai.net/character/7adb0ed8d81855c820b3506980fb40f054ceef010ff0c4bab73730c0ebe92279
   // or https://realm.risuai.net/character/7adb0ed8-d818-55c8-20b3-506980fb40f0
   const pattern = /^https?:\/\/realm\.risuai\.net\/character\/([a-f0-9-]+)\/?$/i;
@@ -735,7 +735,7 @@ function parseRisuUrl(url) {
  * @param {string} uuid UUID of the character
  * @returns {Promise<{buffer: Buffer, fileName: string, fileType: string}>}
  */
-async function downloadRisuCharacter(uuid) {
+async function downloadRisuCharacter(uuid: string) {
   const result = await fetch(`https://realm.risuai.net/api/v1/download/png-v3/${uuid}?non_commercial=true`);
 
   if (!result.ok) {
@@ -755,7 +755,7 @@ async function downloadRisuCharacter(uuid) {
  * @param {string} uuid UUID string to check
  * @returns {boolean} True if the UUID is valid, false otherwise
  */
-function isPerchanceUUID(uuid) {
+function isPerchanceUUID(uuid: string) {
   if (!uuid) {
     return false;
   }
@@ -772,7 +772,7 @@ function isPerchanceUUID(uuid) {
  * @param {string} url Perchance character URL
  * @returns {string} Slug of the character
  */
-function parsePerchanceSlug(url) {
+function parsePerchanceSlug(url: string) {
   // Example: https://perchance.org/ai-character-chat?data=Personality_Advisor~6903e991c90fd1dba52c036d917e99c6.gz
   // or: Personality_Advisor~6903e991c90fd1dba52c036d917e99c6.gz
   return url?.split("~")[1] || "";
@@ -783,7 +783,7 @@ function parsePerchanceSlug(url) {
  * @param {string} slug Slug of the character
  * @returns {Promise<{buffer: Buffer, fileName: string, fileType: string} | null>}
  */
-async function downloadPerchanceCharacter(slug) {
+async function downloadPerchanceCharacter(slug: string) {
   // example of slug
   // 6903e991c90fd1dba52c036d917e99c6.gz
   const perchanceBaseURL = "https://user.uploads.dev/file";
@@ -861,7 +861,7 @@ async function downloadPerchanceCharacter(slug) {
  * @returns {Promise<Object>} Parsed Perchance character data
  * @throws {Error} If the character data is invalid or missing required fields
  */
-async function extractPerchanceCharacterFromGz(result) {
+async function extractPerchanceCharacterFromGz(result: any) {
   const compressedBuffer = await result.arrayBuffer();
   const decompressedBuffer = zlib.gunzipSync(compressedBuffer);
 
@@ -888,7 +888,7 @@ async function extractPerchanceCharacterFromGz(result) {
  * @param {boolean} isAvatarBase64 Flag indicating if the avatar URL is a base64 string
  * @returns {Promise<Buffer>} Buffer containing the avatar image
  */
-async function fetchPerchanceAvatar(avatarUrl, isAvatarBase64) {
+async function fetchPerchanceAvatar(avatarUrl: string, isAvatarBase64: boolean) {
   const defaultAvatarPath = path.join(serverDirectory, DEFAULT_AVATAR_PATH);
   const defaultAvatarBuffer = fs.readFileSync(defaultAvatarPath);
 
@@ -949,7 +949,7 @@ async function fetchPerchanceAvatar(avatarUrl, isAvatarBase64) {
  * @param {String} url
  * @returns {String | null } UUID of the character
  */
-function getUuidFromUrl(url) {
+function getUuidFromUrl(url: string) {
   // Extract UUID from URL
   const uuidRegex = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
   const matches = url.match(uuidRegex);
@@ -964,7 +964,7 @@ function getUuidFromUrl(url) {
  * @param {String} url URL to strip
  * @returns {String} Domain name
  */
-export function getHostFromUrl(url) {
+export function getHostFromUrl(url: string) {
   try {
     const urlObj = new URL(url);
     return urlObj.hostname;
@@ -978,7 +978,7 @@ export function getHostFromUrl(url) {
  * @param {String} host Host to check
  * @returns {boolean} If the host is on the whitelist.
  */
-export function isHostWhitelisted(host) {
+export function isHostWhitelisted(host: string) {
   return WHITELIST_GENERIC_URL_DOWNLOAD_SOURCES.includes(host);
 }
 

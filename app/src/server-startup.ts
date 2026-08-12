@@ -1,6 +1,7 @@
 import https from "node:https";
 import http from "node:http";
 import fs from "node:fs";
+import type { Request, Response } from "express";
 import { color, urlHostnameToIPv6, getHasIP } from "./util.ts";
 
 // Express routers
@@ -66,15 +67,15 @@ import { router as volcengineRouter } from "./endpoints/volcengine.ts";
  * Redirect deprecated API endpoints to their replacements.
  * @param {import('express').Express} app The Express app to use
  */
-export function redirectDeprecatedEndpoints(app) {
+export function redirectDeprecatedEndpoints(app: import("express").Express) {
   /**
    * Redirect a deprecated API endpoint URL to its replacement. Because fetch, form submissions, and $.ajax follow
    * redirects, this is transparent to client-side code.
    * @param {string} src The URL to redirect from.
    * @param {string} destination The URL to redirect to.
    */
-  function redirect(src, destination) {
-    app.use(src, (req, res) => {
+  function redirect(src: string, destination: string) {
+    app.use(src, (req: Request, res: Response) => {
       console.warn(`API endpoint ${src} is deprecated; use ${destination} instead`);
       // HTTP 301 causes the request to become a GET. 308 preserves the request method.
       res.redirect(308, destination);
@@ -137,7 +138,7 @@ export function redirectDeprecatedEndpoints(app) {
  * Setup the routers for the endpoints.
  * @param {import('express').Express} app The Express app to use
  */
-export function setupPrivateEndpoints(app) {
+export function setupPrivateEndpoints(app: import("express").Express) {
   app.use("/", userDataRouter);
   app.use("/api/users", usersPrivateRouter);
   app.use("/api/users", usersAdminRouter);
@@ -199,7 +200,7 @@ export class ServerStartup {
    * @param {import('express').Express} app The Express app to use
    * @param {import('./command-line.js').CommandLineArguments} cliArgs The command-line arguments
    */
-  constructor(app, cliArgs) {
+  constructor(app: import("express").Express, cliArgs: any) {
     this.app = app;
     this.cliArgs = cliArgs;
   }
@@ -208,7 +209,7 @@ export class ServerStartup {
    * Prints a fatal error message and exits the process.
    * @param {string} message
    */
-  #fatal(message) {
+  #fatal(message: string) {
     console.error(color.red(message));
     process.exit(1);
   }
@@ -218,7 +219,7 @@ export class ServerStartup {
    * @param {unknown} error
    * @returns {error is NodeJS.ErrnoException}
    */
-  #isAddressInUseError(error) {
+  #isAddressInUseError(error: unknown) {
     return typeof error === "object" && error !== null && "code" in error && error.code === "EADDRINUSE";
   }
 
@@ -228,7 +229,7 @@ export class ServerStartup {
    * @param {number} ipVersion The IP version to use
    * @returns {string}
    */
-  #getListenAddress(url, ipVersion) {
+  #getListenAddress(url: URL, ipVersion: number) {
     const host = ipVersion === 6 ? urlHostnameToIPv6(url.hostname) : url.hostname;
     return `${host}:${Number(url.port || (this.cliArgs.ssl ? 443 : 80))}`;
   }
@@ -239,7 +240,7 @@ export class ServerStartup {
    * @param {number} ipVersion The IP version that failed
    * @returns {string}
    */
-  #getAddressInUseMessage(url, ipVersion) {
+  #getAddressInUseMessage(url: URL, ipVersion: number) {
     const listenAddress = this.#getListenAddress(url, ipVersion);
     return `Address ${listenAddress} is already in use. Another SillyTavern instance may already be running. Stop the other process or change "port" in config.yaml.`;
   }
@@ -274,7 +275,7 @@ export class ServerStartup {
    * @param {number} ipVersion the ip version to use
    * @returns {Promise<void>} A promise that resolves when the server is listening
    */
-  #createHttpsServer(url, ipVersion) {
+  #createHttpsServer(url: URL, ipVersion: number) {
     this.#verifySslOptions();
     return new Promise((resolve, reject) => {
       /** @type {import('https').ServerOptions} */
@@ -304,7 +305,7 @@ export class ServerStartup {
    * @param {number} ipVersion the ip version to use
    * @returns {Promise<void>} A promise that resolves when the server is listening
    */
-  #createHttpServer(url, ipVersion) {
+  #createHttpServer(url: URL, ipVersion: number) {
     return new Promise((resolve, reject) => {
       const server = http.createServer(this.app);
       server.on("error", reject);
@@ -327,7 +328,7 @@ export class ServerStartup {
    * @param {boolean} useIPv4 If use IPv4
    * @returns {Promise<[boolean, boolean, unknown, unknown]>} A promise that resolves with an array of booleans indicating if the server failed to start on IPv6 and IPv4, respectively, and the corresponding errors
    */
-  async #startHTTPorHTTPS(useIPv6, useIPv4) {
+  async #startHTTPorHTTPS(useIPv6: boolean, useIPv4: boolean) {
     let v6Failed = false;
     let v4Failed = false;
     let v6Error;
@@ -375,7 +376,7 @@ export class ServerStartup {
    * @param {ServerStartupResult} result The results of the server startup
    * @returns {void}
    */
-  #handleServerListenFail({ v6Failed, v4Failed, v6Error, v4Error, useIPv6, useIPv4 }) {
+  #handleServerListenFail({ v6Failed, v4Failed, v6Error, v4Error, useIPv6, useIPv4 }: { v6Failed: boolean; v4Failed: boolean; v6Error: unknown; v4Error: unknown; useIPv6: boolean; useIPv4: boolean }) {
     if (v6Failed && !useIPv4) {
       if (this.#isAddressInUseError(v6Error)) {
         this.#fatal(

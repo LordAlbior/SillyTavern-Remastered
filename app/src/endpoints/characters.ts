@@ -62,18 +62,16 @@ class DiskCache {
    */
   static SYNC_INTERVAL = 5 * 60 * 1000;
 
-  /** @type {import('node-persist').LocalStorage} */
-  #instance;
+  #instance: import("node-persist").LocalStorage | undefined;
 
-  /** @type {NodeJS.Timeout} */
-  #syncInterval;
+  #syncInterval: NodeJS.Timeout | undefined;
 
   /**
    * Queue of user handles to sync.
    * @type {Set<string>}
    * @readonly
    */
-  syncQueue = new Set();
+  syncQueue = new Set<string>();
 
   /**
    * Path to the cache directory.
@@ -137,7 +135,7 @@ class DiskCache {
    * @param {import('../users.js').UserDirectoryList[]} directoriesList List of user directories
    * @returns {Promise<void>}
    */
-  async verify(directoriesList) {
+  async verify(directoriesList: import("../users.js").UserDirectoryList[]) {
     try {
       if (!useDiskCache) {
         return;
@@ -177,7 +175,7 @@ export const diskCache = new DiskCache();
  * @param {string} inputFile - Path to the image file
  * @returns {string} - Cache key
  */
-function getCacheKey(inputFile) {
+function getCacheKey(inputFile: string) {
   if (fs.existsSync(inputFile)) {
     const stat = fs.statSync(inputFile);
     return `${inputFile}-${stat.mtimeMs}`;
@@ -192,7 +190,7 @@ function getCacheKey(inputFile) {
  * @param {string} inputFormat - 'png'
  * @returns {Promise<string | undefined>} - Character card data
  */
-async function readCharacterData(inputFile, inputFormat = "png") {
+async function readCharacterData(inputFile: string, inputFormat: string = "png") {
   const cacheKey = getCacheKey(inputFile);
   if (memoryCache.has(cacheKey)) {
     return memoryCache.get(cacheKey);
@@ -231,7 +229,13 @@ async function readCharacterData(inputFile, inputFormat = "png") {
  * @param {Crop|undefined} crop - Crop parameters
  * @returns {Promise<boolean>} - True if the operation was successful
  */
-async function writeCharacterData(inputFile, data, outputFile, request, crop = undefined) {
+async function writeCharacterData(
+  inputFile: string | Buffer,
+  data: string,
+  outputFile: string,
+  request: import("express").Request,
+  crop: any = undefined,
+) {
   try {
     // Reset the cache
     for (const key of memoryCache.keys()) {
@@ -296,7 +300,7 @@ async function writeCharacterData(inputFile, data, outputFile, request, crop = u
  * @param {Crop|undefined} [crop] Crop parameters
  * @returns {Promise<Buffer>} Processed image buffer
  */
-export async function applyAvatarCropResize(jimp, crop) {
+export async function applyAvatarCropResize(jimp: any, crop: any) {
   if (!(jimp instanceof Jimp)) {
     throw new TypeError("Expected a Jimp instance");
   }
@@ -328,7 +332,7 @@ export async function applyAvatarCropResize(jimp, crop) {
  * @param {Crop|undefined} [crop] Crop parameters
  * @returns {Promise<Buffer>} Image buffer
  */
-async function parseImageBuffer(buffer, crop) {
+async function parseImageBuffer(buffer: Buffer, crop: any) {
   const image = await Jimp.fromBuffer(buffer);
   return await applyAvatarCropResize(image, crop);
 }
@@ -339,7 +343,7 @@ async function parseImageBuffer(buffer, crop) {
  * @param {Crop|undefined} crop Crop parameters
  * @returns {Promise<Buffer>} Image buffer
  */
-async function tryReadImage(imgPath, crop) {
+async function tryReadImage(imgPath: string, crop: any) {
   try {
     const rawImg = await Jimp.read(imgPath);
     return await applyAvatarCropResize(rawImg, crop);
@@ -356,7 +360,7 @@ async function tryReadImage(imgPath, crop) {
  * @param  {string} charDir The directory where the chats are stored.
  * @return { {chatSize: number, dateLastChat: number} }         The total chat size.
  */
-const calculateChatSize = (charDir) => {
+const calculateChatSize = (charDir: string) => {
   let chatSize = 0;
   let dateLastChat = 0;
 
@@ -375,7 +379,7 @@ const calculateChatSize = (charDir) => {
 };
 
 // Calculate the total string length of the data object
-const calculateDataSize = (data) => {
+const calculateDataSize = (data: any) => {
   return typeof data === "object"
     ? Object.values(data as any).reduce((acc: number, val: any) => acc + String(val).length, 0)
     : 0;
@@ -386,7 +390,7 @@ const calculateDataSize = (data) => {
  * @param {object} character Character object
  * @returns {{shallow: true, [key: string]: any}} Shallow character
  */
-const toShallow = (character) => {
+const toShallow = (character: any) => {
   return {
     shallow: true,
     name: character.name,
@@ -422,7 +426,7 @@ const toShallow = (character) => {
  * @param  {boolean} options.shallow If true, only return the core character's metadata
  * @return {Promise<object>}     A Promise that resolves when the character processing is done.
  */
-const processCharacter = async (item, directories, { shallow }) => {
+const processCharacter = async (item: string, directories: any, { shallow }: { shallow: boolean }) => {
   try {
     const imgFile = path.join(directories.characters, item);
     const imgData = await readCharacterData(imgFile);
@@ -466,7 +470,7 @@ const processCharacter = async (item, directories, { shallow }) => {
  * @param {boolean} hoistDate Will set the chat and create_date fields to the current date if they are missing
  * @returns {object} Character object in Spec V2 format
  */
-function getCharaCardV2(jsonObject, directories, hoistDate = true) {
+function getCharaCardV2(jsonObject: any, directories: any, hoistDate: boolean = true) {
   if (jsonObject.spec === undefined) {
     jsonObject = convertToV2(jsonObject, directories);
 
@@ -485,7 +489,7 @@ function getCharaCardV2(jsonObject, directories, hoistDate = true) {
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns {object} Character object in Spec V2 format
  */
-function convertToV2(char, directories) {
+function convertToV2(char: any, directories: any) {
   // Simulate incoming data from frontend form
   const result = charaFormatData(
     {
@@ -517,13 +521,13 @@ function convertToV2(char, directories) {
 /**
  * Removes fields that are not meant to be shared.
  */
-function unsetPrivateFields(char) {
+function unsetPrivateFields(char: any) {
   _.set(char, "fav", false);
   _.set(char, "data.extensions.fav", false);
   _.unset(char, "chat");
 }
 
-function readFromV2(char) {
+function readFromV2(char: any) {
   if (_.isUndefined(char.data)) {
     console.warn(`Char ${char.name} has Spec v2 data missing`);
     return char;
@@ -588,7 +592,7 @@ function readFromV2(char) {
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns
  */
-function charaFormatData(data, directories) {
+function charaFormatData(data: any, directories: any) {
   // This is supposed to save all the foreign keys that ST doesn't care about
   const char = tryParse(data.json_data) || {};
 
@@ -596,7 +600,7 @@ function charaFormatData(data, directories) {
   _.unset(char, "json_data");
 
   // Checks if data.alternate_greetings is an array, a string, or neither, and acts accordingly. (expected to be an array of strings)
-  const getAlternateGreetings = (data) => {
+  const getAlternateGreetings = (data: any) => {
     if (Array.isArray(data.alternate_greetings)) return data.alternate_greetings;
     if (typeof data.alternate_greetings === "string") return [data.alternate_greetings];
     return [];
@@ -622,8 +626,8 @@ function charaFormatData(data, directories) {
     typeof data.tags == "string"
       ? data.tags
           .split(",")
-          .map((x) => x.trim())
-          .filter((x) => x)
+          .map((x: string) => x.trim())
+          .filter((x: string) => x)
       : data.tags || [],
   );
 
@@ -647,8 +651,8 @@ function charaFormatData(data, directories) {
     typeof data.tags == "string"
       ? data.tags
           .split(",")
-          .map((x) => x.trim())
-          .filter((x) => x)
+          .map((x: string) => x.trim())
+          .filter((x: string) => x)
       : data.tags || [],
   );
   _.set(char, "data.creator", data.creator || "");
@@ -704,7 +708,7 @@ function charaFormatData(data, directories) {
  * @param {string} name Name of World Info file
  * @param {object} entries Entries object
  */
-function convertWorldInfoToCharacterBook(name, entries) {
+function convertWorldInfoToCharacterBook(name: string, entries: any) {
   /** @type {{ entries: object[]; name: string }} */
   const result = { entries: [] as any[], name };
 
@@ -772,7 +776,7 @@ function convertWorldInfoToCharacterBook(name, entries) {
  * @param {string|undefined} preservedFileName Preserved file name
  * @returns {Promise<string>} Internal name of the character
  */
-async function importFromYaml(uploadPath, context, preservedFileName) {
+async function importFromYaml(uploadPath: string, context: any, preservedFileName: string | undefined) {
   const fileText = fs.readFileSync(uploadPath, "utf8");
   fs.unlinkSync(uploadPath);
   const yamlData = yaml.parse(fileText);
@@ -809,7 +813,7 @@ async function importFromYaml(uploadPath, context, preservedFileName) {
  * @param {string|undefined} preservedFileName Preserved file name
  * @returns {Promise<string>} Internal name of the character
  */
-async function importFromCharX(uploadPath, { request }, preservedFileName) {
+async function importFromCharX(uploadPath: string, { request }: { request: any }, preservedFileName: string | undefined) {
   const fileBuffer = fs.readFileSync(uploadPath);
   // Create a properly-sized ArrayBuffer (Node's buffer pool can cause oversized .buffer)
   const data = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
@@ -849,7 +853,7 @@ async function importFromCharX(uploadPath, { request }, preservedFileName) {
   return result ? fileName : "";
 }
 
-async function importFromByaf(uploadPath, { request }, preservedFileName) {
+async function importFromByaf(uploadPath: string, { request }: { request: any }, preservedFileName: string | undefined) {
   const data = (await fsPromises.readFile(uploadPath)).buffer;
   await fsPromises.unlink(uploadPath);
   console.info("Importing from BYAF");
@@ -868,7 +872,7 @@ async function importFromByaf(uploadPath, { request }, preservedFileName) {
     /**
      * @param {Partial<ByafScenario>} scenario
      */
-    const createChatAsCurrentPersona = (scenario) => {
+    const createChatAsCurrentPersona = (scenario: any) => {
       const chatName = sanitize(`${scenario.title || card.name} - ${humanizedDateTime()} imported.jsonl`, {
         replacement: sanitizeSafeCharacterReplacements,
       });
@@ -890,7 +894,7 @@ async function importFromByaf(uploadPath, { request }, preservedFileName) {
       const baseName = `${path.basename(fileName)}_bg`;
       const filePath = path.join(request.user.directories.userImages, fileName);
       if (!fs.existsSync(filePath)) fs.mkdirSync(filePath, { recursive: true });
-      const file = getUniqueName(baseName, (name) => fs.existsSync(path.join(filePath, `${name}${extension}`)));
+      const file = getUniqueName(baseName, (name: string) => fs.existsSync(path.join(filePath, `${name}${extension}`)));
       if (Buffer.isBuffer(bg.data)) {
         const newFile = `${file}${extension}`;
         writeFileAtomicSync(path.join(filePath, newFile), bg.data);
@@ -922,7 +926,7 @@ async function importFromByaf(uploadPath, { request }, preservedFileName) {
       const extension = path.extname(icon.filename) || ".png";
       const file = getUniqueName(
         `${sanitize(icon.label, { replacement: sanitizeSafeCharacterReplacements }) || "alt"}`,
-        (name) => fs.existsSync(path.join(altImagesFolder, `${name}${extension}`)),
+        (name: string) => fs.existsSync(path.join(altImagesFolder, `${name}${extension}`)),
       );
       if (Buffer.isBuffer(icon.image)) {
         writeFileAtomicSync(path.join(altImagesFolder, `${file}${extension}`), icon.image);
@@ -943,7 +947,7 @@ async function importFromByaf(uploadPath, { request }, preservedFileName) {
  * @param {string|undefined} preservedFileName Preserved file name
  * @returns {Promise<string>} Internal name of the character
  */
-async function importFromJson(uploadPath, { request }, preservedFileName) {
+async function importFromJson(uploadPath: string, { request }: { request: any }, preservedFileName: string | undefined) {
   const data = fs.readFileSync(uploadPath, "utf8");
   fs.unlinkSync(uploadPath);
 
@@ -1028,7 +1032,7 @@ async function importFromJson(uploadPath, { request }, preservedFileName) {
  * @param {string|undefined} preservedFileName Preserved file name
  * @returns {Promise<string>} Internal name of the character
  */
-async function importFromPng(uploadPath, { request }, preservedFileName) {
+async function importFromPng(uploadPath: string, { request }: { request: any }, preservedFileName: string | undefined) {
   const imgData = await readCharacterData(uploadPath);
   if (imgData === undefined) throw new Error("Failed to read character data");
 
@@ -1101,7 +1105,7 @@ router.post("/create", getFileNameValidationFunction("file_name"), async (reques
       await writeCharacterData(DEFAULT_AVATAR_PATH, char, internalName, request);
       return response.send(avatarName);
     } else {
-      const crop = tryParse(request.query.crop);
+      const crop = tryParse(String(request.query.crop));
       const uploadPath = path.join(request.file.destination, request.file.filename);
       await writeCharacterData(uploadPath, char, internalName, request, crop);
       fs.unlinkSync(uploadPath);
@@ -1183,7 +1187,7 @@ router.post("/edit", validateAvatarUrlMiddleware, async (request, response) => {
       const avatarPath = path.join(request.user.directories.characters, request.body.avatar_url);
       await writeCharacterData(avatarPath, char, targetFile, request);
     } else {
-      const crop = tryParse(request.query.crop);
+      const crop = tryParse(String(request.query.crop));
       const newAvatarPath = path.join(request.file.destination, request.file.filename);
       invalidateThumbnail(request.user.directories, "avatar", request.body.avatar_url);
       await writeCharacterData(newAvatarPath, char, targetFile, request, crop);
@@ -1223,7 +1227,7 @@ router.post("/edit-avatar", validateAvatarUrlMiddleware, async (request, respons
       return response.status(400).send("Error: failed to read character data");
     }
 
-    const crop = tryParse(request.query.crop);
+    const crop = tryParse(String(request.query.crop));
     const fileName = request.body.avatar_url.replace(".png", "");
     await writeCharacterData(uploadPath, data, fileName, request, crop);
 
@@ -1314,7 +1318,7 @@ const BULK_MERGE_CONCURRENCY = 10;
  * @param {object} target The merged character object to clean up
  * @param {object} source The original update payload (pre-merge clone)
  */
-function processUnsetSentinels(target, source) {
+function processUnsetSentinels(target: any, source: any) {
   for (const key of Object.keys(source)) {
     if (source[key] === UNSET_SENTINEL) {
       _.unset(target, key);
@@ -1334,7 +1338,7 @@ function processUnsetSentinels(target, source) {
  * @param {((data: any) => boolean) | null} [shouldSkip] Optional function to determine if a character should be skipped based on its original data (used for bulk merge filtering)
  * @returns {Promise<{ok: boolean, error?: string, skipped?: boolean}>} Result of the merge operation, including any validation error
  */
-async function mergeCharacterUpdate(avatarPath, avatar, updateData, request, shouldSkip: ((data: any) => boolean) | null = null) {
+async function mergeCharacterUpdate(avatarPath: string, avatar: string, updateData: any, request: any, shouldSkip: ((data: any) => boolean) | null = null) {
   const pngStringData = await readCharacterData(avatarPath);
   if (!pngStringData) {
     return { ok: false, error: "Invalid character file" };
@@ -1423,7 +1427,7 @@ const updated: string[] = [];
        * Process a single character in bulk: read, filter, merge, validate, write.
        * @param {string} avatar Avatar filename
        */
-      const processOne = async (avatar) => {
+      const processOne = async (avatar: string) => {
         const avatarPath = path.join(request.user.directories.characters, avatar);
 
         try {
@@ -1614,10 +1618,10 @@ router.post("/chats", validateAvatarUrlMiddleware, async (request, response) => 
  * @param {import('../users.js').UserDirectoryList} directories User directories
  * @returns {string} - The name for the uploaded PNG file
  */
-function getPngName(file, directories) {
+function getPngName(file: string, directories: any) {
   file = sanitize(file);
   return (
-    getUniqueName(file, (name) => fs.existsSync(path.join(directories.characters, `${name}.png`)), {
+    getUniqueName(file, (name: string) => fs.existsSync(path.join(directories.characters, `${name}.png`)), {
       nameBuilder: (base, i) => (i === 0 ? base : `${base}${i}`),
       startIndex: 0,
       maxTries: 10000,
@@ -1630,7 +1634,7 @@ function getPngName(file, directories) {
  * @param {import("express").Request} request - Express request object
  * @returns {string | undefined} - The preserved name if the request is valid, otherwise undefined
  */
-function getPreservedName(request) {
+function getPreservedName(request: any) {
   return typeof request.body.preserved_name === "string" && request.body.preserved_name.length > 0
     ? path.parse(request.body.preserved_name).name
     : undefined;
@@ -1643,7 +1647,7 @@ router.post("/import", async (request, response) => {
   const format = request.body.file_type;
   const preservedFileName = getPreservedName(request);
 
-  const formatImportFunctions = {
+  const formatImportFunctions: Record<string, (uploadPath: string, context: any, preservedFileName: string | undefined) => Promise<string>> = {
     yaml: importFromYaml,
     yml: importFromYaml,
     json: importFromJson,

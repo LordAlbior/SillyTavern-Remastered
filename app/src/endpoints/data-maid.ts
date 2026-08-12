@@ -8,7 +8,7 @@ import { CHAT_BACKUPS_PREFIX } from "./chats.ts";
 import { isPathUnderParent, tryParse } from "../util.ts";
 import { SETTINGS_FILE } from "../constants.ts";
 
-const sha256 = (str) => crypto.createHash("sha256").update(str).digest("hex");
+const sha256 = (str: string): string => crypto.createHash("sha256").update(str).digest("hex");
 
 /**
  * @typedef {object} DataMaidRawReport
@@ -98,7 +98,7 @@ export class DataMaidService {
    * @param {string} handle - The user's handle.
    * @param {import('../users.ts').UserDirectoryList} directories - List of user directories to scan for loose data.
    */
-  constructor(handle, directories) {
+  constructor(handle: string, directories: import("../users.ts").UserDirectoryList) {
     this.handle = handle;
     this.directories = directories;
   }
@@ -131,7 +131,7 @@ export class DataMaidService {
    * @param {boolean} withParent If the model should include the parent directory name.
    * @returns {Promise<DataMaidSanitizedRecord>} A sanitized record with the file name, hash, parent directory name, size, and modification time.
    */
-  async #sanitizeRecord(name, withParent) {
+  async #sanitizeRecord(name: string, withParent: boolean) {
     const stat = fs.existsSync(name) ? await fs.promises.stat(name) : null;
     return {
       name: path.basename(name),
@@ -147,17 +147,17 @@ export class DataMaidService {
    * @param {DataMaidRawReport} report - The raw report containing loose user data.
    * @returns {Promise<DataMaidSanitizedReport>} A sanitized report with sensitive paths removed.
    */
-  async sanitizeReport(report) {
+  async sanitizeReport(report: any) {
     const sanitizedReport = {
-      images: await Promise.all(report.images.map((i) => this.#sanitizeRecord(i, true))),
-      files: await Promise.all(report.files.map((i) => this.#sanitizeRecord(i, false))),
-      chats: await Promise.all(report.chats.map((i) => this.#sanitizeRecord(i, true))),
-      groupChats: await Promise.all(report.groupChats.map((i) => this.#sanitizeRecord(i, false))),
-      avatarThumbnails: await Promise.all(report.avatarThumbnails.map((i) => this.#sanitizeRecord(i, false))),
-      backgroundThumbnails: await Promise.all(report.backgroundThumbnails.map((i) => this.#sanitizeRecord(i, false))),
-      personaThumbnails: await Promise.all(report.personaThumbnails.map((i) => this.#sanitizeRecord(i, false))),
-      chatBackups: await Promise.all(report.chatBackups.map((i) => this.#sanitizeRecord(i, false))),
-      settingsBackups: await Promise.all(report.settingsBackups.map((i) => this.#sanitizeRecord(i, false))),
+      images: await Promise.all(report.images.map((i: string) => this.#sanitizeRecord(i, true))),
+      files: await Promise.all(report.files.map((i: string) => this.#sanitizeRecord(i, false))),
+      chats: await Promise.all(report.chats.map((i: string) => this.#sanitizeRecord(i, true))),
+      groupChats: await Promise.all(report.groupChats.map((i: string) => this.#sanitizeRecord(i, false))),
+      avatarThumbnails: await Promise.all(report.avatarThumbnails.map((i: string) => this.#sanitizeRecord(i, false))),
+      backgroundThumbnails: await Promise.all(report.backgroundThumbnails.map((i: string) => this.#sanitizeRecord(i, false))),
+      personaThumbnails: await Promise.all(report.personaThumbnails.map((i: string) => this.#sanitizeRecord(i, false))),
+      chatBackups: await Promise.all(report.chatBackups.map((i: string) => this.#sanitizeRecord(i, false))),
+      settingsBackups: await Promise.all(report.settingsBackups.map((i: string) => this.#sanitizeRecord(i, false))),
     };
 
     return sanitizedReport;
@@ -174,7 +174,7 @@ export class DataMaidService {
 
     try {
       const messages = await this.#parseAllChats(
-        (x) =>
+        (x: any) =>
           !!x?.extra?.image ||
           !!x?.extra?.video ||
           Array.isArray(x?.extra?.image_swipes) ||
@@ -202,7 +202,7 @@ export class DataMaidService {
         }
       }
       const metadata = await this.#parseAllMetadata(
-        (x) => Array.isArray(x?.chat_backgrounds) && x.chat_backgrounds.length > 0,
+        (x: any) => Array.isArray(x?.chat_backgrounds) && x.chat_backgrounds.length > 0,
       );
       for (const meta of metadata) {
         if (Array.isArray(meta?.chat_backgrounds)) {
@@ -254,7 +254,7 @@ export class DataMaidService {
 
     try {
       const messages = await this.#parseAllChats(
-        (x) => !!x?.extra?.file?.url || (Array.isArray(x?.extra?.files) && x.extra.files.length > 0),
+        (x: any) => !!x?.extra?.file?.url || (Array.isArray(x?.extra?.files) && x.extra.files.length > 0),
       );
       const knownFiles = new Set<string>();
       for (const message of messages) {
@@ -269,7 +269,7 @@ export class DataMaidService {
           }
         }
       }
-      const metadata = await this.#parseAllMetadata((x) => Array.isArray(x?.attachments) && x.attachments.length > 0);
+      const metadata = await this.#parseAllMetadata((x: any) => Array.isArray(x?.attachments) && x.attachments.length > 0);
       for (const meta of metadata) {
         if (Array.isArray(meta?.attachments)) {
           for (const attachment of meta.attachments) {
@@ -540,7 +540,7 @@ export class DataMaidService {
    * @param {function(DataMaidMessage): boolean} filterFn - Filter function to apply to each message.
    * @returns {Promise<DataMaidMessage[]>} Array of chat messages
    */
-  async #parseAllChats(filterFn) {
+  async #parseAllChats(filterFn: (message: any) => boolean) {
     try {
       const allChats: any[] = [];
 
@@ -582,7 +582,7 @@ export class DataMaidService {
    * @param {function(DataMaidChatMetadata): boolean} filterFn - Filter function to apply to each metadata entry.
    * @returns {Promise<DataMaidChatMetadata[]>} Parsed chat metadata as an array.
    */
-  async #parseAllMetadata(filterFn) {
+  async #parseAllMetadata(filterFn: (metadata: any) => boolean) {
     try {
       const allMetadata: any[] = [];
 
@@ -651,7 +651,7 @@ export class DataMaidService {
    * @param {string} filePath Path to the chat file to parse.
    * @returns {Promise<DataMaidMessage[]>} Parsed chat messages as an array.
    */
-  async #parseChatFile(filePath) {
+  async #parseChatFile(filePath: string) {
     try {
       const content = await fs.promises.readFile(filePath, "utf-8");
       const chatData = content.split("\n").map(tryParse).filter(Boolean);
@@ -669,7 +669,7 @@ export class DataMaidService {
    * @param {DataMaidRawReport} report - The report containing loose user data.
    * @returns {string} A unique token.
    */
-  static generateToken(handle, report) {
+  static generateToken(handle: string, report: any) {
     // Remove any existing token for this user
     for (const [token, entry] of DataMaidService.TOKENS.entries()) {
       if (entry.handle === handle) {
@@ -762,7 +762,7 @@ router.get("/view", async (req, res) => {
       return res.sendStatus(403);
     }
 
-    const fileEntry = tokenEntry.paths.find((entry) => entry.hash === hash);
+    const fileEntry = tokenEntry.paths.find((entry: any) => entry.hash === hash);
     if (!fileEntry) {
       return res.sendStatus(404);
     }
@@ -810,7 +810,7 @@ router.post("/delete", async (req, res) => {
     }
 
     for (const hash of hashes) {
-      const fileEntry = tokenEntry.paths.find((entry) => entry.hash === hash);
+      const fileEntry = tokenEntry.paths.find((entry: any) => entry.hash === hash);
       if (!fileEntry) {
         continue;
       }

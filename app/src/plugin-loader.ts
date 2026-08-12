@@ -21,14 +21,14 @@ const loadedPlugins = new Map();
  * @param {string} file Path to file
  * @returns {boolean} True if file is a CommonJS module
  */
-const isCommonJS = (file) => path.extname(file) === ".js" || path.extname(file) === ".cjs";
+const isCommonJS = (file: string) => path.extname(file) === ".js" || path.extname(file) === ".cjs";
 
 /**
  * Determine if a file is an ECMAScript module.
  * @param {string} file Path to file
  * @returns {boolean} True if file is an ECMAScript module
  */
-const isESModule = (file) => path.extname(file) === ".mjs";
+const isESModule = (file: string) => path.extname(file) === ".mjs";
 
 /**
  * Load and initialize server plugins from a directory if they are enabled.
@@ -37,7 +37,7 @@ const isESModule = (file) => path.extname(file) === ".mjs";
  * @returns {Promise<Function>} Promise that resolves when all plugins are loaded. Resolves to a "cleanup" function to
  * be called before the server shuts down.
  */
-export async function loadPlugins(app, pluginsPath) {
+export async function loadPlugins(app: import('express').Express, pluginsPath: string) {
   try {
     const exitHooks: Array<() => void> = [];
     const emptyFn = () => {};
@@ -91,7 +91,7 @@ export async function loadPlugins(app, pluginsPath) {
   }
 }
 
-async function loadFromDirectory(app, pluginDirectoryPath, exitHooks) {
+async function loadFromDirectory(app: import('express').Express, pluginDirectoryPath: string, exitHooks: Array<() => void>) {
   const files = fs.readdirSync(pluginDirectoryPath);
 
   // No plugins to load.
@@ -128,7 +128,7 @@ async function loadFromDirectory(app, pluginDirectoryPath, exitHooks) {
  * an "exit" function.
  * @returns {Promise<boolean>} Promise that resolves to true if plugin was loaded successfully
  */
-async function loadFromPackage(app, packageJsonPath, exitHooks) {
+async function loadFromPackage(app: import('express').Express, packageJsonPath: string, exitHooks: Array<() => void>) {
   try {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
     if (packageJson.main) {
@@ -149,7 +149,7 @@ async function loadFromPackage(app, packageJsonPath, exitHooks) {
  * an "exit" function.
  * @returns {Promise<boolean>} Promise that resolves to true if plugin was loaded successfully
  */
-async function loadFromFile(app, pluginFilePath, exitHooks) {
+async function loadFromFile(app: import('express').Express, pluginFilePath: string, exitHooks: Array<() => void>) {
   try {
     const fileUrl = url.pathToFileURL(pluginFilePath).toString();
     const plugin = await import(fileUrl);
@@ -166,7 +166,7 @@ async function loadFromFile(app, pluginFilePath, exitHooks) {
  * @param {string} id The plugin ID to check
  * @returns {boolean} True if the plugin ID is valid.
  */
-function isValidPluginID(id) {
+function isValidPluginID(id: string) {
   return /^[a-z0-9_-]+$/.test(id);
 }
 
@@ -178,7 +178,7 @@ function isValidPluginID(id) {
  * an "exit" function.
  * @returns {Promise<boolean>} Promise that resolves to true if plugin was initialized successfully
  */
-async function initPlugin(app, plugin, exitHooks) {
+async function initPlugin(app: import('express').Express, plugin: any, exitHooks: Array<() => void>) {
   const info = plugin.info || plugin.default?.info;
   if (typeof info !== "object") {
     console.error("Failed to load plugin module; plugin info not found");
@@ -236,7 +236,7 @@ async function initPlugin(app, plugin, exitHooks) {
  * Automatically update all git plugins in the ./plugins directory
  * @param {string} pluginsPath Path to plugins directory
  */
-async function updatePlugins(pluginsPath) {
+async function updatePlugins(pluginsPath: string) {
   if (!enableServerPluginsAutoUpdate) {
     return;
   }

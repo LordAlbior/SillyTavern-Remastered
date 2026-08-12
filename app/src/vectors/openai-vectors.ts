@@ -43,7 +43,7 @@ const SOURCES = {
     url: "https://{{MODEL}}.chutes.ai/v1",
     model: "chutes-qwen-qwen3-embedding-8b",
     headers: {},
-    processBody: (body) => {
+    processBody: (body: any) => {
       body.model = null;
     },
   },
@@ -79,8 +79,8 @@ const SOURCES = {
  * @param {string|null} urlOverride - Optional URL override for the API endpoint
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getOpenAIBatchVector(texts, source, directories, model = "", urlOverride = null) {
-  const config = SOURCES[source];
+export async function getOpenAIBatchVector(texts: string[], source: string, directories: import('../users.js').UserDirectoryList, model: string = "", urlOverride: string | null = null) {
+  const config = (SOURCES as any)[source];
 
   if (!config) {
     console.error("Unknown source", source);
@@ -134,9 +134,9 @@ export async function getOpenAIBatchVector(texts, source, directories, model = "
   }
 
   // Sort data by x.index to ensure the order is correct
-  data.data.sort((a, b) => a.index - b.index);
+  data.data.sort((a: any, b: any) => a.index - b.index);
 
-  const vectors = data.data.map((x) => x.embedding);
+  const vectors = data.data.map((x: any) => x.embedding);
   return vectors;
 }
 
@@ -149,7 +149,7 @@ export async function getOpenAIBatchVector(texts, source, directories, model = "
  * @param {string|null} urlOverride - Optional URL override for the API endpoint
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getOpenAIVector(text, source, directories, model = "", urlOverride = null) {
+export async function getOpenAIVector(text: string, source: string, directories: import('../users.js').UserDirectoryList, model: string = "", urlOverride: string | null = null) {
   const vectors = await getOpenAIBatchVector([text], source, directories, model, urlOverride);
   return vectors[0];
 }

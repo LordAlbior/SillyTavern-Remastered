@@ -38,7 +38,7 @@ export const CHAT_BACKUPS_PREFIX = "chat_";
  * @param {string} backupPrefix The file prefix. Typically CHAT_BACKUPS_PREFIX.
  * @returns
  */
-function backupChat(directory, name, data, backupPrefix = CHAT_BACKUPS_PREFIX) {
+function backupChat(directory: string, name: string, data: string, backupPrefix: string = CHAT_BACKUPS_PREFIX) {
   try {
     if (!isBackupEnabled) {
       return;
@@ -74,7 +74,7 @@ const backupFunctions = new Map();
  * @param {string} handle User handle
  * @returns {typeof backupChat} Backup function
  */
-function getBackupFunction(handle) {
+function getBackupFunction(handle: string) {
   if (!backupFunctions.has(handle)) {
     backupFunctions.set(handle, _.throttle(backupChat, throttleInterval, { leading: true, trailing: true }));
   }
@@ -86,7 +86,7 @@ function getBackupFunction(handle) {
  * @param {string} [lastMessage] - The message to truncate
  * @returns {string} A truncated preview of the last message or empty string if no messages
  */
-function getPreviewMessage(lastMessage) {
+function getPreviewMessage(lastMessage: string) {
   const strlen = 400;
 
   if (!lastMessage) {
@@ -109,7 +109,7 @@ process.on("exit", () => {
  * @param {object} jsonData JSON data
  * @returns {string} Chat data
  */
-function importOobaChat(userName, characterName, jsonData) {
+function importOobaChat(userName: string, characterName: string, jsonData: any) {
   /** @type {object[]} */
   const chat = [
     {
@@ -152,7 +152,7 @@ function importOobaChat(userName, characterName, jsonData) {
  * @param {object} jsonData Chat data
  * @returns {string} Chat data
  */
-function importAgnaiChat(userName, characterName, jsonData) {
+function importAgnaiChat(userName: string, characterName: string, jsonData: any) {
   /** @type {object[]} */
   const chat = [
     {
@@ -183,20 +183,20 @@ function importAgnaiChat(userName, characterName, jsonData) {
  * @param {object} jsonData JSON data
  * @returns {string[]} Converted data
  */
-function importCAIChat(userName, characterName, jsonData) {
+function importCAIChat(userName: string, characterName: string, jsonData: any) {
   /**
    * Converts the chat data to suitable format.
    * @param {object} history Imported chat data
    * @returns {object[]} Converted chat data
    */
-  function convert(history) {
+  function convert(history: any) {
     const starter = {
       chat_metadata: {},
       user_name: "unused",
       character_name: "unused",
     };
 
-    const historyData = history.msgs.map((msg) => ({
+    const historyData = history.msgs.map((msg: any) => ({
       name: msg.src.is_human ? userName : characterName,
       is_user: msg.src.is_human,
       send_date: new Date().toISOString(),
@@ -207,7 +207,7 @@ function importCAIChat(userName, characterName, jsonData) {
     return [starter, ...historyData];
   }
 
-  const newChats = (jsonData.histories.histories ?? []).map((history) =>
+  const newChats = (jsonData.histories.histories ?? []).map((history: any) =>
     newChats.push(
       convert(history)
         .map((obj) => JSON.stringify(obj))
@@ -224,12 +224,12 @@ function importCAIChat(userName, characterName, jsonData) {
  * @param {object} data JSON data
  * @returns {string} Chat data
  */
-function importKoboldLiteChat(_userName, _characterName, data) {
+function importKoboldLiteChat(_userName: string, _characterName: string, data: any) {
   const inputToken = "{{[INPUT]}}";
   const outputToken = "{{[OUTPUT]}}";
 
   /** @type {function(string): object} */
-  function processKoboldMessage(msg) {
+  function processKoboldMessage(msg: string) {
     const isUser = msg.includes(inputToken);
     return {
       name: isUser ? userName : characterName,
@@ -267,12 +267,12 @@ function importKoboldLiteChat(_userName, _characterName, data) {
  * @param {string[]} lines serialised JSONL data
  * @returns {string} Converted data
  */
-function flattenChubChat(userName, characterName, lines) {
-  function flattenSwipe(swipe) {
+function flattenChubChat(userName: string, characterName: string, lines: string[]) {
+  function flattenSwipe(swipe: any) {
     return swipe.message ? swipe.message : swipe;
   }
 
-  function convert(line) {
+  function convert(line: string) {
     const lineData = tryParse(line);
     if (!lineData) return line;
 
@@ -281,7 +281,7 @@ function flattenChubChat(userName, characterName, lines) {
     }
 
     if (lineData?.swipes && Array.isArray(lineData.swipes)) {
-      lineData.swipes = lineData.swipes.map((swipe) => flattenSwipe(swipe));
+      lineData.swipes = lineData.swipes.map((swipe: any) => flattenSwipe(swipe));
     }
 
     return JSON.stringify(lineData);
@@ -297,7 +297,7 @@ function flattenChubChat(userName, characterName, lines) {
  * @param {object} jsonData Imported chat data
  * @returns {string} Chat data
  */
-function importRisuChat(userName, characterName, jsonData) {
+function importRisuChat(userName: string, characterName: string, jsonData: any) {
   /** @type {object[]} */
   const chat = [
     {
@@ -327,7 +327,7 @@ function importRisuChat(userName, characterName, jsonData) {
  * @param {string} integritySlug Integrity slug
  * @returns {Promise<boolean>} Whether the chat is intact
  */
-async function checkChatIntegrity(filePath, integritySlug) {
+async function checkChatIntegrity(filePath: string, integritySlug: string) {
   // If the chat file doesn't exist, assume it's intact
   if (!fs.existsSync(filePath)) {
     return true;
@@ -373,7 +373,7 @@ async function checkChatIntegrity(filePath, integritySlug) {
  * @typedef {(textArray: string[]) => boolean} ChatMatchFunction
  */
 export async function getChatInfo(
-  pathToFile,
+  pathToFile: string,
   additionalData = {},
   withMetadata = false,
   matcher: ((textArray: string[]) => boolean) | null = null,
@@ -405,7 +405,7 @@ export async function getChatInfo(
       crlfDelay: Infinity,
     });
 
-    let lastLine;
+    let lastLine: string;
     let itemCounter = 0;
     let hasAnyMatch = false;
     let matchBuffer: string[] = [];
@@ -455,7 +455,7 @@ export const router = express.Router();
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
 class IntegrityMismatchError extends Error {
-  constructor(...params) {
+  constructor(...params: any[]) {
     // Pass remaining arguments (including vendor specific ones) to parent constructor
     super(...params);
     // Maintains proper stack trace for where our error was thrown (non-standard)
@@ -475,8 +475,8 @@ class IntegrityMismatchError extends Error {
  * @param {string} cardName Passed to backupChat.
  * @param {string} backupDirectory Passed to backupChat.
  */
-export async function trySaveChat(chatData, filePath, skipIntegrityCheck = false, handle, cardName, backupDirectory) {
-  const jsonlData = chatData?.map((m) => JSON.stringify(m)).join("\n");
+export async function trySaveChat(chatData: any[], filePath: string, skipIntegrityCheck: boolean = false, handle: string, cardName: string, backupDirectory: string) {
+  const jsonlData = chatData?.map((m: any) => JSON.stringify(m)).join("\n");
 
   const doIntegrityCheck = checkIntegrity && !skipIntegrityCheck;
   const chatIntegritySlug = doIntegrityCheck ? chatData?.[0]?.chat_metadata?.integrity : undefined;
@@ -522,7 +522,7 @@ router.post("/save", validateAvatarUrlMiddleware, async (request, response) => {
  * @param {string} chatFilePath The full chat file path.
  * @returns {Array}} If the chatFilePath cannot be read, this will return [].
  */
-export function getChatData(chatFilePath) {
+export function getChatData(chatFilePath: string) {
   let chatData: any[] = [];
 
   const chatJSON = tryReadFileSync(chatFilePath) ?? "";
@@ -766,7 +766,7 @@ router.post("/import", validateAvatarUrlMiddleware, (request, response) => {
         return response.send({ error: true });
       }
 
-      const handleChat = (chat) => {
+      const handleChat = (chat: any) => {
         const fileName = `${characterName} - ${humanizedDateTime()} imported.jsonl`;
         const filePath = path.join(directoryPath, fileName);
         fileNames.push(fileName);
@@ -939,8 +939,8 @@ router.post("/search", validateAvatarUrlMiddleware, async (request, response) =>
       // Find group chat files for given group ID
       const groupChatsDir = path.join(request.user.directories.groupChats);
       chatFiles = targetGroup.chats
-        .map((chatId) => path.join(groupChatsDir, `${chatId}.jsonl`))
-        .filter((fileName) => fs.existsSync(fileName));
+        .map((chatId: string) => path.join(groupChatsDir, `${chatId}.jsonl`))
+        .filter((fileName: string) => fs.existsSync(fileName));
     } else {
       // Regular character chat directory
       const character_name = avatar_url.replace(".png", "");
@@ -973,16 +973,16 @@ router.post("/search", validateAvatarUrlMiddleware, async (request, response) =>
           .trim()
           .toLowerCase()
           .split(/\s+/)
-          .filter((x) => x)
+          .filter((x: string) => x)
       : [];
 
     /** @type {ChatMatchFunction} */
-    const hasTextMatch = (textArray) => {
+    const hasTextMatch = (textArray: string[]) => {
       if (fragments.length === 0) {
         return true;
       }
-      return fragments.every((fragment) =>
-        textArray.some((text) =>
+      return fragments.every((fragment: string) =>
+        textArray.some((text: string) =>
           String(text ?? "")
             .toLowerCase()
             .includes(fragment),
@@ -1094,9 +1094,9 @@ router.post("/recent", async (request, response) => {
     await Promise.allSettled([getCharacterChatFiles(), getGroupChatFiles(), getRootChatFiles()]);
 
     const max = parseInt(request.body.max ?? Number.MAX_SAFE_INTEGER) + pinnedChats.length;
-    const isPinned = (/** @type {ChatFile} */ chatFile) =>
+    const isPinned = (chatFile: any) =>
       pinnedChats.some(
-        (p) =>
+        (p: any) =>
           p.file_name === path.basename(chatFile.filePath) &&
           (p.avatar === chatFile.pngFile || p.group === chatFile.groupId),
       );
