@@ -3069,7 +3069,7 @@ export function generatedTextFiltered(text) {
  * @param {number | undefined} limit Number of strings to return. If 0 or undefined, returns all strings.
  * @returns {string[]} An array of custom stopping strings
  */
-export function getCustomStoppingStrings(limit = undefined) {
+export function getCustomStoppingStrings(limit: any = undefined) {
     function getPermanent() {
         try {
             // If there's no custom stopping strings, return an empty array

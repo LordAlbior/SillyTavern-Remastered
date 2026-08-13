@@ -13,7 +13,7 @@ let PromptArrayItemForRawPromptDisplay;
 let priorPromptArrayItemForRawPromptDisplay;
 
 const promptStorage = localforage.createInstance({ name: "SillyTavern_Prompts" });
-export let itemizedPrompts = [];
+export let itemizedPrompts: any[] = [];
 
 /**
  * Gets the itemized prompts for a chat.

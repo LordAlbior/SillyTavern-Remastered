@@ -395,9 +395,9 @@ toastr.subscribe(function (args) {
 export const characterGroupOverlay = new BulkEditOverlay();
 
 // Markdown converter
-export let mesForShowdownParse; //intended to be used as a context to compare showdown strings against
+export let mesForShowdownParse: any; //intended to be used as a context to compare showdown strings against
 /** @type {import('showdown').Converter} */
-export let converter;
+export let converter: any;
 
 // array for prompt token calculations
 
@@ -413,8 +413,8 @@ export let chat: any[] = [];
  * @type {import('./scripts/constants.js').SWIPE_STATE}
  */
 export let swipeState = SWIPE_STATE.NONE;
-let chatSaveTimeout;
-let importFlashTimeout;
+let chatSaveTimeout: any;
+let importFlashTimeout: any;
 export let isChatSaving = false;
 let firstRun = false;
 export let settingsReady = false;
@@ -428,17 +428,17 @@ export let characters: any[] = [];
  * Stringified index of a currently chosen entity in the characters array.
  * @type {string|undefined} Yes, we hate it as much as you do.
  */
-export let this_chid;
+export let this_chid: string | undefined;
 let saveCharactersPage = 0;
 export const default_avatar = 'img/ai4.png';
 export const system_avatar = 'img/five.png';
 export const comment_avatar = 'img/quill.png';
 export const default_user_avatar = 'img/user-default.png';
 export let CLIENT_VERSION = 'SillyTavern:UNKNOWN:Cohee#1207'; // For Horde header
-let optionsPopper = Popper.createPopper(document.getElementById('options_button'), document.getElementById('options'), {
+let optionsPopper = Popper.createPopper(document.getElementById('options_button')!, document.getElementById('options')!, {
     placement: 'top-start',
 });
-let exportPopper = Popper.createPopper(document.getElementById('export_button'), document.getElementById('export_format_popup'), {
+let exportPopper = Popper.createPopper(document.getElementById('export_button')!, document.getElementById('export_format_popup')!, {
     placement: 'left',
 });
 let isExportPopupOpen = false;
@@ -447,19 +447,19 @@ let isExportPopupOpen = false;
 const messageTemplate = $('#message_template .mes');
 export const chatElement = $('#chat');
 
-let dialogueResolve = null;
+let dialogueResolve: any = null;
 let dialogueCloseStop = false;
 /** @type {ChatMetadata} */
 export let chat_metadata: Record<string, any> = {};
 /** @type {StreamingProcessor} */
-export let streamingProcessor = null;
-let crop_data = undefined;
+export let streamingProcessor: any = null;
+let crop_data: any = undefined;
 let is_delete_mode = false;
 let fav_ch_checked = false;
 let scrollLock = false;
 export let abortStatusCheck = new AbortController();
-export let charDragDropHandler = null;
-export let chatDragDropHandler = null;
+export let charDragDropHandler: DragAndDropHandler | null = null;
+export let chatDragDropHandler: DragAndDropHandler | null = null;
 
 /** @type {debounce_timeout} The debounce timeout used for chat/settings save. debounce_timeout.long: 1.000 ms */
 export const DEFAULT_SAVE_EDIT_TIMEOUT = debounce_timeout.relaxed;
@@ -541,7 +541,7 @@ export function getCurrentChatId() {
     if (selected_group) {
         return groups.find(x => x.id == selected_group)?.chat_id;
     } else if (this_chid !== undefined) {
-        return characters[this_chid]?.chat;
+        return characters[Number(this_chid)]?.chat;
     }
 }
 
@@ -607,10 +607,10 @@ let this_del_mes = -1;
 /** @type {string} */
 let this_edit_mes_chname = '';
 /** @type {number|undefined} */
-let this_edit_mes_id = undefined;
+let this_edit_mes_id: number | undefined = undefined;
 
 //settings
-export let settings;
+export let settings: any;
 export let amount_gen = 80; //default max length of AI generated responses
 export let max_context = 2048;
 
@@ -624,7 +624,7 @@ export let recentSwipes = 0;
 
 export let extension_prompts: Record<string, any> = {};
 
-export let main_api;// = "kobold";
+export let main_api: any;// = "kobold";
 let abortController = new AbortController();
 
 //css
@@ -632,18 +632,18 @@ var css_send_form_display = $('<div id=send_form></div>').css('display');
 
 var kobold_horde_model = '';
 
-export let token;
+export let token: any;
 
 
 /** The tag of the active character. (NOT the id) */
-export let active_character = '';
+export let active_character: string | null = '';
 /** The tag of the active group. (Coincidentally also the id) */
-export let active_group = '';
+export let active_group: string | null = '';
 
 export const entitiesFilter = new FilterHelper(printCharactersDebounced);
 
 export function getRequestHeaders({ omitContentType = false } = {}) {
-    const headers = {
+    const headers: Record<string, any> = {
         'Content-Type': 'application/json',
         'X-CSRF-Token': token,
     };
@@ -747,7 +747,7 @@ async function firstLoadInit() {
     ToolManager.initToolSlashCommands();
     await initPresetManager();
     await initSystemMessages();
-    await getSettings(initLoaderHandle);
+    await getSettings(initLoaderHandle as any);
     await checkOpenRouterAuth();
     initKeyboard();
     initDynamicStyles();
@@ -810,7 +810,7 @@ export function cancelStatusCheck(reason = 'Manually cancelled status check') {
 export function displayOnlineStatus() {
     if (online_status == 'no_connection') {
         $('.online_status_indicator').removeClass('success');
-        $('.online_status_text').text($('#API-status-top').attr('no_connection_text'));
+        $('.online_status_text').text($('#API-status-top').attr('no_connection_text') ?? '');
     } else {
         $('.online_status_indicator').addClass('success');
         $('.online_status_text').text(online_status);
@@ -831,7 +831,7 @@ export function setAnimationDuration(ms = null) {
  * Sets the currently active character
  * @param {object|number|string} [entityOrKey] - An entity with id property (character, group, tag), or directly an id or tag key. If not provided, the active character is reset to `null`.
  */
-export function setActiveCharacter(entityOrKey) {
+export function setActiveCharacter(entityOrKey: any) {
     active_character = entityOrKey ? getTagKeyForEntity(entityOrKey) : null;
     if (active_character) active_group = null;
 }
@@ -840,7 +840,7 @@ export function setActiveCharacter(entityOrKey) {
  * Sets the currently active group.
  * @param {object|number|string} [entityOrKey] - An entity with id property (character, group, tag), or directly an id or tag key. If not provided, the active group is reset to `null`.
  */
-export function setActiveGroup(entityOrKey) {
+export function setActiveGroup(entityOrKey: any) {
     active_group = entityOrKey ? getTagKeyForEntity(entityOrKey) : null;
     if (active_group) active_character = null;
 }
@@ -870,7 +870,7 @@ export function resultCheckStatus() {
  * @param {boolean} [options.switchMenu=true] Whether to switch the right menu to the character edit menu if the character is already selected.
  * @returns {Promise<void>} A promise that resolves when the character is switched.
  */
-export async function selectCharacterById(id, { switchMenu = true } = {}) {
+export async function selectCharacterById(id: number, { switchMenu = true } = {}) {
     if (characters[id] === undefined) {
         return;
     }
@@ -926,7 +926,7 @@ async function getEmptyBlock() {
 /**
  * @param {number} hidden Number of hidden characters
  */
-async function getHiddenBlock(hidden) {
+async function getHiddenBlock(hidden: number) {
     const params = {
         text: (hidden > 1 ? t`${hidden} characters hidden.` : t`${hidden} character hidden.`),
     };
@@ -934,7 +934,7 @@ async function getHiddenBlock(hidden) {
     return $(hiddenBlock);
 }
 
-function getCharacterBlock(item, id) {
+function getCharacterBlock(item: any, id: any) {
     let this_avatar = default_avatar;
     if (item.avatar != 'none') {
         this_avatar = getThumbnailUrl('avatar', item.avatar);
@@ -1029,7 +1029,7 @@ export async function printCharacters(fullRefresh = false) {
         formatNavigator: PAGINATION_TEMPLATE,
         formatSizeChanger: renderPaginationDropdown(pageSize, sizeChangerOptions),
         showNavigator: true,
-        callback: async function (/** @type {Entity[]} */ data) {
+        callback: async function (data: any[]) {
             $(listId).empty();
             if (power_user.bogus_folders && isBogusFolderOpen()) {
                 $(listId).append(getBackBlock());
@@ -1064,15 +1064,15 @@ export async function printCharacters(fullRefresh = false) {
 
             eventSource.emit(event_types.CHARACTER_PAGE_LOADED);
         },
-        afterSizeSelectorChange: function (e, size) {
+        afterSizeSelectorChange: function (e: any, size: any) {
             accountStorage.setItem(storageKey, e.target.value);
             paginationDropdownChangeHandler(e, size);
         },
-        afterPaging: function (e) {
+        afterPaging: function (e: any) {
             saveCharactersPage = e;
         },
         afterRender: function () {
-            $(listId).scrollTop(currentScrollTop);
+            if (currentScrollTop !== undefined) $(listId).scrollTop(currentScrollTop);
         },
     });
 
@@ -1117,7 +1117,7 @@ function verifyCharactersSearchSortRule() {
  * @param {string|number} id - The id of this character
  * @returns {Entity} The entity for this character
  */
-export function characterToEntity(character, id) {
+export function characterToEntity(character: any, id: any) {
     return { item: character, id, type: 'character' };
 }
 
@@ -1127,7 +1127,7 @@ export function characterToEntity(character, id) {
  * @param {Group} group - The group
  * @returns {Entity} The entity for this group
  */
-export function groupToEntity(group) {
+export function groupToEntity(group: any) {
     return { item: group, id: group.id, type: 'group' };
 }
 
@@ -1137,7 +1137,7 @@ export function groupToEntity(group) {
  * @param {import('./scripts/tags.js').Tag} tag - The tag
  * @returns {Entity} The entity for this tag
  */
-export function tagToEntity(tag) {
+export function tagToEntity(tag: any) {
     return { item: structuredClone(tag), id: tag.id, type: 'tag', entities: [] };
 }
 
@@ -1176,9 +1176,9 @@ export function getEntitiesList({ doFilter = false, doSort = true } = {}) {
         // For folders, we remember the sub entities so they can be displayed later, even if they might be filtered
         // Those sub entities should be filtered and have the search filters applied too
         if (entity.type === 'tag') {
-            let subEntities = filterByTagState(entities, { subForEntity: entity, filterHidden: false });
+            let subEntities = filterByTagState(entities, { subForEntity: entity as any, filterHidden: false });
             const subCount = subEntities.length;
-            subEntities = filterByTagState(entities, { subForEntity: entity });
+            subEntities = filterByTagState(entities, { subForEntity: entity as any });
             if (doFilter) {
                 // sub entities filter "hacked" because folder filter should not be applied there, so even in "only folders" mode characters show up
                 subEntities = entitiesFilter.applyFilters(subEntities, { clearScoreCache: false, tempOverrides: { [FILTER_TYPES.FOLDER]: FILTER_STATES.UNDEFINED }, clearFuzzySearchCaches: false });
@@ -1218,7 +1218,7 @@ export function getEntitiesList({ doFilter = false, doSort = true } = {}) {
     return entities;
 }
 
-export async function getOneCharacter(avatarUrl) {
+export async function getOneCharacter(avatarUrl: string) {
     const response = await fetch('/api/characters/get', {
         method: 'POST',
         headers: getRequestHeaders(),
@@ -1242,45 +1242,45 @@ export async function getOneCharacter(avatarUrl) {
     }
 }
 
-export function getCharacterSource(chId = this_chid) {
-    const character = characters[chId];
+export function getCharacterSource(chId: string | number | undefined = this_chid) {
+    const character = characters[chId as number];
 
     if (!character) {
         return '';
     }
 
-    const chubId = characters[chId]?.data?.extensions?.chub?.full_path;
+    const chubId = characters[chId as number]?.data?.extensions?.chub?.full_path;
 
     if (chubId) {
         return `https://chub.ai/characters/${chubId}`;
     }
 
-    const pygmalionId = characters[chId]?.data?.extensions?.pygmalion_id;
+    const pygmalionId = characters[chId as number]?.data?.extensions?.pygmalion_id;
 
     if (pygmalionId) {
         return `https://pygmalion.chat/${pygmalionId}`;
     }
 
-    const githubRepo = characters[chId]?.data?.extensions?.github_repo;
+    const githubRepo = characters[chId as number]?.data?.extensions?.github_repo;
 
     if (githubRepo) {
         return `https://github.com/${githubRepo}`;
     }
 
-    const sourceUrl = characters[chId]?.data?.extensions?.source_url;
+    const sourceUrl = characters[chId as number]?.data?.extensions?.source_url;
 
     if (sourceUrl) {
         return sourceUrl;
     }
 
-    const risuId = characters[chId]?.data?.extensions?.risuai?.source;
+    const risuId = characters[chId as number]?.data?.extensions?.risuai?.source;
 
     if (Array.isArray(risuId) && risuId.length && typeof risuId[0] === 'string' && risuId[0].startsWith('risurealm:')) {
         const realmId = risuId[0].split(':')[1];
         return `https://realm.risuai.net/character/${realmId}`;
     }
 
-    const perchanceSlug = characters[chId]?.data?.extensions?.perchance_data?.slug;
+    const perchanceSlug = characters[chId as number]?.data?.extensions?.perchance_data?.slug;
 
     if (perchanceSlug) {
         return `https://perchance.org/ai-character-chat?data=${perchanceSlug}`;
@@ -1296,7 +1296,7 @@ export async function getCharacters() {
         body: JSON.stringify({}),
     });
     if (response.ok) {
-        const previousAvatar = this_chid !== undefined ? characters[this_chid]?.avatar : null;
+        const previousAvatar = this_chid !== undefined ? characters[Number(this_chid)]?.avatar : null;
         characters.splice(0, characters.length);
         const getData = await response.json();
         for (let i = 0; i < getData.length; i++) {
@@ -1333,19 +1333,19 @@ export async function getCharacters() {
     }
 }
 
-async function delChat(chatfile) {
+async function delChat(chatfile: string) {
     const response = await fetch('/api/chats/delete', {
         method: 'POST',
         headers: getRequestHeaders(),
         body: JSON.stringify({
             chatfile: chatfile,
-            avatar_url: characters[this_chid].avatar,
+            avatar_url: characters[Number(this_chid)].avatar,
         }),
     });
     if (response.ok === true) {
         // choose another chat if current was deleted
         const name = chatfile.replace('.jsonl', '');
-        if (name === characters[this_chid].chat) {
+        if (name === characters[Number(this_chid)].chat) {
             chat_metadata = {};
             await replaceCurrentChat();
         }
@@ -1359,12 +1359,12 @@ async function delChat(chatfile) {
  * @param {string} fileName Name of the chat file to delete (without .jsonl extension)
  * @returns {Promise<void>} A promise that resolves when the chat is deleted.
  */
-export async function deleteCharacterChatByName(characterId, fileName) {
+export async function deleteCharacterChatByName(characterId: string, fileName: string) {
     // Make sure all the data is loaded.
     await unshallowCharacter(characterId);
 
     /** @type {Character} */
-    const character = characters[characterId];
+    const character = characters[Number(characterId)];
     if (!character) {
         console.warn(`Character with ID ${characterId} not found.`);
         return;
@@ -1405,7 +1405,7 @@ export async function replaceCurrentChat() {
     const chatsResponse = await fetch('/api/characters/chats', {
         method: 'POST',
         headers: getRequestHeaders(),
-        body: JSON.stringify({ avatar_url: characters[this_chid].avatar }),
+        body: JSON.stringify({ avatar_url: characters[Number(this_chid)].avatar }),
     });
 
     if (chatsResponse.ok) {
@@ -1414,14 +1414,14 @@ export async function replaceCurrentChat() {
 
         if (chats.length && typeof chats[0] === 'object') {
             // pick existing chat
-            characters[this_chid].chat = chats[0].file_name.replace('.jsonl', '');
-            $('#selected_chat_pole').val(characters[this_chid].chat);
+            characters[Number(this_chid)].chat = chats[0].file_name.replace('.jsonl', '');
+            $('#selected_chat_pole').val(characters[Number(this_chid)].chat);
             saveCharacterDebounced();
             await getChat();
         } else {
             // start new chat
-            characters[this_chid].chat = `${name2} - ${humanizedDateTime()}`;
-            $('#selected_chat_pole').val(characters[this_chid].chat);
+            characters[Number(this_chid)].chat = `${name2} - ${humanizedDateTime()}`;
+            $('#selected_chat_pole').val(characters[Number(this_chid)].chat);
             saveCharacterDebounced();
             await getChat();
         }
@@ -1436,7 +1436,7 @@ export async function showMoreMessages(messagesToLoad = null) {
     // If there are no messages displayed, or the message somehow has no mesid, we default to one higher than last message id,
     // so the first "new" message being shown will be the last available message
     if (isNaN(messageId)) {
-        messageId = getLastMessageId() + 1;
+        messageId = (getLastMessageId() ?? 0) + 1;
     }
 
     console.debug('Inserting messages before', messageId, 'count', count, 'chat length', chat.length);
@@ -1445,7 +1445,7 @@ export async function showMoreMessages(messagesToLoad = null) {
     const isButtonInView = isElementInViewport(showMoreButton[0]);
 
     const firstId = clamp(messageId - count, 0, Infinity);
-    const messageElements = [];
+    const messageElements: any[] = [];
     chat.slice(firstId, messageId).forEach((message, id) => {
         messageElements.push(updateMessageElement(message, { messageId: firstId + id }));
     });
@@ -1514,12 +1514,12 @@ export async function redisplayChat({ targetChat = chat, startIndex = 0, fade = 
         });
 
         //The last_mes has been removed, add it to the new last message.
-        newMessageElements.at(-1).classList.add('last_mes');
+        newMessageElements.at(-1)?.classList.add('last_mes');
 
         //Append to chat in one DOM update.
         chatElement.append(newMessageElements);
 
-        applyCharacterTagsToMessageDivs({ mesIds: lodash.range(startIndex, targetChat.length, 1) });
+        applyCharacterTagsToMessageDivs({ mesIds: lodash.range(startIndex, targetChat.length, 1) as number[] });
     }
 
     refreshSwipeButtons(false, fade);
@@ -1615,7 +1615,7 @@ export async function deleteLastMessage() {
  * @param {number} [swipeDeletionIndex] Deletes the swipe with that index.
  * @param {boolean} [askConfirmation=false] Whether to ask for confirmation before deleting.
  */
-export async function deleteMessage(id, swipeDeletionIndex = undefined, askConfirmation = false) {
+export async function deleteMessage(id: number, swipeDeletionIndex: number | undefined = undefined, askConfirmation = false) {
     const canDeleteSwipe = swipeDeletionIndex !== undefined && swipeDeletionIndex !== null;
     if (canDeleteSwipe) {
         if (swipeDeletionIndex < 0) {
@@ -1637,7 +1637,7 @@ export async function deleteMessage(id, swipeDeletionIndex = undefined, askConfi
 
     let deleteOnlySwipe = canDeleteSwipe;
     if (askConfirmation) {
-        const result = await callGenericPopup(t`Are you sure you want to delete this message?`, POPUP_TYPE.CONFIRM, null, {
+        const result = await callGenericPopup(t`Are you sure you want to delete this message?`, POPUP_TYPE.CONFIRM, null as any, {
             okButton: canDeleteSwipe ? t`Delete Swipe` : t`Delete Message`,
             cancelButton: 'Cancel',
             customButtons: canDeleteSwipe ? [t`Delete Message`] : null,
@@ -1649,7 +1649,7 @@ export async function deleteMessage(id, swipeDeletionIndex = undefined, askConfi
     }
 
     if (deleteOnlySwipe) {
-        await deleteSwipe(swipeDeletionIndex, id);
+        await deleteSwipe(swipeDeletionIndex as number, id);
         return;
     }
 
@@ -1660,7 +1660,7 @@ export async function deleteMessage(id, swipeDeletionIndex = undefined, askConfi
 
     const startIndex = [0, minId].includes(id) ? id : null;
     deleteItemizedPromptForMessage(id);
-    updateViewMessageIds(startIndex);
+    updateViewMessageIds(startIndex as number | null);
     saveChatDebounced();
 
     if (this_edit_mes_id === id) {
@@ -1750,7 +1750,7 @@ export async function sendTextareaMessage() {
  * @param {boolean} [isReasoning] If the message is reasoning output
  * @returns {string} HTML string
  */
-export function messageFormatting(mes, ch_name, isSystem, isUser, messageId, sanitizerOverrides = {}, isReasoning = false) {
+export function messageFormatting(mes: any, ch_name: any, isSystem: any, isUser: any, messageId: any, sanitizerOverrides: any = {}, isReasoning = false) {
     if (!mes) {
         return '';
     }
@@ -1837,14 +1837,14 @@ export function messageFormatting(mes, ch_name, isSystem, isUser, messageId, san
     if (!isSystem) {
         // Save double quotes in tags as a special character to prevent them from being encoded
         if (!power_user.encode_tags) {
-            mes = mes.replace(/<([^>]+)>/g, function (_, contents) {
+            mes = mes.replace(/<([^>]+)>/g, function (_: string, contents: string) {
                 return '<' + contents.replace(/"/g, '\ufffe') + '>';
             });
         }
 
         mes = mes.replace(
             /<style>[\s\S]*?<\/style>|```[\s\S]*?```|~~~[\s\S]*?~~~|``[\s\S]*?``|`[\s\S]*?`|(".*?")|(\u201C.*?\u201D)|(\u00AB.*?\u00BB)|(\u300C.*?\u300D)|(\u300E.*?\u300F)|(\uFF02.*?\uFF02)/gim,
-            function (match, p1, p2, p3, p4, p5, p6) {
+            function (match: string, p1: any, p2: any, p3: any, p4: any, p5: any, p6: any) {
                 if (p1) {
                     // English double quotes
                     return `<q>"${p1.slice(1, -1)}"</q>`;
@@ -1879,14 +1879,14 @@ export function messageFormatting(mes, ch_name, isSystem, isUser, messageId, san
         mes = mes.replaceAll('\\end{align*}', '$$');
         mes = converter.makeHtml(mes);
 
-        mes = mes.replace(/<code(.*)>[\s\S]*?<\/code>/g, function (match) {
+        mes = mes.replace(/<code(.*)>[\s\S]*?<\/code>/g, function (match: string) {
             // Firefox creates extra newlines from <br>s in code blocks, so we replace them before converting newlines to <br>s.
             return match.replace(/\n/gm, '\u0000');
         });
         mes = mes.replace(/\u0000/g, '\n'); // Restore converted newlines
         mes = mes.trim();
 
-        mes = mes.replace(/<code(.*)>[\s\S]*?<\/code>/g, function (match) {
+        mes = mes.replace(/<code(.*)>[\s\S]*?<\/code>/g, function (match: string) {
             return match.replace(/&amp;/g, '&');
         });
     }
@@ -1920,7 +1920,7 @@ export function messageFormatting(mes, ch_name, isSystem, isUser, messageId, san
  * @param {string} [modelName=''] - Model name shown in the tooltip
  * @returns {HTMLImageElement} The image element (not yet in the DOM)
  */
-export function createModelIcon(apiName, modelName = '') {
+export function createModelIcon(apiName: string, modelName = '') {
     const image = new Image();
     image.classList.add('icon-svg');
     image.src = `/img/${apiName}.svg`;
@@ -1934,14 +1934,14 @@ export function createModelIcon(apiName, modelName = '') {
  * @param {JQuery<HTMLElement>} mes - The message element containing the timestamp where the icon should be inserted or replaced.
  * @param {ChatMessageExtra} extra - Contains the API and model details.
  */
-function insertSVGIcon(mes, extra) {
+function insertSVGIcon(mes: any, extra: any) {
     const apiName = extra?.api || '';
 
     if (!apiName) {
         return;
     }
 
-    const insertOrReplaceSVG = (image, className, targetSelector, insertBefore) => {
+    const insertOrReplaceSVG = (image: HTMLImageElement, className: string, targetSelector: string, insertBefore: boolean) => {
         image.onload = async function () {
             let existingSVG = insertBefore ? mes.find(targetSelector).prev(`.${className}`) : mes.find(targetSelector).next(`.${className}`);
             if (existingSVG.length) {
@@ -1954,7 +1954,7 @@ function insertSVGIcon(mes, extra) {
         };
     };
 
-    const insertIcon = (className, targetSelector, insertBefore) => {
+    const insertIcon = (className: string, targetSelector: string, insertBefore: boolean) => {
         const image = createModelIcon(apiName, extra?.model);
         image.classList.add(className);
         insertOrReplaceSVG(image, className, targetSelector, insertBefore);
@@ -1971,7 +1971,7 @@ function insertSVGIcon(mes, extra) {
  * @param {object} [options={}] Optional arguments
  * @param {boolean} [options.rerenderMessage=true] Whether to re-render the message content (inside <c>.mes_text</c>)
  */
-export function updateMessageBlock(messageId, message, { rerenderMessage = true } = {}) {
+export function updateMessageBlock(messageId: number, message: any, { rerenderMessage = true } = {}) {
     const messageElement = chatElement.find(`[mesid="${messageId}"]`);
     if (rerenderMessage) {
         const text = message?.extra?.display_text ?? message.mes;
@@ -1988,14 +1988,14 @@ export function updateMessageBlock(messageId, message, { rerenderMessage = true 
  * Ensures that the message media properties are arrays, adding getters/setters for single media items.
  * @param {ChatMessage} mes Message object
  */
-export function ensureMessageMediaIsArray(mes) {
+export function ensureMessageMediaIsArray(mes: any) {
     /**
      * Determines if a property of an object is a plain property (not a getter/setter or non-enumerable).
      * @param {object} obj Object to check
      * @param {string} name Property name
      * @returns {boolean} True if the property is a plain property, false otherwise
      */
-    function isPlainObjectProperty(obj, name) {
+    function isPlainObjectProperty(obj: any, name: string) {
         const hasProperty = Object.hasOwn(obj, name);
         if (hasProperty) {
             const descriptor = Object.getOwnPropertyDescriptor(obj, name);
@@ -2010,7 +2010,7 @@ export function ensureMessageMediaIsArray(mes) {
      * @param {string} name Property name
      * @returns {boolean} True if the property is a getter, false otherwise
      */
-    function isGetterObjectProperty(obj, name) {
+    function isGetterObjectProperty(obj: any, name: string) {
         const hasProperty = Object.hasOwn(obj, name);
         if (hasProperty) {
             const descriptor = Object.getOwnPropertyDescriptor(obj, name);
@@ -2027,7 +2027,7 @@ export function ensureMessageMediaIsArray(mes) {
      * @param {(value: any) => boolean} [filterFn] Optional filter function to apply when getting/setting the plain property
      * @param {(value: any) => any} [mapFn] Optional map function to apply when getting/setting the plain property
      */
-    function addArrayAutoWrapper(obj, plainProperty, arrayProperty, filterFn = () => true, mapFn = (t) => t) {
+    function addArrayAutoWrapper(obj: any, plainProperty: string, arrayProperty: string, filterFn: (value: any) => boolean = () => true, mapFn: (value: any) => any = (t) => t) {
         // If the plain property is already a getter, do nothing.
         const hasGetterProperty = isGetterObjectProperty(obj, plainProperty);
         if (hasGetterProperty) {
@@ -2057,7 +2057,7 @@ export function ensureMessageMediaIsArray(mes) {
      * Migrates image swipes from a single image property to an array.
      * @param {ChatMessageExtra} obj
      */
-    function migrateMediaToArray(obj) {
+    function migrateMediaToArray(obj: any) {
         if (isPlainObjectProperty(obj, 'file')) {
             if (!Array.isArray(obj.files)) {
                 obj.files = [];
@@ -2092,12 +2092,12 @@ export function ensureMessageMediaIsArray(mes) {
                 obj.media.push({ type: MEDIA_TYPE.IMAGE, url: imageValue });
             }
             if (obj.media_display === MEDIA_DISPLAY.GALLERY) {
-                const selectedIndex = obj.media.findIndex(t => t.url === imageValue);
+                const selectedIndex = obj.media.findIndex((t: any) => t.url === imageValue);
                 if (selectedIndex > -1) {
                     obj.media_index = selectedIndex;
                 }
             }
-            obj.media = obj.media.filter((v, i, a) => i === a.findIndex(t => t.url === v.url));
+            obj.media = obj.media.filter((v: any, i: number, a: any[]) => i === a.findIndex((t: any) => t.url === v.url));
         }
 
         if (isPlainObjectProperty(obj, 'video')) {
@@ -2118,8 +2118,8 @@ export function ensureMessageMediaIsArray(mes) {
 
     migrateMediaToArray(mes.extra);
     addArrayAutoWrapper(mes.extra, 'file', 'files');
-    (addArrayAutoWrapper as any)(mes.extra, 'image', 'media', (t) => t.type === MEDIA_TYPE.IMAGE, (t) => t.url);
-    (addArrayAutoWrapper as any)(mes.extra, 'video', 'media', (t) => t.type === MEDIA_TYPE.VIDEO, (t) => t.url);
+    (addArrayAutoWrapper as any)(mes.extra, 'image', 'media', (t: any) => t.type === MEDIA_TYPE.IMAGE, (t: any) => t.url);
+    (addArrayAutoWrapper as any)(mes.extra, 'video', 'media', (t: any) => t.type === MEDIA_TYPE.VIDEO, (t: any) => t.url);
 }
 
 /**
@@ -2127,7 +2127,7 @@ export function ensureMessageMediaIsArray(mes) {
  * @param {ChatMessage} mes Message object
  * @returns {MEDIA_DISPLAY} Media display setting
  */
-export function getMediaDisplay(mes) {
+export function getMediaDisplay(mes: any) {
     const value = mes?.extra?.media_display || power_user.media_display || MEDIA_DISPLAY.LIST;
     return Object.values(MEDIA_DISPLAY).includes(value) ? value : MEDIA_DISPLAY.LIST;
 }
@@ -2137,7 +2137,7 @@ export function getMediaDisplay(mes) {
  * @param {ChatMessage} mes Message object
  * @returns {number} Media index
  */
-export function getMediaIndex(mes) {
+export function getMediaIndex(mes: any) {
     if (!Array.isArray(mes?.extra?.media)) {
         return 0;
     }
@@ -2154,7 +2154,7 @@ export function getMediaIndex(mes) {
  * @param {JQuery<HTMLElement>} messageElement Message element
  * @param {string} [scrollBehavior] Scroll behavior when adjusting scroll position
  */
-export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROLL_BEHAVIOR.ADJUST) {
+export function appendMediaToMessage(mes: any, messageElement: any, scrollBehavior: any = SCROLL_BEHAVIOR.ADJUST) {
     ensureMessageMediaIsArray(mes);
 
     const fileWrapper = messageElement.find('.mes_file_wrapper');
@@ -2165,8 +2165,8 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
     const mediaDisplay = hasMedia ? getMediaDisplay(mes) : null;
     const hideMessageText = hasMedia && mes?.extra?.inline_image === false;
 
-    const mediaBlocks = [];
-    const mediaPromises = [];
+    const mediaBlocks: any[] = [];
+    const mediaPromises: any[] = [];
 
     const chatHeight = (hasMedia || hasFiles) ? chatElement.prop('scrollHeight') : 0;
     const scrollPosition = (hasMedia || hasFiles) ? chatElement.scrollTop() : 0;
@@ -2178,12 +2178,12 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
             return;
         }
         if (scrollBehavior === SCROLL_BEHAVIOR.KEEP) {
-            chatElement.scrollTop(scrollPosition);
+            chatElement.scrollTop(scrollPosition ?? 0);
             return;
         }
         const newChatHeight = chatElement.prop('scrollHeight');
         const diff = newChatHeight - chatHeight;
-        chatElement.scrollTop(scrollPosition + diff);
+        chatElement.scrollTop((scrollPosition ?? 0) + diff);
     };
 
     // Set media display attribute
@@ -2197,7 +2197,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
      * @param {number} index Index of the image attachment
      * @returns {JQuery<HTMLElement>} The appended image container element
      */
-    function appendImageAttachment(attachment, index) {
+    function appendImageAttachment(attachment: any, index: number) {
         const template = $('#message_image_template .mes_img_container').clone();
         template.attr('data-index', index);
 
@@ -2233,7 +2233,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
      * @param {number} index Index of the video attachment
      * @returns {JQuery<HTMLElement>} The appended video container element
      */
-    function appendVideoAttachment(attachment, index) {
+    function appendVideoAttachment(attachment: any, index: number) {
         const template = $('#message_video_template .mes_video_container').clone();
         template.attr('data-index', index);
 
@@ -2266,7 +2266,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
      * @param {number} index Index of the audio attachment
      * @returns {JQuery<HTMLElement>} The appended audio container element
      */
-    function appendAudioAttachment(attachment, index) {
+    function appendAudioAttachment(attachment: any, index: number) {
         const template = $('#message_audio_template .mes_audio_container').clone();
         template.attr('data-index', index);
         const audio = template.find('.mes_audio');
@@ -2301,7 +2301,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
      * @param {number} index Index of the media attachment
      * @returns {JQuery<HTMLElement>} The appended media container element
      */
-    function appendMediaAttachment(attachment, index) {
+    function appendMediaAttachment(attachment: any, index: number) {
         if (!attachment.type) {
             attachment.type = MEDIA_TYPE.IMAGE;
         }
@@ -2325,7 +2325,7 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
     function saveMediaStates() {
         const states = new Map();
         const media = mediaWrapper.find('video, audio');
-        media.each((_, element) => {
+        media.each((_: number, element: HTMLElement) => {
             if (element instanceof HTMLMediaElement) {
                 if (!element.currentSrc || element.readyState === HTMLMediaElement.HAVE_NOTHING) {
                     return;
@@ -2341,9 +2341,9 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
      * Restores the playback times of media elements in the message.
      * @param {Map<string, MediaState>} states Media playback times by source URL
      */
-    function restoreMediaStates(states) {
+    function restoreMediaStates(states: Map<string, any>) {
         const media = mediaWrapper.find('video, audio');
-        media.each((_, element) => {
+        media.each((_: number, element: HTMLElement) => {
             if (element instanceof HTMLMediaElement) {
                 const restoreState = () => {
                     if (!states.has(element.currentSrc)) {
@@ -2417,19 +2417,21 @@ export function appendMediaToMessage(mes, messageElement, scrollBehavior = SCROL
     });
 }
 
-export function addCopyToCodeBlocks(messageElement) {
+export function addCopyToCodeBlocks(messageElement: any) {
     const codeBlocks = $(messageElement).find('pre code');
     for (let i = 0; i < codeBlocks.length; i++) {
-        hljs.highlightElement(codeBlocks.get(i));
+        const codeElement = codeBlocks.get(i);
+        if (!codeElement) continue;
+        hljs.highlightElement(codeElement);
         const copyButton = document.createElement('i');
         copyButton.classList.add('fa-solid', 'fa-copy', 'code-copy', 'interactable');
         copyButton.title = 'Copy code';
-        codeBlocks.get(i).appendChild(copyButton);
+        codeElement.appendChild(copyButton);
         copyButton.addEventListener('click', function (e) {
             e.stopPropagation();
         });
         copyButton.addEventListener('pointerup', async function () {
-            const text = codeBlocks.get(i).textContent;
+            const text = codeElement.textContent ?? '';
             await copyText(text);
             toastr.info(t`Copied!`, '', { timeOut: 2000 });
         });
@@ -2444,10 +2446,10 @@ export function addCopyToCodeBlocks(messageElement) {
  * @param {JQuery<HTMLElement>} [options.messageElement] Message element
  * @return {void}
  */
-function updateMessageItemizedPromptButton(message, { messageId = chat.indexOf(message), messageElement = chatElement.find(`.mes[mesid="${messageId}"]`) }) {
+function updateMessageItemizedPromptButton(message: any, { messageId = chat.indexOf(message) as number, messageElement = chatElement.find(`.mes[mesid="${messageId}"]`) }: any) {
     //if we have itemized messages, and the array isn't null..
     if (!message.is_user && Array.isArray(itemizedPrompts) && itemizedPrompts.length > 0) {
-        const itemizedPrompt = itemizedPrompts.find(x => Number(x.mesId) === Number(messageId));
+        const itemizedPrompt = itemizedPrompts.find((x: any) => Number(x.mesId) === Number(messageId));
         if (itemizedPrompt) {
             messageElement.find('.mes_prompt').show();
         }
@@ -2461,7 +2463,7 @@ function updateMessageItemizedPromptButton(message, { messageId = chat.indexOf(m
  * @param {number} [options.messageId] Message ID
  * @returns {string} Formatted message HTML
  */
-function getMessageTextHTML(message, { messageId = chat.indexOf(message) }) {
+function getMessageTextHTML(message: any, { messageId = chat.indexOf(message) as number }) {
     // if mes.extra.uses_system_ui is true, set an override on the sanitizer options
     /** @type {Partial<DOMPurify.Config>} */
     const sanitizerOverrides = message.extra?.uses_system_ui ? { MESSAGE_ALLOW_SYSTEM_UI: true } : {};
@@ -2489,7 +2491,7 @@ function getMessageTextHTML(message, { messageId = chat.indexOf(message) }) {
  * @param {boolean} [options.showSwipes=true] Whether to refresh the swipe buttons.
  * @returns {JQuery<HTMLElement>} The newly added message element
  */
-export function addOneMessage(mes, { type = undefined, insertAfter = null, scroll = true, insertBefore = null, forceId = null, showSwipes = true } = {}) {
+export function addOneMessage(mes: any, { type = undefined, insertAfter = null, scroll = true, insertBefore = null, forceId = null, showSwipes = true } = {}) {
     // Callers push the new message to chat before calling addOneMessage
     const messageId = (() => {
         if (typeof forceId === 'number') {
@@ -2556,7 +2558,7 @@ export function addOneMessage(mes, { type = undefined, insertAfter = null, scrol
  * @param {SCROLL_BEHAVIOR} [options.adjustMediaScroll=SCROLL_BEHAVIOR.NONE] Scroll behavior option passed to appendMediaToMessage.
  * @returns {JQuery<HTMLElement>} Rendered HTMLElement.
  */
-export function updateMessageElement(mes, { messageId = chat.length - 1, messageElement = messageTemplate.clone(), adjustMediaScroll = SCROLL_BEHAVIOR.NONE } = {}) {
+export function updateMessageElement(mes: any, { messageId = chat.length - 1 as number, messageElement = messageTemplate.clone(), adjustMediaScroll = SCROLL_BEHAVIOR.NONE } = {}) {
     let avatarImg = getThumbnailUrl('persona', user_avatar);
 
     //for non-user messages
@@ -2565,8 +2567,8 @@ export function updateMessageElement(mes, { messageId = chat.length - 1, message
             avatarImg = mes.force_avatar;
         } else if (this_chid === undefined) {
             avatarImg = system_avatar;
-        } else if (characters[this_chid] && characters[this_chid].avatar !== 'none') {
-            avatarImg = getThumbnailUrl('avatar', characters[this_chid].avatar);
+        } else if (characters[Number(this_chid)] && characters[Number(this_chid)].avatar !== 'none') {
+            avatarImg = getThumbnailUrl('avatar', characters[Number(this_chid)].avatar);
         } else {
             avatarImg = default_avatar;
         }
@@ -2639,7 +2641,7 @@ export function updateMessageElement(mes, { messageId = chat.length - 1, message
 
     // Set the swipes counter for all non-user messages.
     if (!mes.is_user) {
-        updateSwipeCounter(messageId, { message: mes, messageElement });
+        updateSwipeCounter(messageId, { message: mes, messageElement: messageElement as any });
     }
 
     return messageElement;
@@ -2650,8 +2652,8 @@ export function updateMessageElement(mes, { messageId = chat.length - 1, message
  * @param {number|string} characterId Character Id
  * @returns {string} Avatar URL
  */
-export function getCharacterAvatar(characterId) {
-    const character = characters[characterId];
+export function getCharacterAvatar(characterId: number | string) {
+    const character = characters[Number(characterId)];
     const avatarImg = character?.avatar;
 
     if (!avatarImg || avatarImg === 'none') {
@@ -2661,7 +2663,7 @@ export function getCharacterAvatar(characterId) {
     return formatCharacterAvatar(avatarImg);
 }
 
-export function formatCharacterAvatar(characterAvatar) {
+export function formatCharacterAvatar(characterAvatar: string) {
     return `characters/${characterAvatar}`;
 }
 
@@ -2678,7 +2680,7 @@ export function formatCharacterAvatar(characterAvatar) {
  * console.log(timerValue); // 1.2s
  * console.log(timerTitle); // Generation queued: 12:34:56 7 Jan 2021\nReply received: 12:34:57 7 Jan 2021\nTime to generate: 1.2 seconds\nToken rate: 5 t/s
  */
-function formatGenerationTimer(gen_started, gen_finished, tokenCount, reasoningDuration = null, timeToFirstToken = null) {
+function formatGenerationTimer(gen_started: any, gen_finished: any, tokenCount: any, reasoningDuration: number | null = null, timeToFirstToken: number | null = null) {
     if (!gen_started || !gen_finished) {
         return {};
     }
@@ -2693,7 +2695,7 @@ function formatGenerationTimer(gen_started, gen_finished, tokenCount, reasoningD
         `Reply received: ${finish.format(dateFormat)}`,
         `Time to generate: ${seconds} seconds`,
         timeToFirstToken ? `Time to first token: ${timeToFirstToken / 1000} seconds` : '',
-        reasoningDuration > 0 ? `Time to think: ${reasoningDuration / 1000} seconds` : '',
+        reasoningDuration && reasoningDuration > 0 ? `Time to think: ${reasoningDuration / 1000} seconds` : '',
         tokenCount > 0 ? `Token rate: ${Number(tokenCount / seconds).toFixed(3)} t/s` : '',
     ].filter(x => x).join('\n').trim();
 
@@ -2704,7 +2706,7 @@ function formatGenerationTimer(gen_started, gen_finished, tokenCount, reasoningD
     return { timerValue, timerTitle };
 }
 
-let requestId = null;
+let requestId: number | null = null;
 
 /**
  * Scrolls the chat to the bottom if configured to do so.
@@ -2723,7 +2725,7 @@ export function scrollChatToBottom({ waitForFrame }: Record<string, any> = {}) {
             const lastMessage = chatElement.find('.mes').last();
             if (lastMessage.length) {
                 const lastMessagePosition = lastMessage.position().top;
-                position = chatElement.scrollTop() + lastMessagePosition;
+                position = (chatElement.scrollTop() ?? 0) + lastMessagePosition;
             }
         }
 
@@ -2753,7 +2755,7 @@ export function scrollChatToBottom({ waitForFrame }: Record<string, any> = {}) {
  * Substitutes {{macro}} parameters in a string.
  * @returns {string} The string with substituted parameters.
  */
-export function substituteParamsExtended(content, additionalMacro = {}, postProcessFn = (x) => x) {
+export function substituteParamsExtended(content: string, additionalMacro: any = {}, postProcessFn: (x: any) => any = (x) => x) {
     return substituteParams(content, { dynamicMacros: additionalMacro, postProcessFn });
 }
 
@@ -2769,7 +2771,7 @@ export function substituteParamsExtended(content, additionalMacro = {}, postProc
  * @param {(x: string) => string} [postProcessFn] - Post-processing function for each substituted macro.
  * @returns {string} The string with substituted parameters.
  */
-export function substituteParamsLegacy(content, _name1, _name2, _original, _group, _replaceCharacterCard = true, additionalMacro = {}, postProcessFn = (x) => x) {
+export function substituteParamsLegacy(content: string, _name1: any, _name2: any, _original: any, _group: any, _replaceCharacterCard = true, additionalMacro: any = {}, postProcessFn: (x: any) => any = (x) => x): string {
     if (!content) {
         return '';
     }
@@ -2815,7 +2817,7 @@ export function substituteParamsLegacy(content, _name1, _name2, _original, _grou
         };
     }
 
-    const getGroupValue = (includeMuted) => {
+    const getGroupValue = (includeMuted: boolean) => {
         if (typeof _group === 'string') {
             return _group;
         }
@@ -2824,7 +2826,7 @@ export function substituteParamsLegacy(content, _name1, _name2, _original, _grou
             const members = groups.find(x => x.id === selected_group)?.members;
             /** @type {string[]} */
             const disabledMembers = groups.find(x => x.id === selected_group)?.disabled_members ?? [];
-            const isMuted = x => includeMuted ? true : !disabledMembers.includes(x);
+            const isMuted = (x: string) => includeMuted ? true : !disabledMembers.includes(x);
             const names = Array.isArray(members)
                 ? members.filter(isMuted).map(m => characters.find(c => c.avatar === m)?.name).filter(Boolean).join(', ')
                 : '';
@@ -2918,7 +2920,7 @@ export function substituteParamsLegacy(content, _name1, _name2, _original, _grou
  * @param {(x: string) => string} [options.postProcessFn=(x) => x] - Post-processing function for each substituted macro.
  * @returns {string} The string with substituted parameters.
  */
-export function substituteParams(content, options: any = {}) {
+export function substituteParams(this: any, content: any, options: any = {}) {
     if (!content) return '';
 
     if (typeof content !== 'string') {
@@ -2930,7 +2932,7 @@ export function substituteParams(content, options: any = {}) {
     // We'll simply re-route them to a temporary legacy function. In the future, we'll remove this and cleanly build the options object ourselves.
     const isOptionsObject = options && typeof options === 'object' && !Array.isArray(options);
     if (!isOptionsObject) {
-        return (substituteParamsLegacy as any).call(this, ...arguments);
+        return (substituteParamsLegacy as any).apply(this as any, arguments as any);
     }
 
     // Keep the new macro engine behind a feature switch for now
@@ -2946,7 +2948,7 @@ export function substituteParams(content, options: any = {}) {
         groupOverride: options.groupOverride,
         replaceCharacterCard: options.replaceCharacterCard ?? true,
         dynamicMacros: options.dynamicMacros ?? {},
-        postProcessFn: options.postProcessFn ?? ((x) => x),
+        postProcessFn: options.postProcessFn ?? ((x: any) => x),
     });
 
     const env = MacroEnvBuilder.buildFromRawEnv(ctx);
@@ -2962,7 +2964,7 @@ export function substituteParams(content, options: any = {}) {
  * @param {string} [api] Optional API name to get API-specific stopping sequences for
  * @returns {string[]} Array of stopping strings
  */
-export function getStoppingStrings(isImpersonate, isContinue, api = main_api) {
+export function getStoppingStrings(isImpersonate: boolean, isContinue: boolean, api: any = main_api) {
     // Only custom stop strings apply to Chat Completion
     if (api === 'openai') {
         return getCustomStoppingStrings();
@@ -2987,9 +2989,9 @@ export function getStoppingStrings(isImpersonate, isContinue, api = main_api) {
 
             if (group && Array.isArray(group.members)) {
                 const names = group.members
-                    .map(x => characters.find(y => y.avatar == x))
-                    .filter(x => x && x.name && x.name !== name2)
-                    .map(x => `\n${x.name}:`);
+                    .map((x: any) => characters.find(y => y.avatar == x))
+                    .filter((x: any) => x && x.name && x.name !== name2)
+                    .map((x: any) => `\n${x.name}:`);
                 result.push(...names);
             }
         }
@@ -3042,8 +3044,8 @@ export async function generateQuietPrompt({ quietPrompt = '', quietToLoud = fals
             jsonSchema: jsonSchema ?? null,
         };
         if (responseLengthCustomized) {
-            TempResponseLength.save(main_api, responseLength);
-            eventHook = TempResponseLength.setupEventHook(main_api);
+            TempResponseLength.save(main_api as string, responseLength ?? amount_gen);
+            eventHook = TempResponseLength.setupEventHook(main_api as string);
         }
         let result = await Generate('quiet', generateOptions);
         result = trimToSentence ? trimToEndSentence(result) : result;
@@ -3062,7 +3064,7 @@ export async function generateQuietPrompt({ quietPrompt = '', quietToLoud = fals
  * @param {string} message Text to be sent
  * @returns {Promise<boolean>} Whether the message sending was interrupted
  */
-export async function processCommands(message) {
+export async function processCommands(message: string) {
     if (!message || !message.trim().startsWith('/')) {
         return false;
     }
@@ -3077,15 +3079,15 @@ export async function processCommands(message) {
  * @param {string} message Message text
  * @returns {string} Message bias extracted from the message (or an empty string if not found)
  */
-export function extractMessageBias(message) {
+export function extractMessageBias(message: string) {
     if (!message) {
         return '';
     }
 
     try {
         const biasHandlebars = Handlebars.create();
-        const biasMatches = [];
-        biasHandlebars.registerHelper('bias', function (text) {
+        const biasMatches: any[] = [];
+        biasHandlebars.registerHelper('bias', function (text: any) {
             biasMatches.push(text);
             return '';
         });
@@ -3108,7 +3110,7 @@ export function extractMessageBias(message) {
  * @param {string} getMessage Group message
  * @returns Cleaned-up group message
  */
-function cleanGroupMessage(getMessage) {
+function cleanGroupMessage(getMessage: string) {
     if (power_user.disable_group_trimming) {
         return getMessage;
     }
@@ -3194,7 +3196,7 @@ async function getAllExtensionPrompts() {
  * @param {string} moduleName Module name
  * @returns {Promise<string>} Extension prompt
  */
-export async function getExtensionPromptByName(moduleName) {
+export async function getExtensionPromptByName(moduleName: string) {
     if (!moduleName) {
         return '';
     }
@@ -3238,8 +3240,8 @@ export function getExtensionPromptMaxDepth() {
  * @param {boolean} [wrap] Wrap start and end with a separator
  * @returns {Promise<string>} Extension prompt
  */
-export async function getExtensionPrompt(position = extension_prompt_types.IN_PROMPT, depth = undefined, separator = '\n', role = undefined, wrap = true) {
-    const filterByFunction = async (prompt) => {
+export async function getExtensionPrompt(position: any = extension_prompt_types.IN_PROMPT, depth: any = undefined, separator: any = '\n', role: any = undefined, wrap: any = true) {
+    const filterByFunction = async (prompt: any) => {
         const hasFilter = typeof prompt.filter === 'function';
         if (hasFilter && !await prompt.filter()) {
             return false;
@@ -3278,7 +3280,7 @@ export async function getExtensionPrompt(position = extension_prompt_types.IN_PR
  * @param {string?} name2Override Override for name2
  * @returns {string} Processed string
  */
-export function baseChatReplace(value, name1Override = null, name2Override = null) {
+export function baseChatReplace(value: string, name1Override: string | null = null, name2Override: string | null = null) {
     if (typeof value === 'string' && value.length > 0) {
         value = substituteParams(value, { name1Override, name2Override, replaceCharacterCard: false });
 
@@ -3315,7 +3317,7 @@ export function baseChatReplace(value, name1Override = null, name2Override = nul
 export function createLazyFields(resolvers: Record<string, () => string | string[]>) {
     const result: any = {};
     for (const [key, resolver] of Object.entries(resolvers)) {
-        let cached;
+        let cached: string | string[] | undefined;
         let resolved = false;
         Object.defineProperty(result, key, {
             get() {
@@ -3339,9 +3341,9 @@ export function createLazyFields(resolvers: Record<string, () => string | string
  * @param {number} [options.chid] Optional character index
  * @returns {CharacterCardFields} Character card fields with lazy evaluation
  */
-export function getCharacterCardFieldsLazy({ chid = undefined } = {}) {
+export function getCharacterCardFieldsLazy({ chid = undefined }: any = {}) {
     const currentChid = chid ?? this_chid;
-    const character = characters[currentChid];
+    const character = characters[Number(currentChid)];
 
     // For group chats, we need to check if group cards should be used
     const useGroupCards = selected_group && character;
@@ -3438,7 +3440,7 @@ export function getCharacterCardFields({ chid = undefined } = {}) {
  * @param {string} examplesStr
  * @returns {string[]} Examples array with block heading
  */
-export function parseMesExamples(examplesStr, isInstruct) {
+export function parseMesExamples(examplesStr: string, isInstruct: boolean) {
     if (!examplesStr || examplesStr.length === 0 || examplesStr === '<START>') {
         return [];
     }
@@ -3449,7 +3451,7 @@ export function parseMesExamples(examplesStr, isInstruct) {
 
     const exampleSeparator = power_user.context.example_separator ? `${substituteParams(power_user.context.example_separator)}\n` : '';
     const blockHeading = (main_api === 'openai' || isInstruct) ? '<START>\n' : exampleSeparator;
-    const splitExamples = examplesStr.split(/<START>/gi).slice(1).map(block => `${blockHeading}${block.trim()}\n`);
+    const splitExamples = examplesStr.split(/<START>/gi).slice(1).map((block: string) => `${blockHeading}${block.trim()}\n`);
 
     return splitExamples;
 }
@@ -3505,7 +3507,7 @@ class StreamingProcessor {
     reasoningSignature: string | null = null;
     stoppingStrings: any;
 
-    constructor(type, forceName2, timeStarted, continueMessage, promptReasoning) {
+    constructor(type: string, forceName2: boolean, timeStarted: Date, continueMessage: string, promptReasoning: any) {
         this.result = '';
         this.messageId = -1;
         /** @type {HTMLElement} */
@@ -3517,7 +3519,7 @@ class StreamingProcessor {
         /** @type {HTMLElement} */
         this.messageTokenCounterDom = null;
         /** @type {HTMLTextAreaElement} */
-        this.sendTextarea = document.querySelector('#send_textarea');
+        this.sendTextarea = document.querySelector('#send_textarea')!;
         this.type = type;
         this.force_name2 = forceName2;
         this.isStopped = false;
@@ -3535,7 +3537,7 @@ class StreamingProcessor {
         this.messageLogprobs = [];
         this.toolCalls = [];
         // Initialize reasoning in its own handler
-        this.reasoningHandler = new ReasoningHandler(timeStarted);
+        this.reasoningHandler = new ReasoningHandler(timeStarted as any);
         /** @type {PromptReasoning} */
         this.promptReasoning = promptReasoning;
         /** @type {string[]} */
@@ -3549,12 +3551,12 @@ class StreamingProcessor {
      * @param {number} messageId Current message ID
      * @param {boolean?} continueOnReasoning If continuing on reasoning
      */
-    async #checkDomElements(messageId, continueOnReasoning = null) {
+    async #checkDomElements(messageId: number, continueOnReasoning: boolean | null = null) {
         if (this.messageDom === null || this.messageTextDom === null) {
             this.messageDom = document.querySelector(`#chat .mes[mesid="${messageId}"]`);
-            this.messageTextDom = this.messageDom?.querySelector('.mes_text');
-            this.messageTimerDom = this.messageDom?.querySelector('.mes_timer');
-            this.messageTokenCounterDom = this.messageDom?.querySelector('.tokenCounterDisplay');
+            this.messageTextDom = this.messageDom?.querySelector('.mes_text') ?? null;
+            this.messageTimerDom = this.messageDom?.querySelector('.mes_timer') ?? null;
+            this.messageTokenCounterDom = this.messageDom?.querySelector('.tokenCounterDisplay') ?? null;
         }
         if (continueOnReasoning) {
             await this.reasoningHandler.process(messageId, false, this.promptReasoning);
@@ -3577,7 +3579,7 @@ class StreamingProcessor {
         (unblockGeneration as any)();
     }
 
-    async onStartStreaming(text) {
+    async onStartStreaming(text: string) {
         const continueOnReasoning = !!(this.type === 'continue' && this.promptReasoning.prefixReasoning);
         if (continueOnReasoning) {
             this.reasoningHandler.initContinue(this.promptReasoning);
@@ -3599,7 +3601,7 @@ class StreamingProcessor {
         return messageId;
     }
 
-    async onProgressStreaming(messageId, text, isFinal) {
+    async onProgressStreaming(messageId: number, text: string, isFinal: boolean) {
         const isImpersonate = this.type == 'impersonate';
         const isContinue = this.type == 'continue';
 
@@ -3653,7 +3655,7 @@ class StreamingProcessor {
 
             // Token count update.
             const tokenCountText = this.reasoningHandler.reasoning + processedText;
-            const currentTokenCount = isFinal && power_user.message_token_count_enabled ? await getTokenCountAsync(tokenCountText, 0) : 0;
+            const currentTokenCount = isFinal && power_user.message_token_count_enabled ? await getTokenCountAsync(tokenCountText, 0 as any) : 0;
             if (currentTokenCount) {
                 chat[messageId].extra.token_count = currentTokenCount;
                 if (this.messageTokenCounterDom instanceof HTMLElement) {
@@ -3690,8 +3692,8 @@ class StreamingProcessor {
 
             const timePassed = formatGenerationTimer(this.timeStarted, currentTime, currentTokenCount, this.reasoningHandler.getDuration(), this.timeToFirstToken);
             if (this.messageTimerDom instanceof HTMLElement) {
-                this.messageTimerDom.textContent = timePassed.timerValue;
-                this.messageTimerDom.title = timePassed.timerTitle;
+                this.messageTimerDom.textContent = timePassed.timerValue ?? '';
+                this.messageTimerDom.title = timePassed.timerTitle ?? '';
             }
 
             this.setFirstSwipe(messageId);
@@ -3711,7 +3713,7 @@ class StreamingProcessor {
      * @param {Object} options - Additional options for finalization.
      * @param {boolean} options.unlockUI - Whether to unlock the generation UI.
      */
-    async finalizeIntermediaryMessage(messageId, text, { unlockUI = true }) {
+    async finalizeIntermediaryMessage(messageId: number, text: string, { unlockUI = true }: any) {
         await this.onProgressStreaming(messageId, text, true);
         const messageElement = chatElement.find(`.mes[mesid="${messageId}"]`);
         const message = chat[messageId];
@@ -3741,7 +3743,7 @@ class StreamingProcessor {
 
         if (Array.isArray(this.images) && this.images.length > 0) {
             await processImageAttachment(message, { imageUrls: this.images });
-            appendMediaToMessage(message, $(this.messageDom));
+            appendMediaToMessage(message, $(this.messageDom as HTMLElement));
         }
 
         // Store reasoning signature for models that support multi-turn context
@@ -3761,10 +3763,10 @@ class StreamingProcessor {
             await eventSource.emit(event_types.IMPERSONATE_READY, text);
         }
 
-        updateSwipeCounter(messageId, { message, messageElement });
+        updateSwipeCounter(messageId, { message, messageElement: messageElement as any });
     }
 
-    async onFinishStreaming(messageId, text) {
+    async onFinishStreaming(messageId: number, text: string) {
         await this.finalizeIntermediaryMessage(messageId, text, { unlockUI: true });
 
         const isAborted = this.abortController.signal.aborted;
@@ -3789,7 +3791,7 @@ class StreamingProcessor {
         }
     }
 
-    setFirstSwipe(messageId) {
+    setFirstSwipe(messageId: number) {
         if (this.type !== 'swipe' && this.type !== 'impersonate') {
             if (Array.isArray(chat[messageId].swipes) && chat[messageId].swipes.length === 1 && chat[messageId].swipe_id === 0) {
                 chat[messageId].swipes[0] = chat[messageId].mes;
@@ -3880,7 +3882,7 @@ class StreamingProcessor {
  * @param {string} [prefill] Prefill for the prompt.
  * @returns {string | object[]} Prompt ready for use in generation. If using TC, this will be a string. If using CC, this will be an array of chat-style messages.
  */
-export function createRawPrompt(prompt, api, instructOverride, quietToLoud, systemPrompt, prefill) {
+export function createRawPrompt(prompt: any, api: any, instructOverride: any, quietToLoud: any, systemPrompt: any, prefill: any) {
     const isInstruct = power_user.instruct.enabled && api !== 'openai' && api !== 'novel' && !instructOverride;
 
     // If the prompt was given as a string, convert to a message-style object assuming user role
@@ -3929,7 +3931,7 @@ export function createRawPrompt(prompt, api, instructOverride, quietToLoud, syst
     // if text completion, convert to text prompt by concatenating all message contents and adding the prefill as a promptBias.
     if (api !== 'openai') {
         const joiner = isInstruct ? '' : '\n';
-        prompt = prompt.map(message => message.content).join(joiner);
+        prompt = prompt.map((message: any) => message.content).join(joiner);
         prompt = api === 'novel' ? adjustNovelInstructionPrompt(prompt) : prompt;
         prompt = prompt + (isInstruct ? formatInstructModePrompt(name2, false, prefill, name1, name2, true, quietToLoud) : `\n${prefill}`);  // add last line
     }
@@ -3956,7 +3958,7 @@ export function createRawPrompt(prompt, api, instructOverride, quietToLoud, syst
  * @param {GenerateRawParams} params Parameters for generating a message
  * @returns {Promise<object | string>} Raw API response data, or a JSON string extracted from the response when `jsonSchema` is provided.
  */
-export async function generateRawData({ prompt = '', api = null, instructOverride = false, quietToLoud = false, systemPrompt = '', responseLength = null, prefill = '', jsonSchema = null } = {}) {
+export async function generateRawData({ prompt = '', api = null as string | null, instructOverride = false, quietToLoud = false, systemPrompt = '', responseLength = null as number | null, prefill = '', jsonSchema = null }: any = {}) {
     if (!api) {
         api = main_api;
     }
@@ -4109,7 +4111,7 @@ export async function generateRaw({ prompt = '', api = null, instructOverride = 
 
 class TempResponseLength {
     static #originalResponseLength = -1;
-    static #lastApi = null;
+    static #lastApi: string | null = null;
 
     static isCustomized() {
         return this.#originalResponseLength > -1;
@@ -4120,7 +4122,7 @@ class TempResponseLength {
      * @param {string} api API identifier
      * @param {number} responseLength New response length
      */
-    static save(api, responseLength) {
+    static save(api: string, responseLength: number) {
         if (api === 'openai') {
             this.#originalResponseLength = oai_settings.openai_max_tokens;
             oai_settings.openai_max_tokens = responseLength;
@@ -4138,7 +4140,7 @@ class TempResponseLength {
      * @param {string|null} api API identifier
      * @returns {void}
      */
-    static restore(api) {
+    static restore(api: string | null) {
         if (this.#originalResponseLength === -1) {
             return;
         }
@@ -4161,7 +4163,7 @@ class TempResponseLength {
      * @param {string} api API identifier
      * @returns {function(): void} Event hook function
      */
-    static setupEventHook(api) {
+    static setupEventHook(api: string) {
         const eventHook = () => {
             if (this.isCustomized()) {
                 this.restore(api);
@@ -4185,7 +4187,7 @@ class TempResponseLength {
      * @param {string} api API identifier
      * @param {function(): void} eventHook Previously set up event hook
      */
-    static removeEventHook(api, eventHook) {
+    static removeEventHook(api: string, eventHook: () => void) {
         switch (api) {
             case 'openai':
                 eventSource.removeListener(event_types.CHAT_COMPLETION_SETTINGS_READY, eventHook);
@@ -4244,7 +4246,7 @@ function removeLastMessage() {
  * @param {boolean} dryRun Whether to actually generate a message or just assemble the prompt
  * @returns {Promise<any>} Returns a promise that resolves when the text is done generating.
  */
-export async function Generate(type, { automatic_trigger, force_name2, quiet_prompt, quietToLoud, skipWIAN, force_chid, signal, quietImage, quietName, jsonSchema = null, depth = 0 }: any = {}, dryRun = false) {
+export async function Generate(type: string, { automatic_trigger, force_name2, quiet_prompt, quietToLoud, skipWIAN, force_chid, signal, quietImage, quietName, jsonSchema = null, depth = 0 }: any = {}, dryRun = false) {
     console.log('Generate entered');
     setGenerationProgress(0);
     generation_started = new Date();
@@ -4307,13 +4309,13 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
     if (selected_group && !is_group_generating) {
         if (!dryRun) {
             // Returns the promise that generateGroupWrapper returns; resolves when generation is done
-            return generateGroupWrapper(false, type, { quiet_prompt, force_chid, signal: abortController.signal, quietImage, jsonSchema });
+            return generateGroupWrapper(false, type as any, { quiet_prompt, force_chid, signal: abortController.signal, quietImage, jsonSchema });
         }
 
         const characterIndexMap = new Map(characters.map((char, index) => [char.avatar, index]));
         const group = groups.find((x) => x.id === selected_group);
 
-        const enabledMembers = group.members.reduce((acc, member) => {
+        const enabledMembers = group.members.reduce((acc: any[], member: string) => {
             if (!group.disabled_members.includes(member) && !acc.includes(member)) {
                 acc.push(member);
             }
@@ -4321,8 +4323,8 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         }, []);
 
         const memberIds = enabledMembers
-            .map((member) => characterIndexMap.get(member))
-            .filter((index) => index !== undefined && index !== null);
+            .map((member: string) => characterIndexMap.get(member))
+            .filter((index: number | undefined) => index !== undefined && index !== null);
 
         if (memberIds.length > 0) {
             if (menu_type != 'character_edit') setCharacterId(memberIds[0]);
@@ -4437,8 +4439,8 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         });
     } else {
         const depthPromptText = charDepthPrompt || '';
-        const depthPromptDepth = characters[this_chid]?.data?.extensions?.depth_prompt?.depth ?? depth_prompt_depth_default;
-        const depthPromptRole = getExtensionPromptRoleByName(characters[this_chid]?.data?.extensions?.depth_prompt?.role ?? depth_prompt_role_default);
+        const depthPromptDepth = characters[Number(this_chid)]?.data?.extensions?.depth_prompt?.depth ?? depth_prompt_depth_default;
+        const depthPromptRole = getExtensionPromptRoleByName(characters[Number(this_chid)]?.data?.extensions?.depth_prompt?.role ?? depth_prompt_role_default);
         setExtensionPrompt(inject_ids.DEPTH_PROMPT, depthPromptText, extension_prompt_types.IN_CHAT, depthPromptDepth, extension_settings.note.allowWIScan, depthPromptRole);
     }
 
@@ -4697,7 +4699,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
     }
 
     // Inject all Depth prompts. Chat Completion does it separately
-    let injectedIndices = [];
+    let injectedIndices: any[] = [];
     if (main_api !== 'openai') {
         injectedIndices = await doChatInject(coreChat, isContinue);
     }
@@ -4784,8 +4786,8 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         userAlignmentMessage = formatMessageHistoryItem(alignmentMessage, isInstruct, force_output_sequence.FIRST);
     }
 
-    let oaiMessages = [];
-    let oaiMessageExamples = [];
+    let oaiMessages: any[] = [];
+    let oaiMessageExamples: any[] = [];
 
     if (main_api === 'openai') {
         oaiMessages = setOpenAIMessages(coreChat);
@@ -4814,7 +4816,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
     }
 
     // Force pinned examples into the context
-    let pinExmString;
+    let pinExmString: string | undefined;
     if (power_user.pin_examples) {
         pinExmString = examplesString = mesExamplesArray.join('');
     }
@@ -4893,8 +4895,8 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
     }
 
     // Unsparse the array. Adjust injected indices
-    const newArrMes = [];
-    const newInjectedIndices = [];
+    const newArrMes: any[] = [];
+    const newInjectedIndices: any[] = [];
     for (let i = 0; i < arrMes.length; i++) {
         if (arrMes[i] !== undefined) {
             newArrMes.push(arrMes[i]);
@@ -4926,7 +4928,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         }
     }
 
-    let mesSend = [];
+    let mesSend: any[] = [];
     console.debug('calling runGenerate');
 
     if (isContinue) {
@@ -4982,7 +4984,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         }
     }
 
-    function modifyLastPromptLine(lastMesString) {
+    function modifyLastPromptLine(lastMesString: string) {
         //#########QUIET PROMPT STUFF PT2##############
 
         // Add quiet generation prompt at depth 0
@@ -5086,7 +5088,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
     // For prompt bit itemization
     let mesSendString = '';
 
-    async function getCombinedPrompt(isNegative) {
+    async function getCombinedPrompt(isNegative: boolean) {
         // Only return if the guidance scale doesn't exist or the value is 1
         // Also don't return if constructing the neutral prompt
         if (isNegative && !useCfgPrompt) {
@@ -5099,7 +5101,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         }
 
         // Deep clone
-        let finalMesSend = structuredClone(mesSend);
+        let finalMesSend: any[] = structuredClone(mesSend);
 
         if (useCfgPrompt) {
             const cfgPrompt = getCfgPrompt(cfgGuidanceScale, isNegative);
@@ -5201,14 +5203,14 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
     finalPrompt = eventData.prompt;
 
     let maxLength = Number(amount_gen); // how many tokens the AI will be requested to generate
-    let thisPromptBits = [];
+    let thisPromptBits: any[] = [];
 
-    let generate_data;
+    let generate_data: any;
     switch (main_api) {
         case 'koboldhorde':
         case 'kobold':
             if (main_api == 'koboldhorde' && horde_settings.auto_adjust_response_length) {
-                maxLength = Math.min(maxLength, adjustedParams.maxLength);
+                maxLength = Math.min(maxLength, adjustedParams?.maxLength ?? maxLength);
                 maxLength = Math.max(maxLength, MIN_LENGTH); // prevent validation errors
             }
 
@@ -5283,7 +5285,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
      * @returns {Promise<void|*|Awaited<*>|String|{fromStream}|string|undefined|Object>}
      * @throws {Error|object} Error with message text, or Error with response JSON (OAI/Horde), or the actual response JSON (novel|textgenerationwebui|kobold)
      */
-    async function finishGenerating() {
+    async function finishGenerating(): Promise<any> {
         if (power_user.console_log_prompts) {
             console.log(generate_data.prompt);
         }
@@ -5329,7 +5331,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
         };
 
         //console.log(additionalPromptStuff);
-        const itemizedIndex = itemizedPrompts.findIndex((item) => item.mesId === additionalPromptStuff.mesId);
+        const itemizedIndex = itemizedPrompts.findIndex((item: any) => item.mesId === additionalPromptStuff.mesId);
 
         if (itemizedIndex !== -1) {
             itemizedPrompts[itemizedIndex] = additionalPromptStuff;
@@ -5415,7 +5417,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
      * @returns {Promise<String|{fromStream}|*|string|string|void|Awaited<*>|undefined>}
      * @throws {Error} Throws an error if the response data contains an error message
      */
-    async function onSuccess(data) {
+    async function onSuccess(data: any): Promise<any> {
         if (!data) return;
 
         if (data?.fromStream) {
@@ -5544,7 +5546,7 @@ export async function Generate(type, { automatic_trigger, force_name2, quiet_pro
      * @param {Error|object} exception Error or response JSON
      * @throws {Error|object} Re-throws the exception
      */
-    function onError(exception) {
+    function onError(exception: any) {
         // if the response JSON was thrown (novel|textgenerationwebui|kobold), show the error message
         if (typeof exception?.error?.message === 'string') {
             toastr.error(exception.error.message, t`Text generation error`, { timeOut: 10000, extendedTimeOut: 20000 });
@@ -5582,7 +5584,7 @@ export function stopGeneration() {
  * @param {boolean} isContinue Whether the generation is a continuation. If true, the extension prompts of depth 0 are injected at position 1.
  * @returns {Promise<number[]>} Array of indices where the extension prompts were injected
  */
-async function doChatInject(messages, isContinue) {
+async function doChatInject(messages: any[], isContinue: boolean) {
     const injectedMessages = [];
     let totalInsertedMessages = 0;
     messages.reverse();
@@ -5601,7 +5603,7 @@ async function doChatInject(messages, isContinue) {
         const wrap = false;
 
         for (const role of roles) {
-            const extensionPrompt = String(await getExtensionPrompt(extension_prompt_types.IN_CHAT, i, separator, role, wrap)).trimStart();
+            const extensionPrompt = String(await getExtensionPrompt(extension_prompt_types.IN_CHAT, i as any, separator, role as any, wrap)).trimStart();
             const isNarrator = role === extension_prompt_roles.SYSTEM;
             const isUser = role === extension_prompt_roles.USER;
             const name = names[role];
@@ -5647,7 +5649,7 @@ function flushWIInjections() {
  * Unblocks the UI after a generation is complete.
  * @param {string} [type] Generation type (optional)
  */
-function unblockGeneration(type) {
+function unblockGeneration(type: any) {
     // Don't unblock if a parallel stream is still running
     if (type === 'quiet' && streamingProcessor && !streamingProcessor.isFinished) {
         return;
@@ -5660,7 +5662,7 @@ function unblockGeneration(type) {
     flushWIInjections();
 }
 
-export function getNextMessageId(type) {
+export function getNextMessageId(type: string) {
     return type == 'swipe' ? chat.length - 1 : chat.length;
 }
 
@@ -5670,7 +5672,7 @@ export function getNextMessageId(type) {
  * @param {boolean} isImpersonate Is the user impersonation
  * @returns {boolean} Whether the message should be auto-continued
  */
-export function shouldAutoContinue(messageChunk, isImpersonate) {
+export function shouldAutoContinue(messageChunk: string, isImpersonate: boolean) {
     if (!power_user.auto_continue.enabled) {
         console.debug('Auto-continue is disabled by user.');
         return false;
@@ -5737,7 +5739,7 @@ export function shouldAutoContinue(messageChunk, isImpersonate) {
  * @param {string} messageChunk Current message chunk
  * @param {boolean} isImpersonate Is the user impersonation
  */
-export function triggerAutoContinue(messageChunk, isImpersonate) {
+export function triggerAutoContinue(messageChunk: string, isImpersonate: boolean) {
     if (selected_group) {
         console.debug('Auto-continue is disabled for group chat');
         return;
@@ -5748,7 +5750,7 @@ export function triggerAutoContinue(messageChunk, isImpersonate) {
     }
 }
 
-export function getBiasStrings(textareaText, type) {
+export function getBiasStrings(textareaText: string, type: string) {
     if (type == 'impersonate' || type == 'continue') {
         return { messageBias: '', promptBias: '', isUserPromptBias: false };
     }
@@ -5787,7 +5789,7 @@ export function getBiasStrings(textareaText, type) {
  * @param {boolean} isInstruct Whether instruct mode is enabled.
  * @param {boolean|number} forceOutputSequence Whether to force the first/last output sequence for instruct mode.
  */
-function formatMessageHistoryItem(chatItem, isInstruct, forceOutputSequence) {
+function formatMessageHistoryItem(chatItem: any, isInstruct: boolean, forceOutputSequence: any) {
     const isNarratorType = chatItem?.extra?.type === system_message_types.NARRATOR;
     const characterName = chatItem?.name ? chatItem.name : name2;
     const itemName = chatItem.is_user ? chatItem.name : characterName;
@@ -5814,7 +5816,7 @@ function formatMessageHistoryItem(chatItem, isInstruct, forceOutputSequence) {
  * @param {string} str String to remove macros from.
  * @returns {string} String with macros removed.
  */
-export function removeMacros(str) {
+export function removeMacros(str: string) {
     return (str ?? '').replace(/\{\{[\s\S]*?\}\}/gm, '').trim();
 }
 
@@ -5828,7 +5830,7 @@ export function removeMacros(str) {
  * @param {string} [avatar] Avatar of the user sending the message. Defaults to user_avatar.
  * @returns {Promise<any>} A promise that resolves to the message when it is inserted.
  */
-export async function sendMessageAsUser(messageText, messageBias, insertAt = null, compact = false, name = name1, avatar = user_avatar) {
+export async function sendMessageAsUser(messageText: string, messageBias: string, insertAt: number | null = null, compact = false, name = name1, avatar = user_avatar) {
     messageText = getRegexedString(messageText, regex_placement.USER_INPUT);
 
     const message = {
@@ -5843,7 +5845,7 @@ export async function sendMessageAsUser(messageText, messageBias, insertAt = nul
     };
 
     if (power_user.message_token_count_enabled) {
-        (message.extra as any).token_count = await getTokenCountAsync(message.mes, 0);
+        (message.extra as any).token_count = await getTokenCountAsync(message.mes, 0 as any);
     }
 
     // Lock user avatar to a persona.
@@ -5943,11 +5945,11 @@ export function getMaxPromptTokens(overrideResponseLength = null) {
     return getMaxContextTokens() - (overrideResponseLength || getMaxResponseTokens());
 }
 
-function parseTokenCounts(counts, thisPromptBits) {
+function parseTokenCounts(counts: any, thisPromptBits: any[]) {
     /**
      * @param {any[]} numbers
      */
-    function getSum(...numbers) {
+    function getSum(...numbers: any[]) {
         return numbers.map(x => Number(x)).filter(x => !Number.isNaN(x)).reduce((acc, val) => acc + val, 0);
     }
     const total = getSum(Object.values(counts));
@@ -5967,13 +5969,13 @@ function parseTokenCounts(counts, thisPromptBits) {
     });
 }
 
-function addChatsPreamble(mesSendString) {
+function addChatsPreamble(mesSendString: string) {
     return main_api === 'novel'
         ? substituteParams(nai_settings.preamble) + '\n' + mesSendString
         : mesSendString;
 }
 
-function addChatsSeparator(mesSendString) {
+function addChatsSeparator(mesSendString: string) {
     if (power_user.context.chat_start) {
         return substituteParams(power_user.context.chat_start + '\n') + mesSendString;
     } else {
@@ -5999,11 +6001,11 @@ export async function duplicateCharacter({ avatar = null, silent = false } = {})
         }
         targetAvatar = avatar;
     } else {
-        if (this_chid === undefined || !characters[this_chid]) {
+        if (this_chid === undefined || !characters[Number(this_chid)]) {
             toastr.warning(t`You must first select a character to duplicate!`);
             return '';
         }
-        targetAvatar = characters[this_chid].avatar;
+        targetAvatar = characters[Number(this_chid)].avatar;
     }
 
     // Show confirmation unless silent
@@ -6037,7 +6039,7 @@ export async function duplicateCharacter({ avatar = null, silent = false } = {})
     return data.path;
 }
 
-function setInContextMessages(msgInContextCount, type) {
+function setInContextMessages(msgInContextCount: number, type: string) {
     chatElement.find('.mes').removeClass('lastInContext');
 
     if (type === 'swipe' || type === 'regenerate' || type === 'continue') {
@@ -6070,7 +6072,7 @@ function setInContextMessages(msgInContextCount, type) {
  * @returns {Promise<object>} Response data from the API
  * @throws {Error|object}
  */
-export async function sendGenerationRequest(type, data, options = {}) {
+export async function sendGenerationRequest(type: string, data: any, options: any = {}) {
     if (main_api === 'openai') {
         return await sendOpenAIRequest(type, data.prompt, abortController.signal, options);
     }
@@ -6101,7 +6103,7 @@ export async function sendGenerationRequest(type, data, options = {}) {
  * @param {AdditionalRequestOptions} [options] Additional options for the generation request
  * @returns {Promise<any>} Streaming generator
  */
-export async function sendStreamingRequest(type, data, options = {}) {
+export async function sendStreamingRequest(type: string, data: any, options: any = {}) {
     if (abortController?.signal?.aborted) {
         throw new Error('Generation was aborted.');
     }
@@ -6126,7 +6128,7 @@ export async function sendStreamingRequest(type, data, options = {}) {
  * @returns {string} Generation URL
  * @throws {Error} If the API is unknown
  */
-export function getGenerateUrl(api) {
+export function getGenerateUrl(api: string) {
     switch (api) {
         case 'kobold':
             return '/api/backends/kobold/generate';
@@ -6141,7 +6143,7 @@ export function getGenerateUrl(api) {
     }
 }
 
-function extractTitleFromData(data) {
+function extractTitleFromData(data: any) {
     if (main_api == 'koboldhorde') {
         return data.workerName;
     }
@@ -6157,19 +6159,19 @@ function extractTitleFromData(data) {
  * @param {string} [options.chatCompletionSource] Chat completion source
  * @returns {string[]} Extracted images or empty array
  */
-function extractImagesFromData(data, { mainApi = null, chatCompletionSource = null } = {}) {
+function extractImagesFromData(data: any, { mainApi = null, chatCompletionSource = null } = {}) {
     switch (mainApi ?? main_api) {
         case 'openai': {
             switch (chatCompletionSource ?? oai_settings.chat_completion_source) {
                 case chat_completion_sources.VERTEXAI:
                 case chat_completion_sources.MAKERSUITE: {
-                    const inlineData = data?.responseContent?.parts?.filter(x => x.inlineData && !x.thought)?.map(x => x.inlineData);
+                    const inlineData = data?.responseContent?.parts?.filter((x: any) => x.inlineData && !x.thought)?.map((x: any) => x.inlineData);
                     if (Array.isArray(inlineData) && inlineData.length > 0) {
                         return inlineData.map(x => `data:${x.mimeType};base64,${x.data}`).filter(isDataURL);
                     }
                 } break;
                 case chat_completion_sources.OPENROUTER: {
-                    const imageUrl = data?.choices[0]?.message?.images?.filter(x => x.type === 'image_url')?.map(x => x?.image_url?.url);
+                    const imageUrl = data?.choices[0]?.message?.images?.filter((x: any) => x.type === 'image_url')?.map((x: any) => x?.image_url?.url);
                     if (Array.isArray(imageUrl) && imageUrl.length > 0) {
                         return imageUrl.filter(isDataURL);
                     }
@@ -6189,7 +6191,7 @@ function extractImagesFromData(data, { mainApi = null, chatCompletionSource = nu
  * @param {object} data - response data containing all tokens/logprobs
  * @param {string} continueFrom - for 'continue' generations, the prompt
  *  */
-function parseAndSaveLogprobs(data, continueFrom) {
+function parseAndSaveLogprobs(data: any, continueFrom: string) {
     /** @type {import('./scripts/logprobs.js').TokenLogprobs[] | null} */
     let logprobs = null;
 
@@ -6206,7 +6208,7 @@ function parseAndSaveLogprobs(data, continueFrom) {
         case 'textgenerationwebui':
             switch (textgen_settings.type) {
                 case textgen_types.LLAMACPP: {
-                    logprobs = data?.completion_probabilities?.map(x => parseTextgenLogprobs(x.content, [x])) || null;
+                    logprobs = data?.completion_probabilities?.map((x: any) => parseTextgenLogprobs(x.content, [x])) || null;
                 } break;
                 case textgen_types.KOBOLDCPP:
                 case textgen_types.VLLM:
@@ -6230,7 +6232,7 @@ function parseAndSaveLogprobs(data, continueFrom) {
  * @param {string} activeApi If it's set, ignores active API
  * @returns {string} Extracted message
  */
-export function extractMessageFromData(data, activeApi = null) {
+export function extractMessageFromData(data: any, activeApi: string | null = null) {
     function getResult() {
         if (typeof data === 'string') {
             return data;
@@ -6246,14 +6248,14 @@ export function extractMessageFromData(data, activeApi = null) {
             case 'novel':
                 return data.output;
             case 'openai':
-                return data?.content?.filter(p => p.type === 'text')?.map(p => p.text)?.join('\n\n') ?? data?.choices?.[0]?.message?.content ?? data?.choices?.[0]?.text ?? data?.text ?? data?.message?.content?.[0]?.text ?? data?.message?.tool_plan ?? '';
+                return data?.content?.filter((p: any) => p.type === 'text')?.map((p: any) => p.text)?.join('\n\n') ?? data?.choices?.[0]?.message?.content ?? data?.choices?.[0]?.text ?? data?.text ?? data?.message?.content?.[0]?.text ?? data?.message?.tool_plan ?? '';
             default:
                 return '';
         }
     }
 
     const result = getResult();
-    return Array.isArray(result) ? result.map(x => x.text).filter(x => x).join('') : result;
+    return Array.isArray(result) ? result.map((x: any) => x.text).filter(x => x).join('') : result;
 }
 
 /**
@@ -6265,11 +6267,11 @@ export function extractMessageFromData(data, activeApi = null) {
  * @param {boolean} [options.returnInvalidJson=false] Whether to return the raw JSON string even if it fails to parse
  * @returns {string} Extracted JSON string from the response data
  */
-export function extractJsonFromData(data, { mainApi = null, chatCompletionSource = null, returnInvalidJson = false } = {}) {
+export function extractJsonFromData(data: any, { mainApi = null, chatCompletionSource = null, returnInvalidJson = false }: any = {}) {
     mainApi = mainApi ?? main_api;
     chatCompletionSource = chatCompletionSource ?? oai_settings.chat_completion_source;
 
-    const tryParse = (/** @type {string} */ value) => {
+    const tryParse = (/** @type {string} */ value: string) => {
         try {
             return JSON.parse(value);
         } catch (e) {
@@ -6283,7 +6285,7 @@ export function extractJsonFromData(data, { mainApi = null, chatCompletionSource
             const text = extractMessageFromData(data, mainApi);
             switch (chatCompletionSource) {
                 case chat_completion_sources.CLAUDE:
-                    result = data?.content?.find(x => x.type === 'tool_use')?.input;
+                    result = data?.content?.find((x: any) => x.type === 'tool_use')?.input;
                     break;
                 case chat_completion_sources.PERPLEXITY:
                     result = tryParse(removeReasoningFromString(text));
@@ -6327,8 +6329,8 @@ export function extractJsonFromData(data, { mainApi = null, chatCompletionSource
  * @param {string} type Type of generation
  * @returns {string[]} Array of extra swipes
  */
-function extractMultiSwipes(data, type) {
-    const swipes = [];
+function extractMultiSwipes(data: any, type: string) {
+    const swipes: any[] = [];
 
     if (!data) {
         return swipes;
@@ -6475,7 +6477,7 @@ export function cleanUpMessage({ getMessage, isImpersonate, isContinue, displayI
         getMessage = getMessage.substring(0, getMessage.indexOf('<|endoftext|>'));
     }
     const isInstruct = power_user.instruct.enabled && main_api !== 'openai';
-    const isNotEmpty = (str) => str && str.trim() !== '';
+    const isNotEmpty = (str: string) => str && str.trim() !== '';
     if (isInstruct && power_user.instruct.stop_sequence) {
         if (getMessage.indexOf(power_user.instruct.stop_sequence) != -1) {
             getMessage = getMessage.substring(0, getMessage.indexOf(power_user.instruct.stop_sequence));
@@ -6497,7 +6499,7 @@ export function cleanUpMessage({ getMessage, isImpersonate, isContinue, displayI
             { value: power_user.instruct.last_output_sequence, apply: !isImpersonate && isNotEmpty(power_user.instruct.last_output_sequence) },
         ];
         for (const seq of sequences.filter(s => s.apply)) {
-            seq.value.split('\n').filter(line => line.trim() !== '').forEach(line => { getMessage = getMessage.replaceAll(line, ''); });
+            seq.value.split('\n').filter((line: string) => line.trim() !== '').forEach((line: string) => { getMessage = getMessage.replaceAll(line, ''); });
         }
     }
 
@@ -6556,7 +6558,7 @@ export function cleanUpMessage({ getMessage, isImpersonate, isContinue, displayI
  *
  * @returns {Promise<void>}
  */
-async function processImageAttachment(message, { imageUrls }) {
+async function processImageAttachment(message: any, { imageUrls }: any) {
     if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
         return;
     }
@@ -6569,7 +6571,8 @@ async function processImageAttachment(message, { imageUrls }) {
         let url = imageUrl;
         if (isDataURL(url)) {
             const fileName = `inline_image_${Date.now().toString()}_${index}`;
-            const [mime, base64] = /^data:(.*?);base64,(.*)$/.exec(imageUrl).slice(1);
+            const match = /^data:(.*?);base64,(.*)$/.exec(imageUrl);
+            const [, mime, base64] = match ?? ['', '', ''];
             url = await saveBase64AsFile(base64, message.name, fileName, mime.split('/')[1]);
         }
         saveImageToMessage({ image: url, inline: true }, message);
@@ -6595,7 +6598,7 @@ async function processImageAttachment(message, { imageUrls }) {
  * @property {string} type Type of generation
  * @property {string} getMessage Generated message
  */
-export async function saveReply({ type, getMessage, fromStreaming = false, title = '', swipes = [], reasoning = '', imageUrls = [], reasoningSignature = null }) {
+export async function saveReply({ type, getMessage, fromStreaming = false, title = '', swipes = [], reasoning = '', imageUrls = [], reasoningSignature = null }: any) {
     // Backward compatibility
     if (arguments.length > 1 && typeof arguments[0] !== 'object') {
         console.trace('saveReply called with positional arguments. Please use an object instead.');
@@ -6641,11 +6644,11 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
             await processImageAttachment(lastMessage, { imageUrls });
             if (power_user.message_token_count_enabled) {
                 const tokenCountText = (reasoning || '') + lastMessage.mes;
-                lastMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0);
+lastMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0 as any);
             }
             const chat_id = (chat.length - 1);
             !fromStreaming && await eventSource.emit(event_types.MESSAGE_RECEIVED, chat_id, type);
-            addOneMessage(chat[chat_id], { type: 'swipe' });
+            addOneMessage(chat[chat_id], { type: 'swipe' as any });
             !fromStreaming && await eventSource.emit(event_types.CHARACTER_MESSAGE_RENDERED, chat_id, type);
         } else {
             lastMessage.mes = getMessage;
@@ -6666,11 +6669,11 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
         await processImageAttachment(lastMessage, { imageUrls });
         if (power_user.message_token_count_enabled) {
             const tokenCountText = (reasoning || '') + lastMessage.mes;
-            lastMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0);
+            lastMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0 as any);
         }
         const chat_id = (chat.length - 1);
         !fromStreaming && await eventSource.emit(event_types.MESSAGE_RECEIVED, chat_id, type);
-        addOneMessage(chat[chat_id], { type: 'swipe' });
+        addOneMessage(chat[chat_id], { type: 'swipe' as any });
         !fromStreaming && await eventSource.emit(event_types.CHARACTER_MESSAGE_RENDERED, chat_id, type);
     } else if (type === 'appendFinal') {
         oldMessage = lastMessage.mes;
@@ -6688,11 +6691,11 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
         // We don't know if the reasoning duration extended, so we don't update it here on purpose.
         if (power_user.message_token_count_enabled) {
             const tokenCountText = (reasoning || '') + lastMessage.mes;
-            lastMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0);
+            lastMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0 as any);
         }
         const chat_id = (chat.length - 1);
         !fromStreaming && await eventSource.emit(event_types.MESSAGE_RECEIVED, chat_id, type);
-        addOneMessage(chat[chat_id], { type: 'swipe' });
+        addOneMessage(chat[chat_id], { type: 'swipe' as any });
         !fromStreaming && await eventSource.emit(event_types.CHARACTER_MESSAGE_RENDERED, chat_id, type);
     } else {
         console.debug('entering chat update routine for non-swipe post');
@@ -6717,17 +6720,17 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
 
         if (power_user.message_token_count_enabled) {
             const tokenCountText = (reasoning || '') + newMessage.mes;
-            newMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0);
+            newMessage.extra.token_count = await getTokenCountAsync(tokenCountText, 0 as any);
         }
 
         if (selected_group) {
             console.debug('entering chat update for groups');
             let avatarImg = 'img/ai4.png';
-            if (characters[this_chid].avatar != 'none') {
-                avatarImg = getThumbnailUrl('avatar', characters[this_chid].avatar);
+            if (characters[Number(this_chid)].avatar != 'none') {
+                avatarImg = getThumbnailUrl('avatar', characters[Number(this_chid)].avatar);
             }
             newMessage.force_avatar = avatarImg;
-            newMessage.original_avatar = characters[this_chid].avatar;
+            newMessage.original_avatar = characters[Number(this_chid)].avatar;
             newMessage.extra.gen_id = group_generation_id;
         }
 
@@ -6790,7 +6793,7 @@ export async function saveReply({ type, getMessage, fromStreaming = false, title
  * @param {ChatMessage} message
  * @returns {boolean} true if the message was updated.
  */
-export function ensureSwipes(message) {
+export function ensureSwipes(message: any) {
     let updated = false;
 
     if (!message || typeof message !== 'object') {
@@ -6822,7 +6825,7 @@ export function ensureSwipes(message) {
     });
 
     if (!Array.isArray(message.swipe_info)) {
-        message.swipe_info = message.swipes.map(_ => createSwipeInfo());
+        message.swipe_info = message.swipes.map((_: any) => createSwipeInfo());
         updated = true;
     }
 
@@ -6849,7 +6852,7 @@ export function ensureSwipes(message) {
  * @param {number?} [messageId=null] - The ID of the message to sync with the swipe data. If no ID is given, the last message is used.
  * @returns {boolean} Whether the message was successfully synced
  */
-export function syncMesToSwipe(messageId = null) {
+export function syncMesToSwipe(messageId: number | null = null) {
     if (!chat.length) {
         return false;
     }
@@ -6907,7 +6910,7 @@ export function syncMesToSwipe(messageId = null) {
  * @param {ChatMessage?} [targetMessage=null] - The message object to sync instead of resolving one from `chat`.
  * @returns {boolean} Whether the swipe data was successfully synced to the message
  */
-export function syncSwipeToMes(messageId = null, swipeId = null, targetMessage = null) {
+export function syncSwipeToMes(messageId: number | null = null, swipeId: number | null = null, targetMessage: any = null) {
     if (!targetMessage && !chat.length) {
         return false;
     }
@@ -6945,7 +6948,7 @@ export function syncSwipeToMes(messageId = null, swipeId = null, targetMessage =
 
     // Backfill swipe_info if missing.
     if (!Array.isArray(targetMessage.swipe_info)) {
-        targetMessage.swipe_info = targetMessage.swipes.map(_ => ({
+        targetMessage.swipe_info = targetMessage.swipes.map((_: any) => ({
             send_date: targetMessage.send_date,
             gen_started: void 0,
             gen_finished: void 0,
@@ -6979,7 +6982,7 @@ export function syncSwipeToMes(messageId = null, swipeId = null, targetMessage =
  * @param {ChatMessage} mes Chat message object
  * @typedef {{ image?: string, title?: string, inline?: boolean }} ParsedImage
  */
-function saveImageToMessage(img, mes) {
+function saveImageToMessage(img: any, mes: any) {
     if (mes && img.image) {
         if (!mes.extra || typeof mes.extra !== 'object') {
             mes.extra = {};
@@ -7003,7 +7006,7 @@ export function getGeneratingApi() {
     }
 }
 
-export function getGeneratingModel(mes) {
+export function getGeneratingModel(mes: any) {
     let model = '';
     switch (main_api) {
         case 'kobold':
@@ -7061,13 +7064,13 @@ export function resetChatState() {
  *
  * @param {'characters' | 'character_edit' | 'create' | 'group_edit' | 'group_create'} value
  */
-export function setMenuType(value) {
+export function setMenuType(value: string) {
     menu_type = value;
     // Allow custom CSS to see which menu type is active
-    document.getElementById('right-nav-panel').dataset.menuType = menu_type;
+    document.getElementById('right-nav-panel')!.dataset.menuType = menu_type;
 }
 
-export function setExternalAbortController(controller) {
+export function setExternalAbortController(controller: any) {
     abortController = controller;
 }
 
@@ -7075,7 +7078,7 @@ export function setExternalAbortController(controller) {
  * Sets a character array index.
  * @param {number|string|undefined} value
  */
-export function setCharacterId(value) {
+export function setCharacterId(value: any) {
     switch (typeof value) {
         case 'bigint':
         case 'number':
@@ -7096,7 +7099,7 @@ export function setCharacterId(value) {
     }
 }
 
-export function setCharacterName(value) {
+export function setCharacterName(value: any) {
     name2 = value;
 }
 
@@ -7104,7 +7107,7 @@ export function setCharacterName(value) {
  * Sets the API connection status of the application
  * @param {string|'no_connection'} value Connection status value
  */
-export function setOnlineStatus(value) {
+export function setOnlineStatus(value: any) {
     const previousStatus = online_status;
     online_status = value;
     displayOnlineStatus();
@@ -7113,11 +7116,11 @@ export function setOnlineStatus(value) {
     }
 }
 
-export function setEditedMessageId(value) {
+export function setEditedMessageId(value: any) {
     this_edit_mes_id = value;
 }
 
-export function setSendButtonState(value) {
+export function setSendButtonState(value: any) {
     is_send_press = value;
 }
 
@@ -7148,14 +7151,14 @@ export async function renameCharacter(name = null, { silent = false, renameChats
         return false;
     }
 
-    const oldAvatar = characters[this_chid].avatar;
-    const newValue = name || await callGenericPopup('<h3>' + t`New name:` + '</h3>', POPUP_TYPE.INPUT, characters[this_chid].name);
+    const oldAvatar = characters[Number(this_chid)].avatar;
+    const newValue = name || await callGenericPopup('<h3>' + t`New name:` + '</h3>', POPUP_TYPE.INPUT, characters[Number(this_chid)].name);
 
     if (!newValue) {
         toastr.warning(t`No character name provided.`, t`Rename Character`);
         return false;
     }
-    if (newValue === characters[this_chid].name) {
+    if (newValue === characters[Number(this_chid)].name) {
         toastr.info(t`Same character name provided, so name did not change.`, t`Rename Character`);
         return false;
     }
@@ -7180,14 +7183,14 @@ export async function renameCharacter(name = null, { silent = false, renameChats
             renameTagKey(oldAvatar, newAvatar);
 
             // Additional lore books
-            const charLore = world_info.charLore?.find(x => x.name == oldName);
+            const charLore = world_info.charLore?.find((x: any) => x.name == oldName);
             if (charLore) {
                 charLore.name = newName;
                 saveSettingsDebounced();
             }
 
             // Char-bound Author's Notes
-            const charNote = extension_settings.note.chara?.find(x => x.name == oldName);
+            const charNote = extension_settings.note.chara?.find((x: any) => x.name == oldName);
             if (charNote) {
                 charNote.name = newName;
                 saveSettingsDebounced();
@@ -7258,7 +7261,7 @@ export async function renameCharacter(name = null, { silent = false, renameChats
     return true;
 }
 
-async function renamePastChats(oldAvatar, newAvatar, newName) {
+async function renamePastChats(oldAvatar: any, newAvatar: any, newName: any) {
     const pastChats = await getPastCharacterChats();
 
     for (const { file_name } of pastChats as any[]) {
@@ -7360,7 +7363,7 @@ export async function saveChat({ chatName, withMetadata, mesId, force = false, c
     }
 
     const metadata = { ...chat_metadata, ...(withMetadata || {}) };
-    const fileName = chatName ?? characters[this_chid]?.chat;
+    const fileName = chatName ?? characters[Number(this_chid)]?.chat;
 
     if (!fileName && name2 === neutralCharacterName) {
         // TODO: Do something for a temporary chat with no character.
@@ -7372,7 +7375,7 @@ export async function saveChat({ chatName, withMetadata, mesId, force = false, c
         return;
     }
 
-    characters[this_chid].date_last_chat = Date.now();
+    characters[Number(this_chid)].date_last_chat = Date.now();
 
     const trimmedChat = Array.isArray(chatData)
         ? chatData
@@ -7393,10 +7396,10 @@ export async function saveChat({ chatName, withMetadata, mesId, force = false, c
             cache: 'no-cache',
             headers: getRequestHeaders(),
             body: JSON.stringify({
-                ch_name: characters[this_chid].name,
+                ch_name: characters[Number(this_chid)].name,
                 file_name: fileName,
                 chat: [chatHeader, ...trimmedChat],
-                avatar_url: characters[this_chid].avatar,
+                avatar_url: characters[Number(this_chid)].avatar,
                 force: force,
             }),
         });
@@ -7440,10 +7443,10 @@ export async function saveChat({ chatName, withMetadata, mesId, force = false, c
  * @param {HTMLInputElement} input - The input element containing the avatar file.
  * @returns {Promise<void>}
  */
-async function read_avatar_load(input) {
+async function read_avatar_load(input: HTMLInputElement) {
     if (input.files && input.files[0]) {
         if (selected_button == 'create') {
-            create_save.avatar = input.files;
+            create_save.avatar = input.files as any;
         }
 
         crop_data = undefined;
@@ -7451,7 +7454,7 @@ async function read_avatar_load(input) {
         const fileData = await getBase64Async(file);
 
         if (!power_user.never_resize_avatars) {
-            const dlg = new Popup('Set the crop position of the avatar image', POPUP_TYPE.CROP, '', { cropImage: fileData });
+            const dlg = new Popup('Set the crop position of the avatar image', POPUP_TYPE.CROP, '', { cropImage: fileData as any });
             const croppedImage = await dlg.show();
 
             if (!croppedImage) {
@@ -7471,7 +7474,7 @@ async function read_avatar_load(input) {
         await (createOrEditCharacter as any)();
 
         const formData = new FormData($('#form_create').get(0) as any);
-        const avatarKey = formData.get('avatar_url').toString();
+        const avatarKey = (formData.get('avatar_url') as FormDataEntryValue | null)?.toString() ?? '';
 
         // Bust cache for the avatar thumbnail and character image
         const thumbnailUrl = getThumbnailUrl('avatar', avatarKey);
@@ -7501,11 +7504,11 @@ async function read_avatar_load(input) {
  * @param {boolean} [t=false] Whether to add a cache-busting timestamp to the URL
  * @returns {string} The URL for the thumbnail
  */
-export function getThumbnailUrl(type, file, t = false) {
+export function getThumbnailUrl(type: any, file: string, t = false) {
     return `/thumbnail?type=${type}&file=${encodeURIComponent(file)}${t ? `&t=${Date.now()}` : ''}`;
 }
 
-export function buildAvatarList(block, entities, { templateId = 'inline_avatar_template', empty = true, interactable = false, highlightFavs = true } = {}) {
+export function buildAvatarList(block: any, entities: any[], { templateId = 'inline_avatar_template', empty = true, interactable = false, highlightFavs = true } = {}) {
     if (empty) {
         block.empty();
     }
@@ -7534,7 +7537,7 @@ export function buildAvatarList(block, entities, { templateId = 'inline_avatar_t
         if (entity.type === 'group') {
             const grpTemplate = getGroupAvatar(entity.item);
 
-            avatarTemplate.addClass(grpTemplate.attr('class'));
+            avatarTemplate.addClass(grpTemplate.attr('class') ?? '');
             avatarTemplate.empty();
             avatarTemplate.append(grpTemplate.children());
             avatarTemplate.attr({ 'data-grid': id, 'data-chid': null });
@@ -7560,14 +7563,14 @@ export function buildAvatarList(block, entities, { templateId = 'inline_avatar_t
  * @param {string|undefined} characterId Array index
  * @returns {Promise<void>} Promise that resolves when the character is unshallowed
  */
-export async function unshallowCharacter(characterId) {
+export async function unshallowCharacter(characterId: string | undefined) {
     if (characterId === undefined) {
         console.debug('Undefined character cannot be unshallowed');
         return;
     }
 
     /** @type {Character} */
-    const character = characters[characterId];
+    const character = characters[Number(characterId)];
     if (!character) {
         console.debug('Character not found:', characterId);
         return;
@@ -7596,9 +7599,9 @@ export async function getChat() {
             headers: getRequestHeaders(),
             cache: 'no-cache',
             body: JSON.stringify({
-                ch_name: characters[this_chid].name,
-                file_name: characters[this_chid].chat,
-                avatar_url: characters[this_chid].avatar,
+                ch_name: characters[Number(this_chid)].name,
+                file_name: characters[Number(this_chid)].chat,
+                avatar_url: characters[Number(this_chid)].avatar,
             }),
         });
 
@@ -7622,11 +7625,11 @@ export async function getChat() {
             chat_metadata.integrity = uuidv4();
         }
         await getChatResult();
-        eventSource.emit(event_types.CHAT_LOADED, { detail: { id: this_chid, character: characters[this_chid] } });
+        eventSource.emit(event_types.CHAT_LOADED, { detail: { id: this_chid, character: characters[Number(this_chid)] } });
 
         // Focus on the textarea if not already focused on a visible text input
         delay(debounce_timeout.short).then(() => {
-            if ($(document.activeElement).is('input:visible, textarea:visible')) {
+            if ($(document.activeElement as HTMLElement).is('input:visible, textarea:visible')) {
                 return;
             }
             $('#send_textarea').trigger('click').trigger('focus');
@@ -7638,7 +7641,7 @@ export async function getChat() {
 }
 
 async function getChatResult() {
-    name2 = characters[this_chid].name;
+    name2 = characters[Number(this_chid)].name;
     let freshChat = false;
     if (chat.length === 0) {
         const message = getFirstMessage();
@@ -7664,8 +7667,8 @@ async function getChatResult() {
 }
 
 function getFirstMessage() {
-    const firstMes = characters[this_chid]?.first_mes || '';
-    const alternateGreetings = characters[this_chid]?.data?.alternate_greetings;
+    const firstMes = characters[Number(this_chid)]?.first_mes || '';
+    const alternateGreetings = characters[Number(this_chid)]?.data?.alternate_greetings;
 
     const message = {
         name: name2,
@@ -7697,10 +7700,10 @@ function getFirstMessage() {
     return message;
 }
 
-export async function openCharacterChat(file_name) {
+export async function openCharacterChat(file_name: string) {
     await waitUntilCondition(() => !isChatSaving, debounce_timeout.extended, 10);
     await clearChat({ clearData: true });
-    characters[this_chid].chat = file_name;
+    characters[Number(this_chid)].chat = file_name;
     chat_metadata = {};
     await getChat();
     $('#selected_chat_pole').val(file_name);
@@ -7764,7 +7767,7 @@ export function changeMainAPI(api = null) {
 
     //first, disable everything so the old elements stop showing
     for (const apiName in apiElements) {
-        const apiObj = apiElements[apiName];
+        const apiObj = (apiElements as Record<string, any>)[apiName];
         //do not hide items to then proceed to immediately show them.
         if (selectedVal === apiName) {
             continue;
@@ -7778,7 +7781,7 @@ export function changeMainAPI(api = null) {
 
     //then, find and enable the active item.
     //This is split out of the loop so that different apis can share settings divs
-    let activeItem = apiElements[selectedVal];
+    let activeItem = (apiElements as Record<string, any>)[selectedVal as string];
 
     activeItem.apiStreaming.css('display', 'block');
     activeItem.apiSettings.css('display', 'block');
@@ -7826,7 +7829,7 @@ export function changeMainAPI(api = null) {
     forceCharacterEditorTokenize();
 }
 
-export function setUserName(value, { toastPersonaNameChange = true } = {}) {
+export function setUserName(value: any, { toastPersonaNameChange = true } = {}) {
     name1 = value;
     if (name1 === undefined || name1 == '')
         name1 = default_user_name;
@@ -7838,9 +7841,9 @@ export function setUserName(value, { toastPersonaNameChange = true } = {}) {
     saveSettingsDebounced();
 }
 
-async function doOnboarding(avatarId) {
+async function doOnboarding(avatarId: string) {
     const template = $('#onboarding_template .onboarding');
-    let userName = await callGenericPopup(template, POPUP_TYPE.INPUT, currentUser?.name || name1, { wider: true, cancelButton: false });
+    let userName = await callGenericPopup(template, POPUP_TYPE.INPUT, (currentUser as any)?.name || name1, { wider: true, cancelButton: false }) as any;
 
     if (userName) {
         userName = String(userName).replace('\n', ' ');
@@ -7993,7 +7996,7 @@ export async function getSettings(initLoaderHandle = null) {
         firstRun = !!settings.firstRun;
 
         if (firstRun) {
-            await initLoaderHandle?.hide();
+            await (initLoaderHandle as any)?.hide();
             await doOnboarding(user_avatar);
             firstRun = false;
         }
@@ -8074,7 +8077,7 @@ export async function saveSettings(loopCounter = 0) {
  * Sets the generation parameters from a preset object.
  * @param {{ genamt?: number, max_length?: number }} preset Preset object
  */
-export function setGenerationParamsFromPreset(preset) {
+export function setGenerationParamsFromPreset(preset: any) {
     const needsUnlock = (preset.max_length ?? max_context) > MAX_CONTEXT_DEFAULT || (preset.genamt ?? amount_gen) > MAX_RESPONSE_DEFAULT;
     $('#max_context_unlocked').prop('checked', needsUnlock).trigger('change');
 
@@ -8092,7 +8095,7 @@ export function setGenerationParamsFromPreset(preset) {
 }
 
 // Common code for message editor done and auto-save
-function updateMessage(div) {
+function updateMessage(div: any) {
     const mesBlock = div.closest('.mes_block');
     let text = mesBlock.find('.edit_textarea').val()
         ?? mesBlock.find('.mes_text').text();
@@ -8148,7 +8151,7 @@ function updateMessage(div) {
     return { mesBlock, text, mes, bias };
 }
 
-function openMessageDelete(fromSlashCommand) {
+function openMessageDelete(fromSlashCommand: boolean) {
     closeMessageEditor();
     hideSwipeButtons();
     if (fromSlashCommand || (!is_send_press) || (selected_group && !is_group_generating)) {
@@ -8170,7 +8173,7 @@ function openMessageDelete(fromSlashCommand) {
     is_delete_mode = true;
 }
 
-function messageEditAuto(div) {
+function messageEditAuto(div: any) {
     const { mesBlock, text, mes, bias } = updateMessage(div);
 
     mesBlock.find('.mes_text').val('');
@@ -8192,7 +8195,7 @@ function messageEditAuto(div) {
  * Create the message edit UI.
  * @param {number} editMessageId The ID of the message to edit
  */
-export async function messageEdit(editMessageId) {
+export async function messageEdit(editMessageId: number) {
     const editMessage = chat[editMessageId];
     if (!editMessage) {
         console.warn(`Message with id ${editMessageId} not found in chat array.`);
@@ -8246,7 +8249,7 @@ export async function messageEdit(editMessageId) {
     editTextArea.setSelectionRange(text.length, text.length);
 
     if (Number(this_edit_mes_id) === chat.length - 1) {
-        chatElement.scrollTop(chatScrollPosition);
+        chatElement.scrollTop(chatScrollPosition ?? 0);
     }
 
     updateEditArrowClasses();
@@ -8257,12 +8260,12 @@ export async function messageEdit(editMessageId) {
  * This deletes the user's unsaved changes.
  * @param {number} [messageId=this_edit_mes_id]
  */
-async function messageEditCancel(messageId = this_edit_mes_id) {
-    let text = chat[messageId].mes;
-    let thisMesDiv;
+async function messageEditCancel(this: any, messageId: number = this_edit_mes_id as number) {
+    let text = chat[messageId]?.mes ?? '';
+    let thisMesDiv: any;
     // If this is the button then select it's parent. Otherwise, select by messageId.
-    if (this?.classList?.contains('mes_edit_cancel')) {
-        thisMesDiv = $(this).closest('.mes');
+    if ((this as any)?.classList?.contains('mes_edit_cancel')) {
+        thisMesDiv = $(this as HTMLElement).closest('.mes');
     } else {
         thisMesDiv = chatElement.children('.mes').filter(`[mesid="${messageId}"]`);
     }
@@ -8275,8 +8278,8 @@ async function messageEditCancel(messageId = this_edit_mes_id) {
         .append(messageFormatting(
             text,
             this_edit_mes_chname,
-            chat[messageId].is_system,
-            chat[messageId].is_user,
+            chat[messageId]?.is_system,
+            chat[messageId]?.is_user,
             messageId,
             {},
             false,
@@ -8305,7 +8308,7 @@ async function messageEditCancel(messageId = this_edit_mes_id) {
  * @param {number} targetId Index of the target message
  * @returns {Promise<boolean>} True if the messages were moved, false otherwise
  */
-async function messageEditMove(sourceId, targetId) {
+async function messageEditMove(sourceId: number, targetId: number) {
     if (is_send_press) {
         console.warn(`The message #${sourceId} was not moved to #${targetId} because a generation is in progress.`);
         return false;
@@ -8349,8 +8352,8 @@ async function messageEditMove(sourceId, targetId) {
     return true;
 }
 
-async function messageEditDone(div) {
-    if (!(this_edit_mes_id >= 0)) {
+async function messageEditDone(div: any) {
+    if (!(this_edit_mes_id as number >= 0)) {
         console.trace('this_edit_mes_id cannot be blank when calling messageEditDone.');
         return;
     }
@@ -8358,7 +8361,7 @@ async function messageEditDone(div) {
     let { mesBlock, text, mes, bias } = updateMessage(div);
 
     await eventSource.emit(event_types.MESSAGE_EDITED, this_edit_mes_id);
-    text = chat[this_edit_mes_id]?.mes ?? text;
+    text = chat[this_edit_mes_id as number]?.mes ?? text;
     mesBlock.find('.mes_text').empty();
     mesBlock.find('.mes_edit_buttons').css('display', 'none');
     mesBlock.find('.mes_buttons').css('display', '');
@@ -8399,7 +8402,7 @@ async function messageEditDone(div) {
  * @returns {Promise<Object>} chat_dict - A dictionary where each key is a file_name and the value is the
  * corresponding chat content fetched from the server.
  */
-export async function getChatsFromFiles(data, isGroupChat) {
+export async function getChatsFromFiles(data: any, isGroupChat: boolean) {
     const context = getContext();
     let chat_dict: Record<string, any> = {};    let chat_list = (Object.values(data) as any[]).sort((a, b) => a.file_name.localeCompare(b.file_name)).reverse();
 
@@ -8410,9 +8413,9 @@ export async function getChatsFromFiles(data, isGroupChat) {
                 const requestBody = isGroupChat
                     ? JSON.stringify({ id: file_name })
                     : JSON.stringify({
-                        ch_name: characters[context.characterId].name,
+                        ch_name: characters[context.characterId as any].name,
                         file_name: file_name.replace('.jsonl', ''),
-                        avatar_url: characters[context.characterId].avatar,
+                        avatar_url: characters[context.characterId as any].avatar,
                     });
 
                 const chatResponse = await fetch(endpoint, {
@@ -8457,8 +8460,8 @@ export async function getChatsFromFiles(data, isGroupChat) {
  * in descending order by file name. Returns an empty array if the fetch request is unsuccessful or the
  * response is an object with an `error` property set to `true`.
  */
-export async function getPastCharacterChats(characterId = null) {
-    characterId = characterId ?? parseInt(this_chid);
+export async function getPastCharacterChats(characterId: null | number = null) {
+    characterId = characterId ?? parseInt(this_chid as string);
     if (!characters[characterId]) return [];
 
     const response = await fetch('/api/characters/chats', {
@@ -8484,14 +8487,14 @@ export async function getPastCharacterChats(characterId = null) {
  * Helper for `displayPastChats`, to make the same info consistently available for other functions
  */
 export function getCurrentChatDetails() {
-    if (!characters[this_chid] && !selected_group) {
+    if (!characters[Number(this_chid)] && !selected_group) {
         return { sessionName: '', group: null, characterName: '', avatarImgURL: '' };
     }
 
     const group = selected_group ? groups.find(x => x.id === selected_group) : null;
-    const currentChat = selected_group ? group?.chat_id : characters[this_chid].chat;
-    const displayName = selected_group ? group?.name : characters[this_chid].name;
-    const avatarImg = selected_group ? group?.avatar_url : getThumbnailUrl('avatar', characters[this_chid].avatar);
+    const currentChat = selected_group ? group?.chat_id : characters[Number(this_chid)].chat;
+    const displayName = selected_group ? group?.name : characters[Number(this_chid)].name;
+    const avatarImg = selected_group ? group?.avatar_url : getThumbnailUrl('avatar', characters[Number(this_chid)].avatar);
     return { sessionName: currentChat, group: group, characterName: displayName, avatarImgURL: avatarImg };
 }
 
@@ -8502,7 +8505,7 @@ export function getCurrentChatDetails() {
  * displayed chats based on a search query.
  * @param {string[]} hightlightNames - An array of chat names to highlight
  */
-export async function displayPastChats(hightlightNames = []) {
+export async function displayPastChats(hightlightNames: string[] = []) {
     $('#select_chat_div').empty();
     $('#select_chat_search').val('').off('input');
 
@@ -8513,7 +8516,7 @@ export async function displayPastChats(hightlightNames = []) {
 
     await displayChats('', currentChat, displayName, avatarImg, selected_group, hightlightNames);
 
-    const debouncedDisplay = debounce((searchQuery) => {
+    const debouncedDisplay = debounce((searchQuery: string) => {
         displayChats(searchQuery, currentChat, displayName, avatarImg, selected_group, []);
     });
 
@@ -8532,14 +8535,14 @@ export async function displayPastChats(hightlightNames = []) {
     addChatBackupsBrowser();
 }
 
-async function displayChats(searchQuery, currentChat, displayName, avatarImg, selected_group, highlightNames) {
+async function displayChats(searchQuery: string, currentChat: any, displayName: any, avatarImg: any, selected_group: any, highlightNames: any) {
     try {
         const response = await fetch('/api/chats/search', {
             method: 'POST',
             headers: getRequestHeaders(),
             body: JSON.stringify({
                 query: searchQuery,
-                avatar_url: selected_group ? null : characters[this_chid].avatar,
+                avatar_url: selected_group ? null : characters[Number(this_chid)].avatar,
                 group_id: selected_group || null,
             }),
         });
@@ -8551,7 +8554,7 @@ async function displayChats(searchQuery, currentChat, displayName, avatarImg, se
         const filteredData = await response.json();
         $('#select_chat_div').empty();
 
-        filteredData.sort((a, b) => sortMoments(timestampToMoment(a.last_mes), timestampToMoment(b.last_mes)));
+        filteredData.sort((a: any, b: any) => sortMoments(timestampToMoment(a.last_mes), timestampToMoment(b.last_mes)));
 
         for (const chat of filteredData) {
             const isSelected = currentChat === chat.file_name;
@@ -8572,7 +8575,7 @@ async function displayChats(searchQuery, currentChat, displayName, avatarImg, se
             $('#select_chat_div').append(template);
 
             if (Array.isArray(highlightNames) && highlightNames.includes(chat.file_name)) {
-                const templateOffset = template.offset().top - template.parent().offset().top;
+                const templateOffset = (template.offset()?.top ?? 0) - (template.parent().offset()?.top ?? 0);
                 $('#select_chat_div').scrollTop(templateOffset);
                 flashHighlight(template, debounce_timeout.extended);
             }
@@ -8583,8 +8586,8 @@ async function displayChats(searchQuery, currentChat, displayName, avatarImg, se
     }
 }
 
-export function selectRightMenuWithAnimation(selectedMenuId) {
-    const displayModes = {
+export function selectRightMenuWithAnimation(selectedMenuId: any) {
+    const displayModes: Record<string, string> = {
         'rm_group_chats_block': 'flex',
         'rm_api_block': 'grid',
         'rm_characters_block': 'flex',
@@ -8594,7 +8597,7 @@ export function selectRightMenuWithAnimation(selectedMenuId) {
         $(menu).css('display', 'none');
 
         if (selectedMenuId && selectedMenuId.replace('#', '') === menu.id) {
-            const mode = displayModes[menu.id] ?? 'block';
+            const mode = displayModes[menu.id as string] ?? 'block';
             $(menu).css('display', mode);
             $(menu).css('opacity', 0.0);
             $(menu).transition({
@@ -8607,13 +8610,15 @@ export function selectRightMenuWithAnimation(selectedMenuId) {
     });
 }
 
-export function select_rm_info(type, charId, previousCharId = null) {
+export function select_rm_info(type: any, charId: any, previousCharId: any = null) {
     if (!type) {
         toastr.error(t`Invalid process (no 'type')`);
         return;
     }
     if (type !== 'group_create') {
         var displayName = String(charId).replace('.png', '');
+    } else {
+        var displayName = '';
     }
 
     if (type === 'char_delete') {
@@ -8663,7 +8668,7 @@ export function select_rm_info(type, charId, previousCharId = null) {
                         return;
                     }
 
-                    const scrollOffset = element.offset().top - element.parent().offset().top;
+                    const scrollOffset = (element.offset()?.top ?? 0) - (element.parent().offset()?.top ?? 0);
                     element.parent().scrollTop(scrollOffset);
                     flashHighlight(element, 5000);
                 });
@@ -8689,7 +8694,7 @@ export function select_rm_info(type, charId, previousCharId = null) {
             try {
                 waitUntilCondition(() => document.querySelector(selector) !== null).then(() => {
                     const element = $(selector);
-                    const scrollOffset = element.offset().top - element.parent().offset().top;
+                    const scrollOffset = (element.offset()?.top ?? 0) - (element.parent().offset()?.top ?? 0);
                     element.parent().scrollTop(scrollOffset);
                     flashHighlight(element, 5000);
                 });
@@ -8713,7 +8718,7 @@ export function select_rm_info(type, charId, previousCharId = null) {
  * @param {object} [param1] Options for the switch
  * @param {boolean} [param1.switchMenu=true] Whether to switch the menu
  */
-export function select_selected_character(chid, { switchMenu = true } = {}) {
+export function select_selected_character(chid: any, { switchMenu = true } = {}) {
     //character select
     //console.log('select_selected_character() -- starting with input of -- ' + chid + ' (name:' + characters[chid].name + ')');
     select_rm_create({ switchMenu });
@@ -8851,7 +8856,7 @@ function select_rm_create({ switchMenu = true } = {}) {
     $('#name_div').addClass('displayBlock');
     $('.open_alternate_greetings').data('chid', -1);
     $('#set_character_world').data('chid', -1);
-    setWorldInfoButtonClass(undefined, !!create_save.world);
+    setWorldInfoButtonClass(undefined as any, !!create_save.world as any);
     updateFavButtonState(false);
     (checkEmbeddedWorld as any)();
 
@@ -8877,7 +8882,7 @@ function select_rm_characters() {
  * @param {boolean} scan Should the prompt be included in the world info scan.
  * @param {(function(): Promise<boolean>|boolean)} filter Filter function to determine if the prompt should be injected.
  */
-export function setExtensionPrompt(key, value, position, depth, scan = false, role = extension_prompt_roles.SYSTEM, filter = null) {
+export function setExtensionPrompt(key: string, value: string, position: number, depth: number, scan = false, role = extension_prompt_roles.SYSTEM, filter: any = null) {
     extension_prompts[key] = {
         value: String(value),
         position: Number(position),
@@ -8893,7 +8898,7 @@ export function setExtensionPrompt(key, value, position, depth, scan = false, ro
  * @param {string} roleName The name of the extension prompt role.
  * @returns {number} The role id of the extension prompt.
  */
-export function getExtensionPromptRoleByName(roleName) {
+export function getExtensionPromptRoleByName(roleName: any) {
     // If the role is already a valid number, return it
     if (typeof roleName === 'number' && Object.values(extension_prompt_roles).includes(roleName)) {
         return roleName;
@@ -8929,7 +8934,7 @@ export function removeDepthPrompts() {
  * @param {Object} newValues An object with collection of new values to be added into the metadata.
  * @param {boolean} reset Should a metadata be reset by this call.
  */
-export function updateChatMetadata(newValues, reset) {
+export function updateChatMetadata(newValues: any, reset: boolean) {
     chat_metadata = reset ? { ...newValues } : { ...chat_metadata, ...newValues };
 }
 
@@ -8938,7 +8943,7 @@ export function updateChatMetadata(newValues, reset) {
  * Updates the state of the favorite button based on the provided state.
  * @param {boolean} state Whether the favorite button should be on or off.
  */
-function updateFavButtonState(state) {
+function updateFavButtonState(state: boolean) {
     // Update global state of the flag
     // TODO: This is bad and needs to be refactored.
     fav_ch_checked = state;
@@ -8948,7 +8953,7 @@ function updateFavButtonState(state) {
 }
 
 export async function setCharacterSettingsOverrides() {
-    if (!selected_group && (this_chid === undefined || !characters[this_chid])) {
+    if (!selected_group && (this_chid === undefined || !characters[Number(this_chid)])) {
         console.warn('setCharacterSettingsOverrides() -- no selected group or character');
         return;
     }
@@ -9018,7 +9023,7 @@ export async function setCharacterSettingsOverrides() {
  * @returns {Promise<any>} A promise that resolves when the popup is closed.
  * @deprecated Use `callGenericPopup` instead.
  */
-export function callPopup(text, type, inputValue = '', { okButton, rows, wide, wider, large, allowHorizontalScrolling, allowVerticalScrolling, cropAspect }: Record<string, any> = {}) {
+export function callPopup(text: any, type: any, inputValue = '', { okButton, rows, wide, wider, large, allowHorizontalScrolling, allowVerticalScrolling, cropAspect }: Record<string, any> = {}) {
     function getOkButtonText() {
         if (['text', 'char_not_selected'].includes(popup_type)) {
             $dialoguePopupCancel.css('display', 'none');
@@ -9080,7 +9085,7 @@ export function callPopup(text, type, inputValue = '', { okButton, rows, wide, w
  * @param {ChatMessage} [options.message=undefined] Swipe numbers from this message will be used instead of mesId.
  * @param {JQuery<HTMLElement>} [options.messageElement=undefined] Target Element. Passing in the message's element will save a DOM query.
  */
-export async function updateSwipeCounter(mesId, { message = undefined, messageElement = undefined } = {}) {
+export async function updateSwipeCounter(mesId: number, { message = undefined, messageElement = undefined }: any = {}) {
     message ??= chat[mesId];
     messageElement ??= chatElement.children('.mes').filter(`[mesid="${mesId}"]`);
 
@@ -9134,7 +9139,7 @@ export function isSwipingAllowed() {
  * @param {ChatMessage} [message=undefined] If undefined, then the message checks will be skipped.
  * @returns {boolean}
  */
-export function isMessageSwipeable(messageId, message = undefined) {
+export function isMessageSwipeable(messageId: number, message: any = undefined) {
     message ??= chat[messageId];
 
     //If the message does not have swipes, create them.
@@ -9174,7 +9179,7 @@ export function isMessageSwipeable(messageId, message = undefined) {
  * @param {ChatMessage} [message=undefined] If defined, this will be used instead of chat[messageId].
  * @returns {OVERSWIPE_BEHAVIOR}
  */
-export function getOverswipeBehavior(messageId, message = undefined) {
+export function getOverswipeBehavior(messageId: number, message: any = undefined) {
     message ??= chat[messageId];
 
     const isPristine = !chat_metadata?.tainted;
@@ -9290,7 +9295,7 @@ export function hideSwipeButtons({ hideCounters = false } = {}) {
  * @param {number?} [messageId = chat.length - 1] - The ID of the message to delete from. If not provided, the last message will be targeted.
  * @returns {Promise<number>|undefined} - The ID of the new swipe after deletion.
  */
-export async function deleteSwipe(swipeId = null, messageId = chat.length - 1) {
+export async function deleteSwipe(swipeId: number | null = null, messageId: number = chat.length - 1) {
     if (swipeId != null) {
         swipeId = Number(swipeId);
         if (!Number.isInteger(swipeId) || swipeId < 0) {
@@ -9399,7 +9404,7 @@ export async function saveChatConditional() {
  * @param {boolean} [options.refresh] Whether to refresh the group chat list after import
  * @returns {Promise<string[]>} List of imported file names.
  */
-export async function importCharacterChat(formData, { refresh = true } = {}) {
+export async function importCharacterChat(formData: FormData, { refresh = true } = {}) {
     const fetchResult = await fetch('/api/chats/import', {
         method: 'POST',
         body: formData,
@@ -9418,7 +9423,7 @@ export async function importCharacterChat(formData, { refresh = true } = {}) {
     return [];
 }
 
-export function updateViewMessageIds(startIndex = null) {
+export function updateViewMessageIds(startIndex: number | null = null) {
     const minId = startIndex ?? getFirstDisplayedMessageId();
 
     chatElement.find('.mes').each(function (index, element) {
@@ -9439,7 +9444,7 @@ export function getFirstDisplayedMessageId() {
 }
 
 export function updateEditArrowClasses() {
-    if (!(this_edit_mes_id >= 0)) {
+    if (!(this_edit_mes_id as number >= 0)) {
         return;
     }
 
@@ -9467,7 +9472,7 @@ export function updateEditArrowClasses() {
  */
 export function closeMessageEditor(what = 'all') {
     if (what === 'message' || what === 'all') {
-        if (this_edit_mes_id >= 0) {
+        if (this_edit_mes_id as number >= 0) {
             chatElement.find(`.mes[mesid="${this_edit_mes_id}"] .mes_edit_cancel`).trigger('click');
         }
     }
@@ -9481,7 +9486,7 @@ export function closeMessageEditor(what = 'all') {
     }
 }
 
-export function setGenerationProgress(progress) {
+export function setGenerationProgress(progress: number) {
     if (!progress) {
         $('#send_textarea').css({ 'background': '', 'transition': '' });
     } else {
@@ -9498,7 +9503,7 @@ export function cancelTtsPlay() {
     }
 }
 
-function updateAlternateGreetingsHintVisibility(root) {
+function updateAlternateGreetingsHintVisibility(root: any) {
     const numberOfGreetings = root.find('.alternate_greetings_list .alternate_greeting').length;
     $(root).find('.alternate_grettings_hint').toggle(numberOfGreetings == 0);
 }
@@ -9518,40 +9523,40 @@ async function openCharacterWorldPopup() {
     template.find('.character_name').text(charName);
 
     // --- Event Handlers ---
-    async function handlePrimaryWorldSelect() {
+    async function handlePrimaryWorldSelect(this: any) {
         const selectedValue = $(this).val();
         const worldIndex = selectedValue !== '' ? Number(selectedValue) : NaN;
         const name = !isNaN(worldIndex) ? world_names[worldIndex] : '';
         await charUpdatePrimaryWorld(name);
     }
 
-    function handleExtrasWorldSelect(evt) {
-        const el = evt?.currentTarget ?? this;
+    function handleExtrasWorldSelect(this: any, evt: any) {
+        const el = evt?.currentTarget ?? (this as any);
         const selectedValues = $(el).val();
         const selected = Array.isArray(selectedValues) ? selectedValues : [];
         const fileName = getCharaFilename(null, {});
-        const nextList = selected.map(i => world_names[i]).filter(Boolean);
+        const nextList = selected.map((i: any) => world_names[i]).filter(Boolean);
         charSetAuxWorlds(fileName, nextList);
     }
 
     // --- Populate Dropdowns ---
     // Append to primary dropdown.
     const primarySelect = template.find('.character_world_info_selector');
-    world_names.forEach((item, i) => {
+    world_names.forEach((item: string, i: number) => {
         primarySelect.append(new Option(item, String(i), item === worldId, item === worldId));
     });
 
     // Append to extras dropdown.
     const extrasSelect = template.find('.character_extra_world_info_selector');
-    const existingCharLore = world_info.charLore?.find((e) => e.name === fileName);
-    world_names.forEach((item, i) => {
+    const existingCharLore = world_info.charLore?.find((e: any) => e.name === fileName);
+    world_names.forEach((item: string, i: number) => {
         const array = (menu_type == 'create' ? create_save.extra_books : existingCharLore?.extraBooks);
         const isSelected = !!array?.includes(item);
         extrasSelect.append(new Option(item, String(i), isSelected, isSelected));
     });
 
     const popup = new Popup(template, POPUP_TYPE.TEXT, '', {
-        onOpen: function (popup) {
+        onOpen: function (popup: any) {
             const popupDialog = $(popup.dlg);
 
             primarySelect.on('change', handlePrimaryWorldSelect);
@@ -9568,7 +9573,7 @@ async function openCharacterWorldPopup() {
                 });
             }
         },
-    });
+    } as any);
 
     await popup.show();
 }
@@ -9588,7 +9593,7 @@ function openAlternateGreetings() {
 
     const template = $('#alternate_greetings_template .alternate_grettings').clone();
     const getArray = () => menu_type == 'create' ? create_save.alternate_greetings : characters[chid].data.alternate_greetings;
-    const popup = new Popup(template, POPUP_TYPE.TEXT, '', {
+    const popup = new (Popup as any)(template, POPUP_TYPE.TEXT, '', {
         wide: true,
         large: true,
         allowVerticalScrolling: true,
@@ -9625,7 +9630,7 @@ function openAlternateGreetings() {
  * @param {() => any[]} getArray
  * @param {Popup} popup
  */
-function addAlternateGreeting(template, greeting, index, getArray, popup) {
+function addAlternateGreeting(template: any, greeting: string, index: number, getArray: () => any[], popup: any) {
     const greetingBlock = $('#alternate_greeting_form_template .alternate_greeting').clone();
     greetingBlock.attr('data-index', index);
     greetingBlock.find('.alternate_greeting_text')
@@ -9665,7 +9670,7 @@ function addAlternateGreeting(template, greeting, index, getArray, popup) {
      * @param {JQuery.ClickEvent} event - The click event
      * @param {number} direction - Direction to move: -1 for up, 1 for down
      */
-    function handleMoveAlternateGreeting(event, direction) {
+    function handleMoveAlternateGreeting(event: any, direction: number) {
         event.preventDefault();
         event.stopPropagation();
 
@@ -9699,7 +9704,7 @@ function addAlternateGreeting(template, greeting, index, getArray, popup) {
  * Creates or edits a character based on the form data.
  * @param {Event} [e] Event that triggered the function call.
  */
-export async function createOrEditCharacter(e) {
+export async function createOrEditCharacter(e: any) {
     if (!settingsReady) {
         console.warn('Settings not ready, aborting character creation/editing.');
         return;
@@ -9757,36 +9762,36 @@ export async function createOrEditCharacter(e) {
 
             $('#character_cross').trigger('click'); //closes the advanced character editing popup
             const fields = [
-                { id: '#character_name_pole', callback: value => create_save.name = value },
-                { id: '#description_textarea', callback: value => create_save.description = value },
-                { id: '#creator_notes_textarea', callback: value => create_save.creator_notes = value },
-                { id: '#character_version_textarea', callback: value => create_save.character_version = value },
-                { id: '#post_history_instructions_textarea', callback: value => create_save.post_history_instructions = value },
-                { id: '#system_prompt_textarea', callback: value => create_save.system_prompt = value },
-                { id: '#tags_textarea', callback: value => create_save.tags = value },
-                { id: '#creator_textarea', callback: value => create_save.creator = value },
-                { id: '#personality_textarea', callback: value => create_save.personality = value },
-                { id: '#firstmessage_textarea', callback: value => create_save.first_message = value },
-                { id: '#talkativeness_slider', callback: value => create_save.talkativeness = value, defaultValue: talkativeness_default },
-                { id: '#scenario_pole', callback: value => create_save.scenario = value },
-                { id: '#depth_prompt_prompt', callback: value => create_save.depth_prompt_prompt = value },
-                { id: '#depth_prompt_depth', callback: value => create_save.depth_prompt_depth = value, defaultValue: depth_prompt_depth_default },
-                { id: '#depth_prompt_role', callback: value => create_save.depth_prompt_role = value, defaultValue: depth_prompt_role_default },
-                { id: '#mes_example_textarea', callback: value => create_save.mes_example = value },
+                { id: '#character_name_pole', callback: (value: any) => create_save.name = value },
+                { id: '#description_textarea', callback: (value: any) => create_save.description = value },
+                { id: '#creator_notes_textarea', callback: (value: any) => create_save.creator_notes = value },
+                { id: '#character_version_textarea', callback: (value: any) => create_save.character_version = value },
+                { id: '#post_history_instructions_textarea', callback: (value: any) => create_save.post_history_instructions = value },
+                { id: '#system_prompt_textarea', callback: (value: any) => create_save.system_prompt = value },
+                { id: '#tags_textarea', callback: (value: any) => create_save.tags = value },
+                { id: '#creator_textarea', callback: (value: any) => create_save.creator = value },
+                { id: '#personality_textarea', callback: (value: any) => create_save.personality = value },
+                { id: '#firstmessage_textarea', callback: (value: any) => create_save.first_message = value },
+                { id: '#talkativeness_slider', callback: (value: any) => create_save.talkativeness = value, defaultValue: talkativeness_default },
+                { id: '#scenario_pole', callback: (value: any) => create_save.scenario = value },
+                { id: '#depth_prompt_prompt', callback: (value: any) => create_save.depth_prompt_prompt = value },
+                { id: '#depth_prompt_depth', callback: (value: any) => create_save.depth_prompt_depth = value, defaultValue: depth_prompt_depth_default },
+                { id: '#depth_prompt_role', callback: (value: any) => create_save.depth_prompt_role = value, defaultValue: depth_prompt_role_default },
+                { id: '#mes_example_textarea', callback: (value: any) => create_save.mes_example = value },
                 { id: '#character_json_data', callback: () => { } },
-                { id: '#alternate_greetings_template', callback: value => create_save.alternate_greetings = value, defaultValue: [] },
-                { id: '#character_world', callback: value => create_save.world = value },
-                { id: '#_character_extensions_fake', callback: value => create_save.extensions = {} },
+                { id: '#alternate_greetings_template', callback: (value: any) => create_save.alternate_greetings = value, defaultValue: [] },
+                { id: '#character_world', callback: (value: any) => create_save.world = value },
+                { id: '#_character_extensions_fake', callback: (value: any) => create_save.extensions = {} },
             ];
 
-            fields.forEach(field => {
+            fields.forEach((field: any) => {
                 const fieldValue = field.defaultValue !== undefined ? field.defaultValue : '';
                 $(field.id).val(fieldValue);
                 field.callback && field.callback(fieldValue);
             });
 
             if (Array.isArray(create_save.extra_books) && create_save.extra_books.length > 0) {
-                const fileName = getCharaFilename(null, { manualAvatarKey: avatarId });
+                const fileName = getCharaFilename(null, { manualAvatarKey: avatarId as any });
                 const charLore = world_info.charLore ?? [];
                 charLore.push({ name: fileName, extraBooks: create_save.extra_books });
                 Object.assign(world_info, { charLore: charLore });
@@ -9804,7 +9809,7 @@ export async function createOrEditCharacter(e) {
 
             let oldSelectedChar = null;
             if (this_chid !== undefined) {
-                oldSelectedChar = characters[this_chid].avatar;
+                oldSelectedChar = characters[Number(this_chid)].avatar;
             }
 
             console.log(`new avatar id: ${avatarId}`);
@@ -9845,7 +9850,7 @@ export async function createOrEditCharacter(e) {
                 throw new Error('Fetch result is not ok');
             }
 
-            await getOneCharacter(formData.get('avatar_url'));
+            await getOneCharacter(String(formData.get('avatar_url')));
             favsToHotswap(); // Update fav state
 
             $('#add_avatar_button').replaceWith(
@@ -9853,7 +9858,7 @@ export async function createOrEditCharacter(e) {
             );
             $('#create_button').attr('value', 'Save');
             crop_data = undefined;
-            await eventSource.emit(event_types.CHARACTER_EDITED, { detail: { id: this_chid, character: characters[this_chid] } });
+            await eventSource.emit(event_types.CHARACTER_EDITED, { detail: { id: this_chid, character: characters[Number(this_chid)] } });
 
             // Recreate the chat if it hasn't been used at least once (i.e. with continue).
             const message = getFirstMessage();
@@ -9886,7 +9891,7 @@ export async function createOrEditCharacter(e) {
  * @param {number} total The total number of items.
  * @returns {string} The formatted counter.
  */
-function formatSwipeCounter(current, total) {
+function formatSwipeCounter(current: any, total: any) {
     if (isNaN(current) && isNaN(total)) {
         return '';
     }
@@ -9905,7 +9910,7 @@ function formatSwipeCounter(current, total) {
  * @param {number} [params.forceSwipeId] The target swipe_id. When out of range, it will be looped or clamped.
  * @param {number} [params.forceDuration] Overwrites the default swipe duration.
  */
-export async function swipe(event, direction, { source, repeated, message = chat[chat.length - 1], forceMesId, forceSwipeId, forceDuration }: any = {}) {
+export async function swipe(event: any, direction: any, { source, repeated, message = chat[chat.length - 1], forceMesId, forceSwipeId, forceDuration }: any = {}) {
     if (chat.length === 0) {
         console.warn('Swipe was called on an empty chat.');
         return;
@@ -9947,7 +9952,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
     cancelDebouncedChatSave();
 
     swipeState = SWIPE_STATE.SWIPING;
-    let generation;
+    let generation: Promise<any> | undefined;
 
     const thisMesDiv = chatElement.children('.mes').filter(`[mesid="${mesId}"]`);
     const thisMesText = thisMesDiv.find('.mes_block .mes_text');
@@ -9965,7 +9970,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
      * @param {number} animation_duration
      * @returns {number} The adjusted swipe duration.
      */
-    function getSwipeDuration(animation_duration) {
+    function getSwipeDuration(animation_duration: number) {
         const now = performance.now();
         const resetTime = animation_duration * 2 + 300;
 
@@ -9983,7 +9988,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
     const swipeDuration = forceDuration ?? getSwipeDuration(animation_duration);
 
     //The offscreen messages may be visible if the user resizes the viewport during a swipe.
-    const thisMesDivWidth = thisMesDiv.width() + 30;
+    const thisMesDivWidth = (thisMesDiv.width() ?? 0) + 30;
     let swipeRange = (direction === SWIPE_DIRECTION.RIGHT) ? -thisMesDivWidth : thisMesDivWidth;
 
     /**
@@ -10055,7 +10060,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
         showSwipeButtons();
     }
 
-    async function standardSwipe(newSwipeId) {
+    async function standardSwipe(newSwipeId: number) {
         //If swipe_id has changed, or the source is being deleted.
         if (newSwipeId !== originalSwipeId || source == SWIPE_SOURCE.DELETE || source == SWIPE_SOURCE.BACK) {
             //Update the chat.
@@ -10070,7 +10075,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
      * Removes a message's extra and gen times.
      * @param {ChatMessage} message
      */
-    function clearMessageData(message) {
+    function clearMessageData(message: any) {
         if (message.extra && typeof message.extra === 'object') {
             delete message.extra.memory;
             delete message.extra.display_text;
@@ -10092,7 +10097,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
      * @param {number} mesId
      * @param {number} newSwipeId
      */
-    async function loadFromSwipeId(mesId, newSwipeId) {
+    async function loadFromSwipeId(mesId: number, newSwipeId: number) {
         //Update the swipe_id.
         chat[mesId].swipe_id = newSwipeId;
 
@@ -10120,7 +10125,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
      * @param {boolean} [params.freeze=true] When true, do not remove the class from the animation, leaving it stuck at xEnd.
      * @returns {Promise<boolean|Function>} endSlide unfreezes the messages from xEnd.
      */
-    async function animateSwipeTransition(mesId, { xStart = '0px', xEnd = '0px', duration = animation_duration, classes = '', freeze = false } = {}) {
+    async function animateSwipeTransition(mesId: number, { xStart = '0px', xEnd = '0px', duration = animation_duration, classes = '', freeze = false } = {}) {
         // If the animation_duration is zero, the 'animationend' promise will never resolve.
         //Skip the animation if it's faster than 50ms.
         if (duration <= 50) return;
@@ -10182,20 +10187,20 @@ export async function swipe(event, direction, { source, repeated, message = chat
         return false;
     }
 
-    function getMessageBottomHeight(thisMesDiv) {
+    function getMessageBottomHeight(thisMesDiv: any) {
         const thisMesRect = thisMesDiv[0].getBoundingClientRect();
         //Scroll position + Chat height = Bottom of chat height.
-        const chatBottom = chatElement.scrollTop() - chatElement.height();
+        const chatBottom = (chatElement.scrollTop() ?? 0) - (chatElement.height() ?? 0);
         //Message offset from viewport top + height = Bottom of message offset.
-        const messageBottom = thisMesRect.top + thisMesDiv.height();
+        const messageBottom = thisMesRect.top + (thisMesDiv.height() ?? 0);
         // Bottom of chat + Bottom of message offset = target scroll position.
         const scrollHeight = (chatBottom + messageBottom);
         return scrollHeight;
     }
 
-    function expandNewMessage(thisMesDiv) {
+    function expandNewMessage(thisMesDiv: any) {
         //Only scroll if the view is not near the bottom.
-        const is_animation_scroll = (chatElement.scrollTop() >= (chatElement.prop('scrollHeight') - chatElement.outerHeight()) - 10);
+        const is_animation_scroll = ((chatElement.scrollTop() ?? 0) >= ((chatElement.prop('scrollHeight') ?? 0) - (chatElement.outerHeight() ?? 0)) - 10);
 
         let new_height = thisMesDivHeight - (thisMesTextHeight - thisMesText[0].scrollHeight);
         if (new_height < 103) new_height = 103;
@@ -10206,7 +10211,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
         thisMesDiv.animate({ height: new_height + 'px' }, {
             duration: 0, //used to be 100 //Disabled on Cohee's request. https://github.com/SillyTavern/SillyTavern/pull/4610/files#r2408731744
             queue: false,
-            progress: function (animation, progress, remainingMs) {
+            progress: function (animation: any, progress: any, remainingMs: any) {
                 if (is_animation_scroll) chatElement.scrollTop(getMessageBottomHeight(thisMesDiv));
             },
             complete: function () {
@@ -10244,7 +10249,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
             //Only scroll when swiping the last message.
             const scroll = (mesId == chat.length - 1);
             //The swipe buttons will be refreshed in endSwipe(), refreshing them now will cause flickering.
-            addOneMessage(chat[mesId], { type: 'swipe', forceId: mesId, scroll: scroll, showSwipes: false });
+            addOneMessage(chat[mesId], { type: 'swipe' as any, forceId: mesId as any, scroll: scroll, showSwipes: false });
 
             if (power_user.message_token_count_enabled) {
                 if (!chat[mesId].extra) {
@@ -10252,7 +10257,7 @@ export async function swipe(event, direction, { source, repeated, message = chat
                 }
 
                 const tokenCountText = (chat[mesId]?.extra?.reasoning || '') + chat[mesId].mes;
-                const tokenCount = await getTokenCountAsync(tokenCountText, 0);
+                const tokenCount = await getTokenCountAsync(tokenCountText, 0 as any);
                 chat[mesId].extra.token_count = tokenCount;
                 thisMesDiv.find('.tokenCounterDisplay').text(`${tokenCount}t`);
             }
@@ -10388,8 +10393,8 @@ export async function swipe(event, direction, { source, repeated, message = chat
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {object} [params.message] The chat message to swipe.
  */
-export async function swipe_left(event, { source, repeated, message }: Record<string, any> = {}) {
-    await swipe.call(this, event, SWIPE_DIRECTION.LEFT, { source: source, repeated: repeated, message: message });
+export async function swipe_left(this: any, event: any, { source, repeated, message }: Record<string, any> = {}) {
+    await swipe.call(this as any, event, SWIPE_DIRECTION.LEFT, { source: source, repeated: repeated, message: message });
 }
 
 /**
@@ -10402,8 +10407,8 @@ export async function swipe_left(event, { source, repeated, message }: Record<st
  * @param {object} [params.message] The chat message to swipe.
  */
 //MARK: swipe_right
-export async function swipe_right(event = null, { source, repeated, message }: Record<string, any> = {}) {
-    await swipe.call(this, event, SWIPE_DIRECTION.RIGHT, { source: source, repeated: repeated, message: message });
+export async function swipe_right(this: any, event = null, { source, repeated, message }: Record<string, any> = {}) {
+    await swipe.call(this as any, event, SWIPE_DIRECTION.RIGHT, { source: source, repeated: repeated, message: message });
 }
 
 /**
@@ -10412,7 +10417,7 @@ export async function swipe_right(event = null, { source, repeated, message }: R
  * @param {Map<File, string>} [data] Extra data to pass to the import function
  * @returns {Promise<void>}
  */
-export async function processDroppedFiles(files, data = new Map()) {
+export async function processDroppedFiles(files: File[], data: Map<File, string> = new Map()) {
     const allowedMimeTypes = [
         'application/json',
         'image/png',
@@ -10427,12 +10432,12 @@ export async function processDroppedFiles(files, data = new Map()) {
         'byaf',
     ];
 
-    const avatarFileNames = [];
+    const avatarFileNames: string[] = [];
     for (const file of files) {
-        const extension = file.name.split('.').pop().toLowerCase();
+        const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
         if (allowedMimeTypes.some(x => file.type.startsWith(x)) || allowedExtensions.includes(extension)) {
-            const preservedName = data instanceof Map && data.get(file);
-            const avatarFileName = await importCharacter(file, { preserveFileName: preservedName });
+            const preservedName = data instanceof Map ? data.get(file) : undefined;
+            const avatarFileName = await importCharacter(file, { preserveFileName: preservedName ?? '' });
             if (avatarFileName !== undefined) {
                 avatarFileNames.push(avatarFileName);
             }
@@ -10451,7 +10456,7 @@ export async function processDroppedFiles(files, data = new Map()) {
  * Imports tags for the given characters
  * @param {string[]} avatarFileNames character avatar filenames whose tags are to import
  */
-async function importCharactersTags(avatarFileNames) {
+async function importCharactersTags(avatarFileNames: string[]) {
     await getCharacters();
     for (let i = 0; i < avatarFileNames.length; i++) {
         if (power_user.tag_import_setting !== tag_import_setting.NONE) {
@@ -10465,10 +10470,10 @@ async function importCharactersTags(avatarFileNames) {
  * Selects the given imported char
  * @param {string} charId char to select
  */
-function selectImportedChar(charId) {
+function selectImportedChar(charId: any) {
     let oldSelectedChar = null;
     if (this_chid !== undefined) {
-        oldSelectedChar = characters[this_chid].avatar;
+        oldSelectedChar = characters[Number(this_chid)].avatar;
     }
     select_rm_info('char_import_no_toast', charId, oldSelectedChar);
 }
@@ -10481,7 +10486,7 @@ function selectImportedChar(charId) {
  * @param {Boolean} [options.importTags=false] Whether to import tags
  * @returns {Promise<string>}
  */
-async function importCharacter(file, { preserveFileName = '', importTags = false } = {}) {
+async function importCharacter(file: File, { preserveFileName = '', importTags = false } = {}) {
     if (is_group_generating || is_send_press) {
         toastr.error(t`Cannot import characters while generating. Stop the request and try again.`, t`Import aborted`);
         throw new Error('Cannot import character while generating');
@@ -10547,11 +10552,11 @@ async function importCharacter(file, { preserveFileName = '', importTags = false
     }
 }
 
-async function importFromURL(items, files) {
+async function importFromURL(items: any[], files: any[]) {
     for (const item of items) {
         if (item.type === 'text/uri-list') {
             const uriList = await new Promise<string>((resolve) => {
-                item.getAsString((uriList) => { resolve(uriList); });
+                item.getAsString((uriList: string) => { resolve(uriList); });
             });
             const uris = uriList.split('\n').filter(uri => uri.trim() !== '');
             try {
@@ -10592,8 +10597,8 @@ export async function doNewChat({ deleteCurrentChat = false } = {}) {
     } else {
         //RossAscends: added character name to new chat filenames and replaced Date.now() with humanizedDateTime;
         chat_metadata = {};
-        characters[this_chid].chat = `${name2} - ${humanizedDateTime()}`;
-        $('#selected_chat_pole').val(characters[this_chid].chat);
+        characters[Number(this_chid)].chat = `${name2} - ${humanizedDateTime()}`;
+        $('#selected_chat_pole').val(characters[Number(this_chid)].chat);
         await getChat();
         await createOrEditCharacter(new CustomEvent('newChat'));
         if (deleteCurrentChat) await delChat(chat_file_for_del + '.jsonl');
@@ -10609,7 +10614,7 @@ export async function doNewChat({ deleteCurrentChat = false } = {}) {
  * @param {string} param.newFileName New name for the chat (no JSONL extension)
  * @param {boolean} [param.loader=true] Whether to show loader during the operation
  */
-export async function renameGroupOrCharacterChat({ characterId, groupId, oldFileName, newFileName, loader: showLoader }) {
+export async function renameGroupOrCharacterChat({ characterId, groupId, oldFileName, newFileName, loader: showLoader }: any) {
     const currentChatId = getCurrentChatId();
     const body = {
         is_group: !!groupId,
@@ -10682,7 +10687,7 @@ export async function renameGroupOrCharacterChat({ characterId, groupId, oldFile
  * @param {string} oldFileName Old name of the chat (no JSONL extension)
  * @param {string} newName New name for the chat (no JSONL extension)
  */
-export async function renameChat(oldFileName, newName) {
+export async function renameChat(oldFileName: string, newName: string) {
     return await renameGroupOrCharacterChat({
         characterId: this_chid,
         groupId: selected_group,
@@ -10725,8 +10730,8 @@ export async function closeCurrentChat() {
  * @param {string} newName New name for the chat
  * @returns {Promise<void>}
  */
-export async function updateRemoteChatName(characterId, newName) {
-    const character = characters[characterId];
+export async function updateRemoteChatName(characterId: string | number, newName: string) {
+    const character = characters[Number(characterId)];
     if (!character) {
         console.warn(`Character not found for ID: ${characterId}`);
         return;
@@ -10763,12 +10768,12 @@ function doCharListDisplaySwitch() {
  * @param {string} this_chid - The character ID to be deleted.
  * @param {boolean} delete_chats - Whether to delete chats or not.
  */
-export async function handleDeleteCharacter(this_chid, delete_chats) {
-    if (!characters[this_chid]) {
+export async function handleDeleteCharacter(this_chid: string | number, delete_chats: boolean) {
+    if (!characters[Number(this_chid)]) {
         return;
     }
 
-    await deleteCharacter(characters[this_chid].avatar, { deleteChats: delete_chats });
+    await deleteCharacter(characters[Number(this_chid)].avatar, { deleteChats: delete_chats });
 }
 
 /**
@@ -10779,7 +10784,7 @@ export async function handleDeleteCharacter(this_chid, delete_chats) {
  * @param {boolean} [options.deleteChats=true] - Whether to delete associated chats or not
  * @return {Promise<boolean>} - A promise that resolves when the character is successfully deleted
  */
-export async function deleteCharacter(characterKey, { deleteChats = true } = {}) {
+export async function deleteCharacter(characterKey: string | string[], { deleteChats = true } = {}) {
     if (!Array.isArray(characterKey)) {
         characterKey = [characterKey];
     }
@@ -10829,7 +10834,7 @@ export async function deleteCharacter(characterKey, { deleteChats = true } = {})
         accountStorage.removeItem(`AlertWI_${character.avatar}`);
         accountStorage.removeItem(`AlertRegex_${character.avatar}`);
         accountStorage.removeItem(`mediaWarningShown:${character.avatar}`);
-        delete tag_map[character.avatar];
+        delete (tag_map as Record<string, any>)[character.avatar];
         select_rm_info('char_delete', character.name);
 
         if (deleteChats) {
@@ -10859,7 +10864,7 @@ async function removeCharacterFromUI() {
     await clearChat();
     $('#character_cross').trigger('click');
     resetChatState();
-    $(document.getElementById('rm_button_selected_ch')).children('h2').text('');
+    $(document.getElementById('rm_button_selected_ch') as HTMLElement).children('h2').text('');
     restoreNeutralChat();
     await getCharacters();
     await printMessages();
@@ -10890,7 +10895,7 @@ export async function newAssistantChat({ temporary = false } = {}) {
  * Opens the drawer associated with the clicked button according to the data-target attribute.
  * @returns {void}
  */
-function doDrawerOpenClick() {
+function doDrawerOpenClick(this: any) {
     const targetDrawerID = $(this).attr('data-target');
     const drawer = $(`#${targetDrawerID}`);
     const drawerToggle = drawer.find('.drawer-toggle');
@@ -10904,7 +10909,7 @@ function doDrawerOpenClick() {
  * Handles click events on .drawer-toggle elements.
  * @returns {Promise<void>}
  */
-export async function doNavbarIconClick() {
+export async function doNavbarIconClick(this: any) {
     const icon = $(this).find('.drawer-icon');
     const drawer = $(this).parent().find('.drawer-content');
     const drawerWasOpenAlready = $(this).parent().find('.drawer-content').hasClass('openDrawer');
@@ -10956,7 +10961,7 @@ function addDebugFunctions() {
             }
 
             const tokenCountText = (message?.extra?.reasoning || '') + message.mes;
-            message.extra.token_count = await getTokenCountAsync(tokenCountText, 0);
+            message.extra.token_count = await getTokenCountAsync(tokenCountText, 0 as any);
         }
 
         await saveChatConditional();
@@ -10977,7 +10982,7 @@ function addDebugFunctions() {
     registerDebugFunction('generationTest', 'Send a generation request', 'Generates text using the currently selected API.', async () => {
         const text = prompt('Input text:', 'Hello');
         toastr.info('Working on it...');
-        const message = await generateRaw({ prompt: text });
+        const message = await generateRaw({ prompt: text ?? undefined });
         alert(message);
     });
     registerDebugFunction('toggleEventTracing', 'Toggle event tracing', 'Useful to see what triggered a certain event.', () => {
@@ -11019,7 +11024,7 @@ API Settings: ${JSON.stringify(getSettingsContents[getSettingsContents.main_api 
 }
 
 function initCharacterSearch() {
-    const debouncedCharacterSearch = debounce((searchQuery) => {
+    const debouncedCharacterSearch = debounce((searchQuery: string) => {
         entitiesFilter.setFilterData(FILTER_TYPES.SEARCH, searchQuery);
     });
 
@@ -11073,7 +11078,7 @@ jQuery(async function () {
     $(document).on('click', event => {
         if ($(':focus').attr('id') !== 'send_textarea') {
             var validIDs = ['options_button', 'send_but', 'mes_impersonate', 'mes_continue', 'send_textarea', 'option_regenerate', 'option_continue'];
-            if (!validIDs.includes($(event.target).attr('id'))) {
+            if (!validIDs.includes($(event.target).attr('id') ?? '')) {
                 S_TAPreviouslyFocused = false;
             }
         } else {
@@ -11160,8 +11165,8 @@ jQuery(async function () {
          * Sets the scroll height of the edit textarea to fit the content.
          * @param {HTMLTextAreaElement} e Textarea element to auto-fit
          */
-        function autoFitEditTextArea(e) {
-            const scrollTop = chatElement.scrollTop();
+        function autoFitEditTextArea(e: HTMLTextAreaElement) {
+            const scrollTop = chatElement.scrollTop() ?? 0;
             e.style.height = '0px';
             const newHeight = e.scrollHeight + 4;
             e.style.height = `${newHeight}px`;
@@ -11177,7 +11182,7 @@ jQuery(async function () {
         });
     }
 
-    const chatElementScroll = document.getElementById('chat');
+    const chatElementScroll = document.getElementById('chat')!;
     const chatScrollHandler = function () {
         if (power_user.waifuMode) {
             scrollLock = true;
@@ -11228,7 +11233,7 @@ jQuery(async function () {
      * @param {boolean} [fromSlashCommand=false] - Whether the deletion was triggered from a slash command.
      * @returns {Promise<void>}
      */
-    async function handleDeleteChat(chatFile, group, fromSlashCommand = false) {
+    async function handleDeleteChat(chatFile: string, group: any, fromSlashCommand = false) {
         // Close past chat popup.
         $('#select_chat_cross').trigger('click');
 
@@ -11264,7 +11269,7 @@ jQuery(async function () {
 
     $(document).on('click', '.PastChat_cross', async function (e, { fromSlashCommand = false } = {}) {
         e.stopPropagation();
-        const deleteFileName = $(this).attr('file_name');
+        const deleteFileName = $(this).attr('file_name') ?? '';
         console.debug('detected cross click for' + deleteFileName);
 
         // Skip confirmation if called from a slash command.
@@ -11357,14 +11362,14 @@ jQuery(async function () {
     });
 
     $('#add_avatar_button').on('change', function () {
-        const inputElement = /** @type {HTMLInputElement} */ (this);
+        const inputElement = this as HTMLInputElement;
         read_avatar_load(inputElement);
     });
 
     $('#form_create').on('submit', (e) => createOrEditCharacter(e.originalEvent));
 
     $('#delete_button').on('click', async function () {
-        if (this_chid === undefined || !characters[this_chid]) {
+        if (this_chid === undefined || !characters[Number(this_chid)]) {
             toastr.warning('No character selected.');
             return;
         }
@@ -11378,7 +11383,7 @@ jQuery(async function () {
             return;
         }
 
-        await deleteCharacter(characters[this_chid].avatar, { deleteChats: deleteChats });
+        await deleteCharacter(characters[Number(this_chid)].avatar, { deleteChats: deleteChats });
     });
 
     //////// OPTIMIZED ALL CHAR CREATION/EDITING TEXTAREA LISTENERS ///////////////
@@ -11389,7 +11394,7 @@ jQuery(async function () {
         }
     });
 
-    const elementsToUpdate = {
+    const elementsToUpdate: Record<string, () => void> = {
         '#description_textarea': function () { create_save.description = String($('#description_textarea').val()); },
         '#creator_notes_textarea': function () { create_save.creator_notes = String($('#creator_notes_textarea').val()); },
         '#character_version_textarea': function () { create_save.character_version = String($('#character_version_textarea').val()); },
@@ -11419,7 +11424,7 @@ jQuery(async function () {
 
     $('#creator_notes_textarea').on('input', function () {
         const notes = String($('#creator_notes_textarea').val());
-        const avatar = menu_type === 'create' ? '' : characters[this_chid]?.avatar;
+        const avatar = menu_type === 'create' ? '' : characters[Number(this_chid)]?.avatar;
         $('#creator_notes_spoiler').html(formatCreatorNotes(notes, avatar));
     });
 
@@ -11460,7 +11465,7 @@ jQuery(async function () {
 
         const body = {
             is_group: !!selected_group,
-            avatar_url: characters[this_chid]?.avatar,
+            avatar_url: characters[Number(this_chid)]?.avatar,
             file: `${filename}.jsonl`,
             exportfilename: `${filename}.${format}`,
             format: format,
@@ -11617,9 +11622,9 @@ jQuery(async function () {
             await closeCurrentChat();
         } else if (id === 'option_settings') {
             //var checkBox = document.getElementById("waifuMode");
-            var topBar = document.getElementById('top-bar');
-            var topSettingsHolder = document.getElementById('top-settings-holder');
-            var divchat = document.getElementById('chat');
+            var topBar = document.getElementById('top-bar')!;
+            var topSettingsHolder = document.getElementById('top-settings-holder')!;
+            var divchat = document.getElementById('chat')!;
 
             //if (checkBox.checked) {
             if (topBar.style.display === 'none') {
@@ -11705,11 +11710,11 @@ jQuery(async function () {
     ////////////////// OPTIMIZED RANGE SLIDER LISTENERS////////////////
 
     var sliderLocked = true;
-    var sliderTimer;
+    var sliderTimer: ReturnType<typeof setTimeout>;
 
     $('input[type=\'range\']').on('touchstart', function () {
         // Unlock the slider after 300ms
-        setTimeout(function () {
+        setTimeout(function (this: any) {
             sliderLocked = false;
             $(this).css('background-color', 'var(--SmartThemeQuoteColor)');
         }.bind(this), 300);
@@ -11731,14 +11736,14 @@ jQuery(async function () {
         {
             sliderId: '#amount_gen',
             counterId: '#amount_gen_counter',
-            format: (val) => `${val}`,
-            setValue: (val) => { amount_gen = Number(val); },
+            format: (val: any) => `${val}`,
+            setValue: (val: any) => { amount_gen = Number(val); },
         },
         {
             sliderId: '#max_context',
             counterId: '#max_context_counter',
-            format: (val) => `${val}`,
-            setValue: (val) => { max_context = Number(val); },
+            format: (val: any) => `${val}`,
+            setValue: (val: any) => { max_context = Number(val); },
         },
     ];
 
@@ -11767,7 +11772,7 @@ jQuery(async function () {
         if (this_chid !== undefined || selected_group || name2 === neutralCharacterName) {
             try {
                 const messageId = $(this).closest('.mes').attr('mesid');
-                const text = chat[messageId].mes;
+                const text = chat[Number(messageId)].mes;
                 await copyText(text);
                 toastr.info('Copied!', '', { timeOut: 2000 });
             } catch (err) {
@@ -11790,7 +11795,8 @@ jQuery(async function () {
                 return;
             }*/
 
-            if (this_edit_mes_id >= 0) {
+            var edit_mes_id = Number($(this).closest('.mes').attr('mesid'));
+            if (this_edit_mes_id! >= 0) {
                 let mes_edited = chatElement.find(`[mesid="${this_edit_mes_id}"]`).find('.mes_edit_done');
                 if (Number(edit_mes_id) == chat.length - 1) { //if the generating swipe (...)
                     let run_edit = true;
@@ -11805,8 +11811,6 @@ jQuery(async function () {
                 }
                 await messageEditDone(mes_edited);
             }
-            var edit_mes_id = Number($(this).closest('.mes').attr('mesid'));
-
             await messageEdit(edit_mes_id);
         }
     });
@@ -11890,20 +11894,20 @@ jQuery(async function () {
     });
 
     $(document).on('click', '.mes_edit_up', async function () {
-        if (this_edit_mes_id <= 0) {
+        if (this_edit_mes_id! <= 0) {
             return;
         }
         const targetId = Number(this_edit_mes_id) - 1;
-        await messageEditMove(this_edit_mes_id, targetId);
+        await messageEditMove(this_edit_mes_id!, targetId);
     });
 
     $(document).on('click', '.mes_edit_down', async function () {
-        if (this_edit_mes_id >= chat.length - 1) {
+        if (this_edit_mes_id! >= chat.length - 1) {
             return;
         }
 
         const targetId = Number(this_edit_mes_id) + 1;
-        await messageEditMove(this_edit_mes_id, targetId);
+        await messageEditMove(this_edit_mes_id!, targetId);
     });
 
     $(document).on('click', '.mes_edit_copy', async function () {
@@ -11914,10 +11918,10 @@ jQuery(async function () {
 
         hideSwipeButtons();
         const oldScroll = chatElement[0].scrollTop;
-        const clone = structuredClone(chat[this_edit_mes_id]);
+        const clone = structuredClone(chat[this_edit_mes_id!]);
         clone.send_date = Date.now();
         const this_edit_mes_element = $(this).closest('.mes');
-        clone.mes = this_edit_mes_element.find('.edit_textarea').val().toString();
+        clone.mes = String(this_edit_mes_element.find('.edit_textarea').val());
 
         if (power_user.trim_spaces) {
             clone.mes = clone.mes.trim();
@@ -11935,7 +11939,7 @@ jQuery(async function () {
 
     $(document).on('click', '.mes_edit_delete', async function (event, customData) {
         const fromSlashCommand = customData?.fromSlashCommand || false;
-        const message = chat[this_edit_mes_id];
+        const message = chat[this_edit_mes_id!];
         const selectedSwipe = message.swipe_id ?? undefined;
         const swipesArray = Array.isArray(message.swipes) ? message.swipes : [];
         const canDeleteSwipe = power_user.confirm_message_delete && !fromSlashCommand && !message.is_user && swipesArray.length > 1 && this_edit_mes_id === chat.length - 1 && selectedSwipe !== undefined;
@@ -11960,12 +11964,12 @@ jQuery(async function () {
             return;
         }
 
-        if (!e.target.files.length) {
+        if (!e.target.files!.length) {
             return;
         }
 
-        const avatarFileNames = [];
-        for (const file of e.target.files) {
+const avatarFileNames: string[] = [];
+        for (const file of e.target.files!) {
             const avatarFileName = await importCharacter(file);
             if (avatarFileName !== undefined) {
                 avatarFileNames.push(avatarFileName);
@@ -12000,7 +12004,7 @@ jQuery(async function () {
 
         // Save before exporting
         await (createOrEditCharacter as any)();
-        const body = { format, avatar_url: characters[this_chid].avatar };
+        const body = { format, avatar_url: characters[Number(this_chid)].avatar };
 
         const response = await fetch('/api/characters/export', {
             method: 'POST',
@@ -12009,7 +12013,7 @@ jQuery(async function () {
         });
 
         if (response.ok) {
-            const filename = characters[this_chid].avatar.replace('.png', `.${format}`);
+            const filename = characters[Number(this_chid)].avatar.replace('.png', `.${format}`);
             const blob = await response.blob();
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -12032,13 +12036,13 @@ jQuery(async function () {
             return;
         }
 
-        const importedFileNames = [];
+        const importedFileNames: string[] = [];
 
-        for (const file of targetElement.files) {
+        for (const file of targetElement.files!) {
             const ext = file.name.match(/\.(\w+)$/);
             const format = ext?.[1]?.toLowerCase();
 
-            if (!['json', 'jsonl'].includes(format)) {
+            if (!['json', 'jsonl'].includes(format ?? '')) {
                 toastr.warning(t`Only JSON and JSONL files are supported for chat imports.`);
                 continue;
             }
@@ -12049,7 +12053,7 @@ jQuery(async function () {
             }
 
             const formData = new FormData(formElement);
-            formData.set('file_type', format);
+            formData.set('file_type', format ?? '');
             formData.set('avatar', file);
             formData.set('user_name', name1);
 
@@ -12178,7 +12182,7 @@ jQuery(async function () {
 
     $(document).on('click', '.mes .avatar', function () {
         const messageElement = $(this).closest('.mes');
-        const thumbURL = $(this).children('img').attr('src');
+        const thumbURL = $(this).children('img').attr('src') ?? '';
         const charsPath = '/characters/';
         const targetAvatarImg = thumbURL.substring(thumbURL.lastIndexOf('=') + 1);
         const charname = targetAvatarImg.replace('.png', '');
@@ -12278,7 +12282,7 @@ jQuery(async function () {
     });
 
     $(document).on('keydown', function (e) {
-        if (e.key === 'Escape' && !e.originalEvent.isComposing) {
+        if (e.key === 'Escape' && !e.originalEvent!.isComposing) {
             const isEditVisible = $('#curEditTextarea').is(':visible') || $('.reasoning_edit_textarea').length > 0;
             if (isEditVisible && power_user.auto_save_msg_edits === false) {
                 closeMessageEditor('all');
@@ -12354,14 +12358,14 @@ jQuery(async function () {
                     });
 
                 // Remember the chat currently selected, so we can reload it after the replacement
-                const currentChatFile = characters[this_chid].chat;
+                const currentChatFile = characters[Number(this_chid)].chat;
                 async function postReplace() {
                     await openCharacterChat(currentChatFile);
                 }
 
                 switch (result) {
                     case POPUP_RESULT_FILE: {
-                        async function uploadReplacementCard(e) {
+                        async function uploadReplacementCard(e: any) {
                             const file = e.target.files[0];
                             if (!file) {
                                 return;
@@ -12369,7 +12373,7 @@ jQuery(async function () {
 
                             try {
                                 const data = new Map();
-                                data.set(file, characters[this_chid].avatar);
+                                data.set(file, characters[Number(this_chid)].avatar);
                                 await processDroppedFiles([file], data);
                                 await postReplace();
                             } catch {
@@ -12388,14 +12392,14 @@ jQuery(async function () {
                             break;
                         }
                         onlineUrl = inputUrl;
-                        await importFromExternalUrl(onlineUrl, { preserveFileName: characters[this_chid].avatar });
+                        await importFromExternalUrl(onlineUrl, { preserveFileName: characters[Number(this_chid)].avatar });
                         await postReplace();
                         break;
                     }
                 }
             } break;
             case 'import_tags': {
-                await importTags(characters[this_chid], { importSetting: tag_import_setting.ASK });
+                await importTags(characters[Number(this_chid)], { importSetting: tag_import_setting.ASK } as any);
             } break;
             /*case 'delete_button':
                 popup_type = "del_ch";
@@ -12422,7 +12426,7 @@ jQuery(async function () {
 
 
     var isManualInput = false;
-    var valueBeforeManualInput;
+    var valueBeforeManualInput: any;
 
     $(document).on('input', '.range-block-counter input, .neo-range-input', function () {
         valueBeforeManualInput = $(this).val();
@@ -12505,14 +12509,14 @@ jQuery(async function () {
         }
     });
 
-    charDragDropHandler = new DragAndDropHandler('body', async (files, event) => {
+    charDragDropHandler = new DragAndDropHandler('body', async (files: any, event: any) => {
         if (!files.length) {
             await importFromURL(event.originalEvent.dataTransfer.items, files);
         }
         await processDroppedFiles(files);
     }, { noAnimation: true });
 
-    chatDragDropHandler = new DragAndDropHandler('#select_chat_popup', async (_, event) => {
+    chatDragDropHandler = new DragAndDropHandler('#select_chat_popup', async (_: any, event: any) => {
         const importFile = document.getElementById('chat_import_file');
         if (importFile instanceof HTMLInputElement) {
             importFile.files = event.originalEvent.dataTransfer.files;
@@ -12543,7 +12547,7 @@ jQuery(async function () {
     await firstLoadInit();
 
     window.addEventListener('beforeunload', (e) => {
-        if (isChatSaving || this_edit_mes_id >= 0) {
+        if (isChatSaving || this_edit_mes_id! >= 0) {
             e.preventDefault();
             e.returnValue = true;
         }

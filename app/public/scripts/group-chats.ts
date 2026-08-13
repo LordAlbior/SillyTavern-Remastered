@@ -111,10 +111,10 @@ let is_group_generating = false; // Group generation flag
 let is_group_automode_enabled = false;
 let hideMutedSprites = false;
 /** @type {Group[]} */
-let groups = [];
+let groups: any[] = [];
 /** @type {string|null} */
-let selected_group = null;
-let group_generation_id = null;
+let selected_group: string | null = null;
+let group_generation_id: any = null;
 let fav_grp_checked = false;
 let openGroupId = null;
 let newGroupMembers = [];

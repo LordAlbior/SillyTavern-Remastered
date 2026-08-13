@@ -35,7 +35,7 @@ import { ELSE_MARKER } from "../../constants.ts";
  *
  * @type {MacroEngine}
  */
-let instance;
+let instance: any;
 export { instance as MacroEngine };
 
 class MacroEngine {

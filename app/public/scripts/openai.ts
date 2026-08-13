@@ -181,8 +181,8 @@ const textCompletionModels = [
   "code-search-ada-code-001",
 ];
 
-let biasCache;
-export let model_list = [];
+let biasCache: any;
+export let model_list: any[] = [];
 
 export const chat_completion_sources = {
   OPENAI: "openai",
@@ -517,7 +517,7 @@ const default_settings = {
   extensions: {},
 };
 
-const oai_settings = structuredClone(default_settings);
+let oai_settings: any = structuredClone(default_settings);
 
 export let proxies = [
   {
@@ -528,11 +528,11 @@ export let proxies = [
 ];
 export let selected_proxy = proxies[0];
 
-export let openai_setting_names;
-export let openai_settings;
+export let openai_setting_names: any;
+export let openai_settings: any;
 
 /** @type {import('./PromptManager.js').PromptManager} */
-export let promptManager = null;
+export let promptManager: any = null;
 
 async function validateReverseProxy() {
   if (!oai_settings.reverse_proxy) {
@@ -572,7 +572,7 @@ async function validateReverseProxy() {
  * @param {ChatMessage[]} chat - Array containing all messages.
  * @returns {object[]} - Array containing all messages formatted for chat completion.
  */
-function setOpenAIMessages(chat) {
+function setOpenAIMessages(chat: any) {
   let j = 0;
   // clean openai msgs
   const messages = [];
@@ -671,7 +671,7 @@ function setOpenAIMessages(chat) {
  * @param {string[]} mesExamplesArray - Array containing all examples.
  * @returns {object[]} - Array containing all examples formatted for chat completion.
  */
-function setOpenAIMessageExamples(mesExamplesArray) {
+function setOpenAIMessageExamples(mesExamplesArray: any) {
   // get a nice array of all blocks of all example messages = array of arrays (important!)
   const examples = [];
   for (const item of mesExamplesArray) {
@@ -690,7 +690,7 @@ function setOpenAIMessageExamples(mesExamplesArray) {
  * @param openAiSettings
  * @returns {PromptManager|null}
  */
-function setupChatCompletionPromptManager(openAiSettings) {
+function setupChatCompletionPromptManager(openAiSettings: any) {
   // Do not set up prompt manager more than once
   if (promptManager) {
     promptManager.render(false);
@@ -723,7 +723,7 @@ function setupChatCompletionPromptManager(openAiSettings) {
   };
 
   promptManager.tryGenerate = () => {
-    if (characters[this_chid]) {
+    if (characters[Number(this_chid)]) {
       return Generate("normal", {}, true);
     } else {
       return Promise.resolve();
@@ -744,18 +744,18 @@ function setupChatCompletionPromptManager(openAiSettings) {
  * @param {boolean} appendNamesForGroup - Whether to append the character name for group chats
  * @returns {Message[]} Array of message objects
  */
-export function parseExampleIntoIndividual(messageExampleString, appendNamesForGroup = true) {
+export function parseExampleIntoIndividual(messageExampleString: any, appendNamesForGroup = true) {
   const groupBotNames = getGroupNames().map((name) => `${name}:`);
 
-  const result = []; // array of msgs
+  const result: any[] = []; // array of msgs
   const tmp = messageExampleString.split("\n");
-  let cur_msg_lines = [];
+  let cur_msg_lines: any[] = [];
   let in_user = false;
   let in_bot = false;
   let botName = name2;
 
   // DRY my cock and balls :)
-  function add_msg(name, role, system_name) {
+  function add_msg(name: any, role: any, system_name: any) {
     // join different newlines (we split them by \n and join by \n)
     // remove char name
     // strip to remove extra spaces
@@ -807,7 +807,7 @@ export function parseExampleIntoIndividual(messageExampleString, appendNamesForG
   return result;
 }
 
-export function formatWorldInfo(value, { wiFormat = null } = {}) {
+export function formatWorldInfo(value: any, { wiFormat = null }: any = {}) {
   if (!value) {
     return "";
   }
@@ -828,10 +828,10 @@ export function formatWorldInfo(value, { wiFormat = null } = {}) {
  * @param {Object[]} messages - Array containing all messages.
  * @returns {Promise<Object[]>} - Array containing all messages with injections.
  */
-async function populationInjectionPrompts(prompts, messages) {
+async function populationInjectionPrompts(prompts: any, messages: any) {
   let totalInsertedMessages = 0;
 
-  const roleTypes = {
+  const roleTypes: Record<string, number> = {
     system: extension_prompt_roles.SYSTEM,
     user: extension_prompt_roles.USER,
     assistant: extension_prompt_roles.ASSISTANT,
@@ -840,7 +840,7 @@ async function populationInjectionPrompts(prompts, messages) {
   const maxDepth = getExtensionPromptMaxDepth();
   for (let i = 0; i <= maxDepth; i++) {
     // Get prompts for current depth
-    const depthPrompts = prompts.filter((prompt) => prompt.injection_depth === i && prompt.content);
+    const depthPrompts = prompts.filter((prompt: any) => prompt.injection_depth === i && prompt.content);
 
     const roleMessages = [];
     const separator = "\n";
@@ -848,7 +848,7 @@ async function populationInjectionPrompts(prompts, messages) {
 
     // Group prompts by priority
     const extensionPromptsOrder = "100";
-    const orderGroups = {
+    const orderGroups: Record<string, any[]> = {
       [extensionPromptsOrder]: [],
     };
     for (const prompt of depthPrompts) {
@@ -869,17 +869,17 @@ async function populationInjectionPrompts(prompts, messages) {
       for (const role of roles) {
         const rolePrompts = orderPrompts
           .filter((prompt) => prompt.role === role)
-          .map((x) => x.content)
+          .map((x: any) => x.content)
           .join(separator);
 
         // Get extension prompt
         const extensionPrompt =
           order === extensionPromptsOrder
-            ? await getExtensionPrompt(extension_prompt_types.IN_CHAT, i, separator, roleTypes[role], wrap)
+            ? await getExtensionPrompt(extension_prompt_types.IN_CHAT, i, separator, roleTypes[role] as any, wrap)
             : "";
         const jointPrompt = [rolePrompts, extensionPrompt]
-          .filter((x) => x)
-          .map((x) => x.trim())
+          .filter((x: any) => x)
+          .map((x: any) => x.trim())
           .join(separator);
 
         if (jointPrompt && jointPrompt.length) {
@@ -907,7 +907,7 @@ async function populationInjectionPrompts(prompts, messages) {
  * @param type
  * @param cyclePrompt
  */
-async function populateChatHistory(messages, prompts, chatCompletion, type = null, cyclePrompt = null) {
+async function populateChatHistory(messages: any, prompts: any, chatCompletion: any, type: any = null, cyclePrompt: any = null) {
   if (!prompts.has("chatHistory")) {
     return;
   }
@@ -939,7 +939,7 @@ async function populateChatHistory(messages, prompts, chatCompletion, type = nul
       system_prompt: true,
     };
     continueMessageCollection = new MessageCollection("continueNudge");
-    const continueMessageIndex = messages.findLastIndex((x) => !x.injected);
+    const continueMessageIndex = messages.findLastIndex((x: any) => !x.injected);
     if (continueMessageIndex >= 0) {
       const continueMessage = messages.splice(continueMessageIndex, 1)[0];
       const prompt = new Prompt(continueMessage);
@@ -972,7 +972,7 @@ async function populateChatHistory(messages, prompts, chatCompletion, type = nul
   const isToolReasoningProvider = interleaved_reasoning_providers.includes(oai_settings.chat_completion_source);
   const toolReasoningMode = isToolReasoningProvider ? getEffectiveToolReasoningMode() : tool_reasoning_modes.DISABLED;
   const includeToolReasoning = toolReasoningMode !== tool_reasoning_modes.DISABLED;
-  const lastUserIdx = messages.findLastIndex((x) => x.role === "user");
+  const lastUserIdx = messages.findLastIndex((x: any) => x.role === "user");
 
   // Insert chat messages as long as there is budget available
   const chatPool = [...messages].reverse();
@@ -995,7 +995,7 @@ async function populateChatHistory(messages, prompts, chatCompletion, type = nul
      * Inline a media attachment into the chat message.
      * @param {MediaAttachment} media - The media attachment to inline.
      */
-    async function inlineMediaAttachment(media) {
+    async function inlineMediaAttachment(media: any) {
       if (!media || !media.url) {
         return;
       }
@@ -1071,7 +1071,7 @@ async function populateChatHistory(messages, prompts, chatCompletion, type = nul
         }
       }
       /** @type {import('./tool-calling.js').ToolInvocation[]} */
-      const invocations = chatPrompt.invocations.map((invocation) => {
+      const invocations = chatPrompt.invocations.map((invocation: any) => {
         const clone = structuredClone(invocation);
         if (!reasoningIsEligible) {
           delete clone.reasoning;
@@ -1090,7 +1090,7 @@ async function populateChatHistory(messages, prompts, chatCompletion, type = nul
         invocations
           .slice()
           .reverse()
-          .map((invocation) => Message.createAsync("tool", invocation.result || "[No content]", invocation.id)),
+          .map((invocation: any) => Message.createAsync("tool", invocation.result || "[No content]", invocation.id)),
       );
       await toolCallMessage.setToolCalls(invocations, includeSignature, includeToolReasoning);
       if (chatCompletion.canAffordAll([toolCallMessage, ...toolResultMessages])) {
@@ -1140,7 +1140,7 @@ async function populateChatHistory(messages, prompts, chatCompletion, type = nul
  * @param {ChatCompletion} chatCompletion - An instance of ChatCompletion class that will be populated with the prompts.
  * @param {Object[]} messageExamples - Array containing all message examples.
  */
-async function populateDialogueExamples(prompts, chatCompletion, messageExamples) {
+async function populateDialogueExamples(prompts: any, chatCompletion: any, messageExamples: any) {
   if (!prompts.has("dialogueExamples")) {
     return;
   }
@@ -1183,7 +1183,7 @@ async function populateDialogueExamples(prompts, chatCompletion, messageExamples
  * @param {number} position - Prompt position in the extensions object.
  * @returns {string|false} - The prompt position for prompt collection.
  */
-export function getPromptPosition(position) {
+export function getPromptPosition(position: any) {
   if (position == extension_prompt_types.BEFORE_PROMPT) {
     return "start";
   }
@@ -1200,7 +1200,7 @@ export function getPromptPosition(position) {
  * @param {number} role Role of the prompt.
  * @returns {string} Mapped role.
  */
-export function getPromptRole(role) {
+export function getPromptRole(role: any) {
   switch (role) {
     case extension_prompt_roles.SYSTEM:
       return "system";
@@ -1229,12 +1229,12 @@ export function getPromptRole(role) {
  * @returns {Promise<void>}
  */
 async function populateChatCompletion(
-  prompts,
-  chatCompletion,
-  { bias, quietPrompt, quietImage, type, cyclePrompt, messages, messageExamples },
+  prompts: any,
+  chatCompletion: any,
+  { bias, quietPrompt, quietImage, type, cyclePrompt, messages, messageExamples }: any,
 ) {
   // Helper function for preparing a prompt, that already exists within the prompt collection, for completion
-  const addToChatCompletion = async (source, target = null) => {
+  const addToChatCompletion = async (source: any, target: any = null) => {
     // We need the prompts array to determine a position for the source.
     if (false === prompts.has(source)) return;
 
@@ -1290,14 +1290,14 @@ async function populateChatCompletion(
   // Add ordered system and user prompts
   const systemPrompts = ["nsfw", "jailbreak"];
   const userRelativePrompts = prompts.collection
-    .filter((prompt) => false === prompt.system_prompt && prompt.injection_position !== INJECTION_POSITION.ABSOLUTE)
-    .reduce((acc, prompt) => {
+    .filter((prompt: any) => false === prompt.system_prompt && prompt.injection_position !== INJECTION_POSITION.ABSOLUTE)
+    .reduce((acc: any[], prompt: any) => {
       acc.push(prompt.identifier);
       return acc;
     }, []);
   const absolutePrompts = prompts.collection
-    .filter((prompt) => prompt.injection_position === INJECTION_POSITION.ABSOLUTE)
-    .reduce((acc, prompt) => {
+    .filter((prompt: any) => prompt.injection_position === INJECTION_POSITION.ABSOLUTE)
+    .reduce((acc: any[], prompt: any) => {
       acc.push(prompt);
       return acc;
     }, []);
@@ -1312,14 +1312,14 @@ async function populateChatCompletion(
   // Bias
   if (bias && bias.trim().length) await addToChatCompletion("bias");
 
-  const injectToMain = async (/** @type {Prompt} */ prompt, /** @type {string|number} */ position) => {
+  const injectToMain = async (prompt: any, position: any) => {
     if (chatCompletion.has("main")) {
       const message = await Message.fromPromptAsync(prompt);
       chatCompletion.insert(message, "main", position);
     } else {
       // Convert the relative prompt to an injection and place it relative to main prompt
       // Keeping prompts in the same order bucket will squash them together during in-chat injection
-      const indexOfMain = absolutePrompts.findIndex((p) => p.identifier === "main");
+      const indexOfMain = absolutePrompts.findIndex((p: any) => p.identifier === "main");
       if (indexOfMain >= 0) {
         const main = absolutePrompts[indexOfMain];
         const promptCopy = new Prompt(prompt);
@@ -1346,7 +1346,7 @@ async function populateChatCompletion(
   }
 
   // Other relative extension prompts
-  for (const prompt of prompts.collection.filter((p) => p.extension && p.position)) {
+  for (const prompt of prompts.collection.filter((p: any) => p.extension && p.position)) {
     await injectToMain(prompt, prompt.position);
   }
 
@@ -1368,7 +1368,7 @@ async function populateChatCompletion(
     const namesInCompletion = oai_settings.names_behavior === character_names_behavior.COMPLETION;
     const assistantPrefill =
       isAssistantRole && supportsAssistantPrefill ? substituteParams(oai_settings.assistant_prefill) : "";
-    const messageContent = [assistantPrefill, chatMessage.content].filter((x) => x).join("\n\n");
+    const messageContent = [assistantPrefill, chatMessage.content].filter((x: any) => x).join("\n\n");
     const continueMessage = await Message.createAsync(chatMessage.role, messageContent, "continuePrefill");
     chatMessage.name &&
       namesInCompletion &&
@@ -1424,7 +1424,7 @@ async function preparePromptsForChatCompletion({
   systemPromptOverride,
   jailbreakPromptOverride,
   type,
-}) {
+}: any) {
   const scenarioText =
     scenario && oai_settings.scenario_format ? substituteParams(oai_settings.scenario_format) : scenario || "";
   const charPersonalityText =
@@ -1636,8 +1636,8 @@ export async function prepareOpenAIMessages(
     jailbreakPromptOverride,
     messages,
     messageExamples,
-  },
-  dryRun,
+  }: any,
+  dryRun: any,
 ) {
   // Without a character selected, there is no way to accurately calculate tokens
   if (!promptManager.activeCharacter && dryRun) return [null, false];
@@ -1711,7 +1711,7 @@ export async function prepareOpenAIMessages(
   await eventSource.emit(event_types.CHAT_COMPLETION_PROMPT_READY, eventData);
 
   openai_messages_count =
-    chat.filter((x) => !x?.tool_calls && ["user", "assistant", "tool"].includes(x?.role)).length || 0;
+    chat.filter((x: any) => !x?.tool_calls && ["user", "assistant", "tool"].includes(x?.role)).length || 0;
 
   return [chat, promptManager.tokenHandler.counts];
 }
@@ -1723,7 +1723,7 @@ export async function prepareOpenAIMessages(
  * @param {object} [options]
  * @param {boolean?} [options.quiet=false] Suppress toast messages
  */
-export function tryParseStreamingError(response, decoded, { quiet = false } = {}) {
+export function tryParseStreamingError(response: any, decoded: any, { quiet = false }: any = {}) {
   try {
     const data = JSON.parse(decoded);
 
@@ -1764,7 +1764,7 @@ export function tryParseStreamingError(response, decoded, { quiet = false } = {}
  * @returns {void}
  * @throws {object} - response JSON
  */
-function checkQuotaError(data, { quiet = false } = {}) {
+function checkQuotaError(data: any, { quiet = false }: any = {}) {
   if (!data) {
     return;
   }
@@ -1783,7 +1783,7 @@ function checkQuotaError(data, { quiet = false } = {}) {
  * @param {object} [options]
  * @param {boolean?} [options.quiet=false] Suppress toast messages
  */
-function checkModerationError(data, { quiet = false } = {}) {
+function checkModerationError(data: any, { quiet = false }: any = {}) {
   const moderationError = data?.error?.message?.includes("requires moderation");
   if (moderationError && !quiet) {
     const moderationReason = `Reasons: ${data?.error?.metadata?.reasons?.join(", ") ?? "(N/A)"}`;
@@ -1797,7 +1797,7 @@ function checkModerationError(data, { quiet = false } = {}) {
  * @param {ChatCompletionSettings} settings Chat completion settings
  * @returns {string} API model
  */
-export function getChatCompletionModel(settings = null) {
+export function getChatCompletionModel(settings: any = null) {
   settings = settings ?? oai_settings;
   const source = settings.chat_completion_source;
   switch (source) {
@@ -1859,7 +1859,7 @@ export function getChatCompletionModel(settings = null) {
   }
 }
 
-function getOpenRouterModelTemplate(option) {
+function getOpenRouterModelTemplate(option: any) {
   const model = model_list.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1905,7 +1905,7 @@ function calculateOpenRouterCost() {
   $("#openrouter_max_prompt_cost").text(cost);
 }
 
-function getElectronHubModelTemplate(option) {
+function getElectronHubModelTemplate(option: any) {
   const model = model_list.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1966,7 +1966,7 @@ function calculateElectronHubCost() {
   $("#electronhub_max_prompt_cost").text(cost);
 }
 
-function getChutesModelTemplate(option) {
+function getChutesModelTemplate(option: any) {
   const model = model_list.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -2038,7 +2038,7 @@ function calculateChutesCost() {
   $("#chutes_max_prompt_cost").text(cost);
 }
 
-function getNanoGptModelTemplate(option) {
+function getNanoGptModelTemplate(option: any) {
   const model = model_list.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -2104,7 +2104,7 @@ function getNanoGptModelTemplate(option) {
     `);
 }
 
-function getAimlapiModelTemplate(option) {
+function getAimlapiModelTemplate(option: any) {
   const model = model_list.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -2120,8 +2120,8 @@ function getAimlapiModelTemplate(option) {
     `);
 }
 
-function saveModelList(data) {
-  model_list = data.map((model) => ({ ...model }));
+function saveModelList(data: any) {
+  model_list = data.map((model: any) => ({ ...model }));
   model_list.sort((a, b) => a?.id && b?.id && a.id.localeCompare(b.id));
 
   if (oai_settings.chat_completion_source == chat_completion_sources.OPENROUTER) {
@@ -2132,9 +2132,9 @@ function saveModelList(data) {
     );
 
     if (oai_settings.group_models) {
-      groupModelsByVendor(model_list, chat_completion_sources.OPENROUTER).forEach((models, vendor) => {
+      groupModelsByVendor(model_list, chat_completion_sources.OPENROUTER).forEach((models: any, vendor: any) => {
         const optgroup = $("<optgroup>").attr("label", vendor);
-        models.forEach((model) => {
+        models.forEach((model: any) => {
           optgroup.append($("<option>", { value: model.id, text: model.name }));
         });
         $("#model_openrouter_select").append(optgroup);
@@ -2192,9 +2192,9 @@ function saveModelList(data) {
     $("#model_aimlapi_select").empty();
 
     if (oai_settings.group_models) {
-      groupModelsByVendor(model_list, chat_completion_sources.AIMLAPI).forEach((models, vendor) => {
+      groupModelsByVendor(model_list, chat_completion_sources.AIMLAPI).forEach((models: any, vendor: any) => {
         const optgroup = $("<optgroup>").attr("label", vendor);
-        models.forEach((model) => {
+        models.forEach((model: any) => {
           optgroup.append($("<option>", { value: model.id, text: model.info?.name || model.id }));
         });
         $("#model_aimlapi_select").append(optgroup);
@@ -2233,9 +2233,9 @@ function saveModelList(data) {
     $("#model_electronhub_select").empty();
 
     if (oai_settings.group_models) {
-      groupModelsByVendor(model_list, chat_completion_sources.ELECTRONHUB).forEach((models, vendor) => {
+      groupModelsByVendor(model_list, chat_completion_sources.ELECTRONHUB).forEach((models: any, vendor: any) => {
         const optgroup = $("<optgroup>").attr("label", vendor);
-        models.forEach((model) => {
+        models.forEach((model: any) => {
           optgroup.append($("<option>", { value: model.id, text: model.name }));
         });
         $("#model_electronhub_select").append(optgroup);
@@ -2262,9 +2262,9 @@ function saveModelList(data) {
     $("#model_chutes_select").empty();
 
     if (oai_settings.group_models) {
-      groupModelsByVendor(model_list, chat_completion_sources.CHUTES).forEach((models, vendor) => {
+      groupModelsByVendor(model_list, chat_completion_sources.CHUTES).forEach((models: any, vendor: any) => {
         const optgroup = $("<optgroup>").attr("label", vendor);
-        models.forEach((model) => {
+        models.forEach((model: any) => {
           optgroup.append($("<option>", { value: model.id, text: model.id }));
         });
         $("#model_chutes_select").append(optgroup);
@@ -2288,9 +2288,9 @@ function saveModelList(data) {
     $("#model_nanogpt_select").empty();
 
     if (oai_settings.group_models) {
-      groupModelsByVendor(model_list, chat_completion_sources.NANOGPT).forEach((models, vendor) => {
+      groupModelsByVendor(model_list, chat_completion_sources.NANOGPT).forEach((models: any, vendor: any) => {
         const optgroup = $("<optgroup>").attr("label", vendor);
-        models.forEach((model) => {
+        models.forEach((model: any) => {
           optgroup.append($("<option>", { value: model.id, text: model.name || model.id }));
         });
         $("#model_nanogpt_select").append(optgroup);
@@ -2342,7 +2342,7 @@ function saveModelList(data) {
     $("#google_other_models").empty();
 
     // Get static model options that are already in the HTML
-    const staticModels = [];
+    const staticModels: any[] = [];
     $("#model_google_select option").each(function () {
       staticModels.push($(this).val());
     });
@@ -2528,10 +2528,10 @@ function saveModelList(data) {
  * @param {string} source - Chat Completion source (e.g., 'openrouter', 'chutes', 'electronhub', 'nanogpt')
  * @returns {object[]} Sorted array of model objects
  */
-function sortModelsBy(data, property, source) {
+function sortModelsBy(data: any, property: any, source: any) {
   switch (source) {
     case chat_completion_sources.OPENROUTER:
-      return data.sort((a, b) => {
+      return data.sort((a: any, b: any) => {
         if (property === "context_length") {
           return (b.context_length || 0) - (a.context_length || 0);
         } else if (property === "pricing.input" || property === "pricing.prompt") {
@@ -2543,7 +2543,7 @@ function sortModelsBy(data, property, source) {
         }
       });
     case chat_completion_sources.CHUTES:
-      return data.sort((a, b) => {
+      return data.sort((a: any, b: any) => {
         if (property === "context_length") {
           return (b.context_length || 0) - (a.context_length || 0);
         } else if (property === "pricing.input" || property === "pricing.prompt") {
@@ -2555,7 +2555,7 @@ function sortModelsBy(data, property, source) {
         }
       });
     case chat_completion_sources.ELECTRONHUB:
-      return data.sort((a, b) => {
+      return data.sort((a: any, b: any) => {
         if (property === "context_length") {
           return (b.tokens || 0) - (a.tokens || 0);
         } else if (property === "pricing.input" || property === "pricing.prompt") {
@@ -2567,7 +2567,7 @@ function sortModelsBy(data, property, source) {
         }
       });
     case chat_completion_sources.NANOGPT:
-      return data.sort((a, b) => {
+      return data.sort((a: any, b: any) => {
         if (property === "context_length") {
           return (b.context_length || 0) - (a.context_length || 0);
         } else if (property === "pricing.input" || property === "pricing.prompt") {
@@ -2579,7 +2579,7 @@ function sortModelsBy(data, property, source) {
         }
       });
     case chat_completion_sources.AIMLAPI:
-      return data.sort((a, b) => {
+      return data.sort((a: any, b: any) => {
         if (property === "context_length") {
           return (b.info?.contextLength || 0) - (a.info?.contextLength || 0);
         } else {
@@ -2598,10 +2598,10 @@ function sortModelsBy(data, property, source) {
  * @param {string} source Chat Completion source (e.g., 'openrouter')
  * @returns {Map<string, object[]>} Map of vendor to array of models
  */
-function groupModelsByVendor(array, source) {
+function groupModelsByVendor(array: any, source: any) {
   switch (source) {
     case chat_completion_sources.OPENROUTER:
-      return array.reduce((acc, curr) => {
+      return array.reduce((acc: any, curr: any) => {
         const vendor = curr.id.split("/")[0];
         if (!acc.has(vendor)) {
           acc.set(vendor, []);
@@ -2610,7 +2610,7 @@ function groupModelsByVendor(array, source) {
         return acc;
       }, new Map());
     case chat_completion_sources.ELECTRONHUB:
-      return array.reduce((acc, curr) => {
+      return array.reduce((acc: any, curr: any) => {
         const vendor =
           String(curr?.name || curr?.id || "Other")
             .split(":")[0]
@@ -2622,7 +2622,7 @@ function groupModelsByVendor(array, source) {
         return acc;
       }, new Map());
     case chat_completion_sources.NANOGPT:
-      return array.reduce((acc, curr) => {
+      return array.reduce((acc: any, curr: any) => {
         const vendorPart = /\//.test(curr.id) ? curr.id.split("/")[0] : curr.id.split("-")[0];
         const vendor = String(vendorPart?.trim()?.toLowerCase() || "Other");
         if (!acc.has(vendor)) {
@@ -2632,7 +2632,7 @@ function groupModelsByVendor(array, source) {
         return acc;
       }, new Map());
     case chat_completion_sources.CHUTES:
-      return array.reduce((acc, curr) => {
+      return array.reduce((acc: any, curr: any) => {
         const vendor = curr.id.split("/")[0];
         if (!acc.has(vendor)) {
           acc.set(vendor, []);
@@ -2641,7 +2641,7 @@ function groupModelsByVendor(array, source) {
         return acc;
       }, new Map());
     case chat_completion_sources.AIMLAPI:
-      return array.reduce((acc, curr) => {
+      return array.reduce((acc: any, curr: any) => {
         const vendor = curr.info?.developer || "Other";
         if (!acc.has(vendor)) {
           acc.set(vendor, []);
@@ -2660,7 +2660,7 @@ function groupModelsByVendor(array, source) {
  * @param {string} model Model name (optional, used for ElectronHub)
  * @returns {string} Reasoning effort, if present
  */
-function getReasoningEffort(settings = null, model = null) {
+function getReasoningEffort(settings: any = null, model: any = null) {
   settings = settings ?? oai_settings;
   model = model ?? getChatCompletionModel(settings);
 
@@ -2766,7 +2766,7 @@ function getReasoningEffort(settings = null, model = null) {
  * @param {ChatCompletionSettings} settings Chat completion settings
  * @returns {string} Verbosity level, if present
  */
-function getVerbosity(settings = null) {
+function getVerbosity(settings: any = null) {
   settings = settings ?? oai_settings;
 
   if (settings.verbosity === verbosity_levels.auto) {
@@ -2786,7 +2786,7 @@ function getVerbosity(settings = null) {
  * @param {import('../script.js').AdditionalRequestOptions} options Additional request options
  * @returns {Promise<object>} Final generation parameters object appropriate for the chat completion source
  */
-export async function createGenerationParameters(settings, model, type, messages, { jsonSchema = null } = {}) {
+export async function createGenerationParameters(settings: any, model: any, type: any, messages: any, { jsonSchema = null }: any = {}) {
   // HACK: Filter out null and non-object messages
   if (!Array.isArray(messages)) {
     throw new Error("messages must be an array");
@@ -2871,7 +2871,7 @@ export async function createGenerationParameters(settings, model, type, messages
   const canMultiSwipe =
     settings.n > 1 && !noMultiSwipeTypes.includes(type) && multiswipeSources.includes(settings.chat_completion_source);
 
-  let logit_bias = {};
+  let logit_bias: any = {};
   if (
     settings.bias_preset_selected &&
     logitBiasSources.includes(settings.chat_completion_source) &&
@@ -2945,7 +2945,7 @@ export async function createGenerationParameters(settings, model, type, messages
   }
 
   // Remove logit bias/logprobs/stop-strings if not supported by the model
-  const isVision = (m) => ["gpt", "vision"].every((x) => typeof m === "string" && m.includes(x));
+  const isVision = (m: any) => ["gpt", "vision"].every((x) => typeof m === "string" && m.includes(x));
   if (gptSources.includes(settings.chat_completion_source) && isVision(model)) {
     delete generate_data.logit_bias;
     delete generate_data.stop;
@@ -2992,7 +2992,7 @@ export async function createGenerationParameters(settings, model, type, messages
     generate_data.top_k = Number(settings.top_k_openai);
     generate_data.stop = getCustomStoppingStrings(stopStringsLimit)
       .slice(0, stopStringsLimit)
-      .filter((x) => x.length >= 1 && x.length <= 16);
+      .filter((x: any) => x.length >= 1 && x.length <= 16);
     generate_data.use_sysprompt = settings.use_sysprompt;
     if (settings.chat_completion_source === chat_completion_sources.VERTEXAI) {
       generate_data.vertexai_auth_mode = settings.vertexai_auth_mode;
@@ -3146,7 +3146,7 @@ export async function createGenerationParameters(settings, model, type, messages
     delete generate_data.frequency_penalty;
     delete generate_data.presence_penalty;
     if (/^(openai\/)?(o1)/.test(model)) {
-      generate_data.messages.forEach((msg) => {
+      generate_data.messages.forEach((msg: any) => {
         if (msg.role === "system") {
           msg.role = "user";
         }
@@ -3196,7 +3196,7 @@ export async function createGenerationParameters(settings, model, type, messages
  * @returns {Promise<unknown>}
  * @throws {Error}
  */
-async function sendOpenAIRequest(type, messages, signal, { jsonSchema = null } = {}) {
+async function sendOpenAIRequest(type: any, messages: any, signal: any, { jsonSchema = null }: any = {}) {
   // Provide default abort signal
   if (!signal) {
     signal = new AbortController().signal;
@@ -3226,12 +3226,12 @@ async function sendOpenAIRequest(type, messages, signal, { jsonSchema = null } =
   }
   if (stream) {
     const eventStream = getEventSourceStream() as any;
-    response.body.pipeThrough(eventStream);
+    response.body!.pipeThrough(eventStream);
     const reader = eventStream.readable.getReader();
     return async function* streamData() {
       let text = "";
-      const swipes = [];
-      const toolCalls = [];
+      const swipes: any[] = [];
+      const toolCalls: any[] = [];
       const state = { reasoning: "", images: [], signature: "", toolSignatures: {} };
       while (true) {
         const { done, value } = await reader.read();
@@ -3245,7 +3245,7 @@ async function sendOpenAIRequest(type, messages, signal, { jsonSchema = null } =
           const swipeIndex = parsed.choices[0].index - 1;
           // FIXME: state.reasoning should be an array to support multi-swipe
           swipes[swipeIndex] =
-            (swipes[swipeIndex] || "") + getStreamingReply(parsed, state, { overrideShowThoughts: false });
+            (swipes[swipeIndex] || "") + getStreamingReply(parsed, state, { overrideShowThoughts: false } as any);
         } else {
           text += getStreamingReply(parsed, state);
         }
@@ -3293,7 +3293,7 @@ async function sendOpenAIRequest(type, messages, signal, { jsonSchema = null } =
  * @param {boolean?} [options.overrideShowThoughts] Override show thoughts
  * @returns {string} The reply extracted from the response data
  */
-export function getStreamingReply(data, state, { chatCompletionSource = null, overrideShowThoughts = null } = {}) {
+export function getStreamingReply(data: any, state: any, { chatCompletionSource = null, overrideShowThoughts = null }: any = {}) {
   const chat_completion_source = chatCompletionSource ?? oai_settings.chat_completion_source;
   const show_thoughts = overrideShowThoughts ?? oai_settings.show_thoughts;
 
@@ -3304,45 +3304,45 @@ export function getStreamingReply(data, state, { chatCompletionSource = null, ov
     return data?.delta?.text || "";
   } else if ([chat_completion_sources.MAKERSUITE, chat_completion_sources.VERTEXAI].includes(chat_completion_source)) {
     const inlineData =
-      data?.candidates?.[0]?.content?.parts?.filter((x) => x.inlineData && !x.thought)?.map((x) => x.inlineData) || [];
+      data?.candidates?.[0]?.content?.parts?.filter((x: any) => x.inlineData && !x.thought)?.map((x: any) => x.inlineData) || [];
     if (Array.isArray(inlineData) && inlineData.length > 0) {
-      state.images.push(...inlineData.map((x) => `data:${x.mimeType};base64,${x.data}`).filter(isDataURL));
+      state.images.push(...inlineData.map((x: any) => `data:${x.mimeType};base64,${x.data}`).filter(isDataURL));
     }
     if (show_thoughts) {
-      state.reasoning += data?.candidates?.[0]?.content?.parts?.filter((x) => x.thought)?.map((x) => x.text)?.[0] || "";
+      state.reasoning += data?.candidates?.[0]?.content?.parts?.filter((x: any) => x.thought)?.map((x: any) => x.text)?.[0] || "";
     }
     // Extract thought signatures from streaming chunks (typically in final chunk)
     const parts = data?.candidates?.[0]?.content?.parts || [];
-    parts.forEach((part) => {
+    parts.forEach((part: any) => {
       if (part.thoughtSignature && typeof part.text === "string") {
         state.signature = part.thoughtSignature;
       }
     });
-    return data?.candidates?.[0]?.content?.parts?.filter((x) => !x.thought)?.map((x) => x.text)?.[0] || "";
+    return data?.candidates?.[0]?.content?.parts?.filter((x: any) => !x.thought)?.map((x: any) => x.text)?.[0] || "";
   } else if (chat_completion_source === chat_completion_sources.COHERE) {
     return data?.delta?.message?.content?.text || data?.delta?.message?.tool_plan || "";
   } else if (chat_completion_source === chat_completion_sources.DEEPSEEK) {
     if (show_thoughts) {
-      state.reasoning += data.choices?.filter((x) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content || "";
+      state.reasoning += data.choices?.filter((x: any) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content || "";
     }
     return data.choices?.[0]?.delta?.content || "";
   } else if (chat_completion_source === chat_completion_sources.XAI) {
     if (show_thoughts) {
-      state.reasoning += data.choices?.filter((x) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content || "";
+      state.reasoning += data.choices?.filter((x: any) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content || "";
     }
     return data.choices?.[0]?.delta?.content || "";
   } else if (chat_completion_source === chat_completion_sources.OPENROUTER) {
     const imageUrls =
-      data?.choices?.[0]?.delta?.images?.filter((x) => x.type === "image_url")?.map((x) => x?.image_url?.url) || [];
+      data?.choices?.[0]?.delta?.images?.filter((x: any) => x.type === "image_url")?.map((x: any) => x?.image_url?.url) || [];
     if (Array.isArray(imageUrls) && imageUrls.length > 0) {
       state.images.push(...imageUrls.filter(isDataURL));
     }
     if (show_thoughts) {
       state.reasoning +=
-        data.choices?.filter((x) => x?.delta?.reasoning)?.[0]?.delta?.reasoning ??
-        data.choices?.filter((x) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content ??
-        data.choices?.filter((x) => x?.message?.reasoning)?.[0]?.message?.reasoning ??
-        data.choices?.filter((x) => x?.message?.reasoning_content)?.[0]?.message?.reasoning_content ??
+        data.choices?.filter((x: any) => x?.delta?.reasoning)?.[0]?.delta?.reasoning ??
+        data.choices?.filter((x: any) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content ??
+        data.choices?.filter((x: any) => x?.message?.reasoning)?.[0]?.message?.reasoning ??
+        data.choices?.filter((x: any) => x?.message?.reasoning_content)?.[0]?.message?.reasoning_content ??
         "";
     }
     // Extract thought signatures from OpenRouter streaming.
@@ -3379,23 +3379,23 @@ export function getStreamingReply(data, state, { chatCompletionSource = null, ov
   ) {
     if (show_thoughts) {
       state.reasoning +=
-        data.choices?.filter((x) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content ??
-        data.choices?.filter((x) => x?.delta?.reasoning)?.[0]?.delta?.reasoning ??
+        data.choices?.filter((x: any) => x?.delta?.reasoning_content)?.[0]?.delta?.reasoning_content ??
+        data.choices?.filter((x: any) => x?.delta?.reasoning)?.[0]?.delta?.reasoning ??
         "";
     }
     return data.choices?.[0]?.delta?.content ?? data.choices?.[0]?.message?.content ?? data.choices?.[0]?.text ?? "";
   } else if (chat_completion_source === chat_completion_sources.MISTRALAI) {
     if (show_thoughts) {
       state.reasoning +=
-        data.choices?.filter((x) => x?.delta?.content?.[0]?.thinking)?.[0]?.delta?.content?.[0]?.thinking?.[0]?.text ||
+        data.choices?.filter((x: any) => x?.delta?.content?.[0]?.thinking)?.[0]?.delta?.content?.[0]?.thinking?.[0]?.text ||
         "";
     }
     const content =
       data.choices?.[0]?.delta?.content ?? data.choices?.[0]?.message?.content ?? data.choices?.[0]?.text ?? "";
     return Array.isArray(content)
       ? content
-          .map((x) => x.text)
-          .filter((x) => x)
+          .map((x: any) => x.text)
+          .filter((x: any) => x)
           .join("")
       : content;
   } else {
@@ -3409,7 +3409,7 @@ export function getStreamingReply(data, state, { chatCompletionSource = null, ov
  * @param {Object} data - response data from a chat completions-like source
  * @returns {import('./logprobs.js').TokenLogprobs[] | null} converted logprobs
  */
-function parseChatCompletionLogprobs(data) {
+function parseChatCompletionLogprobs(data: any) {
   if (!data) {
     return null;
   }
@@ -3446,7 +3446,7 @@ function parseChatCompletionLogprobs(data) {
  * @param {{content: { token: string, logprob: number, top_logprobs: { token: string, logprob: number }[] }[]}} logprobs
  * @returns {import('./logprobs.js').TokenLogprobs[] | null} converted logprobs
  */
-function parseOpenAIChatLogprobs(logprobs) {
+function parseOpenAIChatLogprobs(logprobs: any) {
   const { content } = logprobs ?? {};
 
   if (!Array.isArray(content)) {
@@ -3454,12 +3454,12 @@ function parseOpenAIChatLogprobs(logprobs) {
   }
 
   /** @type {(x: { token: string, logprob: number }) => [string, number]} */
-  const toTuple = (x) => [x.token, x.logprob];
+  const toTuple = (x: any) => [x.token, x.logprob];
 
   return content.map(({ token, logprob, top_logprobs = [] }) => {
     // Add the chosen token to top_logprobs if it's not already there, then
     // convert to a list of [token, logprob] pairs
-    const chosenTopToken = top_logprobs.some((top) => token === top.token);
+    const chosenTopToken = top_logprobs.some((top: any) => token === top.token);
     /** @type {import('./logprobs.js').Candidate[]} */
     const topLogprobs = chosenTopToken ? top_logprobs.map(toTuple) : [...top_logprobs.map(toTuple), [token, logprob]];
     return { token, topLogprobs };
@@ -3473,7 +3473,7 @@ function parseOpenAIChatLogprobs(logprobs) {
  * @param {{tokens: string[], token_logprobs: number[], top_logprobs: { token: string, logprob: number }[][]}} logprobs
  * @returns {import('./logprobs.js').TokenLogprobs[] | null} converted logprobs
  */
-function parseOpenAITextLogprobs(logprobs) {
+function parseOpenAITextLogprobs(logprobs: any) {
   const { tokens, token_logprobs, top_logprobs } = logprobs ?? {};
 
   if (!Array.isArray(tokens)) {
@@ -3494,7 +3494,7 @@ function parseOpenAITextLogprobs(logprobs) {
 }
 
 async function calculateLogitBias() {
-  const body = JSON.stringify(oai_settings.bias_presets[oai_settings.bias_preset_selected]);
+  const body = JSON.stringify((oai_settings.bias_presets as Record<string, any>)[oai_settings.bias_preset_selected]);
   let result = {};
 
   try {
@@ -3519,7 +3519,7 @@ class TokenHandler {
   /**
    * @param {(messages: object[] | object, full?: boolean) => Promise<number>} countTokenAsyncFn Function to count tokens
    */
-  constructor(countTokenAsyncFn) {
+  constructor(countTokenAsyncFn: any) {
     this.countTokenAsyncFn = countTokenAsyncFn;
     this.counts = {
       start_chat: 0,
@@ -3541,11 +3541,11 @@ class TokenHandler {
     Object.keys(this.counts).forEach((key) => (this.counts[key] = 0));
   }
 
-  setCounts(counts) {
+  setCounts(counts: any) {
     this.counts = counts;
   }
 
-  uncount(value, type) {
+  uncount(value: any, type: any) {
     this.counts[type] -= value;
   }
 
@@ -3556,14 +3556,14 @@ class TokenHandler {
    * @param {string} [type] Identifier for the token count
    * @returns {Promise<number>} The token count
    */
-  async countAsync(messages, full, type) {
+  async countAsync(messages: any, full: any, type: any) {
     const token_count = await this.countTokenAsyncFn(messages, full);
     this.counts[type] += token_count;
 
     return token_count;
   }
 
-  getTokensForIdentifier(identifier) {
+  getTokensForIdentifier(identifier: any) {
     return this.counts[identifier] ?? 0;
   }
 
@@ -3580,7 +3580,7 @@ const tokenHandler = new TokenHandler(countTokensOpenAIAsync);
 
 // Thrown by ChatCompletion when a requested prompt couldn't be found.
 class IdentifierNotFoundError extends Error {
-  constructor(identifier) {
+  constructor(identifier: any) {
     super(`Identifier ${identifier} not found.`);
     this.name = "IdentifierNotFoundError";
   }
@@ -3617,7 +3617,7 @@ class Message {
   /** @type {string|any[]} */
   content;
   /** @type {string} */
-  name;
+  name: string = '';
   /** @type {object} */
   tool_calls = null;
   /** @type {string?} */
@@ -3632,7 +3632,7 @@ class Message {
    * @param {string} identifier - A unique identifier for the message.
    * @private Don't use this constructor directly. Use createAsync instead.
    */
-  constructor(role, content, identifier) {
+  constructor(role: any, content: any, identifier: any) {
     this.identifier = identifier;
     this.role = role;
     this.content = content;
@@ -3652,7 +3652,7 @@ class Message {
    * @param {string} identifier
    * @returns {Promise<Message>} Message instance
    */
-  static async createAsync(role, content, identifier) {
+  static async createAsync(role: any, content: any, identifier: any) {
     const message = new Message(role, content, identifier);
 
     if (typeof message.content === "string" && message.content.length > 0) {
@@ -3673,8 +3673,8 @@ class Message {
    * @param {boolean} includeReasoning Whether to include plaintext reasoning fallback.
    * @returns {Promise<void>}
    */
-  async setToolCalls(invocations, includeSignature, includeReasoning = false) {
-    this.tool_calls = invocations.map((i) => ({
+  async setToolCalls(invocations: any, includeSignature: any, includeReasoning: any = false) {
+    this.tool_calls = invocations.map((i: any) => ({
       id: i.id,
       type: "function",
       function: {
@@ -3684,7 +3684,7 @@ class Message {
       ...(includeSignature && i.signature ? { signature: i.signature } : {}),
     }));
     const fallbackReasoning =
-      invocations.find((i) => typeof i.reasoning === "string" && i.reasoning.length > 0)?.reasoning || null;
+      invocations.find((i: any) => typeof i.reasoning === "string" && i.reasoning.length > 0)?.reasoning || null;
     this.reasoning = includeReasoning ? fallbackReasoning : null;
     this.tokens = await tokenHandler.countAsync(
       {
@@ -3702,7 +3702,7 @@ class Message {
    * @param {string} name Name to set for the message.
    * @returns {Promise<void>}
    */
-  async setName(name) {
+  async setName(name: any) {
     this.name = name;
     this.tokens = await tokenHandler.countAsync(
       { role: this.role, content: this.content, name: this.name },
@@ -3731,7 +3731,7 @@ class Message {
    * @param {string} image Image URL or Data URL.
    * @returns {Promise<void>}
    */
-  async addImage(image) {
+  async addImage(image: any) {
     this.content = this.ensureContentIsArray();
     const isDataUrl = isDataURL(image);
     if (!isDataUrl) {
@@ -3765,7 +3765,7 @@ class Message {
    * @param {string} video Video URL or Data URL.
    * @returns {Promise<void>}
    */
-  async addVideo(video) {
+  async addVideo(video: any) {
     this.content = this.ensureContentIsArray();
     const isDataUrl = isDataURL(video);
     if (!isDataUrl) {
@@ -3800,7 +3800,7 @@ class Message {
    * @param {string} audio Audio URL or Data URL.
    * @returns {Promise<void>}
    */
-  async addAudio(audio) {
+  async addAudio(audio: any) {
     this.content = this.ensureContentIsArray();
     const isDataUrl = isDataURL(audio);
     if (!isDataUrl) {
@@ -3834,7 +3834,7 @@ class Message {
    * @param {string} image Data URL of the image.
    * @returns {Promise<string>} Compressed image as a Data URL.
    */
-  async compressImage(image) {
+  async compressImage(image: any) {
     const compressImageSources = [
       chat_completion_sources.OPENROUTER,
       chat_completion_sources.MAKERSUITE,
@@ -3847,7 +3847,7 @@ class Message {
     const mimeType = image?.split(";")?.[0]?.split(":")?.[1];
     if (compressImageSources.includes(oai_settings.chat_completion_source) && dataSize > sizeThreshold) {
       const maxSide = 2048;
-      image = await createThumbnail(image, maxSide, maxSide);
+      image = await createThumbnail(image, maxSide as any, maxSide as any);
     } else if (!safeMimeTypes.includes(mimeType)) {
       image = await createThumbnail(image, null, null);
     }
@@ -3860,7 +3860,7 @@ class Message {
    * @param {string} quality String representing the quality of the image. Can be 'low', 'auto', or 'high'.
    * @returns {Promise<number>} The token cost of the image.
    */
-  async getImageTokenCost(dataUrl, quality) {
+  async getImageTokenCost(dataUrl: any, quality: any) {
     if (quality === "low") {
       return Message.tokensPerImage;
     }
@@ -3899,7 +3899,7 @@ class Message {
    * @param {Object} prompt - The prompt object.
    * @returns {Promise<Message>} A new instance of Message.
    */
-  static fromPromptAsync(prompt) {
+  static fromPromptAsync(prompt: any) {
     return Message.createAsync(prompt.role, prompt.content, prompt.identifier);
   }
 
@@ -3918,15 +3918,15 @@ class Message {
  * @class MessageCollection
  */
 class MessageCollection {
-  collection = [];
-  identifier;
+  collection: any[] = [];
+  identifier: any;
 
   /**
    * @constructor
    * @param {string} identifier - A unique identifier for the MessageCollection.
    * @param {...Object} items - An array of Message or MessageCollection instances to be added to the collection.
    */
-  constructor(identifier, ...items) {
+  constructor(identifier: any, ...items: any[]) {
     for (const item of items) {
       if (!(item instanceof Message || item instanceof MessageCollection)) {
         throw new Error("Only Message and MessageCollection instances can be added to MessageCollection");
@@ -3970,7 +3970,7 @@ class MessageCollection {
    * Add a new item to the collection.
    * @param {Object} item - The Message or MessageCollection instance to be added.
    */
-  add(item) {
+  add(item: any) {
     this.collection.push(item);
   }
 
@@ -3979,7 +3979,7 @@ class MessageCollection {
    * @param {string} identifier - The identifier of the item to be found.
    * @returns {Object} The found item, or undefined if no item was found.
    */
-  getItemByIdentifier(identifier) {
+  getItemByIdentifier(identifier: any) {
     return this.collection.find((item) => item?.identifier === identifier);
   }
 
@@ -3988,7 +3988,7 @@ class MessageCollection {
    * @param {string} identifier - The identifier to check.
    * @returns {boolean} True if an item with the given identifier exists, false otherwise.
    */
-  hasItemWithIdentifier(identifier) {
+  hasItemWithIdentifier(identifier: any) {
     return this.collection.some((message) => message.identifier === identifier);
   }
 
@@ -4049,7 +4049,7 @@ export class ChatCompletion {
         continue;
       }
 
-      const shouldSquash = (message) => {
+      const shouldSquash = (message: any) => {
         return !excludeList.includes(message.identifier) && message.role === "system" && !message.name;
       };
 
@@ -4100,7 +4100,7 @@ export class ChatCompletion {
    * @param {number} context - Number of tokens in the context.
    * @param {number} response - Number of tokens in the response.
    */
-  setTokenBudget(context, response) {
+  setTokenBudget(context: any, response: any) {
     this.log(`Prompt tokens: ${context}`);
     this.log(`Completion tokens: ${response}`);
 
@@ -4116,7 +4116,7 @@ export class ChatCompletion {
    * @param {number|null} position - The position at which to add the collection.
    * @returns {ChatCompletion} The current instance for chaining.
    */
-  add(collection, position = null) {
+  add(collection: any, position: any = null) {
     this.validateMessageCollection(collection);
     this.checkTokenBudget(collection, collection.identifier);
 
@@ -4139,7 +4139,7 @@ export class ChatCompletion {
    * @param {Message} message - The message to insert.
    * @param {string} identifier - The identifier of the collection where to insert the message.
    */
-  insertAtStart(message, identifier) {
+  insertAtStart(message: any, identifier: any) {
     this.insert(message, identifier, "start");
   }
 
@@ -4149,7 +4149,7 @@ export class ChatCompletion {
    * @param {Message} message - The message to insert.
    * @param {string} identifier - The identifier of the collection where to insert the message.
    */
-  insertAtEnd(message, identifier) {
+  insertAtEnd(message: any, identifier: any) {
     this.insert(message, identifier, "end");
   }
 
@@ -4160,7 +4160,7 @@ export class ChatCompletion {
    * @param {string} identifier - The identifier of the collection where to insert the message.
    * @param {string|number} position - The position at which to insert the message ('start' or 'end').
    */
-  insert(message, identifier, position = "end") {
+  insert(message: any, identifier: any, position: any = "end") {
     this.validateMessage(message);
     this.checkTokenBudget(message, message.identifier);
 
@@ -4181,7 +4181,7 @@ export class ChatCompletion {
    *
    * @param identifier
    */
-  removeLastFrom(identifier) {
+  removeLastFrom(identifier: any) {
     const index = this.findMessageIndex(identifier);
     const message = this.messages.collection[index].collection.pop();
 
@@ -4201,7 +4201,7 @@ export class ChatCompletion {
    * @param {Message|MessageCollection} message - The message to check for affordability.
    * @returns {boolean} True if the budget can afford the message, false otherwise.
    */
-  canAfford(message) {
+  canAfford(message: any) {
     return 0 <= this.tokenBudget - message.getTokens();
   }
 
@@ -4210,8 +4210,8 @@ export class ChatCompletion {
    * @param {Message[]} messages - The messages to check for affordability.
    * @returns {boolean} True if the budget can afford all the messages, false otherwise.
    */
-  canAffordAll(messages) {
-    return 0 <= this.tokenBudget - messages.reduce((total, message) => total + message.getTokens(), 0);
+  canAffordAll(messages: any) {
+    return 0 <= this.tokenBudget - messages.reduce((total: any, message: any) => total + message.getTokens(), 0);
   }
 
   /**
@@ -4220,7 +4220,7 @@ export class ChatCompletion {
    * @param {string} identifier - The identifier to check for existence.
    * @returns {boolean} True if a message with the specified identifier exists, false otherwise.
    */
-  has(identifier) {
+  has(identifier: any) {
     return this.messages.hasItemWithIdentifier(identifier);
   }
 
@@ -4266,7 +4266,7 @@ export class ChatCompletion {
    *
    * @param {string} output - The output message to log.
    */
-  log(output) {
+  log(output: any) {
     if (this.loggingEnabled) console.log("[ChatCompletion] " + output);
   }
 
@@ -4290,7 +4290,7 @@ export class ChatCompletion {
    *
    * @param {MessageCollection|Message} collection - The collection to validate.
    */
-  validateMessageCollection(collection) {
+  validateMessageCollection(collection: any) {
     if (!(collection instanceof MessageCollection)) {
       console.log(collection);
       throw new Error("Argument must be an instance of MessageCollection");
@@ -4303,7 +4303,7 @@ export class ChatCompletion {
    *
    * @param {Message} message - The message to validate.
    */
-  validateMessage(message) {
+  validateMessage(message: any) {
     if (!(message instanceof Message)) {
       console.log(message);
       throw new Error("Argument must be an instance of Message");
@@ -4317,7 +4317,7 @@ export class ChatCompletion {
    * @param {Message|MessageCollection} message - The message to check.
    * @param {string} identifier - The identifier of the message.
    */
-  checkTokenBudget(message, identifier) {
+  checkTokenBudget(message: any, identifier: any) {
     if (!this.canAfford(message)) {
       throw new TokenBudgetExceededError(identifier);
     }
@@ -4328,7 +4328,7 @@ export class ChatCompletion {
    *
    * @param {Message|MessageCollection|number} message - The message whose tokens to reserve.
    */
-  reserveBudget(message) {
+  reserveBudget(message: any) {
     const tokens = typeof message === "number" ? message : message.getTokens();
     this.decreaseTokenBudgetBy(tokens);
   }
@@ -4338,7 +4338,7 @@ export class ChatCompletion {
    *
    * @param {Message|MessageCollection} message - The message whose tokens to free.
    */
-  freeBudget(message) {
+  freeBudget(message: any) {
     this.increaseTokenBudgetBy(message.getTokens());
   }
 
@@ -4348,7 +4348,7 @@ export class ChatCompletion {
    *
    * @param {number} tokens - The number of tokens to increase the budget by.
    */
-  increaseTokenBudgetBy(tokens) {
+  increaseTokenBudgetBy(tokens: any) {
     this.tokenBudget += tokens;
   }
 
@@ -4358,7 +4358,7 @@ export class ChatCompletion {
    *
    * @param {number} tokens - The number of tokens to decrease the budget by.
    */
-  decreaseTokenBudgetBy(tokens) {
+  decreaseTokenBudgetBy(tokens: any) {
     this.tokenBudget -= tokens;
   }
 
@@ -4369,7 +4369,7 @@ export class ChatCompletion {
    * @param {string} identifier - The identifier of the message to find.
    * @returns {number} The index of the message in the collection.
    */
-  findMessageIndex(identifier) {
+  findMessageIndex(identifier: any) {
     const index = this.messages.collection.findIndex((item) => item?.identifier === identifier);
     if (index < 0) {
       throw new IdentifierNotFoundError(identifier);
@@ -4381,7 +4381,7 @@ export class ChatCompletion {
    * Sets the list of overridden prompts.
    * @param {string[]} list A list of prompts that were overridden.
    */
-  setOverriddenPrompts(list) {
+  setOverriddenPrompts(list: any) {
     this.overriddenPrompts = list;
   }
 
@@ -4394,7 +4394,7 @@ export class ChatCompletion {
  * Migrate old Chat Completion settings to new format.
  * @param {ChatCompletionSettings} settings Settings to migrate
  */
-function migrateChatCompletionSettings(settings) {
+function migrateChatCompletionSettings(settings: any) {
   const migrateMap = [
     {
       oldKey: "names_in_completion",
@@ -4460,16 +4460,16 @@ function migrateChatCompletionSettings(settings) {
  * @param {any} data Settings data from backend
  * @param {ChatCompletionSettings} settings Saved settings from backend
  */
-function loadOpenAISettings(data, settings) {
+function loadOpenAISettings(data: any, settings: any) {
   openai_setting_names = data.openai_setting_names;
   openai_settings = data.openai_settings;
-  openai_settings.forEach((item, i) => {
+  openai_settings.forEach((item: any, i: any) => {
     openai_settings[i] = JSON.parse(item);
   });
 
   $("#settings_preset_openai").empty();
-  const settingNames = {};
-  openai_setting_names.forEach((item, i) => {
+  const settingNames: Record<string, any> = {};
+  openai_setting_names.forEach((item: any, i: any) => {
     settingNames[item] = i;
     const option = document.createElement("option");
     option.value = i;
@@ -4481,7 +4481,7 @@ function loadOpenAISettings(data, settings) {
   migrateChatCompletionSettings(settings);
 
   for (const key of Object.keys(default_settings)) {
-    oai_settings[key] = settings[key] ?? default_settings[key];
+    (oai_settings as any)[key] = settings[key] ?? (default_settings as any)[key];
     const settingToUpdate = Object.values(settingsToUpdate).find(([_, k]) => k === key);
     if (settingToUpdate) {
       const [selector] = settingToUpdate;
@@ -4728,7 +4728,7 @@ async function getStatusOpen() {
  * @returns {Object} The preset body object
  */
 export function getChatCompletionPreset(settings = oai_settings) {
-  const presetBody = {};
+  const presetBody: Record<string, any> = {};
   for (const [presetKey, [, settingsKey]] of Object.entries(settingsToUpdate) as any) {
     presetBody[presetKey] = settings[settingsKey];
   }
@@ -4743,7 +4743,7 @@ export function getChatCompletionPreset(settings = oai_settings) {
  * @param {boolean} triggerUi Whether the change event of preset UI element should be emitted
  * @returns {Promise<void>}
  */
-async function saveOpenAIPreset(name, settings, triggerUi = true) {
+async function saveOpenAIPreset(name: any, settings: any, triggerUi = true) {
   const presetBody = getChatCompletionPreset(settings);
   const savePresetSettings = await fetch("/api/presets/save", {
     method: "POST",
@@ -4809,7 +4809,7 @@ function onLogitBiasPresetChange() {
     delay: getSortableDelay(),
     handle: ".drag-handle",
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       list.children().each(function () {
         order.unshift($(this).data("id"));
       });
@@ -4831,7 +4831,7 @@ function createNewLogitBiasEntry() {
   saveSettingsDebounced();
 }
 
-function createLogitBiasListItem(entry) {
+function createLogitBiasListItem(entry: any) {
   if (!entry.id) {
     entry.id = uuidv4();
   }
@@ -4871,7 +4871,7 @@ function createLogitBiasListItem(entry) {
   template.find(".openai_logit_bias_remove").on("click", function () {
     $(this).closest(".openai_logit_bias_form").remove();
     const preset = oai_settings.bias_presets[oai_settings.bias_preset_selected];
-    const index = preset.findIndex((item) => item.id === id);
+    const index = preset.findIndex((item: any) => item.id === id);
     if (index >= 0) {
       preset.splice(index, 1);
     }
@@ -4899,7 +4899,7 @@ async function createNewLogitBiasPreset() {
   saveSettingsDebounced();
 }
 
-function addLogitBiasPresetOption(name) {
+function addLogitBiasPresetOption(name: any) {
   const option = document.createElement("option");
   option.innerText = name;
   option.value = name;
@@ -4917,7 +4917,7 @@ function onLogitBiasPresetImportClick() {
   $("#openai_logit_bias_import_file").trigger("click");
 }
 
-async function onPresetImportFileChange(e) {
+async function onPresetImportFileChange(e: any) {
   const file = e.target.files[0];
 
   if (!file) {
@@ -5050,7 +5050,7 @@ async function onExportPresetClick() {
   download(presetJsonString, presetFileName, "application/json");
 }
 
-async function onLogitBiasPresetImportFileChange(e) {
+async function onLogitBiasPresetImportFileChange(e: any) {
   const file = e.target.files[0];
 
   if (!file || file.type !== "application/json") {
@@ -5172,8 +5172,8 @@ function onSettingsPresetChange() {
 
   migrateChatCompletionSettings(preset);
 
-  const updateInput = (selector, value) => $(selector).val(value).trigger("input", { source: "preset" });
-  const updateCheckbox = (selector, value) => $(selector).prop("checked", value).trigger("input", { source: "preset" });
+  const updateInput = (selector: any, value: any) => $(selector).val(value).trigger("input", { source: "preset" });
+  const updateCheckbox = (selector: any, value: any) => $(selector).prop("checked", value).trigger("input", { source: "preset" });
 
   // Allow subscribers to alter the preset before applying deltas
   eventSource
@@ -5232,7 +5232,7 @@ function onSettingsPresetChange() {
  * @param {string} value Model identifier
  * @returns {number} Maximum context size in tokens
  */
-function getMaxContextOpenAI(value) {
+function getMaxContextOpenAI(value: any) {
   if (oai_settings.max_context_unlocked) {
     return unlocked_max;
   }
@@ -5271,7 +5271,7 @@ function getMaxContextOpenAI(value) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getGeminiMaxContext(model, isUnlocked) {
+function getGeminiMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5308,7 +5308,7 @@ function getGeminiMaxContext(model, isUnlocked) {
  * @param {string} model Model identifier
  * @returns {number} Maximum temperature for Gemini models
  */
-function getGeminiMaxTemp(model) {
+function getGeminiMaxTemp(model: any) {
   if (Array.isArray(model_list) && model_list.length > 0) {
     const temp = model_list.find((record) => record.id === model)?.maxTemperature;
     if (Number.isFinite(temp) && temp > 0) {
@@ -5329,7 +5329,7 @@ function getGeminiMaxTemp(model) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getMistralMaxContext(model, isUnlocked) {
+function getMistralMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5351,7 +5351,7 @@ function getMistralMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getGroqMaxContext(model, isUnlocked) {
+function getGroqMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5398,7 +5398,7 @@ function getGroqMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked If context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getZaiMaxContext(model, isUnlocked) {
+function getZaiMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5432,7 +5432,7 @@ function getZaiMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getSiliconflowMaxContext(model, isUnlocked) {
+function getSiliconflowMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5490,7 +5490,7 @@ function getSiliconflowMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked If context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getMoonshotMaxContext(model, isUnlocked) {
+function getMoonshotMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5530,7 +5530,7 @@ function getMoonshotMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getFireworksMaxContext(model, isUnlocked) {
+function getFireworksMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5555,7 +5555,7 @@ function getFireworksMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getChutesMaxContext(model, isUnlocked) {
+function getChutesMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5575,7 +5575,7 @@ function getChutesMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getElectronHubMaxContext(model, isUnlocked) {
+function getElectronHubMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5595,7 +5595,7 @@ function getElectronHubMaxContext(model, isUnlocked) {
  * @param {boolean} isUnlocked Whether context limits are unlocked
  * @returns {number} Maximum context size in tokens
  */
-function getNanoGptMaxContext(model, isUnlocked) {
+function getNanoGptMaxContext(model: any, isUnlocked: any) {
   if (isUnlocked) {
     return unlocked_max;
   }
@@ -5610,7 +5610,7 @@ function getNanoGptMaxContext(model, isUnlocked) {
   return max_128k;
 }
 
-async function onModelChange() {
+async function onModelChange(this: any) {
   biasCache = undefined;
   let value = String($(this).val() || "");
 
@@ -6088,7 +6088,7 @@ async function onModelChange() {
     } else {
       const model = model_list.find((m) => m.id === oai_settings.workers_ai_model);
       const ctxProp =
-        Array.isArray(model?.properties) && model.properties.find((p) => p.property_id === "context_window");
+        Array.isArray(model?.properties) && model.properties.find((p: any) => p.property_id === "context_window");
       const contextLength = ctxProp ? Number(ctxProp.value) : max_8k;
       $("#openai_max_context").attr("max", contextLength || max_8k);
     }
@@ -6248,13 +6248,13 @@ async function onNewPresetClick() {
   await saveOpenAIPreset(name, oai_settings);
 }
 
-function onReverseProxyInput() {
+function onReverseProxyInput(this: any) {
   oai_settings.reverse_proxy = String($(this).val());
   $(".reverse_proxy_warning").toggle(oai_settings.reverse_proxy != "");
   saveSettingsDebounced();
 }
 
-async function onConnectButtonClick(e) {
+async function onConnectButtonClick(e: any) {
   e.stopPropagation();
 
   /** @type {Object.<string, {key: string, selector: string, proxy?: boolean, keyless?: boolean}>} */
@@ -6333,7 +6333,7 @@ async function onConnectButtonClick(e) {
     oai_settings.chat_completion_source === chat_completion_sources.VERTEXAI &&
     oai_settings.vertexai_auth_mode === "full"
   ) {
-    if (!secret_state[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]) {
+    if (!(secret_state as Record<string, any>)[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]) {
       toastr.error(
         t`Service Account JSON is required for Vertex AI full version. Please validate and save your Service Account JSON.`,
       );
@@ -6349,7 +6349,7 @@ async function onConnectButtonClick(e) {
       await writeSecret(config.key, apiKey, undefined);
     }
 
-    if (!secret_state[config.key] && (!config.proxy || !oai_settings.reverse_proxy) && !config.keyless) {
+    if (!(secret_state as Record<string, any>)[config.key] && (!config.proxy || !oai_settings.reverse_proxy) && !config.keyless) {
       console.log(`No secret key saved for ${oai_settings.chat_completion_source}`);
       return;
     }
@@ -6455,7 +6455,7 @@ function reconnectOpenAi() {
   }
 }
 
-function onProxyPasswordShowClick() {
+function onProxyPasswordShowClick(this: any) {
   const $input = $("#openai_proxy_password");
   const type = $input.attr("type") === "password" ? "text" : "password";
   $input.attr("type", type);
@@ -6642,7 +6642,7 @@ export function isImageInliningSupported() {
       return Boolean(
         waiModel &&
           Array.isArray(waiModel.properties) &&
-          waiModel.properties.some((p) => p.property_id === "vision" && p.value === "true"),
+          waiModel.properties.some((p: any) => p.property_id === "vision" && p.value === "true"),
       );
     }
     default:
@@ -6789,7 +6789,7 @@ export function isReasoningSignatureSupported(settings = oai_settings) {
 /**
  * Proxy stuff
  */
-export function loadProxyPresets(settings) {
+export function loadProxyPresets(settings: any) {
   let proxyPresets = settings.proxies;
   selected_proxy = settings.selected_proxy || selected_proxy;
   if (!Array.isArray(proxyPresets) || proxyPresets.length === 0) {
@@ -6811,7 +6811,7 @@ export function loadProxyPresets(settings) {
   setProxyPreset(selected_proxy.name, selected_proxy.url, selected_proxy.password);
 }
 
-function setProxyPreset(name, url, password) {
+function setProxyPreset(name: any, url: any, password: any) {
   const preset = proxies.find((p) => p.name === name);
   if (preset) {
     preset.url = url;
@@ -6858,7 +6858,7 @@ $("#save_proxy").on("click", async () => {
 
     $("#openai_proxy_preset").append(option);
   }
-  $("#openai_proxy_preset").val(presetName);
+  $("#openai_proxy_preset").val(String(presetName));
 });
 
 $("#delete_proxy").on("click", async () => {
@@ -6890,7 +6890,7 @@ $("#delete_proxy").on("click", async () => {
   }
 });
 
-function runProxyCallback(_, value) {
+function runProxyCallback(_: any, value: any) {
   if (!value) {
     return selected_proxy?.name || "";
   }
@@ -6912,7 +6912,7 @@ function runProxyCallback(_, value) {
 /**
  * Handle Vertex AI authentication mode change
  */
-function onVertexAIAuthModeChange() {
+function onVertexAIAuthModeChange(this: any) {
   const authMode = String($(this).val());
   oai_settings.vertexai_auth_mode = authMode;
 
@@ -6991,7 +6991,7 @@ async function onVertexAIClearServiceAccount() {
 /**
  * Handle Vertex AI service account JSON input change
  */
-function onVertexAIServiceAccountJsonChange() {
+function onVertexAIServiceAccountJsonChange(this: any) {
   const jsonContent = String($(this).val()).trim();
 
   // Autocomplete has been triggered, don't validate if the input is a UUID
@@ -7032,7 +7032,7 @@ function updateVertexAIServiceAccountStatus(isValid = false, message = "") {
   const infoSpan = $("#vertexai_service_account_info");
 
   // If no explicit message provided, check if we have a saved service account
-  if (!message && secret_state[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]) {
+  if (!message && (secret_state as Record<string, any>)[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]) {
     isValid = true;
     message = t`Service Account JSON is saved and ready to use`;
   }
@@ -7076,7 +7076,7 @@ export function initOpenAI() {
           description: "name",
           typeList: [ARGUMENT_TYPE.STRING],
           isRequired: true,
-          enumProvider: () => proxies.map((preset) => new SlashCommandEnumValue(preset.name, preset.url)),
+          enumProvider: () => proxies.map((preset) => new SlashCommandEnumValue(preset.name, preset.url as any)),
         }),
       ],
       helpString: "Sets a proxy preset by name.",
@@ -7616,7 +7616,7 @@ export function initOpenAI() {
   });
 
   $("#cc_sort_models").on("input", async () => {
-    oai_settings.sort_models = $("#cc_sort_models").val().toString();
+    oai_settings.sort_models = String($("#cc_sort_models").val());
     reconnectOpenAi();
     saveSettingsDebounced();
   });

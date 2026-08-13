@@ -42,7 +42,7 @@ export const env_provider_order = {
 };
 
 /** @type {MacroEnvBuilder} */
-let instance;
+let instance: any;
 export { instance as MacroEnvBuilder };
 
 class MacroEnvBuilder {

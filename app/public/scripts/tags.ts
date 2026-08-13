@@ -349,7 +349,7 @@ const TAG_FOLDER_DEFAULT_TYPE = 'NONE';
  * An list of all tags that are available
  * @type {Tag[]}
  */
-let tags = [];
+let tags: any[] = [];
 
 /**
  * A map representing the key of an entity (character avatar, group id, etc) with a corresponding array of tags this entity has assigned. The array might not exist if no tags were assigned yet.
@@ -2610,7 +2610,7 @@ function registerTagsSlashCommands() {
  * @returns {void}
  * @description This function iterates through the chat messages and applies character tags
  */
-export function applyCharacterTagsToMessageDivs({ mesIds = [] } = {}) {
+export function applyCharacterTagsToMessageDivs({ mesIds = [] as number[] } = {}) {
     try {
         const messagesFilter = buildMessagesFilter(mesIds);
         const messages = $('#chat').children(messagesFilter);
