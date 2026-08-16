@@ -6,7 +6,6 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "checkJs": false,
-    "strict": false,
     "noEmit": true,
     "composite": false,
     "skipLibCheck": true,
@@ -14,7 +13,6 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node"]
-  },
-  "include": ["app/index.d.ts"]
+    "allowImportingTsExtensions": true
+  }
 }

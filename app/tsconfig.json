@@ -1,0 +1,52 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "checkJs": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "strict": true,
+    "useUnknownInCatchVariables": false,
+    "types": ["node", "jquery", "toastr"],
+    "paths": {
+      "/script.js": ["./public/script.ts"],
+      "/script.ts": ["./public/script.ts"],
+      "/lib.js": ["./public/lib.ts"],
+      "/scripts/*": ["./public/scripts/*"]
+    }
+  },
+  "include": ["src/**/*", "public/**/*", "*.js", "*.d.ts", "../extensions/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "public/dist",
+    "data",
+    "backups",
+    "cache",
+    "src/tokenizers/**",
+    "webpack.config.js",
+    "public/lib/*.min.js",
+    "public/lib/*.min.mjs",
+    "public/lib/structured-clone/**",
+    "public/lib/cropper.min.js",
+    "public/lib/dialog-polyfill.esm.js",
+    "public/lib/epub.min.js",
+    "public/lib/eventemitter.js",
+    "public/lib/jquery-3.5.1.min.js",
+    "public/lib/jquery-cookie-1.4.1.min.js",
+    "public/lib/jquery-cropper.min.js",
+    "public/lib/jquery-ui.min.js",
+    "public/lib/jquery.izoomify.js",
+    "public/lib/jquery.transit.min.js",
+    "public/lib/jquery.ui.touch-punch.min.js",
+    "public/lib/jszip.min.js",
+    "public/lib/pdf.min.mjs",
+    "public/lib/pdf.worker.min.mjs",
+    "public/lib/polyfill.js",
+    "public/lib/select2-search-placeholder.js",
+    "public/lib/select2.min.js",
+    "public/lib/swiped-events.js",
+    "public/lib/toastr.js.map",
+    "public/lib/toastr.min.js",
+    "public/lib/toolcool-color-picker.js"
+  ]
+}

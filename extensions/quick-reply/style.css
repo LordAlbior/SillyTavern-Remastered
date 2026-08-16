@@ -95,7 +95,7 @@
 }
 #qr--bar > .qr--buttons > .qr--buttons.qr--color .qr--button:before,
 #qr--popout > .qr--body > .qr--buttons > .qr--buttons.qr--color .qr--button:before {
-  content: '';
+  content: "";
   background-color: var(--qr--color);
   position: absolute;
   inset: -5px;
@@ -109,7 +109,7 @@
 #qr--popout > .qr--body > .qr--buttons > .qr--buttons.qr--color.qr--borderColor:before,
 #qr--bar > .qr--buttons > .qr--buttons.qr--color.qr--borderColor:after,
 #qr--popout > .qr--body > .qr--buttons > .qr--buttons.qr--color.qr--borderColor:after {
-  content: '';
+  content: "";
   width: 5px;
   background-color: var(--qr--color);
 }
@@ -304,10 +304,22 @@
   align-items: center;
   gap: 0.5em;
 }
-#qr--settings #qr--set-qrList .qr--set-qrListContents > .qr--set-item .qr--content .qr--set-itemLabelContainer .qr--set-itemIcon:not(.fa-solid) {
+#qr--settings
+  #qr--set-qrList
+  .qr--set-qrListContents
+  > .qr--set-item
+  .qr--content
+  .qr--set-itemLabelContainer
+  .qr--set-itemIcon:not(.fa-solid) {
   display: none;
 }
-#qr--settings #qr--set-qrList .qr--set-qrListContents > .qr--set-item .qr--content .qr--set-itemLabelContainer .qr--set-itemLabel {
+#qr--settings
+  #qr--set-qrList
+  .qr--set-qrListContents
+  > .qr--set-item
+  .qr--content
+  .qr--set-itemLabelContainer
+  .qr--set-itemLabel {
   min-width: 24px;
 }
 #qr--settings #qr--set-qrList .qr--set-qrListContents > .qr--set-item .qr--content .qr--set-itemLabel,
@@ -352,7 +364,13 @@
   body .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels {
     flex-direction: column;
   }
-  body .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder {
+  body
+    .popup:has(#qr--modalEditor)
+    .popup-content
+    > #qr--modalEditor
+    > #qr--main
+    > .qr--modal-messageContainer
+    > #qr--modal-messageHolder {
     min-height: 50dvh;
     height: 50dvh;
   }
@@ -392,21 +410,44 @@
 }
 .popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor > #qr--main,
 .popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor > #qr--resizeHandle,
-.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor > #qr--qrOptions > h3,
-.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor > #qr--qrOptions > #qr--modal-executeButtons,
-.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor > #qr--qrOptions > #qr--modal-executeProgress {
+.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--qrOptions
+  > h3,
+.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--qrOptions
+  > #qr--modal-executeButtons,
+.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--qrOptions
+  > #qr--modal-executeProgress {
   display: none;
 }
 .popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor #qr--qrOptions {
   width: auto;
 }
-.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-maximize {
+.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-maximize {
   display: flex;
 }
-.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-minimize {
+.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-minimize {
   display: none;
 }
-.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized) .popup-content > #qr--modalEditor #qr--modal-debugState {
+.popup:has(#qr--modalEditor):has(.qr--isExecuting.qr--minimized)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState {
   padding-top: 0;
 }
 .popup:has(#qr--modalEditor):has(.qr--isExecuting) .popup-controls {
@@ -440,56 +481,108 @@
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--main > h3:first-child,
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--main > .qr--labels,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--main > .qr--modal-messageContainer > .qr--modal-editorSettings,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting
+  #qr--main
+  > .qr--modal-messageContainer
+  > .qr--modal-editorSettings,
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--qrOptions > h3:first-child,
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--qrOptions > #qr--ctxEditor,
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--qrOptions > .qr--ctxEditorActions,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--qrOptions > .qr--ctxEditorActions + h3,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--qrOptions > .qr--ctxEditorActions + h3 + div {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting
+  #qr--qrOptions
+  > .qr--ctxEditorActions
+  + h3,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting
+  #qr--qrOptions
+  > .qr--ctxEditorActions
+  + h3
+  + div {
   display: none;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-message {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting
+  #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-message {
   visibility: hidden;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--modal-debugButtons {
   display: flex;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize) {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize) {
   cursor: not-allowed;
   opacity: 0.5;
   pointer-events: none;
   transition: var(--animation-duration-2x);
   border-color: transparent;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting.qr--isPaused #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize) {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting.qr--isPaused
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize) {
   cursor: pointer;
   opacity: 1;
   pointer-events: all;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting.qr--isPaused #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-resume {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting.qr--isPaused
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-resume {
   animation-name: qr--debugPulse;
   animation-duration: 1500ms;
   animation-timing-function: ease-in-out;
   animation-delay: 0s;
   animation-iteration-count: infinite;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting.qr--isPaused #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-resume {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting.qr--isPaused
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-resume {
   border-color: #51a351;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting.qr--isPaused #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-step {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting.qr--isPaused
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-step {
   border-color: var(--SmartThemeQuoteColor);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting.qr--isPaused #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-stepInto {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting.qr--isPaused
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-stepInto {
   border-color: var(--SmartThemeQuoteColor);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting.qr--isPaused #qr--modal-debugButtons .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-stepOut {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor.qr--isExecuting.qr--isPaused
+  #qr--modal-debugButtons
+  .menu_button:not(#qr--modal-minimize, #qr--modal-maximize)#qr--modal-stepOut {
   border-color: var(--SmartThemeQuoteColor);
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--resizeHandle {
   width: 6px;
   background-color: var(--SmartThemeBorderColor);
   border: 2px solid var(--SmartThemeBlurTintColor);
-  transition: border-color var(--animation-duration-2x), background-color var(--animation-duration-2x);
+  transition:
+    border-color var(--animation-duration-2x),
+    background-color var(--animation-duration-2x);
   cursor: w-resize;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor.qr--isExecuting #qr--resizeHandle:hover {
@@ -531,7 +624,14 @@
   gap: 0.5em;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--inputGroup input,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--inputGroup input {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--inputGroup
+  input {
   flex: 1 1 auto;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--labelText,
@@ -546,8 +646,20 @@
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label input {
   flex: 0 0 auto;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList {
   background-color: var(--stcdx--bgColor);
   border: 1px solid var(--SmartThemeBorderColor);
   backdrop-filter: blur(var(--SmartThemeBlurStrength));
@@ -565,8 +677,22 @@
   z-index: 40000;
   max-width: 100%;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--modal-switcherItem,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--modal-switcherItem {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem {
   display: flex;
   gap: 1em;
   text-align: left;
@@ -574,45 +700,191 @@
   transition: var(--animation-duration-2x);
   cursor: pointer;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--modal-switcherItem:hover,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--modal-switcherItem:hover {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem:hover,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem:hover {
   opacity: 1;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--modal-switcherItem.qr--current,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--modal-switcherItem.qr--current {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem.qr--current,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem.qr--current {
   opacity: 1;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--modal-switcherItem.qr--current .qr--label,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--modal-switcherItem.qr--current .qr--label,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--modal-switcherItem.qr--current .qr--id,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--modal-switcherItem.qr--current .qr--id {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem.qr--current
+  .qr--label,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem.qr--current
+  .qr--label,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem.qr--current
+  .qr--id,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--modal-switcherItem.qr--current
+  .qr--id {
   font-weight: bold;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--label,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--label {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--label,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--label {
   white-space: nowrap;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--label .menu_button,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--label .menu_button {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--label
+  .menu_button,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--label
+  .menu_button {
   display: inline-block;
   height: min-content;
   width: min-content;
   margin: 0 0.5em 0 0;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--id,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--id {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--id,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--id {
   opacity: 0.5;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--id:before,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--id:before {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--id:before,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--id:before {
   content: "[";
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--id:after,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--id:after {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--id:after,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--id:after {
   content: "]";
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > label .qr--modal-switcherList .qr--message,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--labels > .label .qr--modal-switcherList .qr--message {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > label
+  .qr--modal-switcherList
+  .qr--message,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--labels
+  > .label
+  .qr--modal-switcherList
+  .qr--message {
   height: 1lh;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -625,7 +897,12 @@
   flex-direction: column;
   overflow: hidden;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > .qr--modal-editorSettings {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > .qr--modal-editorSettings {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -634,40 +911,100 @@
   font-size: smaller;
   align-items: baseline;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > .qr--modal-editorSettings > .checkbox_label {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > .qr--modal-editorSettings
+  > .checkbox_label {
   white-space: nowrap;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > .qr--modal-editorSettings > .checkbox_label > input {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > .qr--modal-editorSettings
+  > .checkbox_label
+  > input {
   font-size: inherit;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder {
   flex: 1 1 auto;
   display: grid;
   text-align: left;
   overflow: hidden;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder.qr--noSyntax > #qr--modal-messageSyntax {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder.qr--noSyntax
+  > #qr--modal-messageSyntax {
   display: none;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder.qr--noSyntax > #qr--modal-message {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder.qr--noSyntax
+  > #qr--modal-message {
   background-color: var(--ac-style-color-background);
   color: var(--ac-style-color-text);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder.qr--noSyntax > #qr--modal-message::-webkit-scrollbar,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder.qr--noSyntax > #qr--modal-message::-webkit-scrollbar-thumb {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder.qr--noSyntax
+  > #qr--modal-message::-webkit-scrollbar,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder.qr--noSyntax
+  > #qr--modal-message::-webkit-scrollbar-thumb {
   visibility: visible;
   cursor: unset;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder.qr--noSyntax > #qr--modal-message::selection {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder.qr--noSyntax
+  > #qr--modal-message::selection {
   color: unset;
   background-color: rgba(108 171 251 / 0.25);
 }
 @supports (color: rgb(from white r g b / 0.25)) {
-  .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder.qr--noSyntax > #qr--modal-message::selection {
+  .popup:has(#qr--modalEditor)
+    .popup-content
+    > #qr--modalEditor
+    > #qr--main
+    > .qr--modal-messageContainer
+    > #qr--modal-messageHolder.qr--noSyntax
+    > #qr--modal-message::selection {
     background-color: rgb(from var(--ac-style-color-matchedText) r g b / 0.25);
   }
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-messageSyntax {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-messageSyntax {
   grid-column: 1;
   grid-row: 1;
   padding: 0;
@@ -677,10 +1014,23 @@
   min-width: 100%;
   width: 0;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-messageSyntax > #qr--modal-messageSyntaxInner {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-messageSyntax
+  > #qr--modal-messageSyntaxInner {
   height: 100%;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-message {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-message {
   background-color: transparent;
   color: transparent;
   grid-column: 1;
@@ -688,22 +1038,58 @@
   caret-color: var(--ac-style-color-text);
   overflow: auto;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-message::-webkit-scrollbar,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-message::-webkit-scrollbar-thumb {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-message::-webkit-scrollbar,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-message::-webkit-scrollbar-thumb {
   visibility: hidden;
   cursor: default;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-message::selection {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  > #qr--modal-message::selection {
   color: transparent;
   background-color: rgba(108 171 251 / 0.25);
 }
 @supports (color: rgb(from white r g b / 0.25)) {
-  .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder > #qr--modal-message::selection {
+  .popup:has(#qr--modalEditor)
+    .popup-content
+    > #qr--modalEditor
+    > #qr--main
+    > .qr--modal-messageContainer
+    > #qr--modal-messageHolder
+    > #qr--modal-message::selection {
     background-color: rgb(from var(--ac-style-color-matchedText) r g b / 0.25);
   }
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder #qr--modal-message,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor > #qr--main > .qr--modal-messageContainer > #qr--modal-messageHolder #qr--modal-messageSyntaxInner {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  #qr--modal-message,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  > #qr--main
+  > .qr--modal-messageContainer
+  > #qr--modal-messageHolder
+  #qr--modal-messageSyntaxInner {
   font-family: var(--monoFontFamily);
   padding: 0.75em;
   margin: 0;
@@ -729,7 +1115,12 @@
   gap: 0.5em;
   padding: 0.5em 0.75em;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-executeButtons .qr--modal-executeButton .qr--modal-executeComboIcon {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-executeButtons
+  .qr--modal-executeButton
+  .qr--modal-executeComboIcon {
   display: flex;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-executeButtons #qr--modal-execute {
@@ -773,12 +1164,20 @@
   width: 2.25em;
   position: relative;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton:not(.fa-solid) {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton:not(.fa-solid) {
   border-width: 1px;
   border-style: solid;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton:not(.fa-solid):after {
-  content: '';
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton:not(.fa-solid):after {
+  content: "";
   position: absolute;
   inset: 3px;
   background-color: var(--SmartThemeBodyColor);
@@ -786,19 +1185,39 @@
   mask-position: center;
   mask-repeat: no-repeat;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-resume:after {
-  mask-image: url('/img/step-resume.svg');
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-resume:after {
+  mask-image: url("/img/step-resume.svg");
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-step:after {
-  mask-image: url('/img/step-over.svg');
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-step:after {
+  mask-image: url("/img/step-over.svg");
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-stepInto:after {
-  mask-image: url('/img/step-into.svg');
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-stepInto:after {
+  mask-image: url("/img/step-into.svg");
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-stepOut:after {
-  mask-image: url('/img/step-out.svg');
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-stepOut:after {
+  mask-image: url("/img/step-out.svg");
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugButtons .qr--modal-debugButton#qr--modal-maximize {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugButtons
+  .qr--modal-debugButton#qr--modal-maximize {
   display: none;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-send_textarea {
@@ -817,7 +1236,7 @@
   position: relative;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-executeProgress:after {
-  content: '';
+  content: "";
   background-color: var(--progColor);
   position: absolute;
   inset: 0;
@@ -870,7 +1289,7 @@
   display: block;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-executeResult:before {
-  content: 'Result: ';
+  content: "Result: ";
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState {
   display: none;
@@ -905,40 +1324,184 @@
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe {
   display: contents;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var:nth-child(2n + 1) .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro:nth-child(2n + 1) .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe:nth-child(2n + 1) .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var:nth-child(2n + 1) .qr--val,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro:nth-child(2n + 1) .qr--val,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe:nth-child(2n + 1) .qr--val {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var:nth-child(2n + 1)
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro:nth-child(2n + 1)
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe:nth-child(2n + 1)
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var:nth-child(2n + 1)
+  .qr--val,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro:nth-child(2n + 1)
+  .qr--val,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe:nth-child(2n + 1)
+  .qr--val {
   background-color: rgb(from var(--SmartThemeEmColor) r g b / 0.25);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var:nth-child(2n + 1) .qr--val:nth-child(2n),
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro:nth-child(2n + 1) .qr--val:nth-child(2n),
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe:nth-child(2n + 1) .qr--val:nth-child(2n) {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var:nth-child(2n + 1)
+  .qr--val:nth-child(2n),
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro:nth-child(2n + 1)
+  .qr--val:nth-child(2n),
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe:nth-child(2n + 1)
+  .qr--val:nth-child(2n) {
   background-color: rgb(from var(--SmartThemeEmColor) r g b / 0.125);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var:nth-child(2n + 1) .qr--val:hover,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro:nth-child(2n + 1) .qr--val:hover,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe:nth-child(2n + 1) .qr--val:hover {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var:nth-child(2n + 1)
+  .qr--val:hover,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro:nth-child(2n + 1)
+  .qr--val:hover,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe:nth-child(2n + 1)
+  .qr--val:hover {
   background-color: rgb(from var(--SmartThemeEmColor) r g b / 0.5);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var:nth-child(2n) .qr--val:nth-child(2n),
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro:nth-child(2n) .qr--val:nth-child(2n),
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe:nth-child(2n) .qr--val:nth-child(2n) {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var:nth-child(2n)
+  .qr--val:nth-child(2n),
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro:nth-child(2n)
+  .qr--val:nth-child(2n),
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe:nth-child(2n)
+  .qr--val:nth-child(2n) {
   background-color: rgb(from var(--SmartThemeEmColor) r g b / 0.0625);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var:nth-child(2n) .qr--val:hover,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro:nth-child(2n) .qr--val:hover,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe:nth-child(2n) .qr--val:hover {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var:nth-child(2n)
+  .qr--val:hover,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro:nth-child(2n)
+  .qr--val:hover,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe:nth-child(2n)
+  .qr--val:hover {
   background-color: rgb(from var(--SmartThemeEmColor) r g b / 0.5);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var.qr--isHidden .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro.qr--isHidden .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe.qr--isHidden .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var.qr--isHidden .qr--val,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro.qr--isHidden .qr--val,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe.qr--isHidden .qr--val {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var.qr--isHidden
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro.qr--isHidden
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe.qr--isHidden
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var.qr--isHidden
+  .qr--val,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro.qr--isHidden
+  .qr--val,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe.qr--isHidden
+  .qr--val {
   opacity: 0.5;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var .qr--val,
@@ -946,24 +1509,96 @@
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe .qr--val {
   grid-column: 2 / 4;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var .qr--val.qr--singleCol,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro .qr--val.qr--singleCol,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe .qr--val.qr--singleCol {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var
+  .qr--val.qr--singleCol,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro
+  .qr--val.qr--singleCol,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe
+  .qr--val.qr--singleCol {
   grid-column: unset;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var .qr--val.qr--simple:before,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro .qr--val.qr--simple:before,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe .qr--val.qr--simple:before,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var .qr--val.qr--simple:after,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro .qr--val.qr--simple:after,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe .qr--val.qr--simple:after {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var
+  .qr--val.qr--simple:before,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro
+  .qr--val.qr--simple:before,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe
+  .qr--val.qr--simple:before,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var
+  .qr--val.qr--simple:after,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro
+  .qr--val.qr--simple:after,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe
+  .qr--val.qr--simple:after {
   content: '"';
   color: var(--SmartThemeQuoteColor);
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--var .qr--val.qr--unresolved:after,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro .qr--val.qr--unresolved:after,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe .qr--val.qr--unresolved:after {
-  content: '-UNRESOLVED-';
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--var
+  .qr--val.qr--unresolved:after,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro
+  .qr--val.qr--unresolved:after,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe
+  .qr--val.qr--unresolved:after {
+  content: "-UNRESOLVED-";
   font-style: italic;
   color: var(--SmartThemeQuoteColor);
 }
@@ -974,19 +1609,57 @@
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--key:after {
   content: ": ";
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe > .qr--key:before,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro > .qr--key:before {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe
+  > .qr--key:before,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro
+  > .qr--key:before {
   content: "{{";
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--pipe > .qr--key:after,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--macro > .qr--key:after {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--pipe
+  > .qr--key:after,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--macro
+  > .qr--key:after {
   content: "}}: ";
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--scope {
   display: contents;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--scope .qr--pipe .qr--key,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--scope .qr--scope .qr--pipe .qr--val {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--scope
+  .qr--pipe
+  .qr--key,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--scope
+  .qr--scope
+  .qr--pipe
+  .qr--val {
   opacity: 0.5;
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--stack {
@@ -1004,8 +1677,20 @@
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--stack .qr--item {
   display: contents;
 }
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--stack .qr--item:nth-child(2n + 1) .qr--name,
-.popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--stack .qr--item:nth-child(2n + 1) .qr--source {
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--stack
+  .qr--item:nth-child(2n + 1)
+  .qr--name,
+.popup:has(#qr--modalEditor)
+  .popup-content
+  > #qr--modalEditor
+  #qr--modal-debugState
+  .qr--stack
+  .qr--item:nth-child(2n + 1)
+  .qr--source {
   background-color: rgb(from var(--SmartThemeEmColor) r g b / 0.25);
 }
 .popup:has(#qr--modalEditor) .popup-content > #qr--modalEditor #qr--modal-debugState .qr--stack .qr--item .qr--name {
@@ -1053,7 +1738,7 @@
   transition: var(--animation-duration-2x);
 }
 .popup:has(.qr--transferModal) .popup-button-ok:after {
-  content: 'Transfer';
+  content: "Transfer";
   height: 0;
   overflow: hidden;
   font-weight: bold;
@@ -1068,7 +1753,7 @@
   transition: var(--animation-duration-2x);
 }
 .popup:has(.qr--transferModal) .qr--copy:after {
-  content: 'Copy';
+  content: "Copy";
   height: 0;
   overflow: hidden;
   font-weight: bold;
