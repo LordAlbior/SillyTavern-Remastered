@@ -140,7 +140,8 @@
     "quality:security": "bunx fallow security",
     "quality:recommend": "bunx fallow recommend",
     "quality:type-aware": "bunx fallow dead-code --type-aware",
-    "security:spectral": "bunx spectral lint ."
+    "security:sast": "semgrep scan --config auto",
+    "security:spectral": "spectral lint ."
   },
   "bin": {
     "sillytavern": "./app/src/server-global.ts"
