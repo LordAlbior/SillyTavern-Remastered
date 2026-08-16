@@ -24,7 +24,7 @@ export { MODULE_NAME };
 
 const MODULE_NAME = "assets";
 const DEBUG_PREFIX = "<Assets module> ";
-let previewAudio = null;
+let previewAudio: any = null;
 const ASSETS_JSON_URL = "https://raw.githubusercontent.com/SillyTavern/SillyTavern-Content/main/index.json";
 
 // DBG
@@ -81,7 +81,7 @@ const KNOWN_TYPES = {
  * @param {number} index Index of the asset in the list of available assets of the same type, used to create a unique element ID
  * @returns {JQuery} The button element
  */
-function createAssetButton(asset, assetType, index) {
+function createAssetButton(asset: any, assetType: any, index: any) {
   const elemId = `assets_install_${assetType}_${index}`;
   const element = $("<div />", { id: elemId, class: "asset-download-button right_menu_button" });
   const label = $('<i class="fa-fw fa-solid fa-download fa-lg"></i>');
@@ -89,7 +89,7 @@ function createAssetButton(asset, assetType, index) {
 
   console.debug(DEBUG_PREFIX, "Checking asset", asset.id, asset.url);
 
-  const assetInstall = async function () {
+  const assetInstall = async function (this: any) {
     element.off("click");
     label.removeClass("fa-download");
     this.classList.add("asset-download-button-loading");
@@ -121,7 +121,7 @@ function createAssetButton(asset, assetType, index) {
   const assetDelete = async () => {
     if (assetType === "character") {
       toastr.error("Go to the characters menu to delete a character.", "Character deletion not supported");
-      await SlashCommandParser.commands["go"].callback(null, asset.id);
+      await (SlashCommandParser.commands as Record<string, any>)["go"].callback(null, asset.id);
       return;
     }
     element.off("click");
@@ -166,7 +166,7 @@ function createAssetButton(asset, assetType, index) {
  * @param {JQuery} element The button element from createAssetButton
  * @returns {JQuery} The asset block element
  */
-function createAssetBlock(asset, assetType, element) {
+function createAssetBlock(asset: any, assetType: any, element: any) {
   console.debug(DEBUG_PREFIX, "Created element for ", asset.id);
 
   const displayName = DOMPurify.sanitize(asset.name || asset.id);
@@ -232,17 +232,17 @@ function createAssetBlock(asset, assetType, element) {
  * @param {string} assetType Asset type, e.g. 'extension', 'character', 'ambient', 'bgm', 'blip'
  * @returns {Promise<void>}
  */
-async function buildAssetTypeSection(assetType) {
+async function buildAssetTypeSection(assetType: any) {
   const assetTypeMenu = $("<div />", { id: `assets_${assetType}_div`, class: "assets-list-div" });
   assetTypeMenu.attr("data-type", assetType);
-  assetTypeMenu.append($("<h3>").text(KNOWN_TYPES[assetType] || assetType)).hide();
+  assetTypeMenu.append($("<h3>").text((KNOWN_TYPES as Record<string, any>)[assetType] || assetType)).hide();
 
   if (assetType == "extension") {
     assetTypeMenu.append(await renderExtensionTemplateAsync("assets", "installation"));
   }
 
-  for (const asset of availableAssets[assetType].sort((a, b) => a?.name && b?.name && a.name.localeCompare(b.name))) {
-    const i = availableAssets[assetType].indexOf(asset);
+  for (const asset of (availableAssets as Record<string, any>)[assetType].sort((a: any, b: any) => a?.name && b?.name && a.name.localeCompare(b.name))) {
+    const i = (availableAssets as Record<string, any>)[assetType].indexOf(asset);
     const element = createAssetButton(asset, assetType, i);
     const assetBlock = createAssetBlock(asset, assetType, element);
 
@@ -264,15 +264,15 @@ async function buildAssetTypeSection(assetType) {
  * Parses the fetched assets JSON and renders the full assets menu.
  * @param {object[]} json Array of asset objects, each containing at least id, name, description, url and type fields
  */
-async function populateAssetsMenu(json) {
+async function populateAssetsMenu(json: any) {
   availableAssets = {};
   $("#assets_menu").empty();
 
   console.debug(DEBUG_PREFIX, "Received assets dictionary", json);
 
   for (const i of json) {
-    if (availableAssets[i.type] === undefined) availableAssets[i.type] = [];
-    availableAssets[i.type].push(i);
+    if ((availableAssets as Record<string, any>)[i.type] === undefined) (availableAssets as Record<string, any>)[i.type] = [];
+    (availableAssets as Record<string, any>)[i.type].push(i);
   }
 
   console.debug(DEBUG_PREFIX, "Updated available assets to", availableAssets);
@@ -284,7 +284,7 @@ async function populateAssetsMenu(json) {
   $("#assets_type_select").append($("<option />", { value: "", text: t`All` }));
 
   for (const type of assetTypes) {
-    const text = translate(KNOWN_TYPES[type] || type);
+    const text = translate((KNOWN_TYPES as Record<string, any>)[type] || type);
     const option = $("<option />", { value: type, text: text });
     $("#assets_type_select").append(option);
   }
@@ -309,7 +309,7 @@ async function populateAssetsMenu(json) {
  * Downloads the assets list from the given URL and populates the menu. Shows error message if something goes wrong.
  * @param {URL} url URL to fetch from
  */
-async function downloadAssetsList(url) {
+async function downloadAssetsList(url: any) {
   await updateCurrentAssets();
   try {
     const response = await fetch(url, { cache: "no-cache" });
@@ -343,11 +343,11 @@ async function downloadAssetsList(url) {
  * Previews the asset by opening its URL. If it's an audio asset, it plays a preview sound. Otherwise, it opens the URL in a new tab.
  * @param {JQuery.Event} e Click event
  */
-function previewAsset(e) {
+function previewAsset(this: any, e: any) {
   const href = $(this).attr("href");
   const audioExtensions = [".mp3", ".ogg", ".wav"];
 
-  if (audioExtensions.some((ext) => href.endsWith(ext))) {
+  if (audioExtensions.some((ext: any) => href!.endsWith(ext))) {
     e.preventDefault();
 
     if (previewAudio) {
@@ -374,14 +374,14 @@ function previewAsset(e) {
  * @param {string} filename Name or ID of the asset
  * @returns {boolean} True if the asset is installed, false otherwise
  */
-function isAssetInstalled(assetType, filename) {
-  let assetList = currentAssets[assetType];
+function isAssetInstalled(assetType: any, filename: any) {
+  let assetList = (currentAssets as Record<string, any>)[assetType];
 
   if (assetType == "extension") {
     const thirdPartyMarker = "third-party/";
     assetList = extensionNames
-      .filter((x) => x.startsWith(thirdPartyMarker))
-      .map((x) => x.replace(thirdPartyMarker, ""));
+      .filter((x: any) => x.startsWith(thirdPartyMarker))
+      .map((x: any) => x.replace(thirdPartyMarker, ""));
   }
 
   if (assetType == "character") {
@@ -403,7 +403,7 @@ function isAssetInstalled(assetType, filename) {
  * @param {string} filename Name or ID of the asset
  * @returns {Promise<boolean>} True if the asset was successfully installed, false otherwise
  */
-async function installAsset(url, assetType, filename) {
+async function installAsset(url: any, assetType: any, filename: any) {
   console.debug(DEBUG_PREFIX, "Downloading ", url);
   const category = assetType;
   try {
@@ -446,7 +446,7 @@ async function installAsset(url, assetType, filename) {
  * @param {string} filename Name or ID of the asset
  * @returns {Promise<boolean>} True if the asset was successfully deleted, false otherwise
  */
-async function deleteAsset(assetType, filename) {
+async function deleteAsset(assetType: any, filename: any) {
   console.debug(DEBUG_PREFIX, "Deleting ", assetType, filename);
   const category = assetType;
   try {
@@ -480,7 +480,7 @@ async function deleteAsset(assetType, filename) {
  * @param {boolean} forceDefault If true, it uses the default ASSETS_JSON_URL instead of the one from the input field.
  * @returns {Promise<void>}
  */
-async function openCharacterBrowser(forceDefault) {
+async function openCharacterBrowser(forceDefault: any) {
   const url = forceDefault ? ASSETS_JSON_URL : String($("#assets-json-url-field").val());
   if (!isValidUrl(url)) {
     toastr.error("Please enter a valid URL");
@@ -524,7 +524,7 @@ async function openCharacterBrowser(forceDefault) {
 
     checkMark.toggle(isInstalled).on("click", async () => {
       toastr.error("Go to the characters menu to delete a character.", "Character deletion not supported");
-      await SlashCommandParser.commands["go"].callback(null, character.id);
+      await (SlashCommandParser.commands as Record<string, any>)["go"].callback(null, character.id);
     });
 
     listElement.append(characterElement);
@@ -602,7 +602,7 @@ export async function init() {
           `</span><var>${escapeHtml(url.href)}</var>`,
         {
           customInputs: [{ id: "assets-remember", label: "Don't ask again for this URL" }],
-          onClose: (popup) => {
+          onClose: (popup: any) => {
             if (popup.result) {
               const rememberValue = popup.inputResults.get("assets-remember");
               accountStorage.setItem(rememberKey, String(rememberValue));
@@ -633,7 +633,7 @@ export async function init() {
   windowHtml.find("#assets_filters").hide();
   $("#assets_container").append(windowHtml);
 
-  eventSource.on(event_types.OPEN_CHARACTER_LIBRARY, async (forceDefault) => {
+  eventSource.on(event_types.OPEN_CHARACTER_LIBRARY, async (forceDefault: any) => {
     openCharacterBrowser(forceDefault);
   });
 }

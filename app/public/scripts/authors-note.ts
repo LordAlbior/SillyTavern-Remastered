@@ -41,7 +41,7 @@ const chara_note_position = {
   after: 2,
 };
 
-function setNoteTextCommand(_, text) {
+function setNoteTextCommand(_: any, text: any) {
   if (text) {
     $("#extension_floating_prompt").val(text).trigger("input");
     toastr.success(t`Author's Note text updated`);
@@ -49,7 +49,7 @@ function setNoteTextCommand(_, text) {
   return chat_metadata[metadata_keys.prompt];
 }
 
-function setNoteDepthCommand(_, text) {
+function setNoteDepthCommand(_: any, text: any) {
   if (text) {
     const value = Number(text);
 
@@ -64,7 +64,7 @@ function setNoteDepthCommand(_, text) {
   return chat_metadata[metadata_keys.depth];
 }
 
-function setNoteIntervalCommand(_, text) {
+function setNoteIntervalCommand(_: any, text: any) {
   if (text) {
     const value = Number(text);
 
@@ -79,7 +79,7 @@ function setNoteIntervalCommand(_, text) {
   return chat_metadata[metadata_keys.interval];
 }
 
-function setNotePositionCommand(_, text) {
+function setNotePositionCommand(_: any, text: any) {
   const validPositions = {
     after: 0,
     scenario: 0,
@@ -89,7 +89,7 @@ function setNotePositionCommand(_, text) {
   };
 
   if (text) {
-    const position = validPositions[text?.trim()?.toLowerCase()];
+    const position = (validPositions as Record<string, any>)[text?.trim()?.toLowerCase()];
 
     if (typeof position === "undefined") {
       toastr.error(t`Not a valid position`);
@@ -99,10 +99,10 @@ function setNotePositionCommand(_, text) {
     $(`input[name="extension_floating_position"][value="${position}"]`).prop("checked", true).trigger("input");
     toastr.info(t`Author's Note position updated`);
   }
-  return Object.keys(validPositions).find((key) => validPositions[key] == chat_metadata[metadata_keys.position]);
+  return Object.keys(validPositions).find((key) => (validPositions as Record<string, any>)[key] == chat_metadata[metadata_keys.position]);
 }
 
-function setNoteRoleCommand(_, text) {
+function setNoteRoleCommand(_: any, text: any) {
   const validRoles = {
     system: 0,
     user: 1,
@@ -110,7 +110,7 @@ function setNoteRoleCommand(_, text) {
   };
 
   if (text) {
-    const role = validRoles[text?.trim()?.toLowerCase()];
+    const role = (validRoles as Record<string, any>)[text?.trim()?.toLowerCase()];
 
     if (typeof role === "undefined") {
       toastr.error(t`Not a valid role`);
@@ -120,7 +120,7 @@ function setNoteRoleCommand(_, text) {
     $("#extension_floating_role").val(Math.abs(role)).trigger("input");
     toastr.info(t`Author's Note role updated`);
   }
-  return Object.keys(validRoles).find((key) => validRoles[key] == chat_metadata[metadata_keys.role]);
+  return Object.keys(validRoles).find((key) => (validRoles as Record<string, any>)[key] == chat_metadata[metadata_keys.role]);
 }
 
 function updateSettings() {
@@ -130,32 +130,32 @@ function updateSettings() {
 }
 
 const setMainPromptTokenCounterDebounced = debounce(
-  async (value) => $("#extension_floating_prompt_token_counter").text(await getTokenCountAsync(value)),
+  async (value: any) => $("#extension_floating_prompt_token_counter").text(await getTokenCountAsync(value)),
   debounce_timeout.relaxed,
 );
 const setCharaPromptTokenCounterDebounced = debounce(
-  async (value) => $("#extension_floating_chara_token_counter").text(await getTokenCountAsync(value)),
+  async (value: any) => $("#extension_floating_chara_token_counter").text(await getTokenCountAsync(value)),
   debounce_timeout.relaxed,
 );
 const setDefaultPromptTokenCounterDebounced = debounce(
-  async (value) => $("#extension_floating_default_token_counter").text(await getTokenCountAsync(value)),
+  async (value: any) => $("#extension_floating_default_token_counter").text(await getTokenCountAsync(value)),
   debounce_timeout.relaxed,
 );
 
-async function onExtensionFloatingPromptInput() {
+async function onExtensionFloatingPromptInput(this: any) {
   chat_metadata[metadata_keys.prompt] = $(this).val();
   setMainPromptTokenCounterDebounced(chat_metadata[metadata_keys.prompt]);
   updateSettings();
   saveMetadataDebounced();
 }
 
-async function onExtensionFloatingIntervalInput() {
+async function onExtensionFloatingIntervalInput(this: any) {
   chat_metadata[metadata_keys.interval] = Number($(this).val());
   updateSettings();
   saveMetadataDebounced();
 }
 
-async function onExtensionFloatingDepthInput() {
+async function onExtensionFloatingDepthInput(this: any) {
   let value = Number($(this).val());
 
   if (value < 0) {
@@ -168,18 +168,18 @@ async function onExtensionFloatingDepthInput() {
   saveMetadataDebounced();
 }
 
-async function onExtensionFloatingPositionInput(e) {
+async function onExtensionFloatingPositionInput(e: any) {
   chat_metadata[metadata_keys.position] = Number(e.target.value);
   updateSettings();
   saveMetadataDebounced();
 }
 
-async function onDefaultPositionInput(e) {
+async function onDefaultPositionInput(e: any) {
   extension_settings.note.defaultPosition = Number(e.target.value);
   saveSettingsDebounced();
 }
 
-async function onDefaultDepthInput() {
+async function onDefaultDepthInput(this: any) {
   let value = Number($(this).val());
 
   if (value < 0) {
@@ -191,24 +191,24 @@ async function onDefaultDepthInput() {
   saveSettingsDebounced();
 }
 
-async function onDefaultIntervalInput() {
+async function onDefaultIntervalInput(this: any) {
   extension_settings.note.defaultInterval = Number($(this).val());
   saveSettingsDebounced();
 }
 
-function onExtensionFloatingRoleInput(e) {
+function onExtensionFloatingRoleInput(e: any) {
   chat_metadata[metadata_keys.role] = Number(e.target.value);
   updateSettings();
 }
 
-function onExtensionDefaultRoleInput(e) {
+function onExtensionDefaultRoleInput(e: any) {
   extension_settings.note.defaultRole = Number(e.target.value);
   saveSettingsDebounced();
 }
 
-async function onExtensionFloatingCharPositionInput(e) {
+async function onExtensionFloatingCharPositionInput(e: any) {
   const value = e.target.value;
-  const charaNote = extension_settings.note.chara.find((e) => e.name === getCharaFilename());
+  const charaNote = extension_settings.note.chara.find((e: any) => e.name === getCharaFilename());
 
   if (charaNote) {
     charaNote.position = Number(value);
@@ -216,7 +216,7 @@ async function onExtensionFloatingCharPositionInput(e) {
   }
 }
 
-function onExtensionFloatingCharaPromptInput() {
+function onExtensionFloatingCharaPromptInput(this: any) {
   const tempPrompt = $(this).val();
   const avatarName = getCharaFilename();
   const tempCharaNote = {
@@ -230,7 +230,7 @@ function onExtensionFloatingCharaPromptInput() {
   let existingCharaNote;
 
   if (extension_settings.note.chara) {
-    existingCharaNoteIndex = extension_settings.note.chara.findIndex((e) => e.name === avatarName);
+    existingCharaNoteIndex = extension_settings.note.chara.findIndex((e: any) => e.name === avatarName);
     existingCharaNote = extension_settings.note.chara[existingCharaNoteIndex];
   }
 
@@ -256,9 +256,9 @@ function onExtensionFloatingCharaPromptInput() {
   updateSettings();
 }
 
-function onExtensionFloatingCharaCheckboxChanged() {
+function onExtensionFloatingCharaCheckboxChanged(this: any) {
   const value = !!$(this).prop("checked");
-  const charaNote = extension_settings.note.chara.find((e) => e.name === getCharaFilename());
+  const charaNote = extension_settings.note.chara.find((e: any) => e.name === getCharaFilename());
 
   if (charaNote) {
     charaNote.useChara = value;
@@ -267,7 +267,7 @@ function onExtensionFloatingCharaCheckboxChanged() {
   }
 }
 
-function onExtensionFloatingDefaultInput() {
+function onExtensionFloatingDefaultInput(this: any) {
   extension_settings.note.default = $(this).val();
   setDefaultPromptTokenCounterDebounced(extension_settings.note.default);
   updateSettings();
@@ -315,7 +315,7 @@ function loadSettings() {
   );
 
   if (extension_settings.note.chara && getContext().characterId !== undefined) {
-    const charaNote = extension_settings.note.chara.find((e) => e.name === getCharaFilename());
+    const charaNote = extension_settings.note.chara.find((e: any) => e.name === getCharaFilename());
 
     $("#extension_floating_chara").val(charaNote ? charaNote.prompt : "");
     $("#extension_use_floating_chara").prop("checked", charaNote ? charaNote.useChara : false);
@@ -382,7 +382,7 @@ export function setFloatingPrompt() {
 
   let prompt = shouldAddPrompt ? $("#extension_floating_prompt").val() : "";
   if (shouldAddPrompt && extension_settings.note.chara && getContext().characterId !== undefined) {
-    const charaNote = extension_settings.note.chara.find((e) => e.name === getCharaFilename());
+    const charaNote = extension_settings.note.chara.find((e: any) => e.name === getCharaFilename());
 
     // Only replace with the chara note if the user checked the box
     if (charaNote && charaNote.useChara) {
@@ -476,7 +476,7 @@ async function onChatChanged() {
 
   let tokenCounter2;
   if (extension_settings.note.chara && context.characterId !== undefined) {
-    const charaNote = extension_settings.note.chara.find((e) => e.name === getCharaFilename());
+    const charaNote = extension_settings.note.chara.find((e: any) => e.name === getCharaFilename());
 
     if (charaNote) {
       tokenCounter2 = await getTokenCountAsync(charaNote.prompt);
@@ -489,7 +489,7 @@ async function onChatChanged() {
   $("#extension_floating_default_token_counter").text(tokenCounter3);
 }
 
-function onAllowWIScanCheckboxChanged() {
+function onAllowWIScanCheckboxChanged(this: any) {
   extension_settings.note.allowWIScan = !!$(this).prop("checked");
   updateSettings();
 }
@@ -575,7 +575,7 @@ export function initAuthorsNote() {
       returns: "current author's note insertion position",
       namedArgumentList: [],
       unnamedArgumentList: [
-        new SlashCommandArgument("position", [ARGUMENT_TYPE.STRING], false, false, null, ["before", "after", "chat"]),
+        new SlashCommandArgument("position", [ARGUMENT_TYPE.STRING], false, false, null, ["before", "after", "chat"] as any),
       ],
       helpString: `
             <div>
@@ -591,7 +591,7 @@ export function initAuthorsNote() {
       returns: "current author's note chat insertion role",
       namedArgumentList: [],
       unnamedArgumentList: [
-        new SlashCommandArgument("role", [ARGUMENT_TYPE.STRING], false, false, null, ["system", "user", "assistant"]),
+        new SlashCommandArgument("role", [ARGUMENT_TYPE.STRING], false, false, null, ["system", "user", "assistant"] as any),
       ],
       helpString: `
             <div>
@@ -617,7 +617,7 @@ function registerAuthorsNoteMacros() {
       description: t`The contents of the Character Author's Note`,
       handler: () =>
         this_chid !== undefined
-          ? (extension_settings.note.chara.find((e) => e.name === getCharaFilename())?.prompt ?? "")
+          ? (extension_settings.note.chara.find((e: any) => e.name === getCharaFilename())?.prompt ?? "")
           : "",
     });
     macros.register("defaultAuthorsNote", {
@@ -636,7 +636,7 @@ function registerAuthorsNoteMacros() {
       "charAuthorsNote",
       () =>
         this_chid !== undefined
-          ? (extension_settings.note.chara.find((e) => e.name === getCharaFilename())?.prompt ?? "")
+          ? (extension_settings.note.chara.find((e: any) => e.name === getCharaFilename())?.prompt ?? "")
           : "",
       t`The contents of the Character Author's Note`,
     );

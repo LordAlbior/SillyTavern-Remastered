@@ -47,7 +47,7 @@ export class SlashCommandParser {
    * @param {string[]} aliases List of alternative command names
    * @param {string} helpString Help text shown in autocomplete and command browser
    */
-  static addCommand(command, callback, aliases, helpString = "") {
+  static addCommand(command: any, callback: any, aliases: any, helpString: any = "") {
     SlashCommandParser.addCommandObject(
       SlashCommand.fromProps({
         name: command,
@@ -61,12 +61,12 @@ export class SlashCommandParser {
    *
    * @param {SlashCommand} command
    */
-  static addCommandObject(command) {
+  static addCommandObject(command: any) {
     const reserved = ["/", "#", ":", "parser-flag", "breakpoint"];
     for (const start of reserved) {
       if (
         command.name.toLowerCase().startsWith(start) ||
-        (command.aliases ?? []).find((a) => a.toLowerCase().startsWith(start))
+        (command.aliases ?? []).find((a: any) => a.toLowerCase().startsWith(start))
       ) {
         throw new Error(`Illegal Name. Slash command name cannot begin with "${start}".`);
       }
@@ -77,32 +77,32 @@ export class SlashCommandParser {
    *
    * @param {SlashCommand} command
    */
-  static addCommandObjectUnsafe(command) {
-    if ([command.name, ...command.aliases].some((x) => Object.hasOwn(SlashCommandParser.commands, x))) {
+  static addCommandObjectUnsafe(command: any) {
+    if ([command.name, ...command.aliases].some((x: any) => Object.hasOwn(SlashCommandParser.commands, x))) {
       console.trace("WARN: Duplicate slash command registered!", [command.name, ...command.aliases]);
     }
 
-    const stack = new Error().stack.split("\n").map((it) => it.trim());
-    command.isExtension = stack.find((it) => it.includes("/scripts/extensions/")) != null;
-    command.isThirdParty = stack.find((it) => it.includes("/scripts/extensions/third-party/")) != null;
+    const stack = (new Error().stack ?? "").split("\n").map((it: any) => it.trim());
+    command.isExtension = stack.find((it: any) => it.includes("/scripts/extensions/")) != null;
+    command.isThirdParty = stack.find((it: any) => it.includes("/scripts/extensions/third-party/")) != null;
     if (command.isThirdParty) {
       command.source = stack
-        .find((it) => it.includes("/scripts/extensions/third-party/"))
+        .find((it: any) => it.includes("/scripts/extensions/third-party/"))!
         .replace(/^.*?\/scripts\/extensions\/third-party\/([^/]+)\/.*$/, "$1");
     } else if (command.isExtension) {
       command.source = stack
-        .find((it) => it.includes("/scripts/extensions/"))
+        .find((it: any) => it.includes("/scripts/extensions/"))!
         .replace(/^.*?\/scripts\/extensions\/([^/]+)\/.*$/, "$1");
     } else {
-      const idx = stack.findLastIndex((it) => it.includes("at SlashCommandParser.")) + 1;
-      command.source = stack[idx].replace(/^.*?\/((?:scripts\/)?(?:[^/]+)\.js).*$/, "$1");
+      const idx = stack.findLastIndex((it: any) => it.includes("at SlashCommandParser.")) + 1;
+      command.source = stack[idx]!.replace(/^.*?\/((?:scripts\/)?(?:[^/]+)\.js).*$/, "$1");
     }
 
-    SlashCommandParser.commands[command.name] = command;
+    (SlashCommandParser.commands as Record<string, any>)[command.name] = command;
 
     if (Array.isArray(command.aliases)) {
-      command.aliases.forEach((alias) => {
-        SlashCommandParser.commands[alias] = command;
+      command.aliases.forEach((alias: any) => {
+        (SlashCommandParser.commands as Record<string, any>)[alias] = command;
       });
     }
   }
@@ -112,23 +112,23 @@ export class SlashCommandParser {
   }
   /** @type {Object.<string, string>} */ helpStrings = {};
   /** @type {boolean} */ verifyCommandNames = true;
-  /** @type {string} */ text;
-  /** @type {number} */ index;
-  /** @type {SlashCommandAbortController} */ abortController;
-  /** @type {SlashCommandDebugController} */ debugController;
-  /** @type {SlashCommandScope} */ scope;
-  /** @type {SlashCommandClosure} */ closure;
+  /** @type {any} */ text: any;
+  /** @type {any} */ index: any;
+  /** @type {any} */ abortController: any;
+  /** @type {any} */ debugController: any;
+  /** @type {any} */ scope: any;
+  /** @type {any} */ closure: any;
 
   /** @type {Object.<PARSER_FLAG,boolean>} */ flags = {};
 
   /** @type {boolean} */ jumpedEscapeSequence = false;
 
-  /** @type {{start:number, end:number}[]} */ closureIndex;
-  /** @type {{start:number, end:number, name:string}[]} */ macroIndex;
-  /** @type {SlashCommandExecutor[]} */ commandIndex;
-  /** @type {SlashCommandScope[]} */ scopeIndex;
+  /** @type {any} */ closureIndex: any;
+  /** @type {any} */ macroIndex: any;
+  /** @type {any} */ commandIndex: any;
+  /** @type {any} */ scopeIndex: any;
 
-  /** @type {string} */ parserContext;
+  /** @type {any} */ parserContext: any;
 
   get userIndex() {
     return this.index;
@@ -164,7 +164,7 @@ export class SlashCommandParser {
               typeList: [ARGUMENT_TYPE.STRING],
               isRequired: true,
               enumList: Object.keys(PARSER_FLAG).map(
-                (flag) => new SlashCommandEnumValue(flag, help[PARSER_FLAG[flag]]),
+                (flag) => new SlashCommandEnumValue(flag, help[(PARSER_FLAG as any)[flag]]),
               ),
             }),
             SlashCommandArgument.fromProps({
@@ -365,16 +365,16 @@ export class SlashCommandParser {
       begin: /\|/,
       end: "",
     };
-    BLOCK_COMMENT.contains.push(BLOCK_COMMENT);
-    RUN.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, hljs.QUOTE_STRING_MODE, NUMBER, MACRO, CLOSURE);
-    IMPORT.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
-    BREAK.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
-    LET.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
-    SETVAR.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
-    GETVAR.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, hljs.QUOTE_STRING_MODE, NUMBER, MACRO, CLOSURE);
-    ABORT.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
-    COMMAND.contains.push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
-    CLOSURE.contains.push(
+    (BLOCK_COMMENT.contains as any[]).push(BLOCK_COMMENT);
+    (RUN.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, hljs.QUOTE_STRING_MODE, NUMBER, MACRO, CLOSURE);
+    (IMPORT.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
+    (BREAK.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
+    (LET.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
+    (SETVAR.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
+    (GETVAR.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, hljs.QUOTE_STRING_MODE, NUMBER, MACRO, CLOSURE);
+    (ABORT.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
+    (COMMAND.contains as any[]).push(hljs.BACKSLASH_ESCAPE, NAMED_ARG, NUMBER, MACRO, CLOSURE, hljs.QUOTE_STRING_MODE);
+    (CLOSURE.contains as any[]).push(
       hljs.BACKSLASH_ESCAPE,
       BLOCK_COMMENT,
       COMMENT,
@@ -429,7 +429,7 @@ export class SlashCommandParser {
    * @param {*} text The text to parse.
    * @param {*} index Index to check for names (cursor position).
    */
-  async getNameAt(text, index) {
+  async getNameAt(text: any, index: any) {
     if (this.text != text) {
       try {
         this.parse(text, false);
@@ -439,23 +439,23 @@ export class SlashCommandParser {
       }
     }
     const executor =
-      this.commandIndex.filter((it) => it.start <= index && (it.end >= index || it.end == null)).slice(-1)[0] ?? null;
+      this.commandIndex.filter((it: any) => it.start <= index && (it.end >= index || it.end == null)).slice(-1)[0] ?? null;
 
     if (executor) {
       const childClosure =
         this.closureIndex.find(
-          (it) => it.start <= index && (it.end >= index || it.end == null) && it.start > executor.start,
+          (it: any) => it.start <= index && (it.end >= index || it.end == null) && it.start > executor.start,
         ) ?? null;
       if (childClosure !== null) return null;
       // Check if cursor is inside a macro
-      const macroEntry = this.macroIndex.findLast((it) => it.start <= index && it.end >= index);
+      const macroEntry = this.macroIndex.findLast((it: any) => it.start <= index && it.end >= index);
       if (macroEntry) {
         // Build macro info object for shared function
         const macroContent = text.slice(
           macroEntry.start + 2,
           macroEntry.end - (text.slice(macroEntry.end - 2, macroEntry.end) === "}}" ? 2 : 0),
         );
-        const macro = {
+        const macro: any = {
           start: macroEntry.start,
           end: macroEntry.end,
           content: macroContent,
@@ -481,16 +481,16 @@ export class SlashCommandParser {
       if (executor.name == ":") {
         const options =
           this.scopeIndex[this.commandIndex.indexOf(executor)]?.allVariableNames?.map(
-            (it) => new SlashCommandVariableAutoCompleteOption(it),
+            (it: any) => new SlashCommandVariableAutoCompleteOption(it),
           ) ?? [];
         try {
           if ("quickReplyApi" in globalThis) {
             const qrApi = globalThis.quickReplyApi;
-            options.push(
+            (options as any[]).push(
               ...qrApi
                 .listSets()
-                .flatMap((set) => qrApi.listQuickReplies(set).map((qr) => `${set}.${qr}`))
-                .map((qr) => new SlashCommandQuickReplyAutoCompleteOption(qr)),
+                .flatMap((set: any) => qrApi.listQuickReplies(set).map((qr: any) => `${set}.${qr}`))
+                .map((qr: any) => new SlashCommandQuickReplyAutoCompleteOption(qr)),
             );
           }
         } catch {
@@ -501,8 +501,8 @@ export class SlashCommandParser {
           executor.start,
           options,
           true,
-          () => `No matching variables in scope and no matching Quick Replies for "${result.name}"`,
-          () => "No variables in scope and no Quick Replies found.",
+          (() => `No matching variables in scope and no matching Quick Replies for "${(result as any).name}"`) as any,
+          (() => "No variables in scope and no Quick Replies found.") as any,
         );
         return result;
       }
@@ -545,8 +545,8 @@ export class SlashCommandParser {
    * @param {number} offset Offset from the current index (won't move the index if offset != 0).
    * @returns Whether the next characters are the indicated symbol.
    */
-  testSymbol(sequence, offset = 0) {
-    if (!this.flags[PARSER_FLAG.STRICT_ESCAPING]) return this.testSymbolLooseyGoosey(sequence, offset);
+  testSymbol(sequence: any, offset: any = 0) {
+    if (!(this.flags as any)[PARSER_FLAG.STRICT_ESCAPING]) return this.testSymbolLooseyGoosey(sequence, offset);
     // /echo abc | /echo def
     // -> TOAST: abc
     // -> TOAST: def
@@ -567,8 +567,8 @@ export class SlashCommandParser {
     const escapes = this.text.slice(this.index + offset + escapeOffset).replace(/^(\\*).*$/s, "$1").length;
     const test =
       sequence instanceof RegExp
-        ? (text) => new RegExp(`^${sequence.source}`).test(text)
-        : (text) => text.startsWith(sequence);
+        ? (text: any) => new RegExp(`^${sequence.source}`).test(text)
+        : (text: any) => text.startsWith(sequence);
     if (test(this.text.slice(this.index + offset + escapeOffset + escapes))) {
       // no backslashes before sequence
       //   -> sequence found
@@ -588,13 +588,13 @@ export class SlashCommandParser {
     }
   }
 
-  testSymbolLooseyGoosey(sequence, offset = 0) {
+  testSymbolLooseyGoosey(sequence: any, offset: any = 0) {
     const escapeOffset = this.jumpedEscapeSequence ? -1 : 0;
     const escapes = this.text[this.index + offset + escapeOffset] == "\\" ? 1 : 0;
     const test =
       sequence instanceof RegExp
-        ? (text) => new RegExp(`^${sequence.source}`).test(text)
-        : (text) => text.startsWith(sequence);
+        ? (text: any) => new RegExp(`^${sequence.source}`).test(text)
+        : (text: any) => text.startsWith(sequence);
     if (test(this.text.slice(this.index + offset + escapeOffset + escapes))) {
       // no backslashes before sequence
       //   -> sequence found
@@ -609,12 +609,12 @@ export class SlashCommandParser {
     }
   }
 
-  replaceGetvar(value) {
+  replaceGetvar(value: any) {
     // Not needed with the new parser.
     if (power_user.experimental_macro_engine) {
       return value;
     }
-    return value.replace(/{{(get(?:global)?var)::([^}]+)}}/gi, (match, cmd, name, idx) => {
+    return value.replace(/{{(get(?:global)?var)::([^}]+)}}/gi, (match: any, cmd: any, name: any, idx: any) => {
       name = name.trim();
       cmd = cmd.toLowerCase();
       const startIdx = this.index - value.length + idx;
@@ -630,18 +630,18 @@ export class SlashCommandParser {
         nameAss.value = pipeName;
         const valAss = new SlashCommandUnnamedArgumentAssignment();
         valAss.value = "{{pipe}}";
-        storePipe.unnamedArgumentList = [nameAss, valAss];
+        (storePipe.unnamedArgumentList as any[]) = [nameAss, valAss];
         this.closure.executorList.push(storePipe);
       }
       // getvar / getglobalvar
       const getvar = new SlashCommandExecutor(startIdx);
       {
         getvar.end = endIdx;
-        getvar.command = this.commands[cmd];
+        getvar.command = (this.commands as any)[cmd];
         getvar.name = cmd;
         const nameAss = new SlashCommandUnnamedArgumentAssignment();
         nameAss.value = name;
-        getvar.unnamedArgumentList = [nameAss];
+        (getvar.unnamedArgumentList as any[]) = [nameAss];
         this.closure.executorList.push(getvar);
       }
       // set to temp scoped var
@@ -655,7 +655,7 @@ export class SlashCommandParser {
         nameAss.value = varName;
         const valAss = new SlashCommandUnnamedArgumentAssignment();
         valAss.value = "{{pipe}}";
-        setvar.unnamedArgumentList = [nameAss, valAss];
+        (setvar.unnamedArgumentList as any[]) = [nameAss, valAss];
         this.closure.executorList.push(setvar);
       }
       // return pipe
@@ -666,18 +666,18 @@ export class SlashCommandParser {
         returnPipe.name = "return";
         const varAss = new SlashCommandUnnamedArgumentAssignment();
         varAss.value = `{{var::${pipeName}}}`;
-        returnPipe.unnamedArgumentList = [varAss];
+        (returnPipe.unnamedArgumentList as any[]) = [varAss];
         this.closure.executorList.push(returnPipe);
       }
       return `{{var::${varName}}}`;
     });
   }
 
-  parse(text, verifyCommandNames = true, flags = null, abortController = null, debugController = null) {
+  parse(text: any, verifyCommandNames: any = true, flags: any = null, abortController: any = null, debugController: any = null) {
     this.verifyCommandNames = verifyCommandNames;
     for (const key of Object.keys(PARSER_FLAG)) {
-      this.flags[PARSER_FLAG[key]] =
-        flags?.[PARSER_FLAG[key]] ?? power_user.stscript.parser.flags[PARSER_FLAG[key]] ?? false;
+      (this.flags as any)[(PARSER_FLAG as any)[key]] =
+        flags?.[(PARSER_FLAG as any)[key]] ?? (power_user.stscript.parser.flags as any)[(PARSER_FLAG as any)[key]] ?? false;
     }
     this.abortController = abortController;
     this.debugController = debugController;
@@ -776,7 +776,7 @@ export class SlashCommandParser {
       this.take(2); // discard ()
       closure.executeNow = true;
     }
-    closureIndexEntry.end = this.index - 1;
+    (closureIndexEntry as any).end = this.index - 1;
     this.scope = closure.scope.parent;
     this.closure = oldClosure ?? closure;
     return closure;
@@ -808,7 +808,7 @@ export class SlashCommandParser {
     this.take("/break".length);
     this.discardWhitespace();
     if (this.testUnnamedArgument()) {
-      cmd.unnamedArgumentList.push(...this.parseUnnamedArgument());
+      (cmd.unnamedArgumentList as any[]).push(...this.parseUnnamedArgument());
     }
     cmd.end = this.index;
     this.commandIndex.push(cmd);
@@ -835,7 +835,7 @@ export class SlashCommandParser {
   parseBlockComment() {
     const start = this.index + 1;
     const cmd = new SlashCommandExecutor(start);
-    cmd.command = this.commands["*"];
+    cmd.command = (this.commands as any)["*"];
     this.commandIndex.push(cmd);
     this.scopeIndex.push(this.scope.getCopy());
     this.take(); // discard "/"
@@ -865,7 +865,7 @@ export class SlashCommandParser {
   parseComment() {
     const start = this.index + 1;
     const cmd = new SlashCommandExecutor(start);
-    cmd.command = this.commands["/"];
+    cmd.command = (this.commands as any)["/"];
     this.commandIndex.push(cmd);
     this.scopeIndex.push(this.scope.getCopy());
     this.take(); // discard "/"
@@ -884,19 +884,19 @@ export class SlashCommandParser {
     const start = this.index + 1;
     const cmd = new SlashCommandExecutor(start);
     cmd.name = "parser-flag";
-    cmd.unnamedArgumentList = [];
-    cmd.command = this.commands[cmd.name];
+    (cmd.unnamedArgumentList as any[]) = [];
+    cmd.command = (this.commands as any)[cmd.name];
     this.commandIndex.push(cmd);
     this.scopeIndex.push(this.scope.getCopy());
     this.take(13); // discard "/parser-flag "
     cmd.startNamedArgs = -1;
     cmd.endNamedArgs = -1;
     cmd.startUnnamedArgs = this.index;
-    cmd.unnamedArgumentList = this.parseUnnamedArgument(true);
-    const [flag, state] = cmd.unnamedArgumentList ?? [null, null];
+    (cmd.unnamedArgumentList as any[]) = this.parseUnnamedArgument(true);
+    const [flag, state] = (cmd.unnamedArgumentList as any[]) ?? [null, null];
     cmd.endUnnamedArgs = this.index;
-    if (Object.keys(PARSER_FLAG).includes(flag.value.toString())) {
-      this.flags[PARSER_FLAG[flag.value.toString()]] = isTrueBoolean(state?.value.toString() ?? "on");
+    if (Object.keys(PARSER_FLAG).includes((flag as any).value.toString())) {
+      ((this.flags as any)[(PARSER_FLAG as any)[(flag as any).value.toString()]] as any) = isTrueBoolean((state as any)?.value.toString() ?? "on");
     }
     cmd.end = this.index;
   }
@@ -911,7 +911,7 @@ export class SlashCommandParser {
     const start = this.index + 2;
     const cmd = new SlashCommandExecutor(start);
     cmd.name = ":";
-    cmd.unnamedArgumentList = [];
+    (cmd.unnamedArgumentList as any[]) = [];
     cmd.command = (this.commands as any).run;
     this.commandIndex.push(cmd);
     this.scopeIndex.push(this.scope.getCopy());
@@ -919,12 +919,12 @@ export class SlashCommandParser {
     const assignment = new SlashCommandUnnamedArgumentAssignment();
     if (this.testQuotedValue()) assignment.value = this.parseQuotedValue();
     else assignment.value = this.parseValue();
-    cmd.unnamedArgumentList = [assignment];
+    (cmd.unnamedArgumentList as any[]) = [assignment];
     this.discardWhitespace();
     cmd.startNamedArgs = this.index;
     while (this.testNamedArgument()) {
       const arg = this.parseNamedArgument();
-      cmd.namedArgumentList.push(arg);
+      (cmd.namedArgumentList as any[]).push(arg);
       this.discardWhitespace();
     }
     cmd.endNamedArgs = this.index;
@@ -984,18 +984,18 @@ export class SlashCommandParser {
     this.take(); // discard "/"
     while (!/\s/.test(this.char) && !this.testCommandEnd()) cmd.name += this.take(); // take chars until whitespace or end
     this.discardWhitespace();
-    if (this.verifyCommandNames && !this.commands[cmd.name])
+    if (this.verifyCommandNames && !(this.commands as any)[cmd.name])
       throw new SlashCommandParserError(
         `Unknown command at position ${this.index - cmd.name.length}: "/${cmd.name}"`,
         this.text,
         this.index - cmd.name.length,
       );
-    cmd.command = this.commands[cmd.name];
+    cmd.command = (this.commands as any)[cmd.name];
     cmd.startNamedArgs = this.index;
     cmd.endNamedArgs = this.index;
     while (this.testNamedArgument()) {
       const arg = this.parseNamedArgument();
-      cmd.namedArgumentList.push(arg);
+      (cmd.namedArgumentList as any[]).push(arg);
       cmd.endNamedArgs = this.index;
       this.discardWhitespace();
     }
@@ -1003,26 +1003,26 @@ export class SlashCommandParser {
     cmd.startUnnamedArgs = this.index - (/\s(\s*)$/s.exec(this.behind)?.[1]?.length ?? 0);
     cmd.endUnnamedArgs = this.index;
     if (this.testUnnamedArgument()) {
-      const rawQuotesArg = cmd?.namedArgumentList?.find((a) => a.name === "raw");
+      const rawQuotesArg = (cmd as any)?.namedArgumentList?.find((a: any) => a.name === "raw");
       const rawQuotes =
-        cmd?.command?.rawQuotes && rawQuotesArg
+        (cmd as any)?.command?.rawQuotes && rawQuotesArg
           ? !isFalseBoolean(rawQuotesArg?.value?.toString())
-          : cmd?.command?.rawQuotes;
-      cmd.unnamedArgumentList = this.parseUnnamedArgument(
-        cmd.command?.unnamedArgumentList?.length && cmd?.command?.splitUnnamedArgument,
-        cmd?.command?.splitUnnamedArgumentCount,
+          : (cmd as any)?.command?.rawQuotes;
+      (cmd.unnamedArgumentList as any[]) = this.parseUnnamedArgument(
+        (cmd as any).command?.unnamedArgumentList?.length && (cmd as any)?.command?.splitUnnamedArgument,
+        (cmd as any)?.command?.splitUnnamedArgumentCount,
         rawQuotes,
       );
       cmd.endUnnamedArgs = this.index;
       if (cmd.name == "let") {
-        const keyArg = cmd.namedArgumentList.find((it) => it.name == "key");
+        const keyArg = (cmd.namedArgumentList as any[]).find((it: any) => it.name == "key");
         if (keyArg) {
           this.scope.variableNames.push(keyArg.value.toString());
-        } else if (typeof cmd.unnamedArgumentList[0]?.value == "string") {
-          this.scope.variableNames.push(cmd.unnamedArgumentList[0].value);
+        } else if (typeof (cmd.unnamedArgumentList as any[])[0]?.value == "string") {
+          this.scope.variableNames.push((cmd.unnamedArgumentList as any[])[0].value);
         }
       } else if (cmd.name == "import") {
-        const value = /**@type {string[]}*/ (cmd.unnamedArgumentList.map((it) => it.value));
+        const value = /**@type {string[]}*/ ((cmd.unnamedArgumentList as any[]).map((it: any) => it.value));
         for (let i = 0; i < value.length; i++) {
           const srcName = value[i];
           let dstName = srcName;
@@ -1219,7 +1219,7 @@ export class SlashCommandParser {
     }
     this.indexMacros(this.index - value.length, value);
     value = value.trim();
-    if (this.flags[PARSER_FLAG.REPLACE_GETVAR]) {
+    if ((this.flags as any)[PARSER_FLAG.REPLACE_GETVAR]) {
       value = this.replaceGetvar(value);
     }
     assignment.value = value;
@@ -1240,21 +1240,21 @@ export class SlashCommandParser {
       else return true;
     }
     if (!this.verifyCommandNames && this.testClosureEnd()) return true;
-    if (this.verifyCommandNames && !this.flags[PARSER_FLAG.STRICT_ESCAPING] && this.testCommandEnd()) {
+    if (this.verifyCommandNames && !(this.flags as any)[PARSER_FLAG.STRICT_ESCAPING] && this.testCommandEnd()) {
       throw new SlashCommandParserError(
         `Unexpected end of quoted value at position ${this.index}`,
         this.text,
         this.index,
       );
     }
-    return this.testSymbol('"') || (!this.flags[PARSER_FLAG.STRICT_ESCAPING] && this.testCommandEnd());
+    return this.testSymbol('"') || (!(this.flags as any)[PARSER_FLAG.STRICT_ESCAPING] && this.testCommandEnd());
   }
   parseQuotedValue() {
     this.take(); // discard opening quote
     let value = "";
     while (!this.testQuotedValueEnd()) value += this.take(); // take all chars until closing quote
     this.take(); // discard closing quote
-    if (this.flags[PARSER_FLAG.REPLACE_GETVAR]) {
+    if ((this.flags as any)[PARSER_FLAG.REPLACE_GETVAR]) {
       value = this.replaceGetvar(value);
     }
     this.indexMacros(this.index - value.length, value);
@@ -1277,7 +1277,7 @@ export class SlashCommandParser {
     let value = this.take(); // take the already tested opening bracket
     while (!this.testListValueEnd()) value += this.take(); // take all chars until closing bracket
     value += this.take(); // take closing bracket
-    if (this.flags[PARSER_FLAG.REPLACE_GETVAR]) {
+    if ((this.flags as any)[PARSER_FLAG.REPLACE_GETVAR]) {
       value = this.replaceGetvar(value);
     }
     this.indexMacros(this.index - value.length, value);
@@ -1294,14 +1294,14 @@ export class SlashCommandParser {
   parseValue() {
     let value = this.jumpedEscapeSequence ? this.take() : ""; // take the first, already tested, char if it is an escaped one
     while (!this.testValueEnd()) value += this.take(); // take all chars until value end
-    if (this.flags[PARSER_FLAG.REPLACE_GETVAR]) {
+    if ((this.flags as any)[PARSER_FLAG.REPLACE_GETVAR]) {
       value = this.replaceGetvar(value);
     }
     this.indexMacros(this.index - value.length, value);
     return value;
   }
 
-  indexMacros(offset, text) {
+  indexMacros(offset: any, text: any) {
     // Index all macros including nested ones
     // We need to track brace depth to properly handle nested macros like {{reverse::Hey {{user}}}}
     let i = 0;

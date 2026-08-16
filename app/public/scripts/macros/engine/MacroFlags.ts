@@ -183,7 +183,7 @@ export function createEmptyFlags() {
  * @param {string[]} flagSymbols - Array of flag symbol strings (e.g., ['!', '?']).
  * @returns {MacroFlags}
  */
-export function parseFlags(flagSymbols) {
+export function parseFlags(flagSymbols: any) {
   const flags = createEmptyFlags();
 
   for (const symbol of flagSymbols) {
@@ -209,7 +209,7 @@ export function parseFlags(flagSymbols) {
       default:
         console.warn(`Can't parse unknown macro flag: ${symbol}`);
     }
-    flags.raw.push(symbol);
+    (flags.raw as any[]).push(symbol);
   }
 
   return flags;
@@ -221,7 +221,7 @@ export function parseFlags(flagSymbols) {
  * @param {MacroFlags} flags - The flags object to check.
  * @returns {boolean} True if at least one flag is set.
  */
-export function hasAnyFlag(flags) {
+export function hasAnyFlag(flags: any) {
   return flags.raw.length > 0;
 }
 
@@ -231,7 +231,7 @@ export function hasAnyFlag(flags) {
  * @param {string} symbol - The flag symbol (e.g., '!').
  * @returns {MacroFlagDefinition|undefined}
  */
-export function getFlagDefinition(symbol) {
+export function getFlagDefinition(symbol: any) {
   return MacroFlagDefinitions.get(symbol);
 }
 
@@ -241,6 +241,6 @@ export function getFlagDefinition(symbol) {
  * @param {string} symbol - The symbol to check.
  * @returns {boolean}
  */
-export function isValidFlag(symbol) {
+export function isValidFlag(symbol: any) {
   return ValidFlagSymbols.has(symbol);
 }

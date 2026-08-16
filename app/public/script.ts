@@ -2289,7 +2289,7 @@ export function appendMediaToMessage(mes: any, messageElement: any, scrollBehavi
             }
         }));
 
-        new AudioPlayer(audio.get(0), template.get(0));
+        new AudioPlayer(audio.get(0) as HTMLAudioElement, template.get(0) as HTMLElement);
 
         mediaBlocks.push(template);
         return template;

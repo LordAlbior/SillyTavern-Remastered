@@ -14,12 +14,12 @@ export class SlashCommandScope {
   /** @type {{key:string, value:string|SlashCommandClosure}[]} */
   get macroList() {
     return [
-      ...Object.keys(this.macros).map((key) => ({ key, value: this.macros[key] })),
+      ...Object.keys(this.macros).map((key: any) => ({ key, value: (this.macros as Record<string, any>)[key] })),
       ...(this.parent?.macroList ?? []),
     ];
   }
   /** @type {SlashCommandScope} */ parent;
-  /** @type {string} */ #pipe;
+  /** @type {string} */ #pipe: any;
   get pipe() {
     return this.#pipe ?? this.parent?.pipe;
   }
@@ -27,7 +27,7 @@ export class SlashCommandScope {
     this.#pipe = value;
   }
 
-  constructor(parent) {
+  constructor(parent: any) {
     this.parent = parent;
   }
 
@@ -40,27 +40,27 @@ export class SlashCommandScope {
     return scope;
   }
 
-  setMacro(key, value, overwrite = true) {
-    if (overwrite || !this.macroList.find((it) => it.key == key)) {
-      this.macros[key] = value;
+  setMacro(key: any, value: any, overwrite = true) {
+    if (overwrite || !this.macroList.find((it: any) => it.key == key)) {
+      (this.macros as Record<string, any>)[key] = value;
     }
   }
 
-  existsVariableInScope(key) {
+  existsVariableInScope(key: any) {
     return Object.keys(this.variables).includes(key);
   }
-  existsVariable(key) {
+  existsVariable(key: any) {
     return Object.keys(this.variables).includes(key) || this.parent?.existsVariable(key);
   }
-  letVariable(key, value = undefined) {
+  letVariable(key: any, value: any = undefined) {
     if (this.existsVariableInScope(key))
       throw new SlashCommandScopeVariableExistsError(`Variable named "${key}" already exists.`);
-    this.variables[key] = value;
+    (this.variables as Record<string, any>)[key] = value;
   }
-  setVariable(key, value, index = null, type = null) {
+  setVariable(key: any, value: any, index: any = null, type: any = null) {
     if (this.existsVariableInScope(key)) {
       if (index !== null && index !== undefined) {
-        let v = this.variables[key];
+        let v: any = (this.variables as Record<string, any>)[key];
         try {
           v = JSON.parse(v);
           const numIndex = Number(index);
@@ -73,9 +73,9 @@ export class SlashCommandScope {
         } catch {
           v[index] = convertValueType(value, type);
         }
-        this.variables[key] = v;
+        (this.variables as Record<string, any>)[key] = v;
       } else {
-        this.variables[key] = value;
+        (this.variables as Record<string, any>)[key] = value;
       }
       return value;
     }
@@ -84,10 +84,10 @@ export class SlashCommandScope {
     }
     throw new SlashCommandScopeVariableNotFoundError(`No such variable: "${key}"`);
   }
-  getVariable(key, index = null) {
+  getVariable(key: any, index: any = null) {
     if (this.existsVariableInScope(key)) {
       if (index !== null && index !== undefined) {
-        let v = this.variables[key];
+        let v: any = (this.variables as Record<string, any>)[key];
         try {
           v = JSON.parse(v);
         } catch {
@@ -102,7 +102,7 @@ export class SlashCommandScope {
         if (typeof v == "object") return JSON.stringify(v);
         return v ?? "";
       } else {
-        const value = this.variables[key];
+        const value = (this.variables as Record<string, any>)[key];
         return value?.trim?.() === "" || isNaN(Number(value)) ? value || "" : Number(value);
       }
     }

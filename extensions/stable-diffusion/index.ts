@@ -384,7 +384,7 @@ const defaultSettings = {
 };
 
 const writePromptFieldsDebounced = debounce(writePromptFields, debounce_timeout.relaxed);
-const isVideo = (/** @type {string} */ format) =>
+const isVideo = (/** @type {string} */ format: any) =>
   VIDEO_EXTENSIONS.includes(
     String(format || "")
       .trim()
@@ -398,7 +398,7 @@ const isVideo = (/** @type {string} */ format) =>
  * @param {function(boolean): void} abort Abort generation function
  * @param {string} type Type of the generation
  */
-function processTriggers(chat, _, abort, type) {
+function processTriggers(chat: any, _: any, abort: any, type: any) {
   if (type === "quiet") {
     return;
   }
@@ -445,7 +445,7 @@ function processTriggers(chat, _, abort, type) {
     outer: for (const [specialMode, triggers] of Object.entries(messageTrigger.specialCases)) {
       for (const trigger of triggers) {
         if (subject === trigger) {
-          subject = triggerWords[specialMode][0];
+          subject = (triggerWords as Record<string, any>)[specialMode][0];
           console.log(`SD: Detected special case "${trigger}", switching to mode ${specialMode}`);
           break outer;
         }
@@ -459,7 +459,7 @@ function processTriggers(chat, _, abort, type) {
   }
 }
 
-globalThis.SD_ProcessTriggers = processTriggers;
+(globalThis as Record<string, any>).SD_ProcessTriggers = processTriggers;
 
 function getSdRequestBody() {
   switch (extension_settings.sd.source) {
@@ -596,7 +596,7 @@ async function loadSettings() {
   }
 
   const resolutionId = getClosestKnownResolution();
-  $("#sd_resolution").val(resolutionId);
+  $("#sd_resolution").val(resolutionId as any);
 
   toggleSourceControls();
   addPromptTemplates();
@@ -642,7 +642,7 @@ function addPromptTemplates() {
     (a, b) => Number(a[0]) - Number(b[0]),
   )) {
     const label = $("<label></label>")
-      .text(modeLabels[name])
+      .text(modeLabels[name as any])
       .attr("for", `sd_prompt_${name}`)
       .attr("data-i18n", `sd_prompt_${name}`);
     const textarea = $("<textarea></textarea>")
@@ -659,8 +659,8 @@ function addPromptTemplates() {
       .attr("title", "Restore default")
       .attr("data-i18n", "Restore default")
       .on("click", () => {
-        textarea.val(promptTemplates[name]);
-        extension_settings.sd.prompts[name] = promptTemplates[name];
+        textarea.val(promptTemplates[name as any]);
+        extension_settings.sd.prompts[name] = promptTemplates[name as any];
         if (String(name) === String(generationMode.TOOL)) {
           registerFunctionTool();
         }
@@ -672,29 +672,29 @@ function addPromptTemplates() {
   }
 }
 
-function onInteractiveModeInput() {
+function onInteractiveModeInput(this: any) {
   extension_settings.sd.interactive_mode = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onMultimodalCaptioningInput() {
+function onMultimodalCaptioningInput(this: any) {
   extension_settings.sd.multimodal_captioning = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onSnapInput() {
+function onSnapInput(this: any) {
   extension_settings.sd.snap = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onMinimalPromptProcessing() {
+function onMinimalPromptProcessing(this: any) {
   extension_settings.sd.minimal_prompt_processing = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
 function onStyleSelect() {
   const selectedStyle = String($("#sd_style").find(":selected").val());
-  const styleObject = extension_settings.sd.styles.find((x) => x.name === selectedStyle);
+  const styleObject = extension_settings.sd.styles.find((x: any) => x.name === selectedStyle);
 
   if (!styleObject) {
     console.warn(`Could not find style object for ${selectedStyle}`);
@@ -709,7 +709,7 @@ function onStyleSelect() {
 
 async function onDeleteStyleClick() {
   const selectedStyle = String($("#sd_style").find(":selected").val());
-  const styleObject = extension_settings.sd.styles.find((x) => x.name === selectedStyle);
+  const styleObject = extension_settings.sd.styles.find((x: any) => x.name === selectedStyle);
 
   if (!styleObject) {
     return;
@@ -760,7 +760,7 @@ async function onSaveStyleClick() {
   const prefix = String($("#sd_prompt_prefix").val());
   const negative = String($("#sd_negative_prompt").val());
 
-  const existingStyle = extension_settings.sd.styles.find((x) => x.name === name);
+  const existingStyle = extension_settings.sd.styles.find((x: any) => x.name === name);
 
   if (existingStyle) {
     existingStyle.prefix = prefix;
@@ -788,7 +788,7 @@ async function onSaveStyleClick() {
 
 async function onRenameStyleClick() {
   const selectedStyle = extension_settings.sd.style;
-  const styleObject = extension_settings.sd.styles.find((x) => x.name === selectedStyle);
+  const styleObject = extension_settings.sd.styles.find((x: any) => x.name === selectedStyle);
 
   if (!styleObject) {
     return;
@@ -806,7 +806,7 @@ async function onRenameStyleClick() {
     return;
   }
 
-  const existingStyle = extension_settings.sd.styles.find((x) => x.name === name);
+  const existingStyle = extension_settings.sd.styles.find((x: any) => x.name === name);
 
   if (existingStyle) {
     toastr.error(t`A style with that name already exists`);
@@ -836,10 +836,10 @@ async function onRenameStyleClick() {
  * @param {string} [args.resolution] Saved resolution to offer as a checkbox option
  * @returns {Promise<string>} Refined prompt
  */
-async function refinePrompt(prompt, args = null) {
+async function refinePrompt(prompt: any, args: any = null) {
   if (extension_settings.sd.refine_mode) {
     /** @type {import("/scripts/popup.js").CustomPopupInput[]} */
-    const customInputs = [];
+    const customInputs: any[] = [];
 
     if (args?.negative) {
       customInputs.push({
@@ -869,7 +869,7 @@ async function refinePrompt(prompt, args = null) {
         okButton: t`Continue`,
         cancelButton: t`Cancel`,
         customInputs,
-        onClose: (popup) => {
+        onClose: (popup: any) => {
           if (!popup.result || !(popup.inputResults instanceof Map) || !args) {
             return;
           }
@@ -905,21 +905,21 @@ async function onChatChanged() {
 
   $("#sd_character_prompt_block").show();
 
-  const key = getCharaFilename(this_chid);
-  let characterPrompt = key ? extension_settings.sd.character_prompts[key] || "" : "";
-  let negativePrompt = key ? extension_settings.sd.character_negative_prompts[key] || "" : "";
+  const key = getCharaFilename(this_chid as any);
+  let characterPrompt = key ? extension_settings.sd.character_prompts[key as any] || "" : "";
+  let negativePrompt = key ? extension_settings.sd.character_negative_prompts[key as any] || "" : "";
 
   const context = getContext();
-  const sharedPromptData = context?.characters[this_chid]?.data?.extensions?.sd_character_prompt;
+  const sharedPromptData = (context as any)?.characters[this_chid as any]?.data?.extensions?.sd_character_prompt;
   const hasSharedData = sharedPromptData && typeof sharedPromptData === "object";
 
   if (typeof sharedPromptData?.positive === "string" && !characterPrompt && sharedPromptData.positive) {
     characterPrompt = sharedPromptData.positive;
-    extension_settings.sd.character_prompts[key] = characterPrompt;
+    (extension_settings.sd.character_prompts as any)[key] = characterPrompt;
   }
   if (typeof sharedPromptData?.negative === "string" && !negativePrompt && sharedPromptData.negative) {
     negativePrompt = sharedPromptData.negative;
-    extension_settings.sd.character_negative_prompts[key] = negativePrompt;
+    (extension_settings.sd.character_negative_prompts as any)[key] = negativePrompt;
   }
 
   $("#sd_character_prompt").val(characterPrompt);
@@ -939,18 +939,18 @@ async function adjustElementScrollHeight() {
   await resetScrollHeight($("#sd_character_negative_prompt"));
 }
 
-async function onCharacterPromptInput() {
-  const key = getCharaFilename(this_chid);
-  extension_settings.sd.character_prompts[key] = $("#sd_character_prompt").val();
+async function onCharacterPromptInput(this: any) {
+  const key = getCharaFilename(this_chid as any);
+  (extension_settings.sd.character_prompts as any)[key] = $("#sd_character_prompt").val();
   saveSettingsDebounced();
   writePromptFieldsDebounced(this_chid);
   if (CSS.supports("field-sizing", "content")) return;
   await resetScrollHeight($(this));
 }
 
-async function onCharacterNegativePromptInput() {
-  const key = getCharaFilename(this_chid);
-  extension_settings.sd.character_negative_prompts[key] = $("#sd_character_negative_prompt").val();
+async function onCharacterNegativePromptInput(this: any) {
+  const key = getCharaFilename(this_chid as any);
+  (extension_settings.sd.character_negative_prompts as any)[key] = $("#sd_character_negative_prompt").val();
   saveSettingsDebounced();
   writePromptFieldsDebounced(this_chid);
   if (CSS.supports("field-sizing", "content")) return;
@@ -962,10 +962,10 @@ function getCharacterPrefix() {
     return "";
   }
 
-  const key = getCharaFilename(this_chid);
+  const key = getCharaFilename(this_chid as any);
 
   if (key) {
-    return extension_settings.sd.character_prompts[key] || "";
+    return (extension_settings.sd.character_prompts as any)[key] || "";
   }
 
   return "";
@@ -976,10 +976,10 @@ function getCharacterNegativePrefix() {
     return "";
   }
 
-  const key = getCharaFilename(this_chid);
+  const key = getCharaFilename(this_chid as any);
 
   if (key) {
-    return extension_settings.sd.character_negative_prompts[key] || "";
+    return (extension_settings.sd.character_negative_prompts as any)[key] || "";
   }
 
   return "";
@@ -992,9 +992,9 @@ function getCharacterNegativePrefix() {
  * @param {string} macro Macro to replace with the secondary string
  * @returns {string} Combined string with a comma between them
  */
-function combinePrefixes(str1, str2, macro = "") {
+function combinePrefixes(str1: any, str2: any, macro = "") {
   // Remove leading/trailing white spaces and commas from the strings
-  const process = (s) => s.trim().replace(/^,|,$/g, "").trim();
+  const process = (s: any) => s.trim().replace(/^,|,$/g, "").trim();
 
   if (!str2) {
     return str1;
@@ -1061,14 +1061,14 @@ function onStepsInput() {
   saveSettingsDebounced();
 }
 
-async function onPromptPrefixInput() {
+async function onPromptPrefixInput(this: any) {
   extension_settings.sd.prompt_prefix = $("#sd_prompt_prefix").val();
   saveSettingsDebounced();
   if (CSS.supports("field-sizing", "content")) return;
   await resetScrollHeight($(this));
 }
 
-async function onNegativePromptInput() {
+async function onNegativePromptInput(this: any) {
   extension_settings.sd.negative_prompt = $("#sd_negative_prompt").val();
   saveSettingsDebounced();
   if (CSS.supports("field-sizing", "content")) return;
@@ -1089,48 +1089,48 @@ const resolutionOptions = {
   sd_res_512x512: {
     width: 512,
     height: 512,
-    name: translate("512x512 (1:1, icons, profile pictures)", "sd_res_512x512"),
+    name: translate("512x512 (1:1, icons, profile pictures)", "sd_res_512x512" as any),
   },
   sd_res_600x600: {
     width: 600,
     height: 600,
-    name: translate("600x600 (1:1, icons, profile pictures)", "sd_res_600x600"),
+    name: translate("600x600 (1:1, icons, profile pictures)", "sd_res_600x600" as any),
   },
   sd_res_512x768: {
     width: 512,
     height: 768,
-    name: translate("512x768 (2:3, vertical character card)", "sd_res_512x768"),
+    name: translate("512x768 (2:3, vertical character card)", "sd_res_512x768" as any),
   },
   sd_res_768x512: {
     width: 768,
     height: 512,
-    name: translate("768x512 (3:2, horizontal 35-mm movie film)", "sd_res_768x512"),
+    name: translate("768x512 (3:2, horizontal 35-mm movie film)", "sd_res_768x512" as any),
   },
   sd_res_960x540: {
     width: 960,
     height: 540,
-    name: translate("960x540 (16:9, horizontal wallpaper)", "sd_res_960x540"),
+    name: translate("960x540 (16:9, horizontal wallpaper)", "sd_res_960x540" as any),
   },
-  sd_res_540x960: { width: 540, height: 960, name: translate("540x960 (9:16, vertical wallpaper)", "sd_res_540x960") },
+  sd_res_540x960: { width: 540, height: 960, name: translate("540x960 (9:16, vertical wallpaper)", "sd_res_540x960" as any) },
   sd_res_1920x1088: {
     width: 1920,
     height: 1088,
-    name: translate("1920x1088 (16:9, 1080p, horizontal wallpaper)", "sd_res_1920x1088"),
+    name: translate("1920x1088 (16:9, 1080p, horizontal wallpaper)", "sd_res_1920x1088" as any),
   },
   sd_res_1088x1920: {
     width: 1088,
     height: 1920,
-    name: translate("1088x1920 (9:16, 1080p, vertical wallpaper)", "sd_res_1088x1920"),
+    name: translate("1088x1920 (9:16, 1080p, vertical wallpaper)", "sd_res_1088x1920" as any),
   },
   sd_res_1280x720: {
     width: 1280,
     height: 720,
-    name: translate("1280x720 (16:9, 720p, horizontal wallpaper)", "sd_res_1280x720"),
+    name: translate("1280x720 (16:9, 720p, horizontal wallpaper)", "sd_res_1280x720" as any),
   },
   sd_res_720x1280: {
     width: 720,
     height: 1280,
-    name: translate("720x1280 (9:16, 720p, vertical wallpaper)", "sd_res_720x1280"),
+    name: translate("720x1280 (9:16, 720p, vertical wallpaper)", "sd_res_720x1280" as any),
   },
   sd_res_1024x1024: { width: 1024, height: 1024, name: "1024x1024 (1:1, SDXL)" },
   sd_res_1152x896: { width: 1152, height: 896, name: "1152x896 (9:7, SDXL)" },
@@ -1156,7 +1156,7 @@ const resolutionOptions = {
 
 function onResolutionChange() {
   const selectedOption = $("#sd_resolution").val() as string;
-  const selectedResolution = resolutionOptions[selectedOption];
+  const selectedResolution = (resolutionOptions as any)[selectedOption];
 
   if (!selectedResolution) {
     console.warn(`Could not find resolution option for ${selectedOption}`);
@@ -1210,7 +1210,7 @@ async function onComfyTypeChange() {
   await onSourceChange();
 }
 
-function onFunctionToolInput() {
+function onFunctionToolInput(this: any) {
   extension_settings.sd.function_tool = !!$(this).prop("checked");
   saveSettingsDebounced();
   registerFunctionTool();
@@ -1281,27 +1281,27 @@ function onPollinationsEnhanceInput() {
   saveSettingsDebounced();
 }
 
-function onHordeNsfwInput() {
+function onHordeNsfwInput(this: any) {
   extension_settings.sd.horde_nsfw = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onHordeKarrasInput() {
+function onHordeKarrasInput(this: any) {
   extension_settings.sd.horde_karras = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onHordeSanitizeInput() {
+function onHordeSanitizeInput(this: any) {
   extension_settings.sd.horde_sanitize = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onRestoreFacesInput() {
+function onRestoreFacesInput(this: any) {
   extension_settings.sd.restore_faces = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
 
-function onHighResFixInput() {
+function onHighResFixInput(this: any) {
   extension_settings.sd.enable_hr = !!$(this).prop("checked");
   saveSettingsDebounced();
 }
@@ -1394,7 +1394,7 @@ function onStabilityStylePresetChange() {
   saveSettingsDebounced();
 }
 
-async function changeComfyWorkflow(_, name) {
+async function changeComfyWorkflow(_: any, name: any) {
   name = name.replace(/(\.json)?$/i, ".json");
   if ($(`#sd_comfy_workflow > [value="${name}"]`).length > 0) {
     extension_settings.sd.comfy_workflow = name;
@@ -1834,7 +1834,7 @@ async function loadHordeSamplers() {
 }
 
 async function loadExtrasSamplers() {
-  if (!modules.includes("sd")) {
+  if (!(modules as any).includes("sd")) {
     return [];
   }
 
@@ -1891,7 +1891,7 @@ async function loadSdcppModels() {
     const data = await result.json();
 
     if (data?.data?.length > 0) {
-      return data.data.map((model) => ({ value: model.id, text: model.name || model.id }));
+      return data.data.map((model: any) => ({ value: model.id, text: model.name || model.id }));
     }
   } catch (error) {
     console.error("Failed to load sd.cpp models:", error);
@@ -2089,7 +2089,7 @@ async function loadModels() {
  * Show or hide model-specific controls based on the selected model.
  * @param {string} modelId Model ID
  */
-function switchModelSpecificControls(modelId) {
+function switchModelSpecificControls(modelId: any) {
   const modelControls = $(".sd_settings [data-sd-model]");
   modelControls.hide();
 
@@ -2100,8 +2100,8 @@ function switchModelSpecificControls(modelId) {
   modelControls.each(function () {
     const models = String($(this).attr("data-sd-model") || "")
       .split(",")
-      .map((m) => m.trim());
-    $(this).toggle(models.some((m) => modelId.includes(m)));
+      .map((m: any) => m.trim());
+    $(this).toggle(models.some((m: any) => modelId.includes(m)));
   });
 }
 
@@ -2109,12 +2109,12 @@ function switchModelSpecificControls(modelId) {
  * Ensure the Electron Hub quality select is populated based on the selected model.
  * @param {any[]} models Array of models
  */
-function ensureElectronHubQualitySelect(models) {
+function ensureElectronHubQualitySelect(models: any) {
   try {
     const modelId = String(extension_settings.sd.model || "");
     if (!modelId) return;
 
-    const model = Array.isArray(models) ? models.find((m) => String(m?.id) === modelId) : undefined;
+    const model = Array.isArray(models) ? models.find((m: any) => String(m?.id) === modelId) : undefined;
     const qualities = Array.isArray(model?.qualities) ? model.qualities : undefined;
 
     const $qualityRow = $("#sd_electronhub_quality_row");
@@ -2149,7 +2149,7 @@ function ensureElectronHubQualitySelect(models) {
 }
 
 async function loadStabilityModels() {
-  $("#sd_stability_key").toggleClass("success", !!secret_state[SECRET_KEYS.STABILITY]);
+  $("#sd_stability_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.STABILITY]);
 
   return [
     { value: "stable-image-ultra", text: "Stable Image Ultra" },
@@ -2159,7 +2159,7 @@ async function loadStabilityModels() {
 }
 
 async function loadBflModels() {
-  $("#sd_bfl_key").toggleClass("success", !!secret_state[SECRET_KEYS.BFL]);
+  $("#sd_bfl_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.BFL]);
 
   return [
     { value: "flux-pro-1.1-ultra", text: "flux-pro-1.1-ultra" },
@@ -2170,7 +2170,7 @@ async function loadBflModels() {
 }
 
 async function loadFalaiModels() {
-  $("#sd_falai_key").toggleClass("success", !!secret_state[SECRET_KEYS.FALAI]);
+  $("#sd_falai_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.FALAI]);
 
   const result = await fetch("/api/sd/falai/models", {
     method: "POST",
@@ -2192,9 +2192,9 @@ async function loadXAIModels() {
 }
 
 async function loadWorkersAIImageModels() {
-  $("#sd_cf_workers_key").toggleClass("success", !!secret_state[SECRET_KEYS.WORKERS_AI]);
+  $("#sd_cf_workers_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.WORKERS_AI]);
 
-  if (!secret_state[SECRET_KEYS.WORKERS_AI]) {
+  if (!(secret_state as any)[SECRET_KEYS.WORKERS_AI]) {
     return [];
   }
 
@@ -2219,7 +2219,7 @@ async function loadWorkersAIImageModels() {
 }
 
 async function loadPollinationsModels() {
-  $("#sd_pollinations_key").toggleClass("success", !!secret_state[SECRET_KEYS.POLLINATIONS]);
+  $("#sd_pollinations_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.POLLINATIONS]);
 
   const result = await fetch("/api/sd/pollinations/models", {
     method: "POST",
@@ -2234,7 +2234,7 @@ async function loadPollinationsModels() {
 }
 
 async function loadTogetherAIModels() {
-  if (!secret_state[SECRET_KEYS.TOGETHERAI]) {
+  if (!(secret_state as any)[SECRET_KEYS.TOGETHERAI]) {
     console.debug("TogetherAI API key is not set.");
     return [];
   }
@@ -2252,7 +2252,7 @@ async function loadTogetherAIModels() {
 }
 
 async function loadChutesModels() {
-  if (!secret_state[SECRET_KEYS.CHUTES]) {
+  if (!(secret_state as any)[SECRET_KEYS.CHUTES]) {
     console.debug("Chutes API key is not set.");
     return [];
   }
@@ -2273,7 +2273,7 @@ async function loadChutesModels() {
 }
 
 async function loadElectronHubModels() {
-  if (!secret_state[SECRET_KEYS.ELECTRONHUB]) {
+  if (!(secret_state as any)[SECRET_KEYS.ELECTRONHUB]) {
     console.debug("Electron Hub API key is not set.");
     return [];
   }
@@ -2283,7 +2283,7 @@ async function loadElectronHubModels() {
     headers: getRequestHeaders({ omitContentType: true }),
   });
 
-  function getModelName(model) {
+  function getModelName(model: any) {
     const name = String(model?.name || model?.id || "");
     const premium = model?.premium_model ? " | Premium" : "";
     let price = "Unknown";
@@ -2299,14 +2299,14 @@ async function loadElectronHubModels() {
   if (result.ok) {
     /** @type {any[]} */
     const data = await result.json();
-    return Array.isArray(data) ? data.map((m) => ({ ...m, text: getModelName(m) })) : [];
+    return Array.isArray(data) ? data.map((m: any) => ({ ...m, text: getModelName(m) })) : [];
   }
 
   return [];
 }
 
 async function loadNanoGPTModels() {
-  if (!secret_state[SECRET_KEYS.NANOGPT]) {
+  if (!(secret_state as any)[SECRET_KEYS.NANOGPT]) {
     console.debug("NanoGPT API key is not set.");
     return [];
   }
@@ -2331,8 +2331,8 @@ async function loadHordeModels() {
 
   if (result.ok) {
     const data = await result.json();
-    data.sort((a, b) => b.count - a.count);
-    return data.map((x) => ({
+    data.sort((a: any, b: any) => b.count - a.count);
+    return data.map((x: any) => ({
       value: x.name,
       text: `${x.name} (ETA: ${x.eta}s, Queue: ${x.queued}, Workers: ${x.count})`,
     }));
@@ -2342,7 +2342,7 @@ async function loadHordeModels() {
 }
 
 async function loadExtrasModels() {
-  if (!modules.includes("sd")) {
+  if (!(modules as any).includes("sd")) {
     return [];
   }
 
@@ -2360,7 +2360,7 @@ async function loadExtrasModels() {
 
   if (getModelsResult.ok) {
     const data = await getModelsResult.json();
-    return data.models.map((x) => ({ value: x, text: x }));
+    return data.models.map((x: any) => ({ value: x, text: x }));
   }
 
   return [];
@@ -2459,7 +2459,7 @@ async function loadOpenAiModels() {
 }
 
 async function loadAimlapiModels() {
-  $("#sd_aimlapi_key").toggleClass("success", !!secret_state[SECRET_KEYS.AIMLAPI]);
+  $("#sd_aimlapi_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.AIMLAPI]);
 
   const result = await fetch("/api/sd/aimlapi/models", {
     method: "POST",
@@ -2603,7 +2603,7 @@ function loadNovelSchedulers() {
 
 async function loadComfyModels() {
   if (extension_settings.sd.comfy_type === comfyTypes.runpod_serverless) {
-    $("#sd_runpod_key").toggleClass("success", !!secret_state[SECRET_KEYS.COMFY_RUNPOD]);
+    $("#sd_runpod_key").toggleClass("success", !!(secret_state as any)[SECRET_KEYS.COMFY_RUNPOD]);
     return [{ value: "", text: "N/A" }];
   }
   if (!extension_settings.sd.comfy_url) {
@@ -2929,7 +2929,7 @@ async function loadComfyWorkflows() {
   }
 }
 
-function getGenerationType(prompt) {
+function getGenerationType(prompt: any) {
   let mode = generationMode.FREE;
 
   for (const [key, values] of Object.entries(triggerWords)) {
@@ -2952,7 +2952,7 @@ function getGenerationType(prompt) {
   return mode;
 }
 
-function getQuietPrompt(mode, trigger) {
+function getQuietPrompt(mode: any, trigger: any) {
   if (mode === generationMode.FREE) {
     return trigger;
   }
@@ -2965,7 +2965,7 @@ function getQuietPrompt(mode, trigger) {
  * @param {string} str String to process
  * @returns {string} Processed reply
  */
-function processReply(str) {
+function processReply(str: any) {
   if (!str) {
     return "";
   }
@@ -2992,8 +2992,8 @@ function processReply(str) {
 
   str = str
     .split(",") // list split by commas
-    .map((x) => x.trim()) // trim each entry
-    .filter((x) => x) // remove empty entries
+    .map((x: any) => x.trim()) // trim each entry
+    .filter((x: any) => x) // remove empty entries
     .join(", "); // join it back with proper spacing
 
   return str;
@@ -3019,8 +3019,8 @@ function getRawLastMessage() {
   const context = getContext();
   const lastMessage = getLastUsableMessage();
   const character = context.groupId
-    ? context.characters.find((c) => c.avatar === lastMessage.original_avatar)
-    : context.characters[context.characterId];
+    ? context.characters.find((c: any) => c.avatar === lastMessage.original_avatar)
+    : context.characters[context.characterId as any];
 
   if (!character) {
     console.debug("Character not found, using raw message.");
@@ -3036,15 +3036,15 @@ function getRawLastMessage() {
  * @param {string} selector Dropdown selector
  * @returns {void}
  */
-function ensureSelectionExists(setting, selector) {
+function ensureSelectionExists(setting: any, selector: any) {
   const selectElement = document.querySelector(selector) as HTMLSelectElement;
   if (!selectElement) {
     return;
   }
   const options = Array.from(selectElement.options);
-  const value = extension_settings.sd[setting];
+  const value = (extension_settings.sd as any)[setting];
   if (selectElement.selectedOptions.length && !options.some((option) => option.value === value)) {
-    extension_settings.sd[setting] = selectElement.selectedOptions[0].value;
+    (extension_settings.sd as any)[setting] = selectElement.selectedOptions[0].value;
   }
 }
 
@@ -3058,7 +3058,7 @@ function ensureSelectionExists(setting, selector) {
  * @returns {Promise<string|undefined>} Image path
  * @throws {Error} If the prompt or image generation fails
  */
-async function generatePicture(initiator, args, trigger, message, callback) {
+async function generatePicture(initiator: any, args: any, trigger: any, message: any, callback: any) {
   if (!trigger || trigger.trim().length === 0) {
     console.log("Trigger word empty, aborting");
     return;
@@ -3074,21 +3074,21 @@ async function generatePicture(initiator, args, trigger, message, callback) {
 
   trigger = trigger.trim();
   const generationType = getGenerationType(trigger);
-  const generationTypeKey = Object.keys(generationMode).find((key) => generationMode[key] === generationType);
+  const generationTypeKey = Object.keys(generationMode).find((key: any) => (generationMode as any)[key] === generationType);
   console.log(`Image generation mode ${generationTypeKey} triggered with "${trigger}"`);
 
   const quietPrompt = getQuietPrompt(generationType, trigger);
   const context = getContext();
 
   let characterName = context.groupId
-    ? context.groups[
-        Object.keys(context.groups).filter((x) => context.groups[x].id === context.groupId)[0]
+    ? (context.groups as any)[
+        Object.keys(context.groups).filter((x: any) => (context.groups as any)[x].id === context.groupId)[0]
       ]?.id?.toString()
-    : context.characters[context.characterId]?.name;
+    : (context.characters as any)[context.characterId as any]?.name;
 
   if (generationType === generationMode.BACKGROUND) {
     const callbackOriginal = callback;
-    callback = async (prompt, imagePath, generationType, _negativePromptPrefix, _initiator, prefixedPrompt, format) => {
+    callback = async (prompt: any, imagePath: any, generationType: any, _negativePromptPrefix: any, _initiator: any, prefixedPrompt: any, format: any) => {
       const imgUrl = `url("${encodeURI(imagePath)}")`;
       await eventSource.emit(event_types.FORCE_SET_BACKGROUND, { url: imgUrl, path: imagePath });
 
@@ -3126,7 +3126,7 @@ async function generatePicture(initiator, args, trigger, message, callback) {
   let loaderHandle = ActionLoaderHandle.EMPTY;
 
   try {
-    const combineNegatives = (prefix) => {
+    const combineNegatives = (prefix: any) => {
       negativePromptPrefix = combinePrefixes(negativePromptPrefix, prefix);
     };
 
@@ -3191,7 +3191,7 @@ async function generatePicture(initiator, args, trigger, message, callback) {
  * @param {MediaAttachment} [mediaAttachment] Media attachment to base dimension adjustments on
  * @returns {{height: number, width: number}} Previous dimensions before modification
  */
-function setTypeSpecificDimensions(generationType, mediaAttachment = null) {
+function setTypeSpecificDimensions(generationType: any, mediaAttachment: any = null) {
   const prevSDHeight = extension_settings.sd.height;
   const prevSDWidth = extension_settings.sd.width;
   const aspectRatio = extension_settings.sd.width / extension_settings.sd.height;
@@ -3200,8 +3200,8 @@ function setTypeSpecificDimensions(generationType, mediaAttachment = null) {
   // 2. Face images are always portrait (pun intended) - increase height if needed
   // 3. Background images are always landscape - increase width if needed
   if (Number.isInteger(mediaAttachment?.width) && Number.isInteger(mediaAttachment?.height)) {
-    extension_settings.sd.width = mediaAttachment.width;
-    extension_settings.sd.height = mediaAttachment.height;
+    extension_settings.sd.width = mediaAttachment!.width;
+    extension_settings.sd.height = mediaAttachment!.height;
   } else if (
     (generationType === generationMode.FACE || generationType === generationMode.FACE_MULTIMODAL) &&
     aspectRatio >= 1
@@ -3224,7 +3224,7 @@ function setTypeSpecificDimensions(generationType, mediaAttachment = null) {
       extension_settings.sd.width = Math.round((extension_settings.sd.width * ratio) / 64) * 64;
       console.log(`Pixel counts after rescaling: ${prevPixelCount} -> ${newPixelCount} (ratio: ${ratio})`);
 
-      const resolution = resolutionOptions[getClosestKnownResolution()];
+      const resolution = (resolutionOptions as any)[getClosestKnownResolution() as any];
       if (resolution) {
         extension_settings.sd.height = resolution.height;
         extension_settings.sd.width = resolution.width;
@@ -3242,7 +3242,7 @@ function setTypeSpecificDimensions(generationType, mediaAttachment = null) {
  * Restores the original image generation dimensions after generation is complete.
  * @param {{height: number, width: number}} savedParams The original dimensions to restore
  */
-function restoreOriginalDimensions(savedParams) {
+function restoreOriginalDimensions(savedParams: any) {
   extension_settings.sd.height = savedParams.height;
   extension_settings.sd.width = savedParams.width;
 }
@@ -3256,7 +3256,7 @@ function restoreOriginalDimensions(savedParams) {
  * @param {function} combineNegatives A function that combines the negative prompt with other prompts.
  * @returns {Promise<string>} - A promise that resolves when the prompt generation completes.
  */
-async function getPrompt(generationType, message, trigger, quietPrompt, combineNegatives) {
+async function getPrompt(generationType: any, message: any, trigger: any, quietPrompt: any, combineNegatives: any) {
   let prompt;
   console.log("getPrompt: Generation mode", generationType, "triggered with", trigger);
   switch (generationType) {
@@ -3293,11 +3293,11 @@ async function getPrompt(generationType, message, trigger, quietPrompt, combineN
  * @param {function} combineNegatives - A function that combines the negative prompt with other prompts.
  * @returns {string}
  */
-function generateFreeModePrompt(trigger, combineNegatives) {
-  return trigger.replace(/^char(\s|,)|{{charPrefix}}/gi, (_, suffix) => {
+function generateFreeModePrompt(trigger: any, combineNegatives: any) {
+  return trigger.replace(/^char(\s|,)|{{charPrefix}}/gi, (_: any, suffix: any) => {
     const getLastCharacterKey = () => {
       if (typeof this_chid !== "undefined") {
-        return getCharaFilename(this_chid);
+        return getCharaFilename(this_chid as any);
       }
       const context = getContext();
       for (let i = context.chat.length - 1; i >= 0; i--) {
@@ -3310,8 +3310,8 @@ function generateFreeModePrompt(trigger, combineNegatives) {
     };
 
     const key = getLastCharacterKey();
-    const value = (extension_settings.sd.character_prompts[key] || "").trim();
-    const negativeValue = (extension_settings.sd.character_negative_prompts[key] || "").trim();
+    const value = ((extension_settings.sd.character_prompts as any)[key] || "").trim();
+    const negativeValue = ((extension_settings.sd.character_negative_prompts as any)[key] || "").trim();
     typeof combineNegatives === "function" && negativeValue ? combineNegatives(negativeValue) : void 0;
     return value ? combinePrefixes(value, suffix || "") : "";
   });
@@ -3322,7 +3322,7 @@ function generateFreeModePrompt(trigger, combineNegatives) {
  * @param {number} generationType - The type of image generation to perform.
  * @param {string} quietPrompt - The prompt to use for the image generation.
  */
-async function generateMultimodalPrompt(generationType, quietPrompt) {
+async function generateMultimodalPrompt(generationType: any, quietPrompt: any) {
   let avatarUrl;
 
   if (generationType === generationMode.USER_MULTIMODAL) {
@@ -3335,7 +3335,7 @@ async function generateMultimodalPrompt(generationType, quietPrompt) {
 
   try {
     const toast = toastr.info("Generating multimodal caption...", "Image Generation");
-    const response = await fetch(avatarUrl);
+    const response = await fetch(avatarUrl as any);
 
     if (!response.ok) {
       throw new Error("Could not fetch avatar image.");
@@ -3363,15 +3363,15 @@ function getCharacterAvatarUrl() {
   const context = getContext();
 
   if (context.groupId) {
-    const groupMembers = context.groups.find((x) => x.id === context.groupId)?.members;
-    const lastMessageAvatar = context.chat?.filter((x) => !x.is_system && !x.is_user)?.slice(-1)[0]?.original_avatar;
+    const groupMembers = (context.groups as any).find((x: any) => x.id === context.groupId)?.members;
+    const lastMessageAvatar = context.chat?.filter((x: any) => !x.is_system && !x.is_user)?.slice(-1)[0]?.original_avatar;
     const randomMemberAvatar = Array.isArray(groupMembers)
       ? groupMembers[Math.floor(Math.random() * groupMembers.length)]
       : null;
     const avatarToUse = lastMessageAvatar || randomMemberAvatar;
     return formatCharacterAvatar(avatarToUse);
   } else {
-    return getCharacterAvatar(context.characterId);
+    return getCharacterAvatar(context.characterId as any);
   }
 }
 
@@ -3384,7 +3384,7 @@ function getUserAvatarUrl() {
  * @param {string} quietPrompt - The prompt to use for the image generation.
  * @returns {Promise<string>} - A promise that resolves when the prompt generation completes.
  */
-async function generatePrompt(quietPrompt) {
+async function generatePrompt(quietPrompt: any) {
   const toast = toastr.info("Generating image prompt with an LLM...", "Image Generation");
   const reply = await generateQuietPrompt({ quietPrompt });
   const processedReply = processReply(reply);
@@ -3413,13 +3413,13 @@ async function generatePrompt(quietPrompt) {
  * @returns
  */
 async function sendGenerationRequest(
-  generationType,
-  prompt,
-  additionalNegativePrefix,
-  characterName,
-  callback,
-  initiator,
-  signal,
+  generationType: any,
+  prompt: any,
+  additionalNegativePrefix: any,
+  characterName: any,
+  callback: any,
+  initiator: any,
+  signal: any,
 ) {
   const noCharPrefix = [
     generationMode.FREE,
@@ -3585,7 +3585,7 @@ async function sendGenerationRequest(
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateTogetherAIImage(prompt, negativePrompt, signal) {
+async function generateTogetherAIImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/together/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -3616,7 +3616,7 @@ async function generateTogetherAIImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generatePollinationsImage(prompt, negativePrompt, signal) {
+async function generatePollinationsImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/pollinations/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -3649,7 +3649,7 @@ async function generatePollinationsImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateExtrasImage(prompt, negativePrompt, signal) {
+async function generateExtrasImage(prompt: any, negativePrompt: any, signal: any) {
   const url = new URL(getApiUrl());
   url.pathname = "/api/image";
   const result = await doExtrasFetch(url, {
@@ -3693,7 +3693,7 @@ async function generateExtrasImage(prompt, negativePrompt, signal) {
  * @param {'google'|'stability'|'zai'|'xai'} source Source of the request, used to determine aspect ratio
  * @returns {string} Closest aspect ratio as a string
  */
-function getClosestAspectRatio(width, height, source) {
+function getClosestAspectRatio(width: any, height: any, source: any) {
   function getAspectRatios() {
     switch (source) {
       case "stability":
@@ -3749,10 +3749,10 @@ function getClosestAspectRatio(width, height, source) {
   const aspectRatio = width / height;
 
   let closestAspectRatio = Object.keys(aspectRatios)[0];
-  let minDiff = Math.abs(aspectRatio - aspectRatios[closestAspectRatio]);
+  let minDiff = Math.abs(aspectRatio - (aspectRatios as any)[closestAspectRatio]);
 
   for (const key in aspectRatios) {
-    const diff = Math.abs(aspectRatio - aspectRatios[key]);
+    const diff = Math.abs(aspectRatio - (aspectRatios as any)[key]);
     if (diff < minDiff) {
       minDiff = diff;
       closestAspectRatio = key;
@@ -3769,7 +3769,7 @@ function getClosestAspectRatio(width, height, source) {
  * @param {string[]} sizes - Available sizes
  * @returns {Promise<string>} - The closest size
  */
-async function getClosestSize(width, height, sizes = []) {
+async function getClosestSize(width: any, height: any, sizes: any[] = []) {
   const sizesData = [];
 
   if (Array.isArray(sizes) && sizes.length > 0) {
@@ -3839,7 +3839,7 @@ async function getClosestSize(width, height, sizes = []) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateStabilityImage(prompt, negativePrompt, signal) {
+async function generateStabilityImage(prompt: any, negativePrompt: any, signal: any) {
   const IMAGE_FORMAT = "png";
   const PROMPT_LIMIT = 10000;
 
@@ -3885,7 +3885,7 @@ async function generateStabilityImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateHordeImage(prompt, negativePrompt, signal) {
+async function generateHordeImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/horde/generate-image", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -3925,7 +3925,7 @@ async function generateHordeImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateAutoImage(prompt, negativePrompt, signal) {
+async function generateAutoImage(prompt: any, negativePrompt: any, signal: any) {
   const isValidVae = extension_settings.sd.vae && !["N/A", placeholderVae].includes(extension_settings.sd.vae);
   let payload = {
     ...getSdRequestBody(),
@@ -4000,7 +4000,7 @@ async function generateAutoImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateSdcppImage(prompt, negativePrompt, signal) {
+async function generateSdcppImage(prompt: any, negativePrompt: any, signal: any) {
   const payload = {
     url: extension_settings.sd.sdcpp_url,
     model: extension_settings.sd.model || undefined,
@@ -4050,7 +4050,7 @@ async function generateSdcppImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateDrawthingsImage(prompt, negativePrompt, signal) {
+async function generateDrawthingsImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/drawthings/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4091,7 +4091,7 @@ async function generateDrawthingsImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateNovelImage(prompt, negativePrompt, signal) {
+async function generateNovelImage(prompt: any, negativePrompt: any, signal: any) {
   const { steps, width, height, sm, sm_dyn } = getNovelParams();
 
   const result = await fetch("/api/novelai/generate-image", {
@@ -4205,7 +4205,7 @@ function getNovelParams() {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateOpenAiImage(prompt, signal) {
+async function generateOpenAiImage(prompt: any, signal: any) {
   const dalle2PromptLimit = 1000;
   const dalle3PromptLimit = 4000;
   const gptImgPromptLimit = 32000;
@@ -4312,7 +4312,7 @@ async function generateOpenAiImage(prompt, signal) {
  * - If it’s a URL, fetches the image and converts to base64.
  * - Returns { format: 'png', data: '<base64 string>' }, ready for saveBase64AsFile().
  */
-async function generateAimlapiImage(prompt, signal) {
+async function generateAimlapiImage(prompt: any, signal: any) {
   const model = extension_settings.sd.model.toLowerCase();
   const isSdLike =
     model.startsWith("flux/") || model.startsWith("stable") || model === "recraft-v3" || model === "triposr";
@@ -4354,7 +4354,7 @@ async function generateAimlapiImage(prompt, signal) {
  * @param {string} url - The url of the service to call. Passed to ST server.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateComfyImageCommon(prompt, negativePrompt, signal, basePath, placeholders, url) {
+async function generateComfyImageCommon(prompt: any, negativePrompt: any, signal: any, basePath: any, placeholders: any, url: any) {
   const workflowResponse = await fetch("/api/sd/comfy/workflow", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4380,10 +4380,10 @@ async function generateComfyImageCommon(prompt, negativePrompt, signal, basePath
   const clip_skip = isNaN(extension_settings.sd.clip_skip) ? -1 : -extension_settings.sd.clip_skip;
   workflow = workflow.replaceAll('"%clip_skip%"', JSON.stringify(clip_skip));
 
-  placeholders.forEach((ph) => {
-    workflow = workflow.replaceAll(`"%${ph}%"`, JSON.stringify(extension_settings.sd[ph]));
+  placeholders.forEach((ph: any) => {
+    workflow = workflow.replaceAll(`"%${ph}%"`, JSON.stringify((extension_settings.sd as any)[ph]));
   });
-  (extension_settings.sd.comfy_placeholders ?? []).forEach((ph) => {
+  (extension_settings.sd.comfy_placeholders ?? []).forEach((ph: any) => {
     workflow = workflow.replaceAll(`"%${ph.find}%"`, JSON.stringify(substituteParams(ph.replace)));
   });
   if (/%user_avatar%/gi.test(workflow)) {
@@ -4438,7 +4438,7 @@ async function generateComfyImageCommon(prompt, negativePrompt, signal, basePath
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateComfyImage(prompt, negativePrompt, signal) {
+async function generateComfyImage(prompt: any, negativePrompt: any, signal: any) {
   const placeholders = ["model", "vae", "sampler", "scheduler", "steps", "scale", "width", "height"];
   return generateComfyImageCommon(
     prompt,
@@ -4458,7 +4458,7 @@ async function generateComfyImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateComfyRunPodImage(prompt, negativePrompt, signal) {
+async function generateComfyRunPodImage(prompt: any, negativePrompt: any, signal: any) {
   const placeholders = ["steps", "scale", "width", "height"];
 
   return generateComfyImageCommon(
@@ -4477,7 +4477,7 @@ async function generateComfyRunPodImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateHuggingFaceImage(prompt, signal) {
+async function generateHuggingFaceImage(prompt: any, signal: any) {
   const result = await fetch("/api/sd/huggingface/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4504,7 +4504,7 @@ async function generateHuggingFaceImage(prompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateChutesImage(prompt, negativePrompt, signal) {
+async function generateChutesImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/chutes/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4535,7 +4535,7 @@ async function generateChutesImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateElectronHubImage(prompt, signal) {
+async function generateElectronHubImage(prompt: any, signal: any) {
   const size = await getClosestSize(extension_settings.sd.width, extension_settings.sd.height);
 
   const result = await fetch("/api/sd/electronhub/generate", {
@@ -4566,7 +4566,7 @@ async function generateElectronHubImage(prompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateNanoGPTImage(prompt, negativePrompt, signal) {
+async function generateNanoGPTImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/nanogpt/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4600,7 +4600,7 @@ async function generateNanoGPTImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateBflImage(prompt, signal) {
+async function generateBflImage(prompt: any, signal: any) {
   const result = await fetch("/api/sd/bfl/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4633,7 +4633,7 @@ async function generateBflImage(prompt, signal) {
  * @param {AbortSignal} signal An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} A promise that resolves when the image generation and processing are complete.
  */
-async function generateXAIImage(prompt, _negativePrompt, signal) {
+async function generateXAIImage(prompt: any, _negativePrompt: any, signal: any) {
   let aspectRatio;
   let resolution;
 
@@ -4672,7 +4672,7 @@ async function generateXAIImage(prompt, _negativePrompt, signal) {
  * @param {AbortSignal} signal - An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} - A promise that resolves when the image generation and processing are complete.
  */
-async function generateFalaiImage(prompt, negativePrompt, signal) {
+async function generateFalaiImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/falai/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4705,7 +4705,7 @@ async function generateFalaiImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} A promise that resolves when the image generation and processing are complete.
  */
-async function generateGoogleImage(prompt, negativePrompt, signal) {
+async function generateGoogleImage(prompt: any, negativePrompt: any, signal: any) {
   const isVeo = /^veo-/.test(extension_settings.sd.model);
 
   if (isVeo) {
@@ -4771,7 +4771,7 @@ async function generateGoogleImage(prompt, negativePrompt, signal) {
  * @param {AbortSignal} signal An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>} A promise that resolves when the image generation and processing are complete.
  */
-async function generateZaiImage(prompt, signal) {
+async function generateZaiImage(prompt: any, signal: any) {
   // Video generation models (CogVideoX, Viduq1)
   if (/(cogvideox|vidu)/.test(extension_settings.sd.model)) {
     const videoParams = {} as { quality?: string; size?: string; aspect_ratio?: string };
@@ -4855,7 +4855,7 @@ async function generateZaiImage(prompt, signal) {
  * @param {AbortSignal} signal An AbortSignal object that can be used to cancel the request.
  * @returns {Promise<{format: string, data: string}>}
  */
-async function generateOpenRouterImage(prompt, signal) {
+async function generateOpenRouterImage(prompt: any, signal: any) {
   const result = await fetch("/api/openrouter/image/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4876,7 +4876,7 @@ async function generateOpenRouterImage(prompt, signal) {
   throw new Error(text);
 }
 
-async function generateWorkersAIImage(prompt, negativePrompt, signal) {
+async function generateWorkersAIImage(prompt: any, negativePrompt: any, signal: any) {
   const result = await fetch("/api/sd/workersai/generate", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -4914,29 +4914,29 @@ async function onComfyOpenWorkflowEditorClick() {
     })
   ).json();
   const editorHtml = $(await $.get("scripts/extensions/stable-diffusion/comfyWorkflowEditor.html"));
-  const saveValue = (/** @type {Popup} */ _popup) => {
-    workflow = $("#sd_comfy_workflow_editor_workflow").val().toString();
+  const saveValue = (/** @type {Popup} */ _popup: any) => {
+    workflow = $("#sd_comfy_workflow_editor_workflow").val()!.toString();
     return true;
   };
   const popup = new Popup(editorHtml, POPUP_TYPE.CONFIRM, "", {
-    okButton: "Save",
-    cancelButton: "Cancel",
+    okButton: "Save" as any,
+    cancelButton: "Cancel" as any,
     wide: true,
     large: true,
-    onClosing: saveValue,
+    onClosing: saveValue as any,
   });
   const popupResult = popup.show();
   const checkPlaceholders = () => {
-    workflow = $("#sd_comfy_workflow_editor_workflow").val().toString();
+    workflow = $("#sd_comfy_workflow_editor_workflow").val()!.toString();
     $(".sd_comfy_workflow_editor_placeholder_list > li[data-placeholder]").each(function () {
       const key = this.getAttribute("data-placeholder");
-      const found = workflow.search(`"%${key}%"`) !== -1;
+      const found = workflow!.search(`"%${key}%"`) !== -1;
       this.classList[found ? "remove" : "add"]("sd_comfy_workflow_editor_not_found");
     });
   };
   $("#sd_comfy_workflow_editor_name").text(extension_settings.sd.comfy_workflow);
   $("#sd_comfy_workflow_editor_workflow").val(workflow);
-  const addPlaceholderDom = (placeholder) => {
+  const addPlaceholderDom = (placeholder: any) => {
     const el = $(`
             <li class="sd_comfy_workflow_editor_not_found" data-placeholder="${placeholder.find}">
                 <span class="sd_comfy_workflow_editor_custom_remove" title="Remove custom placeholder">⊘</span>
@@ -4983,7 +4983,7 @@ async function onComfyOpenWorkflowEditorClick() {
     addPlaceholderDom(placeholder);
     saveSettingsDebounced();
   });
-  (extension_settings.sd.comfy_placeholders ?? []).forEach((placeholder) => {
+  (extension_settings.sd.comfy_placeholders ?? []).forEach((placeholder: any) => {
     addPlaceholderDom(placeholder);
   });
   checkPlaceholders();
@@ -5116,7 +5116,7 @@ async function onComfyRenameWorkflowClick() {
  * @param {string} prefixedPrompt Prompt with an attached specific prefix
  * @param {string} format Format of the image (e.g., 'png', 'jpg')
  */
-async function sendMessage(prompt, image, generationType, additionalNegativePrefix, initiator, prefixedPrompt, format) {
+async function sendMessage(prompt: any, image: any, generationType: any, additionalNegativePrefix: any, initiator: any, prefixedPrompt: any, format: any) {
   const context = getContext();
   const name = context.groupId ? systemUserName : context.name2;
   const template = extension_settings.sd.prompts[generationMode.MESSAGE] || "{{prompt}}";
@@ -5163,7 +5163,7 @@ async function sendMessage(prompt, image, generationType, additionalNegativePref
  * @param {string} initiator Generation initiator
  * @returns {boolean} Is resulting message visible
  */
-function getVisibilityByInitiator(initiator) {
+function getVisibilityByInitiator(initiator: any) {
   switch (initiator) {
     case initiators.interactive:
       return !!extension_settings.sd.interactive_visible;
@@ -5189,7 +5189,7 @@ async function addSDGenButtons() {
   const dropdown = $("#sd_dropdown");
   dropdown.hide();
 
-  const popper = Popper.createPopper(button.get(0), dropdown.get(0), {
+  const popper = Popper.createPopper(button.get(0)!, dropdown.get(0)!, {
     placement: "top",
   });
 
@@ -5221,7 +5221,7 @@ async function addSDGenButtons() {
       sd_background: "background",
     };
 
-    const param = idParamMap[id];
+    const param = (idParamMap as any)[id as any];
 
     if (param) {
       console.log("doing /sd " + param);
@@ -5233,7 +5233,7 @@ async function addSDGenButtons() {
 function isValidState() {
   switch (extension_settings.sd.source) {
     case sources.extras:
-      return modules.includes("sd");
+      return (modules as any).includes("sd");
     case sources.horde:
       return true;
     case sources.auto:
@@ -5245,52 +5245,52 @@ function isValidState() {
     case sources.vlad:
       return !!extension_settings.sd.vlad_url;
     case sources.novel:
-      return secret_state[SECRET_KEYS.NOVEL];
+      return (secret_state as any)[SECRET_KEYS.NOVEL];
     case sources.openai:
-      return secret_state[SECRET_KEYS.OPENAI];
+      return (secret_state as any)[SECRET_KEYS.OPENAI];
     case sources.aimlapi:
-      return secret_state[SECRET_KEYS.AIMLAPI];
+      return (secret_state as any)[SECRET_KEYS.AIMLAPI];
     case sources.comfy:
       switch (extension_settings.sd.comfy_type) {
         case comfyTypes.runpod_serverless:
-          return !!extension_settings.sd.comfy_runpod_url && secret_state[SECRET_KEYS.COMFY_RUNPOD];
+          return !!extension_settings.sd.comfy_runpod_url && (secret_state as any)[SECRET_KEYS.COMFY_RUNPOD];
         case comfyTypes.standard:
           return !!extension_settings.sd.comfy_url;
         default:
           return false;
       }
     case sources.togetherai:
-      return secret_state[SECRET_KEYS.TOGETHERAI];
+      return (secret_state as any)[SECRET_KEYS.TOGETHERAI];
     case sources.pollinations:
-      return secret_state[SECRET_KEYS.POLLINATIONS];
+      return (secret_state as any)[SECRET_KEYS.POLLINATIONS];
     case sources.stability:
-      return secret_state[SECRET_KEYS.STABILITY];
+      return (secret_state as any)[SECRET_KEYS.STABILITY];
     case sources.huggingface:
-      return secret_state[SECRET_KEYS.HUGGINGFACE];
+      return (secret_state as any)[SECRET_KEYS.HUGGINGFACE];
     case sources.chutes:
-      return secret_state[SECRET_KEYS.CHUTES];
+      return (secret_state as any)[SECRET_KEYS.CHUTES];
     case sources.electronhub:
-      return secret_state[SECRET_KEYS.ELECTRONHUB];
+      return (secret_state as any)[SECRET_KEYS.ELECTRONHUB];
     case sources.nanogpt:
-      return secret_state[SECRET_KEYS.NANOGPT];
+      return (secret_state as any)[SECRET_KEYS.NANOGPT];
     case sources.bfl:
-      return secret_state[SECRET_KEYS.BFL];
+      return (secret_state as any)[SECRET_KEYS.BFL];
     case sources.falai:
-      return secret_state[SECRET_KEYS.FALAI];
+      return (secret_state as any)[SECRET_KEYS.FALAI];
     case sources.xai:
-      return secret_state[SECRET_KEYS.XAI];
+      return (secret_state as any)[SECRET_KEYS.XAI];
     case sources.google:
       return (
-        secret_state[SECRET_KEYS.MAKERSUITE] ||
-        secret_state[SECRET_KEYS.VERTEXAI] ||
-        secret_state[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]
+        (secret_state as any)[SECRET_KEYS.MAKERSUITE] ||
+        (secret_state as any)[SECRET_KEYS.VERTEXAI] ||
+        (secret_state as any)[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]
       );
     case sources.zai:
-      return secret_state[SECRET_KEYS.ZAI];
+      return (secret_state as any)[SECRET_KEYS.ZAI];
     case sources.openrouter:
-      return secret_state[SECRET_KEYS.OPENROUTER];
+      return (secret_state as any)[SECRET_KEYS.OPENROUTER];
     case sources.workersai:
-      return !!oai_settings.workers_ai_account_id && secret_state[SECRET_KEYS.WORKERS_AI];
+      return !!oai_settings.workers_ai_account_id && (secret_state as any)[SECRET_KEYS.WORKERS_AI];
     default:
       return false;
   }
@@ -5306,12 +5306,12 @@ const buttonAbortControllers = new WeakMap();
  * @param {boolean} [options.animate] Whether to animate the media during generation.
  * @returns {Promise<void>} A promise that resolves when the image generation process is complete.
  */
-async function sdMessageButton($icon, { animate } = {} as any) {
+async function sdMessageButton($icon: any, { animate } = {} as any) {
   /**
    * Sets the icon to indicate busy or idle state.
    * @param {boolean} isBusy Whether the icon should indicate a busy state.
    */
-  function setBusyIcon(isBusy) {
+  function setBusyIcon(isBusy: any) {
     $icon.toggleClass(classes.idle, !isBusy);
     $icon.toggleClass(classes.busy, isBusy);
     $media.toggleClass(classes.animation, isBusy);
@@ -5409,10 +5409,10 @@ async function onCharacterPromptShareInput() {
   }
 }
 
-async function writePromptFields(characterId) {
-  const key = getCharaFilename(characterId);
-  const promptPrefix = key ? extension_settings.sd.character_prompts[key] || "" : "";
-  const negativePromptPrefix = key ? extension_settings.sd.character_negative_prompts[key] || "" : "";
+async function writePromptFields(characterId: any) {
+  const key = getCharaFilename(characterId as any);
+  const promptPrefix = key ? (extension_settings.sd.character_prompts as any)[key] || "" : "";
+  const negativePromptPrefix = key ? (extension_settings.sd.character_negative_prompts as any)[key] || "" : "";
   const promptObject = {
     positive: promptPrefix,
     negative: negativePromptPrefix,
@@ -5430,10 +5430,10 @@ async function writePromptFields(characterId) {
  * @returns {Promise<MediaAttachment|null>} - A promise that resolves to the newly generated media attachment, or null if generation failed or was aborted.
  */
 async function generateMediaSwipe(
-  mediaAttachment,
-  message,
-  onStart,
-  onComplete,
+  mediaAttachment: any,
+  message: any,
+  onStart: any,
+  onComplete: any,
   abortController = new AbortController(),
 ) {
   const stopListener = () => abortController.abort("Aborted by user");
@@ -5451,7 +5451,7 @@ async function generateMediaSwipe(
   let loaderHandle = ActionLoaderHandle.EMPTY;
 
   try {
-    const callback = (_a, _b, _c, _d, _e, _f, format) => {
+    const callback = (_a: any, _b: any, _c: any, _d: any, _e: any, _f: any, format: any) => {
       result.type = isVideo(format) ? MEDIA_TYPE.VIDEO : MEDIA_TYPE.IMAGE;
     };
     const savedPrompt = mediaAttachment.title ?? message.extra.title ?? "";
@@ -5466,10 +5466,10 @@ async function generateMediaSwipe(
 
     const context = getContext();
     const characterName = context.groupId
-      ? context.groups[
-          Object.keys(context.groups).filter((x) => context.groups[x].id === context.groupId)[0]
+      ? (context.groups as any)[
+          Object.keys(context.groups).filter((x: any) => (context.groups as any)[x].id === context.groupId)[0]
         ]?.id?.toString()
-      : context.characters[context.characterId]?.name;
+      : (context.characters as any)[context.characterId as any]?.name;
 
     // Show non-blocking stoppable toast for this generation
     loaderHandle = loader.show({
@@ -5519,7 +5519,7 @@ async function generateMediaSwipe(
  * @param {JQuery<HTMLElement>} param.element Message element
  * @param {string} param.direction Swipe direction
  */
-async function onImageSwiped({ message, element, direction }) {
+async function onImageSwiped({ message, element, direction }: any) {
   const { powerUserSettings, accountStorage } = getContext();
 
   if (!isValidState()) {
@@ -5564,9 +5564,9 @@ async function onImageSwiped({ message, element, direction }) {
  * @param {NamedArguments | NamedArgumentsCapture} args - Command arguments
  * @returns {Record<string, any>} - Current settings before applying the command arguments
  */
-function applyCommandArguments(args) {
-  const overrideSettings = {};
-  const currentSettings = {};
+function applyCommandArguments(args: any) {
+  const overrideSettings: any = {};
+  const currentSettings: any = {};
   const settingMap = {
     edit: "refine_mode",
     extend: "free_extend",
@@ -5589,8 +5589,8 @@ function applyCommandArguments(args) {
     faces: "restore_faces",
     processing: "minimal_prompt_processing",
   };
-  const enumHandlers = {
-    processing: (value) => {
+  const enumHandlers: any = {
+    processing: (value: any) => {
       if (/standard/gi.test(String(value))) {
         return false;
       }
@@ -5601,10 +5601,10 @@ function applyCommandArguments(args) {
   };
 
   for (const [param, setting] of Object.entries(settingMap)) {
-    if (args[param] === undefined || defaultSettings[setting] === undefined) {
+    if (args[param] === undefined || (defaultSettings as any)[setting] === undefined) {
       continue;
     }
-    currentSettings[setting] = extension_settings.sd[setting];
+    currentSettings[setting] = (extension_settings.sd as any)[setting];
     const value = String(args[param]);
     const enumHandler = enumHandlers[param];
     if (typeof enumHandler === "function") {
@@ -5614,7 +5614,7 @@ function applyCommandArguments(args) {
       }
       continue;
     }
-    const type = typeof defaultSettings[setting];
+    const type = typeof (defaultSettings as any)[setting];
     switch (type) {
       case "boolean":
         overrideSettings[setting] = isTrueBoolean(value) || !isFalseBoolean(value);
@@ -5655,7 +5655,7 @@ function registerFunctionTool() {
       },
       required: ["prompt"],
     }),
-    action: async (args) => {
+    action: async (args: any) => {
       if (!isValidState()) throw new Error("Image generation is not configured.");
       if (!args) throw new Error("Missing arguments");
       if (!args.prompt) throw new Error("Missing prompt");
@@ -5668,16 +5668,16 @@ function registerFunctionTool() {
 export async function init() {
   await addSDGenButtons();
 
-  const getSelectEnumProvider = (id, text) => () =>
+  const getSelectEnumProvider = (id: any, text: any) => () =>
     Array.from(document.querySelectorAll(`#${id} > [value]`)).map(
-      (x) => new SlashCommandEnumValue(x.getAttribute("value"), text ? x.textContent : null),
+      (x) => new SlashCommandEnumValue(x.getAttribute("value") as any, text ? x.textContent : null as any),
     );
 
   SlashCommandParser.addCommandObject(
     SlashCommand.fromProps({
       name: "imagine",
       returns: "URL of the generated image, or an empty string if the generation failed",
-      callback: async (args, trigger) => {
+      callback: async (args: any, trigger: any) => {
         const currentSettings = applyCommandArguments(args);
 
         try {
@@ -5692,7 +5692,7 @@ export async function init() {
             const context = getContext();
             const message = context.chat.at(-1);
             if (Array.isArray(message?.extra?.media) && message.extra.media.length > 0) {
-              const mediaAttachment = message.extra.media.findLast((m) => m.url === url);
+              const mediaAttachment = message.extra.media.findLast((m: any) => m.url === url);
               if (mediaAttachment) {
                 mediaAttachment.width = extension_settings.sd.width;
                 mediaAttachment.height = extension_settings.sd.height;
@@ -5720,7 +5720,7 @@ export async function init() {
           [ARGUMENT_TYPE.BOOLEAN],
           false,
           false,
-          "false",
+          "false" as any,
         ),
         new SlashCommandNamedArgument(
           "gallery",
@@ -5728,7 +5728,7 @@ export async function init() {
           [ARGUMENT_TYPE.BOOLEAN],
           false,
           false,
-          "true",
+          "true" as any,
         ),
         SlashCommandNamedArgument.fromProps({
           name: "negative",
@@ -5774,8 +5774,8 @@ export async function init() {
           description: "level of response prompt processing returned by the LLM",
           typeList: [ARGUMENT_TYPE.STRING],
           enumList: [
-            new SlashCommandEnumValue("standard", "Standard prompt processing"),
-            new SlashCommandEnumValue("minimal", "Minimal prompt processing"),
+            new SlashCommandEnumValue("standard", "Standard prompt processing" as any),
+            new SlashCommandEnumValue("minimal", "Minimal prompt processing" as any),
           ],
           isRequired: false,
           acceptsMultiple: false,
@@ -5912,7 +5912,7 @@ export async function init() {
           false,
           false,
           null,
-          Object.values(triggerWords).flat(),
+          Object.values(triggerWords).flat() as any,
         ),
       ],
       helpString: `
@@ -5945,7 +5945,7 @@ export async function init() {
       ],
       helpString:
         "If an argument is provided, change the source of the image generation, e.g. <code>/imagine-source comfy</code>. Returns the current source.",
-      callback: async (_args, name) => {
+      callback: async (_args: any, name: any) => {
         if (!name) {
           return extension_settings.sd.source;
         }
@@ -5980,7 +5980,7 @@ export async function init() {
       ],
       helpString:
         "If an argument is provided, change the style of the image generation, e.g. <code>/imagine-style MyStyle</code>. Returns the current style.",
-      callback: async (_args, name) => {
+      callback: async (_args: any, name: any) => {
         if (!name) {
           return extension_settings.sd.style;
         }
@@ -6144,7 +6144,7 @@ export async function init() {
   eventSource.on(event_types.IMAGE_SWIPED, onImageSwiped);
 
   [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
-    eventSource.on(event, async (/** @type {string} */ key) => {
+    eventSource.on(event, async (/** @type {string} */ key: any) => {
       const keySourceMap = {
         [sources.bfl]: SECRET_KEYS.BFL,
         [sources.falai]: SECRET_KEYS.FALAI,
@@ -6167,17 +6167,17 @@ export async function init() {
   await loadSettings();
   $("body").addClass("sd");
 
-  const getMacroValue = ({ isNegative }) => {
+  const getMacroValue = ({ isNegative }: any) => {
     if (selected_group || this_chid === undefined) {
       return "";
     }
 
-    const key = getCharaFilename(this_chid);
-    let characterPrompt = key ? extension_settings.sd.character_prompts[key] || "" : "";
-    let negativePrompt = key ? extension_settings.sd.character_negative_prompts[key] || "" : "";
+    const key = getCharaFilename(this_chid as any);
+    let characterPrompt = key ? (extension_settings.sd.character_prompts as any)[key] || "" : "";
+    let negativePrompt = key ? (extension_settings.sd.character_negative_prompts as any)[key] || "" : "";
 
     const context = getContext();
-    const sharedPromptData = context?.characters[this_chid]?.data?.extensions?.sd_character_prompt;
+    const sharedPromptData = (context as any)?.characters[this_chid as any]?.data?.extensions?.sd_character_prompt;
 
     if (typeof sharedPromptData?.positive === "string" && !characterPrompt && sharedPromptData.positive) {
       characterPrompt = sharedPromptData.positive || "";

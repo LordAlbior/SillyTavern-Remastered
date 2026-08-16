@@ -214,8 +214,8 @@ export function resolveSecretKey() {
 
   if (mainApi === "textgenerationwebui") {
     const [key] = Object.entries(textgen_types).find(([, value]) => value === textCompletionType) ?? [null];
-    if (key && SECRET_KEYS[key]) {
-      return SECRET_KEYS[key];
+    if (key && (SECRET_KEYS as Record<string, any>)[key]) {
+      return (SECRET_KEYS as Record<string, any>)[key];
     }
   }
 
@@ -230,8 +230,8 @@ export function resolveSecretKey() {
     }
 
     const [key] = Object.entries(chat_completion_sources).find(([, value]) => value === chatCompletionSource) ?? [null];
-    if (key && SECRET_KEYS[key]) {
-      return SECRET_KEYS[key];
+    if (key && (SECRET_KEYS as Record<string, any>)[key]) {
+      return (SECRET_KEYS as Record<string, any>)[key];
     }
   }
 
@@ -243,9 +243,9 @@ export function resolveSecretKey() {
  * @param {string} id The ID of the secret to find.
  * @returns {string} The label of the secret with the given ID, or an empty string if not found.
  */
-export function getSecretLabelById(id) {
+export function getSecretLabelById(id: any) {
   for (const key of Object.values(SECRET_KEYS)) {
-    const secrets = secret_state[key];
+    const secrets = (secret_state as Record<string, any>)[key];
     if (!Array.isArray(secrets)) {
       continue;
     }
@@ -259,11 +259,11 @@ export function getSecretLabelById(id) {
 
 export function updateSecretDisplay() {
   for (const [secret_key, input_selector] of Object.entries(INPUT_MAP)) {
-    const validSecret = !!secret_state[secret_key];
+    const validSecret = !!(secret_state as Record<string, any>)[secret_key];
     const placeholder = $("#viewSecrets").attr(validSecret ? "key_saved_text" : "missing_key_text");
     const label = getActiveSecretLabel(secret_key);
     const placeholderWithLabel = label ? `${placeholder} (${label})` : placeholder;
-    $(input_selector).attr("placeholder", placeholderWithLabel);
+    $(input_selector).attr("placeholder", placeholderWithLabel as any);
   }
 }
 
@@ -275,8 +275,8 @@ registerSecretDisplayHook(updateSecretDisplay);
  * @param {string} key Gets the active secret label for a given key.
  * @returns {string} The label of the active secret, or '[No label]' if none is active.
  */
-function getActiveSecretLabel(key) {
-  const selectedSecret = secret_state[key];
+function getActiveSecretLabel(key: any) {
+  const selectedSecret = (secret_state as Record<string, any>)[key];
   if (Array.isArray(selectedSecret)) {
     const activeSecret = selectedSecret.find((x) => x.active);
     if (!activeSecret) {
@@ -358,7 +358,7 @@ export let secret_state = {};
  * @param {boolean} [options.allowEmpty] Whether to allow writing empty values. If false and value is empty, the secret will be deleted.
  * @return {Promise<string?>} The ID of the newly created secret key, or null if no value is provided.
  */
-export async function writeSecret(key, value, label, { allowEmpty } = {} as any) {
+export async function writeSecret(key: any, value: any, label: any, { allowEmpty } = {} as any) {
   try {
     if (!value && !allowEmpty) {
       console.warn(`No value provided for ${key} in writeSecret, redirecting to deleteSecret`);
@@ -397,7 +397,7 @@ export async function writeSecret(key, value, label, { allowEmpty } = {} as any)
  * @param {string} key Secret key
  * @param {string} [id] (Optional) ID of the secret key to delete. If not provided, deletes an active key.
  */
-export async function deleteSecret(key, id) {
+export async function deleteSecret(key: any, id: any) {
   try {
     const response = await fetch("/api/secrets/delete", {
       method: "POST",
@@ -443,7 +443,7 @@ export async function readSecretState() {
  * @param {string} [id] ID of the secret to find. If not provided, will return the active secret.
  * @returns {Promise<string?>} Secret value, or null if keys are not exposed
  */
-export async function findSecret(key, id) {
+export async function findSecret(key: any, id: any) {
   try {
     const response = await fetch("/api/secrets/find", {
       method: "POST",
@@ -468,7 +468,7 @@ export async function findSecret(key, id) {
  * @param {string} key Secret key to rotate
  * @param {string} id ID of the secret to rotate
  */
-export async function rotateSecret(key, id) {
+export async function rotateSecret(key: any, id: any) {
   try {
     const response = await fetch("/api/secrets/rotate", {
       method: "POST",
@@ -493,7 +493,7 @@ export async function rotateSecret(key, id) {
  * @param {string} id ID of the secret to rename
  * @param {string} label Label to rename the secret to
  */
-export async function renameSecret(key, id, label) {
+export async function renameSecret(key: any, id: any, label: any) {
   try {
     const response = await fetch("/api/secrets/rename", {
       method: "POST",
@@ -515,14 +515,14 @@ export async function renameSecret(key, id, label) {
  * @param {string} source Source for which to generate the storage key (e.g. 'openrouter')
  * @returns {string} The storage key for the PKCE code verifier for a given source.
  */
-const getVerifierKey = (source) => `${getCurrentUserHandle()}_${source}_code_verifier`;
+const getVerifierKey = (source: any) => `${getCurrentUserHandle()}_${source}_code_verifier`;
 
 /**
  * Generates a code challenge for PKCE authentication flows.
  * @param {string} input Input secret string to generate the code challenge from.
  * @returns {string} S256 code challenge generated from the input string, encoded in base64url format.
  */
-const generateChallenge = (input) => {
+const generateChallenge = (input: any) => {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
   const hashBytes = (sha256 as any).array(data);
@@ -536,7 +536,7 @@ const generateChallenge = (input) => {
  * Redirects the user to authorize OpenRouter.
  */
 async function authorizeOpenRouter() {
-  if (secret_state[SECRET_KEYS.OPENROUTER]) {
+      if ((secret_state as Record<string, any>)[SECRET_KEYS.OPENROUTER]) {
     const confirmed = await Popup.show.confirm(
       t`OpenRouter API key already exists`,
       t`Do you really wish to create a new OpenRouter key? Your existing key will not be deleted.`,
@@ -566,7 +566,7 @@ export async function checkOpenRouterAuth() {
   const params = new URLSearchParams(location.search);
   const source = params.get("source");
   if (source === "openrouter") {
-    const query = new URLSearchParams(params.get("query"));
+    const query = new URLSearchParams(params.get("query") as any);
     try {
       const code = query.get("code");
       if (!code) {
@@ -601,7 +601,7 @@ export async function checkOpenRouterAuth() {
 
       await writeSecret(SECRET_KEYS.OPENROUTER, data.key, undefined as any);
 
-      if (secret_state[SECRET_KEYS.OPENROUTER]) {
+  if ((secret_state as Record<string, any>)[SECRET_KEYS.OPENROUTER]) {
         toastr.success("OpenRouter token saved");
       } else {
         throw new Error("OpenRouter token not saved");
@@ -651,7 +651,7 @@ function updateInputDataLists() {
     // Clear existing options
     dataList.innerHTML = "";
 
-    const secrets = secret_state[key];
+    const secrets = (secret_state as Record<string, any>)[key];
     if (!Array.isArray(secrets)) {
       continue;
     }
@@ -674,7 +674,7 @@ function updateInputDataLists() {
  * Opens the key manager dialog for a specific key.
  * @param {string} key Key for which to open the key manager dialog.
  */
-async function openKeyManagerDialog(key) {
+async function openKeyManagerDialog(key: any) {
   const name = FRIENDLY_NAMES[key] || key;
   const template = $(await renderTemplateAsync("secretKeyManager", { name, key }));
   template.find('button[data-action="add-secret"]').on("click", async () => {
@@ -688,7 +688,7 @@ async function openKeyManagerDialog(key) {
           label: t`Label (optional):`,
         },
       ],
-      onClose: (popup) => {
+      onClose: (popup: any) => {
         if (popup.result) {
           label = popup.inputResults.get("newSecretLabel").toString().trim();
           result = popup.result;
@@ -715,7 +715,7 @@ async function openKeyManagerDialog(key) {
   await callGenericPopup(template, POPUP_TYPE.TEXT, "", { wide: true, large: true, onOpen: scrollToActive });
 
   async function renderSecretsList() {
-    const secrets = secret_state[key] ?? [];
+    const secrets = (secret_state as Record<string, any>)[key] ?? [];
     const list = template.find(".secretKeyManagerList");
     const previousScrollTop = list.scrollTop();
 
@@ -768,15 +768,15 @@ async function openKeyManagerDialog(key) {
       itemBlocks.push(itemTemplate);
     }
 
-    list.empty().append(itemBlocks).scrollTop(previousScrollTop);
+    list.empty().append(itemBlocks).scrollTop(previousScrollTop as any);
   }
 
   function scrollToActive() {
     const list = template.find(".secretKeyManagerList");
     const activeKey = list.find(".active");
     if (activeKey.length > 0) {
-      const activeKeyScrollTop = activeKey.position().top + list.scrollTop() - list.height() / 2;
-      list.scrollTop(activeKeyScrollTop);
+      const activeKeyScrollTop = (activeKey.position() as any).top + list.scrollTop() - (list.height() as any) / 2;
+      list.scrollTop(activeKeyScrollTop as any);
     }
   }
 }
@@ -784,19 +784,19 @@ async function openKeyManagerDialog(key) {
 function registerSecretSlashCommands() {
   const secretKeyEnumProvider = () =>
     Object.values(SECRET_KEYS).map(
-      (key) => new SlashCommandEnumValue(key, FRIENDLY_NAMES[key] || key, enumTypes.name, enumIcons.key),
+      (key: any) => new SlashCommandEnumValue(key, FRIENDLY_NAMES[key] || key, enumTypes.name, enumIcons.key),
     );
   const secretIdEnumProvider = (
-    /** @type {SlashCommandExecutor} */ executor,
-    /** @type {SlashCommandScope} */ _scope,
+    /** @type {SlashCommandExecutor} */ executor: any,
+    /** @type {SlashCommandScope} */ _scope: any,
   ) => {
-    const key = executor?.namedArgumentList?.find((x) => x.name === "key")?.value?.toString() || resolveSecretKey();
-    if (!key || !secret_state[key] || !Array.isArray(secret_state[key]) || secret_state[key].length === 0) {
+    const key = executor?.namedArgumentList?.find((x: any) => x.name === "key")?.value?.toString() || resolveSecretKey();
+    if (!key || !(secret_state as Record<string, any>)[key] || !Array.isArray((secret_state as Record<string, any>)[key]) || (secret_state as Record<string, any>)[key].length === 0) {
       return [];
     }
 
-    return secret_state[key].map((secret) => {
-      return new SlashCommandEnumValue(secret.id, `${secret.label} (${secret.value})`, enumTypes.name, enumIcons.key);
+    return (secret_state as Record<string, any>)[key].map((secret: any) => {
+      return new SlashCommandEnumValue(secret.id as any, `${secret.label} (${secret.value})` as any, enumTypes.name, enumIcons.key);
     });
   };
 
@@ -830,7 +830,7 @@ function registerSecretSlashCommands() {
           enumProvider: secretIdEnumProvider,
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         const quiet = isTrueBoolean(args?.quiet?.toString());
         const id = value?.toString()?.trim();
         const key = args?.key?.toString()?.trim() || resolveSecretKey();
@@ -842,7 +842,7 @@ function registerSecretSlashCommands() {
           return "";
         }
 
-        const secrets = secret_state[key];
+        const secrets = (secret_state as Record<string, any>)[key];
         if (!Array.isArray(secrets) || secrets.length === 0) {
           if (!quiet) {
             toastr.error(t`No saved secrets found for the key: ${key}`);
@@ -851,7 +851,7 @@ function registerSecretSlashCommands() {
         }
 
         if (!id) {
-          const activeSecret = secrets.find((s) => s.active);
+          const activeSecret = secrets.find((s: any) => s.active);
           if (!activeSecret) {
             if (!quiet) {
               toastr.error(t`No active secret found for the key: ${key}`);
@@ -861,7 +861,7 @@ function registerSecretSlashCommands() {
           return activeSecret.id;
         }
 
-        const savedSecret = secrets.find((s) => s.id === id) ?? secrets.find((s) => s.label === id);
+        const savedSecret = secrets.find((s: any) => s.id === id) ?? secrets.find((s: any) => s.label === id);
         if (!savedSecret) {
           if (!quiet) {
             toastr.error(t`No secret found with ID: ${id} for the key: ${key}`);
@@ -908,7 +908,7 @@ function registerSecretSlashCommands() {
           enumProvider: secretIdEnumProvider,
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         const quiet = isTrueBoolean(args?.quiet?.toString());
         const id = value?.toString()?.trim();
         const key = args?.key?.toString()?.trim() || resolveSecretKey();
@@ -920,7 +920,7 @@ function registerSecretSlashCommands() {
           return "";
         }
 
-        const secrets = secret_state[key];
+        const secrets = (secret_state as Record<string, any>)[key];
         if (!Array.isArray(secrets) || secrets.length === 0) {
           if (!quiet) {
             toastr.error(t`No saved secrets found for the key: ${key}`);
@@ -929,7 +929,7 @@ function registerSecretSlashCommands() {
         }
 
         const savedSecret =
-          secrets.find((s) => s.id === id) ?? secrets.find((s) => s.label === id) ?? secrets.find((s) => s.active);
+          secrets.find((s: any) => s.id === id) ?? secrets.find((s: any) => s.label === id) ?? secrets.find((s: any) => s.active);
         if (!savedSecret) {
           if (!quiet) {
             toastr.error(t`No secret found with ID: ${id} for the key: ${key}`);
@@ -989,7 +989,7 @@ function registerSecretSlashCommands() {
           typeList: [ARGUMENT_TYPE.STRING],
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         const quiet = isTrueBoolean(args?.quiet?.toString());
         const allowEmpty = isTrueBoolean(args?.empty?.toString());
         const key = args?.key?.toString()?.trim() || resolveSecretKey();
@@ -1001,7 +1001,7 @@ function registerSecretSlashCommands() {
           return "";
         }
 
-        const secrets = secret_state[key];
+        const secrets = (secret_state as Record<string, any>)[key];
         if (!Array.isArray(secrets) || secrets.length === 0) {
           if (!quiet) {
             toastr.error(t`No saved secrets found for the key: ${key}`);
@@ -1062,7 +1062,7 @@ function registerSecretSlashCommands() {
           typeList: [ARGUMENT_TYPE.STRING],
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         const quiet = isTrueBoolean(args?.quiet?.toString());
         const key = args?.key?.toString()?.trim() || resolveSecretKey();
         const id = args?.id?.toString()?.trim();
@@ -1074,7 +1074,7 @@ function registerSecretSlashCommands() {
           return "";
         }
 
-        const secrets = secret_state[key];
+        const secrets = (secret_state as Record<string, any>)[key];
         if (!Array.isArray(secrets) || secrets.length === 0) {
           if (!quiet) {
             toastr.error(t`No saved secrets found for the key: ${key}`);
@@ -1091,7 +1091,7 @@ function registerSecretSlashCommands() {
         }
 
         const savedSecret =
-          secrets.find((s) => s.id === id) ?? secrets.find((s) => s.label === id) ?? secrets.find((s) => s.active);
+          secrets.find((s: any) => s.id === id) ?? secrets.find((s: any) => s.label === id) ?? secrets.find((s: any) => s.active);
         if (!savedSecret) {
           if (!quiet) {
             toastr.error(t`No secret found with ID: ${id} for the key: ${key}`);
@@ -1140,7 +1140,7 @@ function registerSecretSlashCommands() {
           enumProvider: secretIdEnumProvider,
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         const quiet = isTrueBoolean(args?.quiet?.toString());
         const key = args?.key?.toString()?.trim() || resolveSecretKey();
         const id = value?.toString()?.trim();
@@ -1152,7 +1152,7 @@ function registerSecretSlashCommands() {
           return "";
         }
 
-        const secrets = secret_state[key];
+        const secrets = (secret_state as Record<string, any>)[key];
         if (!Array.isArray(secrets) || secrets.length === 0) {
           if (!quiet) {
             toastr.error(t`No saved secrets found for the key: ${key}`);
@@ -1161,7 +1161,7 @@ function registerSecretSlashCommands() {
         }
 
         const savedSecret =
-          secrets.find((s) => s.id === id) ?? secrets.find((s) => s.label === id) ?? secrets.find((s) => s.active);
+          secrets.find((s: any) => s.id === id) ?? secrets.find((s: any) => s.label === id) ?? secrets.find((s: any) => s.active);
         if (!savedSecret) {
           if (!quiet) {
             toastr.error(t`No secret found with ID: ${id} for the key: ${key}`);
@@ -1202,11 +1202,11 @@ export async function initSecrets() {
       if (!value || !this.matches(inputSelector)) {
         continue;
       }
-      const secrets = secret_state[key];
+      const secrets = (secret_state as Record<string, any>)[key];
       if (!Array.isArray(secrets)) {
         continue;
       }
-      const secretMatch = secrets.find((secret) => secret.id === value);
+      const secretMatch = secrets.find((secret: any) => secret.id === value);
       if (secretMatch) {
         $(this).val("");
         return rotateSecret(key, secretMatch.id);
@@ -1241,7 +1241,7 @@ export async function initSecrets() {
     }
   });
 
-  const formatNanoGptNumber = (num, decimals = null) => {
+  const formatNanoGptNumber = (num: any, decimals = null) => {
     const number = Number(num);
     if (!Number.isFinite(number)) return decimals === null ? "0" : (0).toFixed(decimals);
     if (decimals !== null) return number.toFixed(decimals);
@@ -1250,16 +1250,16 @@ export async function initSecrets() {
     return number.toString();
   };
 
-  const createNanoGptCreditsPopup = (credits) => {
+  const createNanoGptCreditsPopup = (credits: any) => {
     const root = $('<div class="nanogpt-credits-popup"></div>');
     root.append($("<h3></h3>").text(t`NanoGPT Credits & Usage`));
 
     const rows = [
-      [t`USD`, `$${formatNanoGptNumber(credits.usdBalance, 2)}`],
-      [t`NANO`, formatNanoGptNumber(credits.nanoBalance, 3)],
+      [t`USD`, `$${formatNanoGptNumber(credits.usdBalance, 2 as any)}`],
+      [t`NANO`, formatNanoGptNumber(credits.nanoBalance, 3 as any)],
     ];
 
-    const addUsage = (label, usage, limit) => {
+    const addUsage = (label: any, usage: any, limit: any) => {
       if (usage) {
         rows.push([
           label,
@@ -1308,9 +1308,9 @@ export async function initSecrets() {
         throw new Error("Invalid response");
       }
 
-      const balances = [`$${formatNanoGptNumber(usdBalance, 2)}`];
+      const balances = [`$${formatNanoGptNumber(usdBalance, 2 as any)}`];
       if (nanoBalance > 0) {
-        balances.push(`${formatNanoGptNumber(nanoBalance, 3)} NANO`);
+        balances.push(`${formatNanoGptNumber(nanoBalance, 3 as any)} NANO`);
       }
       let shortInlineText = balances.join(" | ");
 

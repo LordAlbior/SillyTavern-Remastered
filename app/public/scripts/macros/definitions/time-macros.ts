@@ -1,7 +1,8 @@
 import { moment } from "../../../lib.js";
 import { chat } from "../../../script.ts";
 import { timestampToMoment } from "../../utils.ts";
-import { MacroRegistry, MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+import { MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+const MacroRegistry: any = (await import("../engine/MacroRegistry.ts" as string)).MacroRegistry;
 
 /**
  * Registers time/date related macros and utilities.
@@ -25,7 +26,7 @@ export function registerTimeMacros() {
     returns: "A time string in the format HH:mm.",
     displayOverride: "{{time::[UTC±(offset)]}}",
     exampleUsage: ["{{time}}", "{{time::UTC+2}}", "{{time::UTC-7}}"],
-    handler: ({ unnamedArgs: [offsetSpec] }) => {
+    handler: ({ unnamedArgs: [offsetSpec] }: any) => {
       if (!offsetSpec) return moment().format("LT");
 
       const match = /^UTC([+-]\d+)$/.exec(offsetSpec);
@@ -79,7 +80,7 @@ export function registerTimeMacros() {
     description: "Formats the current date/time using the given moment.js format string.",
     returns: "Formatted date/time string.",
     exampleUsage: ["{{datetimeformat::YYYY-MM-DD HH:mm:ss}}", "{{datetimeformat::LLLL}}"],
-    handler: ({ unnamedArgs: [format] }) => moment().format(format),
+    handler: ({ unnamedArgs: [format] }: any) => moment().format(format),
   });
 
   MacroRegistry.registerMacro("idleDuration", {
@@ -112,7 +113,7 @@ export function registerTimeMacros() {
     returns: "Human-readable difference between two times.",
     displayOverride: "{{timeDiff::left::right}}", // Shorten this, otherwise it's too long. Full dates don't really help for understanding the macro.
     exampleUsage: ["{{ timeDiff :: 2023-01-01 12:00:00 :: 2023-01-01 15:00:00 }}"],
-    handler: ({ unnamedArgs: [left, right] }) => {
+    handler: ({ unnamedArgs: [left, right] }: any) => {
       const diff = moment.duration(moment(left).diff(moment(right)));
       return diff.humanize(true);
     },

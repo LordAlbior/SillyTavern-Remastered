@@ -46,13 +46,13 @@ let instance: any;
 export { instance as MacroEnvBuilder };
 
 class MacroEnvBuilder {
-  /** @type {MacroEnvBuilder} */ static #instance;
+  /** @type {MacroEnvBuilder} */ static #instance:any;
   /** @type {MacroEnvBuilder} */ static get instance() {
     return MacroEnvBuilder.#instance ?? (MacroEnvBuilder.#instance = new MacroEnvBuilder());
   }
 
   /** @type {{ fn: MacroEnvProvider, order: env_provider_order }[]} */
-  #providers;
+  #providers:any[];
 
   constructor() {
     this.#providers = [];
@@ -68,7 +68,7 @@ class MacroEnvBuilder {
    * @param {env_provider_order} [order=env_provider_order.NORMAL]
    * @returns {void}
    */
-  registerProvider(provider, order = env_provider_order.NORMAL) {
+  registerProvider(provider:any, order = env_provider_order.NORMAL) {
     if (typeof provider !== "function") throw new Error("Provider must be a function");
     this.#providers.push({ fn: provider, order });
   }
@@ -80,7 +80,7 @@ class MacroEnvBuilder {
    * @param {MacroEnvRawContext} ctx
    * @returns {MacroEnv}
    */
-  buildFromRawEnv(ctx) {
+  buildFromRawEnv(ctx:any) {
     // Create the env first, we will populate it step by step.
     // Some fields are marked as required, so we have to fill them with dummy fields here
     /** @type {MacroEnv} */
@@ -90,7 +90,7 @@ class MacroEnvBuilder {
       names: { user: "", char: "", group: "", groupNotMuted: "", notChar: "" },
       character: {},
       system: { model: "" },
-      functions: { postProcess: (x) => x } as any,
+      functions: { postProcess: (x:any) => x } as any,
       dynamicMacros: {},
       extra: {},
     };
@@ -155,13 +155,13 @@ class MacroEnvBuilder {
         return ctx.original;
       };
     }
-    env.functions.postProcess = typeof ctx.postProcessFn === "function" ? ctx.postProcessFn : (x) => x;
+    env.functions.postProcess = typeof ctx.postProcessFn === "function" ? ctx.postProcessFn : (x:any) => x;
 
     // Dynamic, per-call macros that should be visible only for this evaluation run.
     // Keys are normalized to lowercase for case-insensitive matching.
     if (ctx.dynamicMacros && typeof ctx.dynamicMacros === "object") {
       for (const [key, value] of Object.entries(ctx.dynamicMacros)) {
-        env.dynamicMacros[key.toLowerCase()] = value;
+        (env.dynamicMacros as Record<string,any>)[key.toLowerCase()] = value;
       }
     }
 
@@ -192,7 +192,7 @@ instance = MacroEnvBuilder.instance;
  * @param {string|null} [options.includeUser=null]
  * @returns {string}
  */
-function getGroupValue(ctx, { currentChar = null, includeMuted = false, filterOutChar = false, includeUser = null }) {
+function getGroupValue(ctx:any, { currentChar = null, includeMuted = false, filterOutChar = false, includeUser = null }:any) {
   if (typeof ctx.groupOverride === "string") {
     return ctx.groupOverride;
   }

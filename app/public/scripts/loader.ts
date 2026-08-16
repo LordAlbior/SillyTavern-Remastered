@@ -4,7 +4,7 @@ import { loader } from "./action-loader.ts";
  * Handle for the legacy loader created by showLoader().
  * @type {import('./action-loader.js').ActionLoaderHandle|null}
  */
-let legacyLoaderHandle = null;
+let legacyLoaderHandle: any = null;
 
 /**
  * Shows the loader overlay.

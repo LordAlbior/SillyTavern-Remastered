@@ -3,8 +3,8 @@ import { splitRecursive } from "/scripts/utils.js";
 import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
 
 export class PollinationsTtsProvider {
-  settings;
-  voices = [];
+  settings: any;
+  voices: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -23,7 +23,7 @@ export class PollinationsTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -61,11 +61,11 @@ export class PollinationsTtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((voice) => voice.name == voiceName || voice.voice_id == voiceName)[0];
+    const match = (this.voices as any[]).filter((voice: any) => voice.name == voiceName || voice.voice_id == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found`;
     }
@@ -78,7 +78,7 @@ export class PollinationsTtsProvider {
    * @param {string} voiceId Voice ID
    * @returns {AsyncGenerator<Response>} Audio response generator
    */
-  generateTts(text, voiceId) {
+  generateTts(text: any, voiceId: any) {
     return this.fetchTtsGeneration(text, voiceId);
   }
 
@@ -96,18 +96,18 @@ export class PollinationsTtsProvider {
       throw new Error(`HTTP ${response.status}: ${await response.text()}`);
     }
     const responseJson = await response.json();
-    return responseJson.sort().map((x) => ({ name: x, voice_id: x, preview_url: false, lang: "en-US" }));
+    return responseJson.sort().map((x: any) => ({ name: x, voice_id: x, preview_url: false, lang: "en-US" }));
   }
 
   /**
    * Preview TTS for a given voice ID.
    * @param {string} id Voice ID
    */
-  async previewTtsVoice(id) {
+  async previewTtsVoice(id: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
     const voice = await this.getVoice(id);
-    const text = getPreviewString(voice.lang);
+    const text = getPreviewString((voice as any).lang);
     for await (const response of this.generateTts(text, id)) {
       const audio = await response.blob();
       const url = URL.createObjectURL(audio);
@@ -121,7 +121,7 @@ export class PollinationsTtsProvider {
     }
   }
 
-  async *fetchTtsGeneration(text, voiceId) {
+  async *fetchTtsGeneration(text: any, voiceId: any) {
     const MAX_LENGTH = 1000;
     console.info(`Generating new TTS for voice_id ${voiceId}`);
     const chunks = splitRecursive(text, MAX_LENGTH);

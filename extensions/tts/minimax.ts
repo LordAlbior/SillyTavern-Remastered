@@ -10,9 +10,9 @@ class MiniMaxTtsProvider {
   // Config //
   //########//
 
-  settings;
-  /** @type {function} */ handler;
-  voices = [];
+  settings: any;
+  /** @type {function} */ handler: any;
+  voices: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -50,8 +50,8 @@ class MiniMaxTtsProvider {
     { id: "speech-01-240228", name: "Speech-01-240228 (Legacy)" },
   ];
 
-  availableModels = [];
-  availableVoices = [];
+  availableModels: any[] = [];
+  availableVoices: any[] = [];
 
   get settingsHtml() {
     return `
@@ -178,10 +178,10 @@ class MiniMaxTtsProvider {
   }
 
   constructor() {
-    this.handler = async function (/** @type {string} */ key) {
+    this.handler = async function (this: any, /** @type {string} */ key: any) {
       if (![SECRET_KEYS.MINIMAX, SECRET_KEYS.MINIMAX_GROUP_ID].includes(key)) return;
-      $("#api_key_minimax").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX]);
-      $("#minimax_group_id").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]);
+      $("#api_key_minimax").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX]);
+      $("#minimax_group_id").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX_GROUP_ID]);
       await this.onRefreshClick();
     }.bind(this);
   }
@@ -194,9 +194,9 @@ class MiniMaxTtsProvider {
 
   onSettingsChange() {
     this.settings.apiHost = $("#minimax_tts_api_host").val();
-    this.settings.speed = parseFloat($("#minimax_tts_speed").val().toString());
-    this.settings.volume = parseFloat($("#minimax_tts_volume").val().toString());
-    this.settings.pitch = parseInt($("#minimax_tts_pitch").val().toString());
+    this.settings.speed = parseFloat(($("#minimax_tts_speed").val() as any).toString());
+    this.settings.volume = parseFloat(($("#minimax_tts_volume").val() as any).toString());
+    this.settings.pitch = parseInt(($("#minimax_tts_pitch").val() as any).toString());
     this.settings.model = $("#minimax_tts_model").find(":selected").val();
     this.settings.format = $("#minimax_tts_format").find(":selected").val();
     this.settings.customVoiceId = $("#minimax_tts_custom_voice_id").val();
@@ -209,8 +209,8 @@ class MiniMaxTtsProvider {
   }
 
   addCustomModel() {
-    const modelId = $("#minimax_custom_model_id").val().toString().trim();
-    const modelName = $("#minimax_custom_model_name").val().toString().trim();
+    const modelId = ($("#minimax_custom_model_id").val() as any).toString().trim();
+    const modelName = ($("#minimax_custom_model_name").val() as any).toString().trim();
 
     if (!modelId || !modelName) {
       toastr.error("Please enter model ID and name");
@@ -218,19 +218,19 @@ class MiniMaxTtsProvider {
     }
 
     // Check if already exists in custom models
-    if (this.settings.customModels.find((m) => m.id === modelId)) {
+    if (this.settings.customModels.find((m: any) => m.id === modelId)) {
       toastr.error("Model ID already exists in custom models");
       return;
     }
 
     // Check if conflicts with default models
-    if (MiniMaxTtsProvider.defaultModels.find((m) => m.id === modelId)) {
+    if (MiniMaxTtsProvider.defaultModels.find((m: any) => m.id === modelId)) {
       toastr.error("Model ID conflicts with default model. Please use a different model ID.");
       return;
     }
 
     // Check if conflicts with default model names
-    if (MiniMaxTtsProvider.defaultModels.find((m) => m.name === modelName)) {
+    if (MiniMaxTtsProvider.defaultModels.find((m: any) => m.name === modelName)) {
       toastr.error("Model name conflicts with default model. Please use a different model name.");
       return;
     }
@@ -245,8 +245,8 @@ class MiniMaxTtsProvider {
     toastr.success("Model added successfully");
   }
 
-  removeCustomModel(modelId) {
-    this.settings.customModels = this.settings.customModels.filter((m) => m.id !== modelId);
+  removeCustomModel(modelId: any) {
+    this.settings.customModels = this.settings.customModels.filter((m: any) => m.id !== modelId);
     this.updateCustomModelsDisplay();
     this.updateModelSelect(this.getAllModels());
     saveTtsProviderSettings();
@@ -255,9 +255,9 @@ class MiniMaxTtsProvider {
   }
 
   addCustomVoice() {
-    const voiceName = $("#minimax_custom_voice_name").val().toString().trim();
-    const voiceId = $("#minimax_custom_voice_id").val().toString().trim();
-    const voiceLang = $("#minimax_custom_voice_lang").val().toString().trim();
+    const voiceName = ($("#minimax_custom_voice_name").val() as any).toString().trim();
+    const voiceId = ($("#minimax_custom_voice_id").val() as any).toString().trim();
+    const voiceLang = ($("#minimax_custom_voice_lang").val() as any).toString().trim();
 
     if (!voiceName || !voiceId) {
       toastr.error("Please enter voice name and ID");
@@ -265,19 +265,19 @@ class MiniMaxTtsProvider {
     }
 
     // Check if already exists in custom voices
-    if (this.settings.customVoices.find((v) => v.voice_id === voiceId)) {
+    if (this.settings.customVoices.find((v: any) => v.voice_id === voiceId)) {
       toastr.error("Voice ID already exists in custom voices");
       return;
     }
 
     // Check if conflicts with default voices
-    if (MiniMaxTtsProvider.defaultVoices.find((v) => v.voice_id === voiceId)) {
+    if (MiniMaxTtsProvider.defaultVoices.find((v: any) => v.voice_id === voiceId)) {
       toastr.error("Voice ID conflicts with default voice. Please use a different voice ID.");
       return;
     }
 
     // Check if conflicts with default voice names
-    if (MiniMaxTtsProvider.defaultVoices.find((v) => v.name === voiceName)) {
+    if (MiniMaxTtsProvider.defaultVoices.find((v: any) => v.name === voiceName)) {
       toastr.error("Voice name conflicts with default voice. Please use a different voice name.");
       return;
     }
@@ -303,8 +303,8 @@ class MiniMaxTtsProvider {
   }
 
   // Remove custom voice
-  removeCustomVoice(voiceId) {
-    this.settings.customVoices = this.settings.customVoices.filter((v) => v.voice_id !== voiceId);
+  removeCustomVoice(voiceId: any) {
+    this.settings.customVoices = this.settings.customVoices.filter((v: any) => v.voice_id !== voiceId);
     this.updateCustomVoicesDisplay();
     initVoiceMap(); // Update TTS extension voiceMap
     saveTtsProviderSettings();
@@ -312,7 +312,7 @@ class MiniMaxTtsProvider {
   }
 
   // Helper function to escape HTML
-  escapeHtml(text) {
+  escapeHtml(text: any) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
@@ -328,7 +328,7 @@ class MiniMaxTtsProvider {
       return;
     }
 
-    this.settings.customModels.forEach((model) => {
+    this.settings.customModels.forEach((model: any) => {
       const modelDiv = $("<div></div>").addClass("minimax-custom-item");
 
       const modelInfo = $("<div></div>").addClass("minimax-custom-item-info");
@@ -363,7 +363,7 @@ class MiniMaxTtsProvider {
       return;
     }
 
-    this.settings.customVoices.forEach((voice) => {
+    this.settings.customVoices.forEach((voice: any) => {
       const voiceDiv = $("<div></div>").addClass("minimax-custom-item");
 
       const voiceInfo = $("<div></div>").addClass("minimax-custom-item-info");
@@ -405,8 +405,8 @@ class MiniMaxTtsProvider {
    * @param {string} displayName Language display name
    * @returns {string} Standard language code
    */
-  convertDisplayNameToLanguageCode(displayName) {
-    const displayNameToCode = {
+  convertDisplayNameToLanguageCode(displayName: any) {
+    const displayNameToCode: Record<string, string> = {
       Chinese: "zh-CN",
       "Chinese,Yue": "zh-TW",
       English: "en-US",
@@ -433,10 +433,10 @@ class MiniMaxTtsProvider {
       Hindi: "hi-IN",
     };
 
-    return displayNameToCode[displayName] || displayName;
+    return (displayNameToCode as Record<string, any>)[displayName] || displayName;
   }
 
-  updateModelSelect(models) {
+  updateModelSelect(models: any) {
     const modelSelect = $("#minimax_tts_model");
     const currentValue = modelSelect.val();
 
@@ -444,7 +444,7 @@ class MiniMaxTtsProvider {
     modelSelect.empty();
 
     // Add all models
-    models.forEach((model) => {
+    models.forEach((model: any) => {
       const option = $("<option></option>");
       option.val(model.id);
       option.text(model.name);
@@ -452,12 +452,12 @@ class MiniMaxTtsProvider {
     });
 
     // Restore previous selection if it still exists
-    if (currentValue && models.find((m) => m.id === currentValue)) {
+    if (currentValue && models.find((m: any) => m.id === currentValue)) {
       modelSelect.val(currentValue);
     }
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length === 0) {
       console.info("Using default MiniMax TTS Provider settings");
@@ -595,14 +595,14 @@ class MiniMaxTtsProvider {
       console.debug("MiniMax: Voice map initialization failed, but continuing");
     }
 
-    $("#api_key_minimax").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX]);
-    $("#minimax_group_id").toggleClass("success", !!secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]);
+    $("#api_key_minimax").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX]);
+    $("#minimax_group_id").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX_GROUP_ID]);
     [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
       eventSource.on(event, this.handler);
     });
 
     // Only check ready status when API credentials are available
-    if (secret_state[SECRET_KEYS.MINIMAX] && secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+    if ((secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX] && (secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX_GROUP_ID]) {
       try {
         await this.checkReady();
         console.debug("MiniMax TTS: Settings loaded and ready");
@@ -616,7 +616,7 @@ class MiniMaxTtsProvider {
 
   // Perform a simple readiness check
   async checkReady() {
-    if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+    if (!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX] || !(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX_GROUP_ID]) {
       const error = new Error("API Key and Group ID are required");
       console.error("MiniMax TTS checkReady error:", error.message);
       throw error;
@@ -658,7 +658,7 @@ class MiniMaxTtsProvider {
     }
   }
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (!voiceName) {
       const error = new Error("TTS Voice name not provided");
       console.error("MiniMax TTS getVoice error:", error.message);
@@ -675,7 +675,7 @@ class MiniMaxTtsProvider {
       this.availableVoices = this.getAllVoices();
     }
 
-    const voice = this.availableVoices.find((voice) => voice.voice_id === voiceName || voice.name === voiceName);
+    const voice = this.availableVoices.find((voice: any) => voice.voice_id === voiceName || voice.name === voiceName);
 
     if (!voice) {
       const error = new Error(`TTS Voice not found: ${voiceName}`);
@@ -686,7 +686,7 @@ class MiniMaxTtsProvider {
     return voice;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     // If voiceId is 'customVoice', use the custom voice ID from settings
     if (voiceId === "customVoice") {
       const customVoiceId = this.settings.customVoiceId;
@@ -699,9 +699,9 @@ class MiniMaxTtsProvider {
     }
 
     // Get the voice object to determine language
-    let language = null;
+    let language: any = null;
     try {
-      const voice = await this.getVoice(voiceId);
+      const voice: any = await this.getVoice(voiceId);
       if (voice && voice.lang) {
         language = this.mapLanguageToMiniMaxFormat(voice.lang);
         console.debug(`MiniMax TTS: Using voice language ${voice.lang}, API language: ${language}`);
@@ -715,7 +715,7 @@ class MiniMaxTtsProvider {
 
   async fetchTtsVoiceObjects() {
     try {
-      if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+      if (!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX] || !(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX_GROUP_ID]) {
         console.warn("MiniMax TTS: API Key and Group ID required for fetching voices");
         console.warn("Using all available voices (default + custom). Please check your API credentials");
         return this.getAllVoices();
@@ -767,28 +767,28 @@ class MiniMaxTtsProvider {
   }
 
   // Get correct MIME type
-  getAudioMimeType(format) {
-    const mimeTypes = {
+  getAudioMimeType(format: any) {
+    const mimeTypes: Record<string, string> = {
       mp3: "audio/mpeg",
       wav: "audio/wav",
       pcm: "audio/pcm",
       flac: "audio/flac",
       aac: "audio/aac",
     };
-    return mimeTypes[format] || "audio/mpeg";
+    return (mimeTypes as Record<string, any>)[format] || "audio/mpeg";
   }
 
-  async fetchTtsGeneration(inputText, voiceId, language = null) {
+  async fetchTtsGeneration(inputText: any, voiceId: any, language: any = null) {
     console.info(`Generating new MiniMax TTS for voice_id ${voiceId}`);
 
-    if (!secret_state[SECRET_KEYS.MINIMAX] || !secret_state[SECRET_KEYS.MINIMAX_GROUP_ID]) {
+    if (!(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX] || !(secret_state as Record<string, any>)[SECRET_KEYS.MINIMAX_GROUP_ID]) {
       const error = new Error("API Key and Group ID are required");
       console.error("MiniMax TTS fetchTtsGeneration error:", error.message);
       throw error;
     }
 
     /** @param {number} number @param {number} lower @param {number} upper @returns {number} */
-    const clamp = (number, lower, upper) => Math.min(Math.max(number, lower), upper);
+    const clamp = (number: any, lower: any, upper: any) => Math.min(Math.max(number, lower), upper);
 
     const requestBody = {
       text: inputText,
@@ -866,12 +866,12 @@ class MiniMaxTtsProvider {
    * @param {string} lang Language code or display name
    * @returns {string} MiniMax API language format
    */
-  mapLanguageToMiniMaxFormat(lang) {
+  mapLanguageToMiniMaxFormat(lang: any) {
     // Convert display name to language code if needed
     const languageCode = this.convertDisplayNameToLanguageCode(lang);
 
     // Then map language codes to MiniMax API format
-    const languageMap = {
+    const languageMap: Record<string, string> = {
       "zh-CN": "zh_CN",
       "zh-TW": "zh_TW",
       "en-US": "en_US",
@@ -902,19 +902,19 @@ class MiniMaxTtsProvider {
     };
 
     // Return mapped language or default to auto
-    return languageMap[languageCode] || "auto";
+    return (languageMap as Record<string, any>)[languageCode] || "auto";
   }
 
   /**
    * Preview TTS for a given voice ID.
    * @param {string} voiceId Voice ID
    */
-  async previewTtsVoice(voiceId) {
+  async previewTtsVoice(voiceId: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
 
     try {
-      const voice = await this.getVoice(voiceId);
+      const voice: any = await this.getVoice(voiceId);
       // Get preview text based on voice language, defaulting to en-US
       const previewLang = voice.lang || "en-US";
       const text = getPreviewString(previewLang);

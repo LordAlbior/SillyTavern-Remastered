@@ -123,7 +123,7 @@ export function getContext() {
         groupId: selected_group,
         chatId: selected_group
             ? groups.find(x => x.id == selected_group)?.chat_id
-            : (characters[this_chid]?.chat),
+            : (characters[this_chid as any]?.chat),
         getCurrentChatId,
         getRequestHeaders,
         reloadCurrentChat,

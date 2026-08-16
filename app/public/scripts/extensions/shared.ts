@@ -13,7 +13,7 @@ import { createThumbnail, isValidUrl } from "../utils.ts";
  * @param {string} prompt Prompt to use for captioning
  * @returns {Promise<string>} Generated caption
  */
-export async function getMultimodalCaption(base64Img, prompt) {
+export async function getMultimodalCaption(base64Img: any, prompt: any) {
   const useReverseProxy =
     ["openai", "anthropic", "google", "mistral", "vertexai", "xai", "zai", "moonshot"].includes(
       extension_settings.caption.multimodal_api,
@@ -42,7 +42,7 @@ export async function getMultimodalCaption(base64Img, prompt) {
   );
   if ((isImage && thumbnailNeeded && base64Bytes > compressionLimit) || isOoba || isKoboldCpp) {
     const maxSide = 2048;
-    base64Img = await createThumbnail(base64Img, maxSide, maxSide);
+    base64Img = await createThumbnail(base64Img, maxSide as any, maxSide as any);
   } else if (isImage && !safeMimeTypes.includes(mimeType)) {
     base64Img = await createThumbnail(base64Img, null, null);
   }
@@ -80,7 +80,7 @@ export async function getMultimodalCaption(base64Img, prompt) {
 
     requestBody.server_url = extension_settings.caption.alt_endpoint_enabled
       ? extension_settings.caption.alt_endpoint_url
-      : textgenerationwebui_settings.server_urls[textgen_types.OLLAMA];
+      : (textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.OLLAMA];
   }
 
   if (isVllm) {
@@ -90,25 +90,25 @@ export async function getMultimodalCaption(base64Img, prompt) {
 
     requestBody.server_url = extension_settings.caption.alt_endpoint_enabled
       ? extension_settings.caption.alt_endpoint_url
-      : textgenerationwebui_settings.server_urls[textgen_types.VLLM];
+      : (textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.VLLM];
   }
 
   if (isLlamaCpp) {
     requestBody.server_url = extension_settings.caption.alt_endpoint_enabled
       ? extension_settings.caption.alt_endpoint_url
-      : textgenerationwebui_settings.server_urls[textgen_types.LLAMACPP];
+      : (textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.LLAMACPP];
   }
 
   if (isOoba) {
     requestBody.server_url = extension_settings.caption.alt_endpoint_enabled
       ? extension_settings.caption.alt_endpoint_url
-      : textgenerationwebui_settings.server_urls[textgen_types.OOBA];
+      : (textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.OOBA];
   }
 
   if (isKoboldCpp) {
     requestBody.server_url = extension_settings.caption.alt_endpoint_enabled
       ? extension_settings.caption.alt_endpoint_url
-      : textgenerationwebui_settings.server_urls[textgen_types.KOBOLDCPP];
+      : (textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.KOBOLDCPP];
   }
 
   if (isCustom) {
@@ -162,11 +162,12 @@ export async function getMultimodalCaption(base64Img, prompt) {
   return String(caption).trim();
 }
 
-function throwIfInvalidModel(useReverseProxy) {
+function throwIfInvalidModel(useReverseProxy: any) {
   const altEndpointEnabled = extension_settings.caption.alt_endpoint_enabled;
   const altEndpointUrl = extension_settings.caption.alt_endpoint_url;
   const multimodalModel = extension_settings.caption.multimodal_model;
   const multimodalApi = extension_settings.caption.multimodal_api;
+  const secrets = secret_state as Record<string, any>;
 
   if (
     altEndpointEnabled &&
@@ -176,23 +177,23 @@ function throwIfInvalidModel(useReverseProxy) {
     throw new Error("Secondary endpoint URL is not set.");
   }
 
-  if (multimodalApi === "openai" && !secret_state[SECRET_KEYS.OPENAI] && !useReverseProxy) {
+  if (multimodalApi === "openai" && !secrets[SECRET_KEYS.OPENAI] && !useReverseProxy) {
     throw new Error("OpenAI API key is not set.");
   }
 
-  if (multimodalApi === "openrouter" && !secret_state[SECRET_KEYS.OPENROUTER]) {
+  if (multimodalApi === "openrouter" && !secrets[SECRET_KEYS.OPENROUTER]) {
     throw new Error("OpenRouter API key is not set.");
   }
 
-  if (multimodalApi === "anthropic" && !secret_state[SECRET_KEYS.CLAUDE] && !useReverseProxy) {
+  if (multimodalApi === "anthropic" && !secrets[SECRET_KEYS.CLAUDE] && !useReverseProxy) {
     throw new Error("Anthropic (Claude) API key is not set.");
   }
 
-  if (multimodalApi === "groq" && !secret_state[SECRET_KEYS.GROQ]) {
+  if (multimodalApi === "groq" && !secrets[SECRET_KEYS.GROQ]) {
     throw new Error("Groq API key is not set.");
   }
 
-  if (multimodalApi === "google" && !secret_state[SECRET_KEYS.MAKERSUITE] && !useReverseProxy) {
+  if (multimodalApi === "google" && !secrets[SECRET_KEYS.MAKERSUITE] && !useReverseProxy) {
     throw new Error("Google AI Studio API key is not set.");
   }
 
@@ -202,12 +203,12 @@ function throwIfInvalidModel(useReverseProxy) {
 
     if (authMode === "express") {
       // Express mode requires API key
-      if (!secret_state[SECRET_KEYS.VERTEXAI]) {
+      if (!secrets[SECRET_KEYS.VERTEXAI]) {
         throw new Error("Google Vertex AI API key is not set for Express mode.");
       }
     } else if (authMode === "full") {
       // Full mode requires Service Account JSON and region settings
-      if (!secret_state[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]) {
+      if (!secrets[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT]) {
         throw new Error(
           "Service Account JSON is required for Vertex AI Full mode. Please validate and save your Service Account JSON.",
         );
@@ -218,21 +219,21 @@ function throwIfInvalidModel(useReverseProxy) {
     }
   }
 
-  if (multimodalApi === "mistral" && !secret_state[SECRET_KEYS.MISTRALAI] && !useReverseProxy) {
+  if (multimodalApi === "mistral" && !secrets[SECRET_KEYS.MISTRALAI] && !useReverseProxy) {
     throw new Error("Mistral AI API key is not set.");
   }
 
-  if (multimodalApi === "cohere" && !secret_state[SECRET_KEYS.COHERE]) {
+  if (multimodalApi === "cohere" && !secrets[SECRET_KEYS.COHERE]) {
     throw new Error("Cohere API key is not set.");
   }
 
-  if (multimodalApi === "xai" && !secret_state[SECRET_KEYS.XAI] && !useReverseProxy) {
+  if (multimodalApi === "xai" && !secrets[SECRET_KEYS.XAI] && !useReverseProxy) {
     throw new Error("xAI API key is not set.");
   }
 
   if (
     multimodalApi === "ollama" &&
-    !textgenerationwebui_settings.server_urls[textgen_types.OLLAMA] &&
+    !(textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.OLLAMA] &&
     !altEndpointEnabled
   ) {
     throw new Error("Ollama server URL is not set.");
@@ -256,7 +257,7 @@ function throwIfInvalidModel(useReverseProxy) {
 
   if (
     multimodalApi === "llamacpp" &&
-    !textgenerationwebui_settings.server_urls[textgen_types.LLAMACPP] &&
+    !(textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.LLAMACPP] &&
     !altEndpointEnabled
   ) {
     throw new Error("LlamaCPP server URL is not set.");
@@ -264,7 +265,7 @@ function throwIfInvalidModel(useReverseProxy) {
 
   if (
     multimodalApi === "ooba" &&
-    !textgenerationwebui_settings.server_urls[textgen_types.OOBA] &&
+    !(textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.OOBA] &&
     !altEndpointEnabled
   ) {
     throw new Error("Text Generation WebUI server URL is not set.");
@@ -272,7 +273,7 @@ function throwIfInvalidModel(useReverseProxy) {
 
   if (
     multimodalApi === "koboldcpp" &&
-    !textgenerationwebui_settings.server_urls[textgen_types.KOBOLDCPP] &&
+    !(textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.KOBOLDCPP] &&
     !altEndpointEnabled
   ) {
     throw new Error("KoboldCpp server URL is not set.");
@@ -280,7 +281,7 @@ function throwIfInvalidModel(useReverseProxy) {
 
   if (
     multimodalApi === "vllm" &&
-    !textgenerationwebui_settings.server_urls[textgen_types.VLLM] &&
+    !(textgenerationwebui_settings.server_urls as Record<string, any>)[textgen_types.VLLM] &&
     !altEndpointEnabled
   ) {
     throw new Error("vLLM server URL is not set.");
@@ -298,37 +299,37 @@ function throwIfInvalidModel(useReverseProxy) {
     throw new Error("Custom OpenAI-compatible Model ID is not set.");
   }
 
-  if (multimodalApi === "aimlapi" && !secret_state[SECRET_KEYS.AIMLAPI]) {
+  if (multimodalApi === "aimlapi" && !secrets[SECRET_KEYS.AIMLAPI]) {
     throw new Error("AI/ML API key is not set.");
   }
 
-  if (multimodalApi === "moonshot" && !secret_state[SECRET_KEYS.MOONSHOT]) {
+  if (multimodalApi === "moonshot" && !secrets[SECRET_KEYS.MOONSHOT]) {
     throw new Error("Moonshot AI API key is not set.");
   }
 
-  if (multimodalApi === "nanogpt" && !secret_state[SECRET_KEYS.NANOGPT]) {
+  if (multimodalApi === "nanogpt" && !secrets[SECRET_KEYS.NANOGPT]) {
     throw new Error("NanoGPT API key is not set.");
   }
 
-  if (multimodalApi === "electronhub" && !secret_state[SECRET_KEYS.ELECTRONHUB]) {
+  if (multimodalApi === "electronhub" && !secrets[SECRET_KEYS.ELECTRONHUB]) {
     throw new Error("Electron Hub API key is not set.");
   }
 
-  if (multimodalApi === "chutes" && !secret_state[SECRET_KEYS.CHUTES]) {
+  if (multimodalApi === "chutes" && !secrets[SECRET_KEYS.CHUTES]) {
     throw new Error("Chutes API key is not set.");
   }
 
-  if (multimodalApi === "zai" && !secret_state[SECRET_KEYS.ZAI]) {
+  if (multimodalApi === "zai" && !secrets[SECRET_KEYS.ZAI]) {
     throw new Error("Z.AI API key is not set.");
   }
 
-  if (multimodalApi === "pollinations" && !secret_state[SECRET_KEYS.POLLINATIONS]) {
+  if (multimodalApi === "pollinations" && !secrets[SECRET_KEYS.POLLINATIONS]) {
     throw new Error("Pollinations API key is not set.");
   }
 
   if (
     multimodalApi === "workers_ai" &&
-    (!secret_state[SECRET_KEYS.WORKERS_AI] || !oai_settings.workers_ai_account_id)
+    (!secrets[SECRET_KEYS.WORKERS_AI] || !oai_settings.workers_ai_account_id)
   ) {
     throw new Error("Workers AI API key or account ID is not set.");
   }
@@ -375,7 +376,7 @@ export function isWebLlmSupported() {
  * @param {object} params Additional parameters
  * @returns {Promise<string>} Generated response
  */
-export async function generateWebLlmChatPrompt(messages, params = {}) {
+export async function generateWebLlmChatPrompt(messages: any, params = {}) {
   if (!isWebLlmSupported()) {
     throw new Error("WebLLM extension is not installed.");
   }
@@ -393,7 +394,7 @@ export async function generateWebLlmChatPrompt(messages, params = {}) {
  * @param {string} text Text to count tokens in
  * @returns {Promise<number>} Number of tokens in the text
  */
-export async function countWebLlmTokens(text) {
+export async function countWebLlmTokens(text: any) {
   if (!isWebLlmSupported()) {
     throw new Error("WebLLM extension is not installed.");
   }
@@ -458,9 +459,9 @@ export class ConnectionManagerRequestService {
    * @returns {Promise<import('../custom-request.js').ExtractedData | (() => AsyncGenerator<import('../custom-request.js').StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
    */
   static async sendRequest(
-    profileId,
-    prompt,
-    maxTokens,
+    profileId: any,
+    prompt: any,
+    maxTokens: any,
     custom = ConnectionManagerRequestService.defaultSendRequestParams,
     overridePayload = {},
   ) {
@@ -553,7 +554,7 @@ export class ConnectionManagerRequestService {
    * @param {string} profileId ID of a given connection profile (from which to infer a completion preset).
    * @param {InstructSettings} instructSettings optional instruct settings
    */
-  static constructPrompt(prompt, profileId, instructSettings = null) {
+  static constructPrompt(prompt: any, profileId: any, instructSettings = null) {
     const context = SillyTavern.getContext();
     const profile = ConnectionManagerRequestService.getProfile(profileId);
     const selectedApiMap = ConnectionManagerRequestService.validateProfile(profile);
@@ -589,7 +590,7 @@ export class ConnectionManagerRequestService {
     }
 
     const profiles = context.extensionSettings.connectionManager.profiles;
-    return profiles.filter((p) => ConnectionManagerRequestService.isProfileSupported(p));
+    return profiles.filter((p: any) => ConnectionManagerRequestService.isProfileSupported(p));
   }
 
   /**
@@ -598,9 +599,9 @@ export class ConnectionManagerRequestService {
    * @returns {import('./connection-manager/index.js').ConnectionProfile?} [profile]
    * @throws {Error}
    */
-  static getProfile(profileId) {
+  static getProfile(profileId: any) {
     const profile = SillyTavern.getContext().extensionSettings.connectionManager.profiles.find(
-      (p) => p.id === profileId,
+      (p: any) => p.id === profileId,
     );
     if (!profile) throw new Error(`Profile not found (ID: ${profileId})`);
     return profile;
@@ -612,7 +613,7 @@ export class ConnectionManagerRequestService {
    * @param {string} [profileId] - Profile ID. If omitted, uses the currently selected profile.
    * @returns {HTMLImageElement | null}
    */
-  static getProfileIcon(profileId) {
+  static getProfileIcon(profileId: any) {
     if (SillyTavern.getContext().extensionSettings.disabledExtensions.includes("connection-manager")) {
       return null;
     }
@@ -633,7 +634,7 @@ export class ConnectionManagerRequestService {
    * @param {import('./connection-manager/index.js').ConnectionProfile?} [profile]
    * @returns {boolean}
    */
-  static isProfileSupported(profile) {
+  static isProfileSupported(profile: any) {
     if (!profile || !profile.api) {
       return false;
     }
@@ -659,7 +660,7 @@ export class ConnectionManagerRequestService {
    * @return {import('../slash-commands.js').ConnectAPIMap}
    * @throws {Error}
    */
-  static validateProfile(profile) {
+  static validateProfile(profile: any) {
     if (!profile) {
       throw new Error("Could not find profile.");
     }
@@ -691,8 +692,8 @@ export class ConnectionManagerRequestService {
    * @param {(profile: import('./connection-manager/index.js').ConnectionProfile) => Promise<void> | void} onDelete
    */
   static handleDropdown(
-    selector,
-    initialSelectedProfileId,
+    selector: any,
+    initialSelectedProfileId: any,
     onChange: (...args: any[]) => void = () => {},
     onCreate: (...args: any[]) => void = () => {},
     unUpdate: (...args: any[]) => void = () => {},
@@ -766,12 +767,12 @@ export class ConnectionManagerRequestService {
       }
     }
 
-    const selectedProfile = profiles.find((p) => p.id === initialSelectedProfileId);
+    const selectedProfile = profiles.find((p: any) => p.id === initialSelectedProfileId);
     if (selectedProfile) {
       dropdown.val(selectedProfile.id);
     }
 
-    context.eventSource.on(context.eventTypes.CONNECTION_PROFILE_CREATED, async (profile) => {
+    context.eventSource.on(context.eventTypes.CONNECTION_PROFILE_CREATED, async (profile: any) => {
       const isSupported = ConnectionManagerRequestService.isProfileSupported(profile);
       if (!isSupported) {
         return;
@@ -786,7 +787,7 @@ export class ConnectionManagerRequestService {
       await onCreate(profile);
     });
 
-    context.eventSource.on(context.eventTypes.CONNECTION_PROFILE_UPDATED, async (oldProfile, newProfile) => {
+    context.eventSource.on(context.eventTypes.CONNECTION_PROFILE_UPDATED, async (oldProfile: any, newProfile: any) => {
       const currentSelected = dropdown.val();
       const isSelectedProfile = currentSelected === oldProfile.id;
       await unUpdate(oldProfile, newProfile);
@@ -817,7 +818,7 @@ export class ConnectionManagerRequestService {
       }
     });
 
-    context.eventSource.on(context.eventTypes.CONNECTION_PROFILE_DELETED, async (profile) => {
+    context.eventSource.on(context.eventTypes.CONNECTION_PROFILE_DELETED, async (profile: any) => {
       const currentSelected = dropdown.val();
       const isSelectedProfile = currentSelected === profile.id;
       if (!ConnectionManagerRequestService.isProfileSupported(profile)) {
@@ -840,7 +841,7 @@ export class ConnectionManagerRequestService {
 
     dropdown.on("change", async () => {
       const profileId = dropdown.val();
-      const profile = context.extensionSettings.connectionManager.profiles.find((p) => p.id === profileId);
+      const profile = context.extensionSettings.connectionManager.profiles.find((p: any) => p.id === profileId);
       await onChange(profile);
     });
   }

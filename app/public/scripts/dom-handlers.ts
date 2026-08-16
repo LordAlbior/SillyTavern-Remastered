@@ -18,7 +18,7 @@ function handleInputWheel() {
    * @param {HTMLInputElement|null} slider The associated range input element, if any
    * @param {number} deltaY The wheel deltaY value
    */
-  function updateValue(input, slider, deltaY) {
+  function updateValue(input: any, slider: any, deltaY: any) {
     const currentValue = parseFloat(input.value);
     const step = parseFloat(input.step);
     const min = parseFloat(input.min);

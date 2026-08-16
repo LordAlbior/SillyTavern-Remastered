@@ -61,7 +61,7 @@ const observer = new MutationObserver((mutations) => {
  * Function to handle node changes (added or modified nodes)
  * @param {Element} node
  */
-function handleNodeChange(node) {
+function handleNodeChange(node: any) {
   if (node.nodeType === Node.ELEMENT_NODE && node instanceof Element) {
     // Handle keyboard interactables
     if (isKeyboardInteractable(node)) {
@@ -87,7 +87,7 @@ function handleNodeChange(node) {
  * @param {boolean} [options.notFocusableByDefault=false] - Whether interactables of this class should not be focusable by default
  */
 export function registerInteractableType(
-  interactableSelector,
+  interactableSelector: any,
   { disabledByDefault = false, notFocusableByDefault = false } = {},
 ) {
   interactableSelectors.push(interactableSelector);
@@ -110,7 +110,7 @@ export function registerInteractableType(
  * @param {Element} control - The control element to check
  * @returns {boolean} Returns true if the control is a keyboard interactable, false otherwise
  */
-export function isKeyboardInteractable(control) {
+export function isKeyboardInteractable(control: any) {
   // Check if this control matches any of the selectors
   return interactableSelectors.some((selector) => control.matches(selector));
 }
@@ -121,7 +121,7 @@ export function isKeyboardInteractable(control) {
  *
  * @param {Element[]} interactables - The controls to make interactable and set their state
  */
-export function makeKeyboardInteractable(...interactables) {
+export function makeKeyboardInteractable(...interactables: any[]) {
   interactables.forEach((interactable) => {
     // If this control doesn't have any of the classes, lets say the caller knows this and wants this to be a custom-enabled keyboard control.
     if (!isKeyboardInteractable(interactable)) {
@@ -138,7 +138,7 @@ export function makeKeyboardInteractable(...interactables) {
      * @param {Element} el
      * @returns {boolean}
      */
-    const hasDisabledOrNotFocusableAncestor = (el) => {
+    const hasDisabledOrNotFocusableAncestor = (el: any) => {
       while (el) {
         if (el.classList.contains(NOT_FOCUSABLE_CONTROL_CLASS) || el.classList.contains(DISABLED_CONTROL_CLASS)) {
           return true;
@@ -177,17 +177,17 @@ function initializeInteractables(element = document) {
  * @param {Element|Document} element - The element within which to query the interactables
  * @returns {HTMLElement[]} An array containing all the interactables that match the given selectors
  */
-function getAllInteractables(element) {
+function getAllInteractables(element: any) {
   // Query each selector individually and combine all to a big array to return
-  return [].concat(...interactableSelectors.map((selector) => Array.from(element.querySelectorAll(`${selector}`))));
+  return ([] as any).concat(...interactableSelectors.map((selector) => Array.from(element.querySelectorAll(`${selector}`))));
 }
 
 /**
  * Function to apply scroll reset behavior to a container
  * @param {Element} container - The container
  */
-const applyScrollResetBehavior = (container) => {
-  container.addEventListener("focusout", (e) => {
+const applyScrollResetBehavior = (container: any) => {
+    container.addEventListener("focusout", (e: any) => {
     setTimeout(() => {
       const focusedElement = document.activeElement;
       if (!container.contains(focusedElement)) {
@@ -213,7 +213,7 @@ function initializeScrollResetBehaviors(element = document) {
  *
  * @param {KeyboardEvent} event - The keyboard event
  */
-function handleGlobalKeyDown(event) {
+function handleGlobalKeyDown(event: any) {
   if (event.key === "Enter") {
     if (!(event.target instanceof HTMLElement)) return;
 

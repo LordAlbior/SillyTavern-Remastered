@@ -76,7 +76,7 @@ function getRecentChatsSettings() {
  * Saves recent chats settings to account storage.
  * @param {{ maxDisplayed: number, collapsedDisplayed: number }} settings
  */
-function saveRecentChatsSettings(settings) {
+function saveRecentChatsSettings(settings: any) {
   accountStorage.setItem(recentChatsSettingsKey, JSON.stringify(settings));
 }
 
@@ -96,7 +96,7 @@ class PinnedChatsManager {
    * Should be called once on app init.
    */
   static init() {
-    PinnedChatsManager.#cachedState = PinnedChatsManager.#loadFromStorage();
+    PinnedChatsManager.#cachedState = PinnedChatsManager.#loadFromStorage() as any;
   }
 
   /**
@@ -121,7 +121,7 @@ class PinnedChatsManager {
    * @param {Partial<RecentChat>} recentChat Recent chat data
    * @returns {string} Key for pinned chat storage
    */
-  static getKey(recentChat) {
+  static getKey(recentChat: any) {
     return `${recentChat.group ? "group_" + recentChat.group : ""}${recentChat.avatar ? "char_" + recentChat.avatar : ""}_${recentChat.file_name}`;
   }
 
@@ -131,7 +131,7 @@ class PinnedChatsManager {
    */
   static getState() {
     if (PinnedChatsManager.#cachedState === null) {
-      PinnedChatsManager.#cachedState = PinnedChatsManager.#loadFromStorage();
+      PinnedChatsManager.#cachedState = PinnedChatsManager.#loadFromStorage() as any;
     }
     return PinnedChatsManager.#cachedState;
   }
@@ -140,7 +140,7 @@ class PinnedChatsManager {
    * Saves the pinned chat state to storage and updates cache.
    * @param {Record<string, PinnedChat>} state The state to save
    */
-  static #saveState(state) {
+  static #saveState(state: any) {
     PinnedChatsManager.#cachedState = state;
     accountStorage.setItem(pinnedChatsKey, JSON.stringify(state));
   }
@@ -150,10 +150,10 @@ class PinnedChatsManager {
    * @param {RecentChat} recentChat Recent chat data
    * @returns {boolean} True if the chat is pinned, false otherwise
    */
-  static isPinned(recentChat) {
+  static isPinned(recentChat: any) {
     const pinKey = PinnedChatsManager.getKey(recentChat);
     const pinState = PinnedChatsManager.getState();
-    return pinKey in pinState;
+    return pinKey in (pinState as any);
   }
 
   /**
@@ -161,9 +161,9 @@ class PinnedChatsManager {
    * @param {RecentChat} recentChat Recent chat data
    * @param {boolean} pinned New pinned state
    */
-  static toggle(recentChat, pinned) {
+  static toggle(recentChat: any, pinned: any) {
     const pinKey = PinnedChatsManager.getKey(recentChat);
-    const pinState = { ...PinnedChatsManager.getState() };
+    const pinState: any = { ...(PinnedChatsManager.getState() as any) };
     if (pinned) {
       pinState[pinKey] = {
         group: recentChat.group,
@@ -181,9 +181,9 @@ class PinnedChatsManager {
    * @param {Partial<RecentChat>} recentChat Recent chat data (with original file_name)
    * @param {string} newFileName New file name after rename
    */
-  static rename(recentChat, newFileName) {
+  static rename(recentChat: any, newFileName: any) {
     const oldKey = PinnedChatsManager.getKey(recentChat);
-    const pinState = { ...PinnedChatsManager.getState() };
+    const pinState: any = { ...(PinnedChatsManager.getState() as any) };
     if (!(oldKey in pinState)) {
       return;
     }
@@ -204,7 +204,7 @@ class PinnedChatsManager {
    */
   static getAll() {
     const pinState = PinnedChatsManager.getState();
-    return Object.values(pinState);
+    return Object.values(pinState as any);
   }
 }
 
@@ -274,7 +274,7 @@ async function unshallowPermanentAssistant() {
  * @param {Character} character Character data
  * @returns {string} Greeting message
  */
-function getAssistantGreeting(character) {
+function getAssistantGreeting(character: any) {
   const defaultGreeting =
     t`If you're connected to an API, try asking me something!` +
     "\n***\n" +
@@ -322,7 +322,7 @@ function sendWelcomePrompt() {
  * @param {RecentChat[]} chats List of recent chats
  * @param {boolean} [expand=false] If true, expands the recent chats section
  */
-async function sendWelcomePanel(chats, expand = false) {
+async function sendWelcomePanel(chats: any, expand = false) {
   try {
     const chatElement = document.getElementById("chat");
     const sendTextArea = document.getElementById("send_textarea");
@@ -334,7 +334,7 @@ async function sendWelcomePanel(chats, expand = false) {
       chats,
       empty: !chats.length,
       version: displayVersion,
-      more: chats.some((chat) => chat.hidden),
+      more: chats.some((chat: any) => chat.hidden),
     };
     const template = await renderTemplateAsync("welcomePanel", templateData);
     const fragment = document.createRange().createContextualFragment(template);
@@ -458,7 +458,7 @@ async function sendWelcomePanel(chats, expand = false) {
         const groupId = chatItem.getAttribute("data-group");
         const fileName = chatItem.getAttribute("data-file");
         const recentChat = chats.find(
-          (c) =>
+          (c: any) =>
             c.chat_name === fileName && ((c.is_group && c.group === groupId) || (!c.is_group && c.avatar === avatarId)),
         );
         if (!recentChat) {
@@ -470,7 +470,7 @@ async function sendWelcomePanel(chats, expand = false) {
         await refreshWelcomeScreen({ flashChat: recentChat });
       });
     });
-    chatElement.append(fragment.firstChild);
+    chatElement.append(fragment.firstChild as any);
     if (expand) {
       chatElement.querySelectorAll("button.showMoreChats").forEach((button) => {
         if (button instanceof HTMLButtonElement) {
@@ -488,7 +488,7 @@ async function sendWelcomePanel(chats, expand = false) {
  * @param {string} avatarId Avatar file name
  * @param {string} fileName Chat file name
  */
-async function openRecentCharacterChat(avatarId, fileName) {
+async function openRecentCharacterChat(avatarId: any, fileName: any) {
   const characterId = characters.findIndex((x) => x.avatar === avatarId);
   if (characterId === -1) {
     console.error(`Character not found for avatar ID: ${avatarId}`);
@@ -516,7 +516,7 @@ async function openRecentCharacterChat(avatarId, fileName) {
  * @param {string} groupId Group ID
  * @param {string} fileName Chat file name
  */
-async function openRecentGroupChat(groupId, fileName) {
+async function openRecentGroupChat(groupId: any, fileName: any) {
   const group = groups.find((x) => x.id === groupId);
   if (!group) {
     console.error(`Group not found for ID: ${groupId}`);
@@ -544,7 +544,7 @@ async function openRecentGroupChat(groupId, fileName) {
  * @param {string} avatarId Avatar file name
  * @param {string} fileName Chat file name
  */
-async function renameRecentCharacterChat(avatarId, fileName) {
+async function renameRecentCharacterChat(avatarId: any, fileName: any) {
   const characterId = characters.findIndex((x) => x.avatar === avatarId);
   if (characterId === -1) {
     console.error(`Character not found for avatar ID: ${avatarId}`);
@@ -577,7 +577,7 @@ async function renameRecentCharacterChat(avatarId, fileName) {
  * @param {string} groupId Group ID
  * @param {string} fileName Chat file name
  */
-async function renameRecentGroupChat(groupId, fileName) {
+async function renameRecentGroupChat(groupId: any, fileName: any) {
   const group = groups.find((x) => x.id === groupId);
   if (!group) {
     console.error(`Group not found for ID: ${groupId}`);
@@ -609,7 +609,7 @@ async function renameRecentGroupChat(groupId, fileName) {
  * @param {string} avatarId Avatar file name
  * @param {string} fileName Chat file name
  */
-async function deleteRecentCharacterChat(avatarId, fileName) {
+async function deleteRecentCharacterChat(avatarId: any, fileName: any) {
   const characterId = characters.findIndex((x) => x.avatar === avatarId);
   if (characterId === -1) {
     console.error(`Character not found for avatar ID: ${avatarId}`);
@@ -635,7 +635,7 @@ async function deleteRecentCharacterChat(avatarId, fileName) {
  * @param {string} groupId Group ID
  * @param {string} fileName Chat file name
  */
-async function deleteRecentGroupChat(groupId, fileName) {
+async function deleteRecentGroupChat(groupId: any, fileName: any) {
   const group = groups.find((x) => x.id === groupId);
   if (!group) {
     console.error(`Group not found for ID: ${groupId}`);
@@ -678,13 +678,14 @@ async function refreshWelcomeScreen({ flashChat = null } = {}) {
   // Restore scroll position or flash specific chat
   if (flashChat) {
     const recentChats = Array.from(chatElement.querySelectorAll(".recentChat"));
-    const chatToFlash = recentChats.find((el) => {
+    const chatToFlash = recentChats.find((el: any) => {
       const file = el.getAttribute("data-file");
       const group = el.getAttribute("data-group");
       const avatar = el.getAttribute("data-avatar");
+      const fc: any = flashChat;
       return (
-        file === flashChat.chat_name &&
-        ((flashChat.is_group && group === flashChat.group) || (!flashChat.is_group && avatar === flashChat.avatar))
+        file === fc.chat_name &&
+        ((fc.is_group && group === fc.group) || (!fc.is_group && avatar === fc.avatar))
       );
     });
     if (chatToFlash instanceof HTMLElement) {
@@ -732,11 +733,11 @@ async function openRecentChatsSettingsPopup() {
     step: 1,
   };
 
-  await callGenericPopup(t`Recent Chats Settings`, POPUP_TYPE.CONFIRM, null, {
+  await callGenericPopup(t`Recent Chats Settings`, POPUP_TYPE.CONFIRM, null as any, {
     okButton: t`Save`,
     cancelButton: t`Cancel`,
     customInputs: [maxRecentChatsInput, collapsedRecentChatsInput],
-    onClose: (popup) => {
+    onClose: (popup: any) => {
       if (!popup.result) {
         return;
       }
@@ -923,7 +924,7 @@ export async function openPermanentAssistantCard() {
  * Assigns a character as the assistant.
  * @param {string?} characterId Character ID
  */
-export function assignCharacterAsAssistant(characterId) {
+export function assignCharacterAsAssistant(characterId: any) {
   if (characterId === undefined) {
     return;
   }
@@ -958,20 +959,20 @@ export function initWelcomeScreen() {
     eventSource.makeFirst(event, openWelcomeScreen);
   }
 
-  eventSource.on(event_types.CHARACTER_MANAGEMENT_DROPDOWN, (target) => {
+  eventSource.on(event_types.CHARACTER_MANAGEMENT_DROPDOWN, (target: any) => {
     if (target !== "set_as_assistant") {
       return;
     }
     assignCharacterAsAssistant(this_chid);
   });
 
-  eventSource.on(event_types.CHARACTER_RENAMED, (oldAvatar, newAvatar) => {
+  eventSource.on(event_types.CHARACTER_RENAMED, (oldAvatar: any, newAvatar: any) => {
     if (oldAvatar === getPermanentAssistantAvatar()) {
       accountStorage.setItem(assistantAvatarKey, newAvatar);
     }
   });
 
-  eventSource.on(event_types.CHAT_RENAMED, async ({ avatarId, groupId, oldFileName, newFileName }) => {
+  eventSource.on(event_types.CHAT_RENAMED, async ({ avatarId, groupId, oldFileName, newFileName }: any) => {
     PinnedChatsManager.rename({ avatar: avatarId, group: groupId, file_name: oldFileName }, newFileName);
   });
 }

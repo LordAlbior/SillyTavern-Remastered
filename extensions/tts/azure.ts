@@ -8,9 +8,9 @@ class AzureTtsProvider {
   // Config //
   //########//
 
-  settings;
+  settings: any;
   /** @type {function} */ handler;
-  voices = [];
+  voices: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -40,9 +40,9 @@ class AzureTtsProvider {
   }
 
   constructor() {
-    this.handler = async function (/** @type {string} */ key) {
+    this.handler = async function (this: any, /** @type {string} */ key: any) {
       if (key !== SECRET_KEYS.AZURE_TTS) return;
-      $("#azure_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.AZURE_TTS]);
+      $("#azure_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.AZURE_TTS]);
       await this.onRefreshClick();
     }.bind(this);
   }
@@ -61,7 +61,7 @@ class AzureTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -81,7 +81,7 @@ class AzureTtsProvider {
     $("#azure_tts_region")
       .val(this.settings.region)
       .on("input", () => this.onSettingsChange());
-    $("#azure_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.AZURE_TTS]);
+    $("#azure_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.AZURE_TTS]);
     [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
       eventSource.on(event, this.handler);
     });
@@ -96,7 +96,7 @@ class AzureTtsProvider {
 
   // Perform a simple readiness check by trying to fetch voiceIds
   async checkReady() {
-    if (secret_state[SECRET_KEYS.AZURE_TTS]) {
+    if ((secret_state as Record<string, any>)[SECRET_KEYS.AZURE_TTS]) {
       await this.fetchTtsVoiceObjects();
     } else {
       this.voices = [];
@@ -111,7 +111,7 @@ class AzureTtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
@@ -122,7 +122,7 @@ class AzureTtsProvider {
     return match;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -131,7 +131,7 @@ class AzureTtsProvider {
   // API CALLS //
   //###########//
   async fetchTtsVoiceObjects() {
-    if (!secret_state[SECRET_KEYS.AZURE_TTS]) {
+    if (!(secret_state as Record<string, any>)[SECRET_KEYS.AZURE_TTS]) {
       console.warn("Azure TTS API Key not set");
       return [];
     }
@@ -154,8 +154,8 @@ class AzureTtsProvider {
     }
     let responseJson = await response.json();
     responseJson = responseJson
-      .sort((a, b) => a.Locale.localeCompare(b.Locale) || a.ShortName.localeCompare(b.ShortName))
-      .map((x) => ({ name: x.ShortName, voice_id: x.ShortName, preview_url: false, lang: x.Locale }));
+      .sort((a: any, b: any) => a.Locale.localeCompare(b.Locale) || a.ShortName.localeCompare(b.ShortName))
+      .map((x: any) => ({ name: x.ShortName, voice_id: x.ShortName, preview_url: false, lang: x.Locale }));
     return responseJson;
   }
 
@@ -163,11 +163,11 @@ class AzureTtsProvider {
    * Preview TTS for a given voice ID.
    * @param {string} id Voice ID
    */
-  async previewTtsVoice(id) {
+  async previewTtsVoice(id: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
     const voice = await this.getVoice(id);
-    const text = getPreviewString(voice.lang);
+    const text = getPreviewString((voice as Record<string, any>).lang);
     const response = await this.fetchTtsGeneration(text, id);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${await response.text()}`);
@@ -180,8 +180,8 @@ class AzureTtsProvider {
     this.audioElement.onended = () => URL.revokeObjectURL(url);
   }
 
-  async fetchTtsGeneration(text, voiceId) {
-    if (!secret_state[SECRET_KEYS.AZURE_TTS]) {
+  async fetchTtsGeneration(text: any, voiceId: any) {
+    if (!(secret_state as Record<string, any>)[SECRET_KEYS.AZURE_TTS]) {
       throw new Error("Azure TTS API Key not set");
     }
 

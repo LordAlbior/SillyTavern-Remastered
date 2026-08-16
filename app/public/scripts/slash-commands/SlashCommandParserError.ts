@@ -42,7 +42,7 @@ export class SlashCommandParserError extends Error {
     return hint.join("\n");
   }
 
-  constructor(message, text, index) {
+  constructor(message: any, text: any, index: any) {
     super(message);
     this.text = text;
     this.index = index;

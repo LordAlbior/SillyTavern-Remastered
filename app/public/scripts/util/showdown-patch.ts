@@ -2,8 +2,8 @@
  * Patches showdown to unrestrictedly unhash HTML spans.
  * @param {import('showdown')} showdown The showdown object to patch
  */
-export function addShowdownPatch(showdown) {
-  showdown.subParser("unhashHTMLSpans", (text, options, globals) => {
+export function addShowdownPatch(showdown: any) {
+  showdown.subParser("unhashHTMLSpans", (text: any, options: any, globals: any) => {
     text = globals.converter._dispatch("unhashHTMLSpans.before", text, options, globals);
 
     for (var i = 0; i < globals.gHtmlSpans.length; ++i) {

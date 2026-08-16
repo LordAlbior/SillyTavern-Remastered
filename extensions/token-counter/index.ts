@@ -23,7 +23,7 @@ async function doTokenCounter() {
       $("#token_counter_result").text(ids.length);
 
       if (Object.hasOwn(ids, "chunks")) {
-        drawChunks(Object.getOwnPropertyDescriptor(ids, "chunks").value, ids);
+        drawChunks(Object.getOwnPropertyDescriptor(ids, "chunks")!.value, ids);
       }
     } else {
       const count = await getTokenCountAsync(text);
@@ -47,7 +47,7 @@ async function doTokenCounter() {
  * @param {string[]} chunks
  * @param {number[]} ids
  */
-function drawChunks(chunks, ids) {
+function drawChunks(chunks: any, ids: any) {
   const pastelRainbow = [
     //main_text_color,
     //italics_text_color,

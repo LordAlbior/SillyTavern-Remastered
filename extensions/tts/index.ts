@@ -56,19 +56,19 @@ import { applyLocale, t } from "/scripts/i18n.js";
 const UPDATE_INTERVAL = 1000;
 const wrapper = new ModuleWorkerWrapper(moduleWorker);
 
-let voiceMapEntries = [];
-let voiceMap = {}; // {charName:voiceid, charName2:voiceid2}
-let lastChatId = null;
-let lastMessage = null;
-let lastMessageHash = null;
-let periodicMessageGenerationTimer = null;
+let voiceMapEntries: any[] = [];
+let voiceMap: Record<string, any> = {}; // {charName:voiceid, charName2:voiceid2}
+let lastChatId: any = null;
+let lastMessage: any = null;
+let lastMessageHash: any = null;
+let periodicMessageGenerationTimer: any = null;
 let lastPositionOfParagraphEnd = -1;
-let currentInitVoiceMapPromise = null;
+let currentInitVoiceMapPromise: any = null;
 
 const DEFAULT_VOICE_MARKER = "[Default Voice]";
 const DISABLED_VOICE_MARKER = "disabled";
 
-export function getPreviewString(lang) {
+export function getPreviewString(lang: any) {
   const previewStrings = {
     "en-US": "The quick brown fox jumps over the lazy dog",
     "en-GB": "Sphinx of black quartz, judge my vow",
@@ -107,7 +107,7 @@ export function getPreviewString(lang) {
   };
   const fallbackPreview = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet";
 
-  return previewStrings[lang] ?? fallbackPreview;
+  return (previewStrings as Record<string, any>)[lang] ?? fallbackPreview;
 }
 
 /**
@@ -115,17 +115,17 @@ export function getPreviewString(lang) {
  * @param {string} name Name of the TTS provider to register.
  * @param {function} provider Provider class.
  */
-export function registerTtsProvider(name, provider) {
+export function registerTtsProvider(name: any, provider: any) {
   if (!name || typeof name !== "string") {
     throw new Error(`TTS provider name ${name} is not a valid string.`);
   }
   if (!provider || typeof provider !== "function") {
     throw new Error(`TTS provider ${name} is not a valid provider class.`);
   }
-  if (ttsProviders[name]) {
+  if ((ttsProviders as Record<string, any>)[name]) {
     throw new Error(`TTS provider ${name} is already registered.`);
   }
-  ttsProviders[name] = provider;
+  (ttsProviders as Record<string, any>)[name] = provider;
   console.info(`Registered TTS provider: ${name}`);
   $("#tts_provider").append($("<option />").val(name).text(name));
 
@@ -165,25 +165,25 @@ const ttsProviders = {
   XTTSv2: XTTSTtsProvider,
   Volcengine: VolcengineTtsProvider,
 };
-let ttsProvider;
-let ttsProviderName;
+let ttsProvider: any;
+let ttsProviderName: any;
 
-async function onNarrateOneMessage() {
+async function onNarrateOneMessage(this: any) {
   audioElement.src = "/sounds/silence.mp3";
   const context = getContext();
   const id = $(this).closest(".mes").attr("mesid");
-  const message = context.chat[id];
+  const message = context.chat[id as any];
 
   if (!message) {
     return;
   }
 
   resetTtsPlayback();
-  processAndQueueTtsMessage(message, Number(id), { manual: true });
+  processAndQueueTtsMessage(message, Number(id) as any, { manual: true });
   moduleWorker();
 }
 
-async function onNarrateText(args, text) {
+async function onNarrateText(args: any, text: any) {
   if (!text) {
     return "";
   }
@@ -242,8 +242,8 @@ function resetTtsPlayback() {
   audioElement.src = "";
 
   // Clear any queue items
-  ttsJobQueue.splice(0, ttsJobQueue.length);
-  audioJobQueue.splice(0, audioJobQueue.length);
+  (ttsJobQueue as any[]).splice(0, ttsJobQueue.length);
+  (audioJobQueue as any[]).splice(0, audioJobQueue.length);
 
   // Set audio ready to process again
   audioQueueProcessorReady = true;
@@ -276,7 +276,7 @@ function isTtsProcessing() {
  * @param {boolean} [options.manual=false] - Whether this TTS job was manually triggered (e.g., from the UI) rather than automatically from a new chat message.
  * @returns {void}
  */
-function processAndQueueTtsMessage(message, messageId = null, { manual = false } = {}) {
+function processAndQueueTtsMessage(message: any, messageId = null, { manual = false } = {}) {
   /** @type {TtsMessage} */
   const clone = structuredClone(message);
   clone.id = messageId ?? null;
@@ -319,7 +319,7 @@ function debugTtsPlayback() {
     }),
   );
 }
-globalThis.debugTtsPlayback = debugTtsPlayback;
+(globalThis as any).debugTtsPlayback = debugTtsPlayback;
 
 //##################//
 //   Audio Control  //
@@ -333,11 +333,11 @@ audioElement.autoplay = true;
  * @type AudioJob[] Audio job queue
  * @typedef {{audioBlob: Blob | string, char: string}} AudioJob Audio job object
  */
-const audioJobQueue = [];
+const audioJobQueue: any[] = [];
 /**
  * @type AudioJob Current audio job
  */
-let currentAudioJob;
+let currentAudioJob: any;
 const audioPaused = false;
 let audioQueueProcessorReady = true;
 
@@ -346,7 +346,7 @@ let audioQueueProcessorReady = true;
  * @param {AudioJob} audioJob Audio job object
  * @returns {Promise<void>} Promise that resolves when audio playback is started
  */
-async function playAudioData(audioJob) {
+async function playAudioData(audioJob: any) {
   const { audioBlob, char } = audioJob;
   // Since current audio job can be cancelled, don't playback if it is null
   if (currentAudioJob == null) {
@@ -356,8 +356,8 @@ async function playAudioData(audioJob) {
     const srcUrl = await getBase64Async(audioBlob);
 
     // VRM lip sync
-    if (extension_settings.vrm?.enabled && typeof globalThis.vrmLipSync === "function") {
-      await globalThis.vrmLipSync(audioBlob, char);
+    if (extension_settings.vrm?.enabled && typeof (globalThis as any).vrmLipSync === "function") {
+      await (globalThis as any).vrmLipSync(audioBlob, char);
     }
 
     audioElement.src = srcUrl as string;
@@ -374,7 +374,7 @@ async function playAudioData(audioJob) {
   });
 }
 
-globalThis.tts_preview = (id) => {
+(globalThis as any).tts_preview = (id: any) => {
   const audio = document.getElementById(id);
 
   if (audio instanceof HTMLAudioElement && !$(audio).data("disabled")) {
@@ -433,7 +433,7 @@ function onAudioControlClicked() {
   } else if (context?.chat?.length > 0) {
     // Default play behavior if not processing or playing is to play the last message.
     const id = context.chat.length - 1;
-    processAndQueueTtsMessage(context.chat[id], id, { manual: true });
+    processAndQueueTtsMessage(context.chat[id], id as any, { manual: true });
   }
   updateUiAudioPlayState();
 }
@@ -480,7 +480,7 @@ function completeCurrentAudioJob() {
  * @param {string} char
  * @returns {Promise<{audioBlob: Blob|string, mimeType: string}>}
  */
-async function addAudioJob(response, char) {
+async function addAudioJob(response: any, char: any) {
   let audioBlob, mimeType;
   if (typeof response === "string") {
     audioBlob = response;
@@ -518,24 +518,24 @@ async function processAudioJobQueue() {
 //################//
 
 /** @type {TtsMessage[]} */
-const ttsJobQueue = [];
+const ttsJobQueue: any[] = [];
 /** @type {TtsMessage|null} */
-let currentTtsJob = null; // Null if nothing is currently being processed
+let currentTtsJob: any = null; // Null if nothing is currently being processed
 
 function completeTtsJob() {
   console.info(`Current TTS job for ${currentTtsJob?.name} completed.`);
   currentTtsJob = null;
 }
 
-async function tts(text, voiceId, char, voiceMapKey = null) {
+async function tts(text: any, voiceId: any, char: any, voiceMapKey = null) {
   const messageId = currentTtsJob?.id ?? null;
 
   await eventSource.emit(event_types.TTS_JOB_STARTED, { messageId, characterName: char, text, voiceId });
 
-  async function processResponse(response) {
+  async function processResponse(response: any) {
     // RVC injection
-    if (typeof globalThis.rvcVoiceConversion === "function" && extension_settings.rvc.enabled)
-      response = await globalThis.rvcVoiceConversion(response, char, text);
+    if (typeof (globalThis as any).rvcVoiceConversion === "function" && extension_settings.rvc.enabled)
+      response = await (globalThis as any).rvcVoiceConversion(response, char, text);
 
     const audioResult = await addAudioJob(response, char);
     const eventData = {
@@ -564,7 +564,7 @@ async function tts(text, voiceId, char, voiceMapKey = null) {
   completeTtsJob();
 }
 
-function parseMessageSegments(text) {
+function parseMessageSegments(text: any) {
   if (!extension_settings.tts.multi_voice_enabled) {
     return [{ type: "other", text: text }];
   }
@@ -811,7 +811,7 @@ async function processTtsQueue() {
  * @param {Array<[string,string]>} [opts.pairs] - Custom quote pairs; defaults cover EN/DE/FR/JP
  * @returns {string} The joined quoted blocks, or the original text if no quotes found
  */
-function joinQuotedBlocks(text, opts = {} as any) {
+function joinQuotedBlocks(text: any, opts = {} as any) {
   const {
     separator = " ... ",
     includeQuotes = true,
@@ -838,15 +838,15 @@ function joinQuotedBlocks(text, opts = {} as any) {
 
   const openToClose = Object.fromEntries(pairs);
 
-  const segments = [];
-  const stack = []; // [{ opener, expectedClose, start }]
+  const segments: any[] = [];
+  const stack: any[] = []; // [{ opener, expectedClose, start }]
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    const top = stack[stack.length - 1];
+    const top: any = stack[stack.length - 1];
 
     // Prefer closing the current open pair if the char matches its expected closer
     if (top && ch === top.expectedClose) {
-      const finished = stack.pop();
+      const finished: any = stack.pop();
       if (stack.length === 0) {
         // Only collect outermost quotes (contains all nested content)
         segments.push(text.slice(finished.start, i + 1));
@@ -880,7 +880,7 @@ async function playFullConversation() {
 
   context.chat.forEach((msg, i) => {
     if (!msg.is_system && msg.mes !== "..." && msg.mes !== "") {
-      processAndQueueTtsMessage(msg, i, { manual: false });
+      processAndQueueTtsMessage(msg, i as any, { manual: false });
     }
   });
 
@@ -889,7 +889,7 @@ async function playFullConversation() {
   }
 }
 
-globalThis.playFullConversation = playFullConversation;
+(globalThis as any).playFullConversation = playFullConversation;
 
 //#############################//
 //  Extension UI and Settings  //
@@ -901,7 +901,7 @@ function loadSettings() {
   }
   for (const key in defaultSettings) {
     if (!(key in extension_settings.tts)) {
-      extension_settings.tts[key] = defaultSettings[key];
+      (extension_settings.tts as Record<string, any>)[key] = (defaultSettings as Record<string, any>)[key];
     }
   }
   $("#tts_provider").val(extension_settings.tts.currentProvider);
@@ -940,7 +940,7 @@ const defaultSettings = {
   regex_pattern: "",
 };
 
-function setTtsStatus(status, success) {
+function setTtsStatus(status: any, success: any) {
   $("#tts_status").text(status);
   if (success) {
     $("#tts_status").removeAttr("style");
@@ -1042,7 +1042,7 @@ function onApplyRegexChange() {
 }
 
 function onRegexPatternChange() {
-  extension_settings.tts.regex_pattern = $("#tts_regex_pattern").val().toString();
+  extension_settings.tts.regex_pattern = ($("#tts_regex_pattern").val() as any).toString();
   saveSettingsDebounced();
   updateRegexPatternWarning();
 }
@@ -1068,7 +1068,7 @@ function updateRegexPatternWarning() {
 // TTS Provider //
 //##############//
 
-async function loadTtsProvider(provider) {
+async function loadTtsProvider(provider: any) {
   //Clear the current config and add new config
   $("#tts_provider_settings").html("");
 
@@ -1079,7 +1079,7 @@ async function loadTtsProvider(provider) {
   // Init provider references
   extension_settings.tts.currentProvider = provider;
   ttsProviderName = provider;
-  ttsProvider = new ttsProviders[provider]();
+  ttsProvider = new (ttsProviders as Record<string, any>)[provider]();
 
   // Init provider settings
   $("#tts_provider_settings").append(ttsProvider.settingsHtml);
@@ -1121,7 +1121,7 @@ async function onChatChanged() {
   lastMessage = null;
 }
 
-async function onMessageEvent(messageId, lastCharIndex) {
+async function onMessageEvent(messageId: any, lastCharIndex: any) {
   // If TTS is disabled, do nothing
   if (!extension_settings.tts.enabled) {
     return;
@@ -1234,7 +1234,7 @@ async function onMessageDeleted() {
   resetTtsPlayback();
 }
 
-async function onGenerationStarted(generationType, _args, isDryRun) {
+async function onGenerationStarted(generationType: any, _args: any, isDryRun: any) {
   // If dry running or quiet mode, do nothing
   if (isDryRun || ["quiet", "impersonate"].includes(generationType)) {
     return;
@@ -1314,7 +1314,7 @@ async function onPeriodicMessageGenerationTick() {
  * @param {boolean} unrestricted - If true, will include all characters in voiceMapEntries, even if they are not in the current chat.
  * @returns {string[]} - Array of character names
  */
-export function getCharacters(unrestricted) {
+export function getCharacters(unrestricted: any) {
   const context = getContext();
 
   if (unrestricted) {
@@ -1361,7 +1361,7 @@ export function getCharacters(unrestricted) {
   return characters;
 }
 
-export function sanitizeId(input) {
+export function sanitizeId(input: any) {
   // Remove any non-alphanumeric characters except underscore (_) and hyphen (-)
   let sanitized = encodeURIComponent(input).replace(/[^a-zA-Z0-9-_]/g, "");
 
@@ -1373,9 +1373,9 @@ export function sanitizeId(input) {
   return sanitized;
 }
 
-function parseVoiceMap(voiceMapString) {
-  const parsedVoiceMap = {};
-  for (const [charName, voiceId] of voiceMapString.split(",").map((s) => s.split(":"))) {
+function parseVoiceMap(voiceMapString: any) {
+  const parsedVoiceMap: Record<string, any> = {};
+  for (const [charName, voiceId] of voiceMapString.split(",").map((s: any) => s.split(":"))) {
     if (charName && voiceId) {
       parsedVoiceMap[charName.trim()] = voiceId.trim();
     }
@@ -1387,7 +1387,7 @@ function parseVoiceMap(voiceMapString) {
  * Apply voiceMap based on current voiceMapEntries
  */
 function updateVoiceMap() {
-  const tempVoiceMap = {};
+  const tempVoiceMap: Record<string, any> = {};
   for (const voice of voiceMapEntries) {
     if (voice.voiceId === null) {
       continue;
@@ -1406,16 +1406,16 @@ function updateVoiceMap() {
 }
 
 class VoiceMapEntry {
-  name;
-  voiceId;
-  selectElement;
-  constructor(name, voiceId = DEFAULT_VOICE_MARKER) {
+  name: any;
+  voiceId: any;
+  selectElement: any;
+  constructor(name: any, voiceId = DEFAULT_VOICE_MARKER) {
     this.name = name;
     this.voiceId = voiceId;
     this.selectElement = null;
   }
 
-  addUI(voiceIds) {
+  addUI(voiceIds: any) {
     const sanitizedName = sanitizeId(this.name);
     const defaultOption =
       this.name === DEFAULT_VOICE_MARKER
@@ -1440,11 +1440,11 @@ class VoiceMapEntry {
     }
 
     this.selectElement = $(`#tts_voicemap_char_${sanitizedName}_voice`);
-    this.selectElement.on("change", (args) => this.onSelectChange(args));
+    this.selectElement.on("change", (args: any) => this.onSelectChange(args));
     this.selectElement.val(this.voiceId);
   }
 
-  onSelectChange(args) {
+  onSelectChange(args: any) {
     this.voiceId = this.selectElement.find(":selected").val();
     updateVoiceMap();
   }
@@ -1484,7 +1484,7 @@ export async function initVoiceMap(unrestricted = false) {
  * Init voiceMapEntries for character select list.
  * @param {boolean} unrestricted - If true, will include all characters in voiceMapEntries, even if they are not in the current chat.
  */
-async function initVoiceMapInternal(unrestricted) {
+async function initVoiceMapInternal(unrestricted: any) {
   // Gate initialization if not enabled or TTS Provider not ready. Prevents error popups.
   const enabled = $("#tts_enabled").is(":checked");
   if (!enabled) {
@@ -1537,7 +1537,7 @@ async function initVoiceMapInternal(unrestricted) {
     // Check provider settings for voiceIds
     let voiceId;
     if (character in voiceMapFromSettings) {
-      voiceId = voiceMapFromSettings[character];
+      voiceId = (voiceMapFromSettings as Record<string, any>)[character];
     } else if (character === DEFAULT_VOICE_MARKER) {
       voiceId = DISABLED_VOICE_MARKER;
     } else {
@@ -1596,12 +1596,12 @@ export async function init() {
   eventSource.on(event_types.GROUP_UPDATED, onChatChanged);
   eventSource.on(event_types.GENERATION_STARTED, onGenerationStarted);
   eventSource.on(event_types.GENERATION_ENDED, onGenerationEnded);
-  eventSource.makeLast(event_types.CHARACTER_MESSAGE_RENDERED, (messageId) => (onMessageEvent as any)(messageId));
-  eventSource.makeLast(event_types.USER_MESSAGE_RENDERED, (messageId) => (onMessageEvent as any)(messageId));
+  eventSource.makeLast(event_types.CHARACTER_MESSAGE_RENDERED, (messageId: any) => (onMessageEvent as any)(messageId));
+  eventSource.makeLast(event_types.USER_MESSAGE_RENDERED, (messageId: any) => (onMessageEvent as any)(messageId));
   SlashCommandParser.addCommandObject(
     SlashCommand.fromProps({
       name: "speak",
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         await onNarrateText(args, value);
         return "";
       },

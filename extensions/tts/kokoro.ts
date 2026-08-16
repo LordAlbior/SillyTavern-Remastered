@@ -6,7 +6,7 @@ export class KokoroTtsProvider {
   /** @type {any} */ settings;
   /** @type {boolean} */ ready;
   /** @type {any} */ voices;
-  /** @type {any} */ worker;
+  /** @type {any} */ worker: any;
   /** @type {string} */ separator;
   /** @type {any} */ pendingRequests;
   /** @type {number} */ nextRequestId;
@@ -66,13 +66,13 @@ export class KokoroTtsProvider {
    * @param {string} text Input text
    * @returns {string} Processed text
    */
-  processText(text) {
+  processText(text: any) {
     // TILDE!
     text = text.replace(/~/g, ".");
     return text;
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     if (settings.modelId !== undefined) this.settings.modelId = settings.modelId;
     if (settings.dtype !== undefined) this.settings.dtype = settings.dtype;
     if (settings.device !== undefined) this.settings.device = settings.device;
@@ -119,11 +119,11 @@ export class KokoroTtsProvider {
           }, 600000); // 600 second timeout
 
           this.pendingRequests.set("initialization", {
-            resolve: (result) => {
+            resolve: (result: any) => {
               clearTimeout(timeoutId);
               initResolve(result);
             },
-            reject: (error) => {
+            reject: (error: any) => {
               clearTimeout(timeoutId);
               initReject(error);
             },
@@ -132,7 +132,7 @@ export class KokoroTtsProvider {
 
         // Resolve the outer promise when initialization completes
         initPromise
-          .then((success) => {
+          .then((success: any) => {
             this.ready = success;
             this.updateStatusDisplay();
             resolve(success);
@@ -152,7 +152,7 @@ export class KokoroTtsProvider {
     });
   }
 
-  handleWorkerMessage(event) {
+  handleWorkerMessage(event: any) {
     const { action, success, ready, error, requestId, blobUrl } = event.data;
 
     switch (action) {
@@ -257,10 +257,10 @@ export class KokoroTtsProvider {
   }
 
   async onSettingsChange() {
-    this.settings.modelId = $("#kokoro_model_id").val().toString();
-    this.settings.dtype = $("#kokoro_dtype").val().toString();
-    this.settings.device = $("#kokoro_device").val().toString();
-    this.settings.speakingRate = parseFloat($("#kokoro_speaking_rate").val().toString());
+    this.settings.modelId = ($("#kokoro_model_id").val() ?? '').toString();
+    this.settings.dtype = ($("#kokoro_dtype").val() ?? '').toString();
+    this.settings.device = ($("#kokoro_device").val() ?? '').toString();
+    this.settings.speakingRate = parseFloat(($("#kokoro_speaking_rate").val() ?? '').toString());
 
     // Update UI display
     $("#kokoro_speaking_rate_output").text(this.settings.speakingRate + "x");
@@ -282,7 +282,7 @@ export class KokoroTtsProvider {
     }));
   }
 
-  async previewTtsVoice(voiceId) {
+  async previewTtsVoice(voiceId: any) {
     if (!this.ready) {
       await this.checkReady();
     }
@@ -302,11 +302,11 @@ export class KokoroTtsProvider {
     }
   }
 
-  getVoiceDisplayName(voiceId) {
+  getVoiceDisplayName(voiceId: any) {
     return voiceId;
   }
 
-  getVoice(voiceName) {
+  getVoice(voiceName: any) {
     const defaultVoice = this.settings.defaultVoice || "af_heart";
     const actualVoiceName = this.voices.includes(voiceName) ? voiceName : defaultVoice;
     return {
@@ -323,7 +323,7 @@ export class KokoroTtsProvider {
    * @param {string} voiceId Voice ID
    * @returns {AsyncGenerator<Response>} Audio response generator
    */
-  async *generateTts(text, voiceId) {
+  async *generateTts(text: any, voiceId: any) {
     if (!this.ready || !this.worker) {
       console.log("TTS not ready, initializing...");
       await this.initializeWorker();

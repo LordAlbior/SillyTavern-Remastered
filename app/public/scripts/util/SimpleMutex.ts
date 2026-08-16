@@ -16,7 +16,7 @@ export class SimpleMutex {
    * Constructs a SimpleMutex.
    * @param {Function} callback Callback function.
    */
-  constructor(callback) {
+  constructor(callback: any) {
     this.isBusy = false;
     this.callback = callback;
   }
@@ -26,7 +26,7 @@ export class SimpleMutex {
    * @param  {...any} args Callback args
    * @returns {Promise<void>}
    */
-  async update(...args) {
+  async update(...args: any[]) {
     // Don't touch me I'm busy...
     if (this.isBusy) {
       return;

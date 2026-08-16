@@ -1,4 +1,5 @@
-import { MacroRegistry, MacroCategory } from "../engine/MacroRegistry.ts";
+import { MacroCategory } from "../engine/MacroRegistry.ts";
+const MacroRegistry: any = (await import("../engine/MacroRegistry.ts" as string)).MacroRegistry;
 import { eventSource, event_types } from "../../events.ts";
 
 import { findExtension } from "/scripts/extensions.ts";
@@ -13,7 +14,7 @@ function ensureLastGenerationTypeTracking() {
   lastGenerationTypeTrackingInitialized = true;
 
   try {
-    eventSource?.on?.(event_types.GENERATION_STARTED, (type, _params, isDryRun) => {
+    eventSource?.on?.(event_types.GENERATION_STARTED, (type: any, _params: any, isDryRun: any) => {
       if (isDryRun) return;
       lastGenerationTypeValue = type || "normal";
     });
@@ -53,7 +54,7 @@ export function registerStateMacros() {
     ],
     description: "Checks if a specific extension is enabled. If the extension does not exist, returns false.",
     returns: "true if the extension is enabled, false otherwise.",
-    handler: ({ unnamedArgs: [extensionName] }) => {
+    handler: ({ unnamedArgs: [extensionName] }: any) => {
       const extension = findExtension(extensionName);
       return String(extension?.enabled ?? false);
     },

@@ -309,7 +309,7 @@ let instance;
 export { instance as MacroLexer };
 
 class MacroLexer extends Lexer {
-  /** @type {MacroLexer} */ static #instance;
+  /** @type {MacroLexer} */ static #instance: any;
   /** @type {MacroLexer} */ static get instance() {
     return MacroLexer.#instance ?? (MacroLexer.#instance = new MacroLexer());
   }
@@ -327,7 +327,7 @@ class MacroLexer extends Lexer {
     });
   }
 
-  test(input) {
+  test(input: any) {
     const result = this.tokenize(input);
     return {
       errors: result.errors,
@@ -354,7 +354,7 @@ instance = MacroLexer.instance;
  * @param {string} [options.andExits] - The modes to exit when entering this mode
  * @returns {TokenType} The token again
  */
-function enter(token, mode, { andExits = undefined } = {}) {
+function enter(token: any, mode: any, { andExits = undefined }: any = {}) {
   if (!token) throw new Error("Token must not be undefined");
   if (enterModesMap.has(token.name) && enterModesMap.get(token.name) !== mode) {
     throw new Error(
@@ -380,7 +380,7 @@ function enter(token, mode, { andExits = undefined } = {}) {
  * @param {string} mode - The mode to leave
  * @returns {TokenType} The token again
  */
-function exits(token, mode) {
+function exits(token: any, mode: any) {
   if (!token) throw new Error("Token must not be undefined");
   token.POP_MODE = !!mode; // Always set to true. We just use the mode here, so the linter thinks it was used. We just pass it in for clarity in the definition
   return token;
@@ -395,7 +395,7 @@ function exits(token, mode) {
  * @param {TokenType} token - The token to modify
  * @returns {TokenType} The token again
  */
-function using(token) {
+function using(token: any) {
   if (!token) throw new Error("Token must not be undefined");
   if (enterModesMap.has(token.name)) {
     throw new Error(

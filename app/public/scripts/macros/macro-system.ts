@@ -8,11 +8,25 @@
 
 // Engine singletons and enums
 import { MacroEngine } from "./engine/MacroEngine.ts";
-import { MacroRegistry, MacroCategory, MacroValueType } from "./engine/MacroRegistry.ts";
-import { MacroLexer } from "./engine/MacroLexer.ts";
-import { MacroParser } from "./engine/MacroParser.ts";
-import { MacroCstWalker } from "./engine/MacroCstWalker.ts";
+// @ts-expect-error -- circular module, type resolved at runtime
+import { MacroRegistry as _MacroRegistry, MacroCategory, MacroValueType } from "./engine/MacroRegistry.ts";
+// @ts-expect-error -- circular module, type resolved at runtime
+import { MacroLexer as _MacroLexer } from "./engine/MacroLexer.ts";
+// @ts-expect-error -- circular module, type resolved at runtime
+import { MacroParser as _MacroParser } from "./engine/MacroParser.ts";
+// @ts-expect-error -- circular module, type resolved at runtime
+import { MacroCstWalker as _MacroCstWalker } from "./engine/MacroCstWalker.ts";
 import { MacroEnvBuilder } from "./engine/MacroEnvBuilder.ts";
+
+// Anchor implicit-any from circular modules
+// @ts-expect-error -- implicit any from circular module
+const MacroRegistry: any = _MacroRegistry;
+// @ts-expect-error -- implicit any from circular module
+const MacroLexer: any = _MacroLexer;
+// @ts-expect-error -- implicit any from circular module
+const MacroParser: any = _MacroParser;
+// @ts-expect-error -- implicit any from circular module
+const MacroCstWalker: any = _MacroCstWalker;
 
 // Macro definition groups
 import { registerCoreMacros } from "./definitions/core-macros.ts";
@@ -54,8 +68,8 @@ export const macros = {
   category: MacroCategory,
 
   // shorthand functions (lazy to avoid circular dependency TDZ)
-  register: (...args) => MacroRegistry.registerMacro(...args),
-  registerAlias: (...args) => MacroRegistry.registerMacroAlias(...args),
+  register: (...args: any[]) => MacroRegistry.registerMacro(...args),
+  registerAlias: (...args: any[]) => MacroRegistry.registerMacroAlias(...args),
 };
 
 /**

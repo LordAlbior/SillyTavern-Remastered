@@ -17,16 +17,16 @@ import { t } from "./i18n.ts";
 import { accountStorage } from "./util/AccountStorage.ts";
 import { localizePagination, PAGINATION_TEMPLATE, textValueMatcher } from "./utils.ts";
 
-let mancerModels = [];
-let togetherModels = [];
-let infermaticAIModels = [];
-let dreamGenModels = [];
-let vllmModels = [];
-let aphroditeModels = [];
-let featherlessModels = [];
-let tabbyModels = [];
-let llamacppModels = [];
-export let openRouterModels = [];
+let mancerModels: any[] = [];
+let togetherModels: any[] = [];
+let infermaticAIModels: any[] = [];
+let dreamGenModels: any[] = [];
+let vllmModels: any[] = [];
+let aphroditeModels: any[] = [];
+let featherlessModels: any[] = [];
+let tabbyModels: any[] = [];
+let llamacppModels: any[] = [];
+export let openRouterModels: any[] = [];
 
 /**
  * List of OpenRouter providers.
@@ -335,10 +335,10 @@ const OPENROUTER_PROVIDER_WARNING_SELECTORS = {
   },
 };
 
-export function updateOpenRouterProvidersWarning(providersSelector) {
+export function updateOpenRouterProvidersWarning(providersSelector: any) {
   const $providers = $(providersSelector);
 
-  const warningSelectors = OPENROUTER_PROVIDER_WARNING_SELECTORS[providersSelector];
+  const warningSelectors = (OPENROUTER_PROVIDER_WARNING_SELECTORS as Record<string, any>)[providersSelector];
 
   if ($providers.length === 0 || !warningSelectors) {
     return;
@@ -355,7 +355,7 @@ export function updateOpenRouterProvidersWarning(providersSelector) {
   $warning.toggleClass("displayNone", !showWarning);
 }
 
-export async function syncOpenRouterProvidersForModel(modelId, providersSelector) {
+export async function syncOpenRouterProvidersForModel(modelId: any, providersSelector: any) {
   const $providers = $(providersSelector);
 
   const refreshWarningState = () => {
@@ -403,7 +403,7 @@ export async function syncOpenRouterProvidersForModel(modelId, providersSelector
   }
 }
 
-export async function syncNanoGptProvidersForModel(modelId, providersSelector) {
+export async function syncNanoGptProvidersForModel(modelId: any, providersSelector: any) {
   const $providers = $(providersSelector);
 
   const refreshWarningState = () => {
@@ -455,7 +455,7 @@ export async function syncNanoGptProvidersForModel(modelId, providersSelector) {
   }
 }
 
-export function updateNanoGptProvidersWarning(providersSelector) {
+export function updateNanoGptProvidersWarning(providersSelector: any) {
   const $providers = $(providersSelector);
 
   if ($providers.length === 0) {
@@ -469,7 +469,7 @@ export function updateNanoGptProvidersWarning(providersSelector) {
   $("#nanogpt_provider_warning").toggleClass("displayNone", !showWarning);
 }
 
-export async function loadOllamaModels(data) {
+export async function loadOllamaModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Ollama models data", data);
     return;
@@ -489,7 +489,7 @@ export async function loadOllamaModels(data) {
   }
 }
 
-export async function loadTabbyModels(data) {
+export async function loadTabbyModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Tabby models data", data);
     return;
@@ -513,7 +513,7 @@ export async function loadTabbyModels(data) {
   }
 }
 
-export async function loadLlamaCppModels(data) {
+export async function loadLlamaCppModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid llama.cpp models data", data);
     return;
@@ -537,7 +537,7 @@ export async function loadLlamaCppModels(data) {
   }
 }
 
-export async function loadTogetherAIModels(data) {
+export async function loadTogetherAIModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Together AI models data", data);
     return;
@@ -565,7 +565,7 @@ export async function loadTogetherAIModels(data) {
   }
 }
 
-export async function loadInfermaticAIModels(data) {
+export async function loadInfermaticAIModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Infermatic AI models data", data);
     return;
@@ -592,7 +592,7 @@ export async function loadInfermaticAIModels(data) {
   }
 }
 
-export function loadGenericModels(data) {
+export function loadGenericModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Generic models data", data);
     return;
@@ -610,7 +610,7 @@ export function loadGenericModels(data) {
   }
 }
 
-export async function loadDreamGenModels(data) {
+export async function loadDreamGenModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid DreamGen models data", data);
     return;
@@ -636,7 +636,7 @@ export async function loadDreamGenModels(data) {
   }
 }
 
-export async function loadMancerModels(data) {
+export async function loadMancerModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Mancer models data", data);
     return;
@@ -659,7 +659,7 @@ export async function loadMancerModels(data) {
   }
 }
 
-export async function loadOpenRouterModels(data) {
+export async function loadOpenRouterModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid OpenRouter models data", data);
     return;
@@ -686,7 +686,7 @@ export async function loadOpenRouterModels(data) {
   syncOpenRouterProvidersForModel(textgen_settings.openrouter_model, "#openrouter_providers_text");
 }
 
-export async function loadVllmModels(data) {
+export async function loadVllmModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid vLLM models data", data);
     return;
@@ -708,7 +708,7 @@ export async function loadVllmModels(data) {
   }
 }
 
-export async function loadAphroditeModels(data) {
+export async function loadAphroditeModels(data: any) {
   if (!Array.isArray(data)) {
     console.error("Invalid Aphrodite models data", data);
     return;
@@ -731,7 +731,7 @@ export async function loadAphroditeModels(data) {
 }
 
 let featherlessCurrentPage = 1;
-export async function loadFeatherlessModels(data) {
+export async function loadFeatherlessModels(data: any) {
   const searchBar = document.getElementById("featherless_model_search_bar");
   const modelCardBlock = document.getElementById("featherless_model_card_block");
   const paginationContainer = $("#featherless_model_pagination_container");
@@ -741,7 +741,7 @@ export async function loadFeatherlessModels(data) {
   const storageKey = "FeatherlessModels_PerPage";
 
   // Store the original models data for search and filtering
-  let originalModels = [];
+  let originalModels: any[] = [];
 
   if (!Array.isArray(data)) {
     console.error("Invalid Featherless models data", data);
@@ -765,7 +765,7 @@ export async function loadFeatherlessModels(data) {
   applyFiltersAndSort();
 
   // Function to set up pagination (also used for filtered results)
-  function setupPagination(models, perPage, pageNumber = featherlessCurrentPage) {
+  function setupPagination(models: any[], perPage: any, pageNumber: any = featherlessCurrentPage) {
     paginationContainer.pagination({
       dataSource: models,
       pageSize: perPage,
@@ -778,10 +778,10 @@ export async function loadFeatherlessModels(data) {
       nextText: ">",
       formatNavigator: PAGINATION_TEMPLATE,
       showNavigator: true,
-      callback: (modelsOnPage, pagination) => {
-        modelCardBlock.innerHTML = "";
+      callback: (modelsOnPage: any[], pagination: any) => {
+        modelCardBlock!.innerHTML = "";
 
-        modelsOnPage.forEach((model) => {
+        modelsOnPage.forEach((model: any) => {
           const card = document.createElement("div");
           card.classList.add("model-card");
 
@@ -815,7 +815,7 @@ export async function loadFeatherlessModels(data) {
           card.appendChild(modelNameContainer);
           card.appendChild(detailsContainer);
 
-          modelCardBlock.appendChild(card);
+          modelCardBlock!.appendChild(card);
 
           if (model.id === textgen_settings.featherless_model) {
             card.classList.add("selected");
@@ -832,7 +832,7 @@ export async function loadFeatherlessModels(data) {
         featherlessCurrentPage = pagination.pageNumber;
         localizePagination(paginationContainer);
       },
-      afterSizeSelectorChange: (e) => {
+      afterSizeSelectorChange: (e: any) => {
         const newPerPage = e.target.value;
         accountStorage.setItem(storageKey, newPerPage);
         setupPagination(models, Number(newPerPage), featherlessCurrentPage); // Use the stored current page number
@@ -841,27 +841,27 @@ export async function loadFeatherlessModels(data) {
   }
 
   // Unset previously added listeners
-  $(searchBar).off("input");
-  $(sortOrderSelect).off("change");
-  $(classSelect).off("change");
-  $(categoriesSelect).off("change");
+  ($ as any)(searchBar).off("input");
+  ($ as any)(sortOrderSelect).off("change");
+  ($ as any)(classSelect).off("change");
+  ($ as any)(categoriesSelect).off("change");
 
   // Add event listener for input on the search bar
-  searchBar.addEventListener("input", () => {
+  searchBar!.addEventListener("input", () => {
     applyFiltersAndSort();
   });
 
   // Add event listener for the sort order select
-  sortOrderSelect.addEventListener("change", () => {
+  sortOrderSelect!.addEventListener("change", () => {
     applyFiltersAndSort();
   });
 
   // Add event listener for the class select
-  classSelect.addEventListener("change", () => {
+  classSelect!.addEventListener("change", () => {
     applyFiltersAndSort();
   });
 
-  categoriesSelect.addEventListener("change", () => {
+  categoriesSelect!.addEventListener("change", () => {
     applyFiltersAndSort();
   });
 
@@ -873,7 +873,7 @@ export async function loadFeatherlessModels(data) {
       const option = document.createElement("option");
       option.value = className;
       option.textContent = className;
-      classSelect.appendChild(option);
+      classSelect!.appendChild(option);
     });
   }
 
@@ -897,14 +897,14 @@ export async function loadFeatherlessModels(data) {
     if (selectedCategory === "Top") {
       featherlessTop = await fetchFeatherlessStats();
     }
-    const featherlessIds = featherlessTop.map((stat) => stat.id);
+    const featherlessIds = featherlessTop.map((stat: any) => stat.id);
 
     if (selectedCategory === "New") {
       featherlessNew = await fetchFeatherlessNew();
     }
-    const featherlessNewIds = featherlessNew.map((stat) => stat.id);
+    const featherlessNewIds = featherlessNew.map((stat: any) => stat.id);
 
-    const filteredModels = originalModels.filter((model) => {
+    const filteredModels = originalModels.filter((model: any) => {
       const matchesSearch = model.id.toLowerCase().includes(searchQuery);
       const matchesClass = selectedClass ? model.model_class === selectedClass : true;
       const matchesTop = featherlessIds.includes(model.id);
@@ -960,7 +960,7 @@ async function fetchFeatherlessNew() {
   return data.items;
 }
 
-function onFeatherlessModelSelect(modelId) {
+function onFeatherlessModelSelect(modelId: any) {
   const model = featherlessModels.find((x) => x.id === modelId);
   textgen_settings.featherless_model = modelId;
   $("#featherless_model").val(modelId);
@@ -973,18 +973,18 @@ let featherlessIsGridView = false; // Default state set to grid view
 // Ensure the correct initial view is applied when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   const modelCardBlock = document.getElementById("featherless_model_card_block");
-  modelCardBlock.classList.add("list-view");
+  modelCardBlock!.classList.add("list-view");
 
   const toggleButton = document.getElementById("featherless_model_grid_toggle");
-  toggleButton.addEventListener("click", function () {
+  toggleButton!.addEventListener("click", function (this: any) {
     // Toggle between grid and list view
     if (featherlessIsGridView) {
-      modelCardBlock.classList.remove("grid-view");
-      modelCardBlock.classList.add("list-view");
+      modelCardBlock!.classList.remove("grid-view");
+      modelCardBlock!.classList.add("list-view");
       this.title = "Toggle to grid view";
     } else {
-      modelCardBlock.classList.remove("list-view");
-      modelCardBlock.classList.add("grid-view");
+      modelCardBlock!.classList.remove("list-view");
+      modelCardBlock!.classList.add("grid-view");
       this.title = "Toggle to list view";
     }
 
@@ -1062,7 +1062,7 @@ function onAphroditeModelSelect() {
   $("#api_button_textgenerationwebui").trigger("click");
 }
 
-function getMancerModelTemplate(option) {
+function getMancerModelTemplate(option: any) {
   const model = mancerModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1080,7 +1080,7 @@ function getMancerModelTemplate(option) {
     `);
 }
 
-function getTogetherModelTemplate(option) {
+function getTogetherModelTemplate(option: any) {
   const model = togetherModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1095,7 +1095,7 @@ function getTogetherModelTemplate(option) {
     `);
 }
 
-function getInfermaticAIModelTemplate(option) {
+function getInfermaticAIModelTemplate(option: any) {
   const model = infermaticAIModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1109,7 +1109,7 @@ function getInfermaticAIModelTemplate(option) {
     `);
 }
 
-function getDreamGenModelTemplate(option) {
+function getDreamGenModelTemplate(option: any) {
   const model = dreamGenModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1123,7 +1123,7 @@ function getDreamGenModelTemplate(option) {
     `);
 }
 
-function getOpenRouterModelTemplate(option) {
+function getOpenRouterModelTemplate(option: any) {
   const model = openRouterModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1142,7 +1142,7 @@ function getOpenRouterModelTemplate(option) {
     `);
 }
 
-function getVllmModelTemplate(option) {
+function getVllmModelTemplate(option: any) {
   const model = vllmModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1156,7 +1156,7 @@ function getVllmModelTemplate(option) {
     `);
 }
 
-function getAphroditeModelTemplate(option) {
+function getAphroditeModelTemplate(option: any) {
   const model = aphroditeModels.find((x) => x.id === option?.element?.value);
 
   if (!option.id || !model) {
@@ -1172,7 +1172,7 @@ function getAphroditeModelTemplate(option) {
 
 async function downloadOllamaModel() {
   try {
-    const serverUrl = textgen_settings.server_urls[textgen_types.OLLAMA];
+    const serverUrl = (textgen_settings.server_urls as Record<string, any>)[textgen_types.OLLAMA];
 
     if (!serverUrl) {
       toastr.info("Please connect to an Ollama server first.");
@@ -1213,7 +1213,7 @@ async function downloadOllamaModel() {
 
 async function downloadTabbyModel() {
   try {
-    const serverUrl = textgen_settings.server_urls[textgen_types.TABBY];
+    const serverUrl = (textgen_settings.server_urls as Record<string, any>)[textgen_types.TABBY];
 
     if (online_status === "no_connection" || !serverUrl) {
       toastr.info("Please connect to a TabbyAPI server first.");
@@ -1231,7 +1231,7 @@ async function downloadTabbyModel() {
       return;
     }
 
-    const repoId = downloadHtml.find('input[name="hf_repo_id"]').val().toString();
+    const repoId = downloadHtml.find('input[name="hf_repo_id"]').val()!.toString();
     if (!repoId) {
       toastr.error("A HuggingFace repo ID must be provided. Skipping Download.");
       return;
@@ -1250,9 +1250,9 @@ async function downloadTabbyModel() {
     };
 
     for (const suffix of ["include", "exclude"]) {
-      const patterns = downloadHtml.find(`textarea[name="tabby_download_${suffix}"]`).val().toString();
+      const patterns = downloadHtml.find(`textarea[name="tabby_download_${suffix}"]`).val()!.toString();
       if (patterns) {
-        params[suffix] = patterns.split("\n");
+        (params as Record<string, any>)[suffix] = patterns.split("\n");
       }
     }
 
@@ -1462,7 +1462,7 @@ export function initTextGenModels() {
       width: "100%",
     });
     providersSelect.select2({
-      sorter: (data) => data.sort((a, b) => a.text.localeCompare(b.text)),
+      sorter: (data: any[]) => data.sort((a: any, b: any) => a.text.localeCompare(b.text)),
       placeholder: t`Select providers. No selection = all providers.`,
       searchInputPlaceholder: t`Search providers...`,
       searchInputCssClass: "text_pole",
@@ -1478,7 +1478,7 @@ export function initTextGenModels() {
       $(this).trigger("change");
     });
     nanoGptProvidersSelect.select2({
-      sorter: (data) => data.sort((a, b) => a.text.localeCompare(b.text)),
+      sorter: (data: any[]) => data.sort((a: any, b: any) => a.text.localeCompare(b.text)),
       placeholder: t`Select providers. No selection = all providers.`,
       searchInputPlaceholder: t`Search providers...`,
       searchInputCssClass: "text_pole",

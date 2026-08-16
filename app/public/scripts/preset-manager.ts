@@ -61,7 +61,7 @@ function autoSelectPreset() {
     return;
   }
 
-  const name = selected_group ? groups.find((x) => x.id == selected_group)?.name : characters[this_chid]?.name;
+  const name = selected_group ? groups.find((x: any) => x.id == selected_group)?.name : characters[Number(this_chid!)]?.name;
 
   if (!name) {
     console.debug(`Preset candidate not found for API: ${main_api}`);
@@ -99,7 +99,7 @@ export function getPresetManager(apiId = "") {
     return null;
   }
 
-  return presetManagers[apiId];
+  return (presetManagers as Record<string, any>)[apiId];
 }
 
 /**
@@ -110,7 +110,7 @@ function registerPresetManagers() {
     const forData = $(e).data("preset-manager-for");
     for (const apiId of forData.split(",")) {
       console.debug(`Registering preset manager for API: ${apiId}`);
-      presetManagers[apiId] = new PresetManager($(e), apiId);
+      (presetManagers as Record<string, any>)[apiId] = new PresetManager($(e), apiId);
     }
   });
 }
@@ -118,10 +118,10 @@ function registerPresetManagers() {
 class PresetManager {
   select: any;
   apiId: string;
-  extensions: Record<string, any>[];
-  sorts: Record<string, any>[];
+  extensions: Record<string, any>[] = [];
+  sorts: Record<string, any>[] = [];
 
-  constructor(select, apiId) {
+  constructor(select: any, apiId: any) {
     this.select = select;
     this.apiId = apiId;
   }
@@ -134,12 +134,12 @@ class PresetManager {
         const name = manager.getSelectedPresetName();
         return manager.getPresetSettings(name);
       },
-      setData: (data) => {
+      setData: (data: any) => {
         const manager = getPresetManager("instruct");
         const name = data.name;
         return manager.savePreset(name, data);
       },
-      isValid: (data) => PresetManager.isPossiblyInstructData(data),
+      isValid: (data: any) => PresetManager.isPossiblyInstructData(data),
     },
     context: {
       name: "Context Template",
@@ -148,12 +148,12 @@ class PresetManager {
         const name = manager.getSelectedPresetName();
         return manager.getPresetSettings(name);
       },
-      setData: (data) => {
+      setData: (data: any) => {
         const manager = getPresetManager("context");
         const name = data.name;
         return manager.savePreset(name, data);
       },
-      isValid: (data) => PresetManager.isPossiblyContextData(data),
+      isValid: (data: any) => PresetManager.isPossiblyContextData(data),
     },
     sysprompt: {
       name: "System Prompt",
@@ -162,12 +162,12 @@ class PresetManager {
         const name = manager.getSelectedPresetName();
         return manager.getPresetSettings(name);
       },
-      setData: (data) => {
+      setData: (data: any) => {
         const manager = getPresetManager("sysprompt");
         const name = data.name;
         return manager.savePreset(name, data);
       },
-      isValid: (data) => PresetManager.isPossiblySystemPromptData(data),
+      isValid: (data: any) => PresetManager.isPossiblySystemPromptData(data),
     },
     preset: {
       name: "Text Completion Preset",
@@ -178,12 +178,12 @@ class PresetManager {
         data.name = name;
         return data;
       },
-      setData: (data) => {
+      setData: (data: any) => {
         const manager = getPresetManager("textgenerationwebui");
         const name = data.name;
         return manager.savePreset(name, data);
       },
-      isValid: (data) => PresetManager.isPossiblyTextCompletionData(data),
+      isValid: (data: any) => PresetManager.isPossiblyTextCompletionData(data),
     },
     reasoning: {
       name: "Reasoning Formatting",
@@ -192,12 +192,12 @@ class PresetManager {
         const name = manager.getSelectedPresetName();
         return manager.getPresetSettings(name);
       },
-      setData: (data) => {
+      setData: (data: any) => {
         const manager = getPresetManager("reasoning");
         const name = data.name;
         return manager.savePreset(name, data);
       },
-      isValid: (data) => PresetManager.isPossiblyReasoningData(data),
+      isValid: (data: any) => PresetManager.isPossiblyReasoningData(data),
     },
     srw: {
       name: "Start Reply With",
@@ -207,43 +207,43 @@ class PresetManager {
           show: power_user.show_user_prompt_bias ?? false,
         };
       },
-      setData: (data) => {
+      setData: (data: any) => {
         power_user.user_prompt_bias = data.value ?? "";
         power_user.show_user_prompt_bias = data.show ?? false;
         $("#start_reply_with").val(power_user.user_prompt_bias);
         $("#chat-show-reply-prefix-checkbox").prop("checked", power_user.show_user_prompt_bias);
         return saveSettingsDebounced();
       },
-      isValid: (data) => PresetManager.isPossiblyStartReplyWithData(data),
+      isValid: (data: any) => PresetManager.isPossiblyStartReplyWithData(data),
     },
   };
 
-  static isPossiblyInstructData(data) {
+  static isPossiblyInstructData(data: any) {
     const instructProps = ["name", "input_sequence", "output_sequence"];
-    return data && instructProps.every((prop) => Object.keys(data).includes(prop));
+    return data && instructProps.every((prop: any) => Object.keys(data).includes(prop));
   }
 
-  static isPossiblyContextData(data) {
+  static isPossiblyContextData(data: any) {
     const contextProps = ["name", "story_string"];
-    return data && contextProps.every((prop) => Object.keys(data).includes(prop));
+    return data && contextProps.every((prop: any) => Object.keys(data).includes(prop));
   }
 
-  static isPossiblySystemPromptData(data) {
+  static isPossiblySystemPromptData(data: any) {
     const sysPromptProps = ["name", "content"];
-    return data && sysPromptProps.every((prop) => Object.keys(data).includes(prop));
+    return data && sysPromptProps.every((prop: any) => Object.keys(data).includes(prop));
   }
 
-  static isPossiblyTextCompletionData(data) {
+  static isPossiblyTextCompletionData(data: any) {
     const textCompletionProps = ["temp", "top_k", "top_p", "rep_pen"];
-    return data && textCompletionProps.every((prop) => Object.keys(data).includes(prop));
+    return data && textCompletionProps.every((prop: any) => Object.keys(data).includes(prop));
   }
 
-  static isPossiblyReasoningData(data) {
+  static isPossiblyReasoningData(data: any) {
     const reasoningProps = ["name", "prefix", "suffix", "separator"];
-    return data && reasoningProps.every((prop) => Object.keys(data).includes(prop));
+    return data && reasoningProps.every((prop: any) => Object.keys(data).includes(prop));
   }
 
-  static isPossiblyStartReplyWithData(data) {
+  static isPossiblyStartReplyWithData(data: any) {
     return data && "value" in data && "show" in data;
   }
 
@@ -253,7 +253,7 @@ class PresetManager {
    * @param {string} fileName File name
    * @returns {Promise<void>}
    */
-  static async performMasterImport(data, fileName) {
+  static async performMasterImport(data: any, fileName: any) {
     if (!data || typeof data !== "object") {
       toastr.error(t`Invalid data provided for master import`);
       return;
@@ -302,8 +302,8 @@ class PresetManager {
       return;
     }
 
-    const sectionNames = validSections.reduce((acc, key) => {
-      acc[key] = { key: key, name: PresetManager.masterSections[key].name, preset: data[key]?.name || "" };
+    const sectionNames = validSections.reduce((acc: any, key: any) => {
+      acc[key] = { key: key, name: (PresetManager.masterSections as Record<string, any>)[key].name, preset: data[key]?.name || "" };
       return acc;
     }, {});
 
@@ -332,8 +332,8 @@ class PresetManager {
     }
 
     for (const section of confirmedSections) {
-      const sectionData = data[section];
-      const masterSection = PresetManager.masterSections[section];
+      const sectionData = (data as Record<string, any>)[section as string];
+      const masterSection = (PresetManager.masterSections as Record<string, any>)[section as string];
       if (sectionData && masterSection) {
         await masterSection.setData(sectionData);
         importedSections.push(masterSection.name);
@@ -348,7 +348,7 @@ class PresetManager {
    * @returns {Promise<string>} JSON data
    */
   static async performMasterExport() {
-    const sectionNames = Object.entries(PresetManager.masterSections).reduce((acc, [key, section]) => {
+    const sectionNames = Object.entries(PresetManager.masterSections).reduce((acc: any, [key, section]: [string, any]) => {
       acc[key] = { key: key, name: section.name, checked: !["preset", "srw"].includes(key) };
       return acc;
     }, {});
@@ -378,9 +378,9 @@ class PresetManager {
     }
 
     for (const section of confirmedSections) {
-      const masterSection = PresetManager.masterSections[section];
+      const masterSection = (PresetManager.masterSections as Record<string, any>)[section as string];
       if (masterSection) {
-        data[section] = masterSection.getData();
+        (data as Record<string, any>)[section as string] = masterSection.getData();
       }
     }
 
@@ -403,7 +403,7 @@ class PresetManager {
    * @param {string} name Preset name
    * @returns {any} Preset value
    */
-  findPreset(name) {
+  findPreset(name: any) {
     return $(this.select)
       .find("option")
       .filter(function () {
@@ -432,7 +432,7 @@ class PresetManager {
    * Selects a preset by option value.
    * @param {string} value Preset option value
    */
-  selectPreset(value) {
+  selectPreset(value: any) {
     const option = $(this.select).filter(function () {
       return $(this).val() === value;
     });
@@ -489,7 +489,7 @@ class PresetManager {
    * @param {object} [options] Options for saving the preset
    * @param {boolean} [options.skipUpdate=false] If true, skips updating the preset list after saving.
    */
-  async savePreset(name, settings?, { skipUpdate = false } = {}) {
+  async savePreset(name: any, settings?: any, { skipUpdate = false }: any = {}) {
     if (this.apiId === "instruct" && settings) {
       await checkForSystemPromptInInstructTemplate(name, settings);
     }
@@ -530,7 +530,7 @@ class PresetManager {
    * Renames the currently selected preset.
    * @param {string} newName New name for the preset
    */
-  async renamePreset(newName) {
+  async renamePreset(newName: any) {
     const oldName = this.getSelectedPresetName();
     if (equalsIgnoreCaseAndAccents(oldName, newName)) {
       throw new Error("New name must be different from old name");
@@ -553,7 +553,7 @@ class PresetManager {
    * @param {string} [api] API ID. If not specified, uses the current API ID.
    * @returns {{presets: any[], preset_names: object, settings: object}}
    */
-  getPresetList(api?) {
+  getPresetList(api?: any) {
     let presets: any[] = [];
     let preset_names: Record<string, any> = {};
     let settings: Record<string, any> = {};
@@ -587,22 +587,22 @@ class PresetManager {
         break;
       case "context":
         presets = context_presets;
-        preset_names = context_presets.map((x) => x.name);
+        preset_names = context_presets.map((x: any) => x.name);
         settings = power_user.context;
         break;
       case "instruct":
         presets = instruct_presets;
-        preset_names = instruct_presets.map((x) => x.name);
+        preset_names = instruct_presets.map((x: any) => x.name);
         settings = power_user.instruct;
         break;
       case "sysprompt":
         presets = system_prompts;
-        preset_names = system_prompts.map((x) => x.name);
+        preset_names = system_prompts.map((x: any) => x.name);
         settings = power_user.sysprompt;
         break;
       case "reasoning":
         presets = reasoning_templates;
-        preset_names = reasoning_templates.map((x) => x.name);
+        preset_names = reasoning_templates.map((x: any) => x.name);
         settings = power_user.reasoning;
         break;
       default:
@@ -631,7 +631,7 @@ class PresetManager {
    * @param {string} name Name of the preset
    * @param {object} preset Preset object
    */
-  updateList(name, preset) {
+  updateList(name: any, preset: any) {
     const { presets, preset_names } = this.getPresetList();
     const presetExists = this.isKeyedApi() ? preset_names.includes(name) : Object.keys(preset_names).includes(name);
 
@@ -669,8 +669,8 @@ class PresetManager {
    * @param {string} name Name of the preset
    * @returns {object} Preset settings object for the given name
    */
-  getPresetSettings(name) {
-    function getSettingsByApiId(apiId) {
+  getPresetSettings(name: any) {
+    function getSettingsByApiId(apiId: any) {
       switch (apiId) {
         case "koboldhorde":
         case "kobold":
@@ -779,7 +779,7 @@ class PresetManager {
    * @param {string} name Name of the preset to retrieve
    * @returns {any} Preset object if found, otherwise undefined
    */
-  getCompletionPresetByName(name) {
+  getCompletionPresetByName(name: any) {
     // Retrieve a completion preset by name. Return undefined if not found.
     const { presets, preset_names } = this.getPresetList();
     let preset;
@@ -809,7 +809,7 @@ class PresetManager {
    * Deletes a preset by name. If not provided, deletes the currently selected preset.
    * @param {string} [name] Name of the preset to delete.
    */
-  async deletePreset(name) {
+  async deletePreset(name?: any) {
     const { preset_names, presets } = this.getPresetList();
     const value = name ? (this.isKeyedApi() ? this.findPreset(name) : name) : this.getSelectedPreset();
     const nameToDelete = name || this.getSelectedPresetName();
@@ -854,7 +854,7 @@ class PresetManager {
    * @param {string} name Name of the preset to restore
    * @returns {Promise<any>} Default preset object, or undefined if the request fails
    */
-  async getDefaultPreset(name) {
+  async getDefaultPreset(name: any) {
     const response = await fetch("/api/presets/restore", {
       method: "POST",
       headers: getRequestHeaders(),
@@ -879,7 +879,7 @@ class PresetManager {
    * @param {string} options.path Path to the preset extension field, e.g. 'myextension.data'. If empty, reads the entire extensions object.
    * @return {any} The value of the preset extension field, or null if not found.
    */
-  readPresetExtensionField({ name, path }) {
+  readPresetExtensionField({ name, path }: any) {
     const { settings } = this.getPresetList();
     const selectedName = this.getSelectedPresetName();
     const presetName = name || selectedName;
@@ -909,7 +909,7 @@ class PresetManager {
    * @param {any} options.value Value to write to the preset extension field.
    * @return {Promise<void>} Resolves when the preset is saved.
    */
-  async writePresetExtensionField({ name, path, value }) {
+  async writePresetExtensionField({ name, path, value }: any) {
     const { settings } = this.getPresetList();
     const selectedName = this.getSelectedPresetName();
     const presetName = name || selectedName;
@@ -943,7 +943,7 @@ class PresetManager {
  * @param {string} name Unnamed arguments
  * @returns {Promise<string>} Selected or current preset name
  */
-async function presetCommandCallback(_, name) {
+async function presetCommandCallback(_: any, name: any) {
   const shouldReconnect = online_status !== "no_connection";
   const presetManager = getPresetManager();
   const allPresets = presetManager.getAllPresets();
@@ -1032,7 +1032,7 @@ export async function initPresetManager() {
           enumProvider: () =>
             getPresetManager()
               .getAllPresets()
-              .map((preset) => new SlashCommandEnumValue(preset, null, enumTypes.enum, enumIcons.preset)),
+              .map((preset: any) => new SlashCommandEnumValue(preset, null, enumTypes.enum, enumIcons.preset)),
         }),
       ],
       helpString: `
@@ -1269,7 +1269,7 @@ export async function initPresetManager() {
     if (!(e.target instanceof HTMLInputElement)) {
       return;
     }
-    const file = e.target.files[0];
+    const file = e.target.files![0];
 
     if (!file) {
       return;
@@ -1278,7 +1278,7 @@ export async function initPresetManager() {
     const data = await parseJsonFile(file);
     const fileName = file.name.replace(".json", "");
     await PresetManager.performMasterImport(data, fileName);
-    e.target.value = null;
+    (e.target as any).value = null;
   });
 
   $("#af_master_export").on("click", async () => {

@@ -16,7 +16,7 @@ import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
 import { renderTemplateAsync } from "./templates.ts";
 import { isTrueBoolean, resetScrollHeight } from "./utils.ts";
 
-export let system_prompts = [];
+export let system_prompts: any[] = [];
 
 const $enabled = $("#sysprompt_enabled");
 const $select = $("#sysprompt_select");
@@ -53,7 +53,7 @@ async function migrateSystemPromptFromInstructMode() {
  * Loads sysprompt settings from the given data object.
  * @param {object} data Settings data object.
  */
-export async function loadSystemPrompts(data) {
+export async function loadSystemPrompts(data: any) {
   if (data.sysprompt !== undefined) {
     system_prompts = data.sysprompt;
   }
@@ -79,7 +79,7 @@ export async function loadSystemPrompts(data) {
  * @param {string} name Name of the instruct template
  * @param {object} template Instruct template object
  */
-export async function checkForSystemPromptInInstructTemplate(name, template) {
+export async function checkForSystemPromptInInstructTemplate(name: any, template: any) {
   if (!template || !name || typeof name !== "string" || typeof template !== "object") {
     return;
   }
@@ -114,7 +114,7 @@ function toggleSystemPromptDisabledControls() {
  * @param {boolean} state System prompt state
  * @returns {string} Empty string
  */
-function setSystemPromptStateCallback(state) {
+function setSystemPromptStateCallback(state: any) {
   power_user.sysprompt.enabled = state;
   $enabled.prop("checked", state);
   toggleSystemPromptDisabledControls();
@@ -122,7 +122,7 @@ function setSystemPromptStateCallback(state) {
   return "";
 }
 
-function toggleSystemPromptCallback(_args, state) {
+function toggleSystemPromptCallback(_args: any, state: any) {
   if (!state || typeof state !== "string") {
     return String(power_user.sysprompt.enabled);
   }
@@ -132,7 +132,7 @@ function toggleSystemPromptCallback(_args, state) {
   return String(power_user.sysprompt.enabled);
 }
 
-function selectSystemPromptCallback(args, name) {
+function selectSystemPromptCallback(args: any, name: any) {
   if (!power_user.sysprompt.enabled && !isTrueBoolean(args.forceGet)) {
     return "";
   }

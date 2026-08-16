@@ -157,13 +157,13 @@ function showKeysButton() {
   const providerRequiresKey = KEY_REQUIRED.includes(extension_settings.translate.provider);
   const providerOptionalUrl = LOCAL_URL.includes(extension_settings.translate.provider);
   $("#translate_key_button").toggle(providerRequiresKey).data("key", extension_settings.translate.provider);
-  $("#translate_key_button").toggleClass("success", Boolean(secret_state[extension_settings.translate.provider]));
+  $("#translate_key_button").toggleClass("success", Boolean((secret_state as Record<string, any>)[extension_settings.translate.provider]));
   $("#translate_url_button")
     .toggle(providerOptionalUrl)
     .data("key", extension_settings.translate.provider + "_url");
   $("#translate_url_button").toggleClass(
     "success",
-    Boolean(secret_state[extension_settings.translate.provider + "_url"]),
+    Boolean((secret_state as Record<string, any>)[extension_settings.translate.provider + "_url"]),
   );
   $("#deepl_api_endpoint").toggle(extension_settings.translate.provider === "deepl");
 }
@@ -171,7 +171,7 @@ function showKeysButton() {
 function loadSettings() {
   for (const key in defaultSettings) {
     if (!Object.hasOwn(extension_settings.translate, key)) {
-      extension_settings.translate[key] = defaultSettings[key];
+      (extension_settings.translate as Record<string, any>)[key] = (defaultSettings as Record<string, any>)[key];
     }
   }
 
@@ -192,15 +192,15 @@ function loadSettings() {
  * @param {string|number} messageId Message ID
  * @returns {boolean} Whether the swipe is being generated
  */
-function isGeneratingSwipe(messageId) {
+function isGeneratingSwipe(messageId: any) {
   return $(`#chat .mes[mesid="${messageId}"] .mes_text`).text() === "...";
 }
 
 async function translateImpersonate() {
   const sendTextArea = $("#send_textarea");
-  const text = sendTextArea.val().toString();
+  const text = sendTextArea.val()?.toString() ?? "";
   const translatedText = await translate(text, extension_settings.translate.target_language);
-  sendTextArea.val(translatedText);
+  sendTextArea.val(translatedText ?? "");
 }
 
 /**
@@ -208,7 +208,7 @@ async function translateImpersonate() {
  * @param {string | number} messageId Message ID
  * @returns {Promise<void>}
  */
-async function translateIncomingMessage(messageId) {
+async function translateIncomingMessage(messageId: any) {
   const context = getContext();
   const message = context.chat[messageId];
 
@@ -236,7 +236,7 @@ async function translateIncomingMessage(messageId) {
  * @param {string | number} messageId
  * @returns {Promise<boolean>} translated or not
  */
-async function translateIncomingMessageReasoning(messageId) {
+async function translateIncomingMessageReasoning(messageId: any) {
   const context = getContext();
   const message = context.chat[messageId];
 
@@ -260,7 +260,7 @@ async function translateIncomingMessageReasoning(messageId) {
   return true;
 }
 
-async function translateProviderOneRing(text, lang) {
+async function translateProviderOneRing(text: any, lang: any) {
   const from_lang =
     lang == extension_settings.translate.internal_language
       ? extension_settings.translate.target_language
@@ -286,7 +286,7 @@ async function translateProviderOneRing(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderLibre(text, lang) {
+async function translateProviderLibre(text: any, lang: any) {
   const response = await fetch("/api/translate/libre", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -307,7 +307,7 @@ async function translateProviderLibre(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderGoogle(text, lang) {
+async function translateProviderGoogle(text: any, lang: any) {
   const response = await fetch("/api/translate/google", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -328,7 +328,7 @@ async function translateProviderGoogle(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderLingva(text, lang) {
+async function translateProviderLingva(text: any, lang: any) {
   const response = await fetch("/api/translate/lingva", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -349,7 +349,7 @@ async function translateProviderLingva(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderDeepl(text, lang) {
+async function translateProviderDeepl(text: any, lang: any) {
   if (!(secret_state as { deepl?: string }).deepl) {
     throw new Error("No DeepL API key");
   }
@@ -375,7 +375,7 @@ async function translateProviderDeepl(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderDeepLX(text, lang) {
+async function translateProviderDeepLX(text: any, lang: any) {
   const response = await fetch("/api/translate/deeplx", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -396,7 +396,7 @@ async function translateProviderDeepLX(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderBing(text, lang) {
+async function translateProviderBing(text: any, lang: any) {
   const response = await fetch("/api/translate/bing", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -417,7 +417,7 @@ async function translateProviderBing(text, lang) {
  * @param {string} lang Target language code
  * @returns {Promise<string>} Translated text
  */
-async function translateProviderYandex(text, lang) {
+async function translateProviderYandex(text: any, lang: any) {
   let chunks = [];
   const chunkSize = 5000;
   if (text.length <= chunkSize) {
@@ -447,7 +447,7 @@ async function translateProviderYandex(text, lang) {
  * @param {number} chunkSize Maximum chunk size
  * @returns {Promise<string>} Translated text
  */
-async function chunkedTranslate(text, lang, translateFn, chunkSize = 5000) {
+async function chunkedTranslate(text: any, lang: any, translateFn: any, chunkSize: any = 5000) {
   if (text.length <= chunkSize) {
     return await translateFn(text, lang);
   }
@@ -468,7 +468,7 @@ async function chunkedTranslate(text, lang, translateFn, chunkSize = 5000) {
  * @param {string} provider Translation provider to use
  * @returns {Promise<string>} Translated text
  */
-async function translate(text, lang, provider = null) {
+async function translate(text: any, lang: any, provider: any = null) {
   try {
     if (text == "") {
       return "";
@@ -506,7 +506,7 @@ async function translate(text, lang, provider = null) {
  * @param {string} provider Translation provider to use
  * @returns {Promise<string>} Translated text
  */
-async function translateInner(text, lang, provider) {
+async function translateInner(text: any, lang: any, provider: any) {
   if (text == "") {
     return "";
   }
@@ -536,7 +536,7 @@ async function translateInner(text, lang, provider) {
   }
 }
 
-async function translateOutgoingMessage(messageId) {
+async function translateOutgoingMessage(messageId: any) {
   const context = getContext();
   const message = context.chat[messageId];
 
@@ -552,12 +552,12 @@ async function translateOutgoingMessage(messageId) {
   console.log("translateOutgoingMessage", messageId);
 }
 
-function shouldTranslate(types) {
+function shouldTranslate(types: any) {
   return types.includes(extension_settings.translate.auto_mode);
 }
 
-function createEventHandler(translateFunction, shouldTranslateFunction) {
-  return async (data) => {
+function createEventHandler(translateFunction: any, shouldTranslateFunction: any) {
+  return async (data: any) => {
     if (shouldTranslateFunction()) {
       await translateFunction(data);
     }
@@ -578,7 +578,7 @@ async function onTranslateInputMessageClick() {
 
   const toast = toastr.info("Input Message is translating", "Please wait...");
   const translatedText = await translate(textarea.value, extension_settings.translate.internal_language);
-  textarea.value = translatedText;
+  textarea.value = translatedText ?? "";
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
   toastr.clear(toast);
 }
@@ -634,7 +634,7 @@ async function onTranslationsClearClick() {
   await reloadCurrentChat();
 }
 
-async function translateMessageEdit(messageId) {
+async function translateMessageEdit(messageId: any) {
   const context = getContext();
   const chat = context.chat;
   const message = chat[messageId];
@@ -660,7 +660,7 @@ async function translateMessageEdit(messageId) {
   }
 }
 
-async function translateMessageReasoningEdit(messageId) {
+async function translateMessageReasoningEdit(messageId: any) {
   const context = getContext();
   const chat = context.chat;
   const message = chat[messageId];
@@ -685,7 +685,7 @@ async function translateMessageReasoningEdit(messageId) {
   }
 }
 
-async function removeReasoningDisplayText(messageId) {
+async function removeReasoningDisplayText(messageId: any) {
   const context = getContext();
   const message = context.chat[messageId];
   if (message.extra?.reasoning_display_text) {
@@ -695,10 +695,10 @@ async function removeReasoningDisplayText(messageId) {
   }
 }
 
-async function onMessageTranslateClick() {
+async function onMessageTranslateClick(this: any) {
   const context = getContext();
   const messageId = $(this).closest(".mes").attr("mesid");
-  const message = context.chat[messageId];
+  const message = context.chat[messageId as any];
 
   // If the message is already translated, revert it back to the original text
   let alreadyTranslated = false;
@@ -723,7 +723,7 @@ async function onMessageTranslateClick() {
 }
 
 const handleIncomingMessage = createEventHandler(
-  async (messageId) => {
+  async (messageId: any) => {
     await translateIncomingMessageReasoning(messageId);
     await translateIncomingMessage(messageId);
   },
@@ -735,7 +735,7 @@ const handleMessageEdit = createEventHandler(translateMessageEdit, () => true);
 const handleMessageReasoningEdit = createEventHandler(translateMessageReasoningEdit, () => true);
 const handleMessageReasoningDelete = createEventHandler(removeReasoningDisplayText, () => true);
 
-globalThis.translate = translate;
+(globalThis as any).translate = translate;
 
 export async function init() {
   const html = await renderExtensionTemplateAsync("translate", "index");
@@ -783,14 +783,14 @@ export async function init() {
   $(document).on("click", ".mes_translate", onMessageTranslateClick);
 
   [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((eventType) => {
-    eventSource.on(eventType, (/** @type {string} */ key) => {
+    eventSource.on(eventType, (/** @type {string} */ key: any) => {
       if (key === extension_settings.translate.provider) {
-        $("#translate_key_button").toggleClass("success", !!secret_state[extension_settings.translate.provider]);
+        $("#translate_key_button").toggleClass("success", !!(secret_state as Record<string, any>)[extension_settings.translate.provider]);
       }
       if (key === `${extension_settings.translate.provider}_url`) {
         $("#translate_url_button").toggleClass(
           "success",
-          !!secret_state[`${extension_settings.translate.provider}_url`],
+          !!(secret_state as Record<string, any>)[`${extension_settings.translate.provider}_url`],
         );
       }
     });
@@ -820,8 +820,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "",
-          Object.values(languageCodes),
+          null as any,
+          Object.values(languageCodes) as any,
         ),
         SlashCommandNamedArgument.fromProps({
           name: "provider",
@@ -831,13 +831,13 @@ export async function init() {
           isRequired: false,
           acceptsMultiple: false,
           enumProvider: () =>
-            Array.from(document.getElementById("translation_provider").querySelectorAll("option")).map(
-              (option) => new SlashCommandEnumValue(option.value, option.text, enumTypes.name, enumIcons.server),
+            Array.from(document.getElementById("translation_provider")?.querySelectorAll("option") ?? []).map(
+              (option: any) => new SlashCommandEnumValue(option.value, option.text, enumTypes.name, enumIcons.server),
             ),
         }),
       ],
-      unnamedArgumentList: [new SlashCommandArgument("The text to translate", ARGUMENT_TYPE.STRING, true, false, "")],
-      callback: async (args, value) => {
+      unnamedArgumentList: [new SlashCommandArgument("The text to translate", ARGUMENT_TYPE.STRING, true, false, null as any)],
+      callback: async (args: any, value: any) => {
         const target =
           args?.target && Object.values(languageCodes).includes(String(args.target))
             ? String(args.target)

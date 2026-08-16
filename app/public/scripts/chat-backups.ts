@@ -6,13 +6,13 @@ import { importGroupChat } from "./group-chats.ts";
 
 class BackupsBrowser {
   /** @type {HTMLElement} */
-  #buttonElement;
+  #buttonElement: any;
   /** @type {HTMLElement} */
-  #buttonChevronIcon;
+  #buttonChevronIcon: any;
   /** @type {HTMLElement} */
-  #backupsListElement;
+  #backupsListElement: any;
   /** @type {AbortController} */
-  #loadingAbortController;
+  #loadingAbortController: any;
   /** @type {boolean} */
   #isOpen = false;
 
@@ -25,7 +25,7 @@ class BackupsBrowser {
    * @param {string} name File name of the backup to view.
    * @returns {Promise<void>}
    */
-  async viewBackup(name) {
+  async viewBackup(this: any, name: any) {
     const response = await fetch("/api/backups/chat/download", {
       method: "POST",
       headers: getRequestHeaders(),
@@ -40,7 +40,7 @@ class BackupsBrowser {
 
     try {
       /** @type {ChatMessage[]} */
-      const parsedLines = [];
+      const parsedLines: any[] = [];
       const fileText = await response.text();
       fileText.split("\n").forEach((line) => {
         try {
@@ -72,7 +72,7 @@ class BackupsBrowser {
    * @param {string} name File name of the backup to restore.
    * @returns {Promise<void>}
    */
-  async restoreBackup(name) {
+  async restoreBackup(this: any, name: any) {
     const response = await fetch("/api/backups/chat/download", {
       method: "POST",
       headers: getRequestHeaders(),
@@ -100,7 +100,7 @@ class BackupsBrowser {
     const formData = new FormData();
     formData.set("file_type", extension);
     formData.set("avatar", file);
-    formData.set("avatar_url", context.characters[context.characterId]?.avatar || "");
+    formData.set("avatar_url", (context.characters as Record<string, any>)[context.characterId ?? '']?.avatar || "");
     formData.set("user_name", context.name1);
     formData.set("character_name", context.name2);
 
@@ -121,7 +121,7 @@ class BackupsBrowser {
    * @param {string} name File name of the backup to delete.
    * @returns {Promise<boolean>} True if deleted, false otherwise.
    */
-  async deleteBackup(name) {
+  async deleteBackup(this: any, name: any) {
     const confirm = await (Popup.show.confirm as any)(t`Are you sure?`);
     if (!confirm) {
       return false;
@@ -148,7 +148,7 @@ class BackupsBrowser {
    * @param {AbortSignal} signal Signal to abort loading.
    * @returns {Promise<void>}
    */
-  async loadBackupsIntoList(signal) {
+  async loadBackupsIntoList(this: any, signal: any) {
     if (!this.#backupsListElement) {
       return;
     }
@@ -169,7 +169,7 @@ class BackupsBrowser {
     /** @type {import('../../src/endpoints/chats.js').ChatInfo[]} */
     const backupsList = await response.json();
 
-    for (const backup of backupsList.sort((a, b) =>
+    for (const backup of backupsList.sort((a: any, b: any) =>
       sortMoments(timestampToMoment(a.last_mes), timestampToMoment(b.last_mes)),
     )) {
       const listItem = document.createElement("div");
@@ -300,7 +300,7 @@ class BackupsBrowser {
       }
     });
 
-    sibling.parentNode.insertBefore(button, sibling);
+    sibling.parentNode!.insertBefore(button, sibling);
 
     this.#buttonElement = button;
     this.#buttonChevronIcon = chevronIcon;
@@ -320,7 +320,7 @@ class BackupsBrowser {
     const list = document.createElement("div");
     list.classList.add("chatBackupsList");
 
-    sibling.parentNode.insertBefore(list, sibling);
+    sibling.parentNode!.insertBefore(list, sibling);
     this.#backupsListElement = list;
   }
 }

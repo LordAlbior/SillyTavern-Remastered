@@ -1,19 +1,20 @@
-import { MacroRegistry, MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+import { MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
 import { chat, chat_metadata } from "../../../script.ts";
+const _MacroRegistry: any = (await import("../engine/MacroRegistry.ts" as string)).MacroRegistry;
 
 /**
  * Registers macros that inspect the current chat log and swipe state
  * (message texts, indices, swipes, and context boundaries).
  */
 export function registerChatMacros() {
-  MacroRegistry.registerMacro("lastMessage", {
+  _MacroRegistry.registerMacro("lastMessage", {
     category: MacroCategory.CHAT,
     description: "Last message in the chat.",
     returns: "Last message in the chat.",
     handler: () => String(getLastMessage() ?? ""),
   });
 
-  MacroRegistry.registerMacro("lastMessageId", {
+  _MacroRegistry.registerMacro("lastMessageId", {
     category: MacroCategory.CHAT,
     description: "Index of the last message in the chat.",
     returns: "Index of the last message in the chat.",
@@ -21,21 +22,21 @@ export function registerChatMacros() {
     handler: () => String(getLastMessageId() ?? ""),
   });
 
-  MacroRegistry.registerMacro("lastUserMessage", {
+  _MacroRegistry.registerMacro("lastUserMessage", {
     category: MacroCategory.CHAT,
     description: "Last user message in the chat.",
     returns: "Last user message in the chat.",
     handler: () => String(getLastUserMessage() ?? ""),
   });
 
-  MacroRegistry.registerMacro("lastCharMessage", {
+  _MacroRegistry.registerMacro("lastCharMessage", {
     category: MacroCategory.CHAT,
     description: "Last character/bot message in the chat.",
     returns: "Last character/bot message in the chat.",
     handler: () => String(getLastCharMessage() ?? ""),
   });
 
-  MacroRegistry.registerMacro("firstIncludedMessageId", {
+  _MacroRegistry.registerMacro("firstIncludedMessageId", {
     category: MacroCategory.CHAT,
     description: "Index of the first message included in the current context.",
     returns: "Index of the first message included in the context.",
@@ -43,7 +44,7 @@ export function registerChatMacros() {
     handler: () => String(getFirstIncludedMessageId() ?? ""),
   });
 
-  MacroRegistry.registerMacro("firstDisplayedMessageId", {
+  _MacroRegistry.registerMacro("firstDisplayedMessageId", {
     category: MacroCategory.CHAT,
     description: "Index of the first displayed message in the chat.",
     returns: "Index of the first displayed message in the chat.",
@@ -51,7 +52,7 @@ export function registerChatMacros() {
     handler: () => String(getFirstDisplayedMessageId() ?? ""),
   });
 
-  MacroRegistry.registerMacro("lastSwipeId", {
+  _MacroRegistry.registerMacro("lastSwipeId", {
     category: MacroCategory.CHAT,
     description: "1-based index of the last swipe for the last message.",
     returns: "1-based index of the last swipe.",
@@ -59,7 +60,7 @@ export function registerChatMacros() {
     handler: () => String(getLastSwipeId() ?? ""),
   });
 
-  MacroRegistry.registerMacro("currentSwipeId", {
+  _MacroRegistry.registerMacro("currentSwipeId", {
     category: MacroCategory.CHAT,
     description: "1-based index of the current swipe.",
     returns: "1-based index of the current swipe.",
@@ -67,7 +68,7 @@ export function registerChatMacros() {
     handler: () => String(getCurrentSwipeId() ?? ""),
   });
 
-  MacroRegistry.registerMacro("allChatRange", {
+  _MacroRegistry.registerMacro("allChatRange", {
     category: MacroCategory.CHAT,
     description: 'Range of all message IDs in the chat (e.g. "0-10"). Empty string if the chat is empty.',
     returns: "Range string from 0 to last message ID, or empty string.",
@@ -80,7 +81,7 @@ export function registerChatMacros() {
   });
 }
 
-function getLastMessageId({ exclude_swipe_in_propress = true, filter = null } = {}) {
+function getLastMessageId({ exclude_swipe_in_propress = true, filter = null }: any = {}) {
   if (!Array.isArray(chat) || chat.length === 0) {
     return null;
   }
@@ -92,7 +93,7 @@ function getLastMessageId({ exclude_swipe_in_propress = true, filter = null } = 
       continue;
     }
 
-    if (!filter || filter(message)) {
+    if (!filter || (filter as any)(message)) {
       return i;
     }
   }
@@ -106,12 +107,12 @@ function getLastMessage() {
 }
 
 function getLastUserMessage() {
-  const mid = getLastMessageId({ filter: (m) => m.is_user && !m.is_system });
+  const mid = getLastMessageId({ filter: (m: any) => m.is_user && !m.is_system });
   return typeof mid === "number" ? (chat[mid]?.mes ?? "") : "";
 }
 
 function getLastCharMessage() {
-  const mid = getLastMessageId({ filter: (m) => !m.is_user && !m.is_system });
+  const mid = getLastMessageId({ filter: (m: any) => !m.is_user && !m.is_system });
   return typeof mid === "number" ? (chat[mid]?.mes ?? "") : "";
 }
 

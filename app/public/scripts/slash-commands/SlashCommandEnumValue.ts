@@ -33,9 +33,9 @@ export const enumTypes = {
    * @param {number?} index - The index used to retrieve the enum type
    * @return {EnumType} The enum type corresponding to the index
    */
-  getBasedOnIndex(index) {
+  getBasedOnIndex(index: any): any {
     const keys = Object.keys(this);
-    return this[keys[(index ?? 0) % keys.length]];
+    return (this as Record<string, any>)[keys[(index ?? 0) % keys.length]];
   },
 };
 
@@ -60,13 +60,13 @@ export class SlashCommandEnumValue {
    * @param {boolean?} makeSelectable - Set to true to make the value selectable (through tab/enter) even though a valueProvider exists.
    */
   constructor(
-    value,
-    description = null,
-    type = "enum",
-    typeIcon = "◊",
-    matchProvider = null,
-    valueProvider = null,
-    makeSelectable = false,
+    value: any,
+    description: any = null,
+    type: any = "enum",
+    typeIcon: any = "◊",
+    matchProvider: any = null,
+    valueProvider: any = null,
+    makeSelectable: any = false,
   ) {
     this.value = value;
     this.description = description;

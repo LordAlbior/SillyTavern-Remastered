@@ -1,13 +1,13 @@
 import { QuickReplySet } from "./QuickReplySet.ts";
 
 export class QuickReplyContextLink {
-  static from(props) {
+  static from(props: any) {
     props.set = QuickReplySet.get(props.set);
     const x = Object.assign(new this(), props);
     return x;
   }
 
-  /**@type {QuickReplySet}*/ set;
+  /**@type {QuickReplySet}*/ set: any;
   /**@type {Boolean}*/ isChained = false;
 
   toJSON() {

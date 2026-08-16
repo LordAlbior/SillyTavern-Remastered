@@ -101,7 +101,7 @@ const converters = {
  * @param {string} type MIME type
  * @returns {string} Matching key
  */
-function findConverterKey(type) {
+function findConverterKey(type: any) {
   return Object.keys(converters).find((key) => {
     // Match exact type
     if (type === key) {
@@ -122,7 +122,7 @@ function findConverterKey(type) {
  * @param {string} type MIME type
  * @returns {boolean} True if the file type is convertible, false otherwise.
  */
-function isConvertible(type) {
+function isConvertible(type: any) {
   return Boolean(findConverterKey(type));
 }
 
@@ -131,9 +131,9 @@ function isConvertible(type) {
  * @param {string} type MIME type
  * @returns {ConverterFunction} Converter function
  */
-function getConverter(type) {
+function getConverter(type: any) {
   const key = findConverterKey(type);
-  return key && converters[key];
+  return key && (converters as Record<string, any>)[key];
 }
 
 /**
@@ -144,7 +144,7 @@ function getConverter(type) {
  * @param {string} nameFitler Optional name filter
  * @returns {Promise<void>}
  */
-export async function hideChatMessageRange(start, end, unhide, nameFitler = null) {
+export async function hideChatMessageRange(start: any, end: any, unhide: any, nameFitler = null) {
   if (isNaN(start)) return;
   if (!end) end = start;
   const hide = !unhide;
@@ -175,7 +175,7 @@ export async function hideChatMessageRange(start, end, unhide, nameFitler = null
  * @param {JQuery<Element>} _messageBlock Unused
  * @returns {Promise<void>}
  */
-export async function hideChatMessage(messageId, _messageBlock) {
+export async function hideChatMessage(messageId: any, _messageBlock: any) {
   return hideChatMessageRange(messageId, messageId, false);
 }
 
@@ -186,7 +186,7 @@ export async function hideChatMessage(messageId, _messageBlock) {
  * @param {JQuery<Element>} _messageBlock Unused
  * @returns {Promise<void>}
  */
-export async function unhideChatMessage(messageId, _messageBlock) {
+export async function unhideChatMessage(messageId: any, _messageBlock: any) {
   return hideChatMessageRange(messageId, messageId, true);
 }
 
@@ -195,14 +195,14 @@ export async function unhideChatMessage(messageId, _messageBlock) {
  * @param {ChatMessage} message Message object
  * @returns {Promise<void>} A promise that resolves when file is uploaded.
  */
-export async function populateFileAttachment(message, inputId = "file_form_input") {
+export async function populateFileAttachment(message: any, inputId = "file_form_input") {
   try {
     if (!message) return;
     if (!message.extra || typeof message.extra !== "object") message.extra = {};
     const fileInput = document.getElementById(inputId);
     if (!(fileInput instanceof HTMLInputElement)) return;
 
-    for (const file of fileInput.files) {
+    for (const file of fileInput.files!) {
       const slug = getStringHash(file.name);
       const fileNamePrefix = `${Date.now()}_${slug}`;
       const fileBase64 = await getBase64Async(file);
@@ -271,7 +271,7 @@ export async function populateFileAttachment(message, inputId = "file_form_input
  * @param {string} base64Data
  * @returns {Promise<string>} File URL
  */
-export async function uploadFileAttachment(fileName, base64Data) {
+export async function uploadFileAttachment(fileName: any, base64Data: any) {
   try {
     const result = await fetch("/api/files/upload", {
       method: "POST",
@@ -300,7 +300,7 @@ export async function uploadFileAttachment(fileName, base64Data) {
  * @param {string} url File URL
  * @returns {Promise<string>} File text
  */
-export async function getFileAttachment(url) {
+export async function getFileAttachment(url: any) {
   try {
     const result = await fetch(url, {
       method: "GET",
@@ -326,7 +326,7 @@ export async function getFileAttachment(url) {
  * @param {File} file File object
  * @returns {Promise<boolean>} True if file is valid, false otherwise.
  */
-async function validateFile(file) {
+async function validateFile(file: any) {
   const fileText = await file.text();
   const isMedia = file.type.startsWith("image/") || file.type.startsWith("video/") || file.type.startsWith("audio/");
   const isBinary = /^[\x00-\x08\x0E-\x1F\x7F-\xFF]*$/.test(fileText);
@@ -348,7 +348,7 @@ async function validateFile(file) {
 export function hasPendingFileAttachment() {
   const fileInput = document.getElementById("file_form_input");
   if (!(fileInput instanceof HTMLInputElement)) return false;
-  return fileInput.files.length > 0;
+  return fileInput.files!.length > 0;
 }
 
 /**
@@ -356,7 +356,7 @@ export function hasPendingFileAttachment() {
  * @param {FileList} fileList File object
  * @returns {Promise<void>}
  */
-async function onFileAttach(fileList) {
+async function onFileAttach(fileList: any) {
   if (!fileList || fileList.length === 0) return;
 
   for (const file of fileList) {
@@ -392,7 +392,7 @@ async function onFileAttach(fileList) {
  * @param {number} messageId Message ID
  * @param {number} fileIndex File index
  */
-async function deleteMessageFile(messageBlock, messageId, fileIndex) {
+async function deleteMessageFile(messageBlock: any, messageId: any, fileIndex: any) {
   if (isNaN(messageId) || isNaN(fileIndex)) {
     console.warn("Invalid message ID or file index");
     return;
@@ -431,7 +431,7 @@ async function deleteMessageFile(messageBlock, messageId, fileIndex) {
  * @param {number} messageId Message ID
  * @param {number} fileIndex File index
  */
-async function viewMessageFile(messageId, fileIndex) {
+async function viewMessageFile(messageId: any, fileIndex: any) {
   if (isNaN(messageId) || isNaN(fileIndex)) {
     console.warn("Invalid message ID or file index");
     return;
@@ -465,7 +465,7 @@ async function viewMessageFile(messageId, fileIndex) {
  * @param {JQuery<HTMLElement>} messageBlock
  * @returns {Promise<void>}
  */
-function embedMessageFile(messageId, messageBlock) {
+function embedMessageFile(messageId: any, messageBlock: any) {
   const message = chat[messageId];
 
   if (!message) {
@@ -475,7 +475,7 @@ function embedMessageFile(messageId, messageBlock) {
 
   $("#embed_file_input").off("change").on("change", parseAndUploadEmbed).trigger("click");
 
-  async function parseAndUploadEmbed(/** @type {JQuery.ChangeEvent} */ e) {
+  async function parseAndUploadEmbed(/** @type {JQuery.ChangeEvent} */ e: any) {
     if (!(e.target instanceof HTMLInputElement)) return;
     if (!e.target.files.length) return;
 
@@ -502,7 +502,7 @@ function embedMessageFile(messageId, messageBlock) {
  * @param {string} messageText Message text
  * @returns {Promise<string>} Message text with file content appended.
  */
-export async function appendFileContent(message, messageText) {
+export async function appendFileContent(message: any, messageText: any) {
   if (!message || !message.extra || typeof message.extra !== "object") {
     return messageText;
   }
@@ -530,9 +530,9 @@ export async function appendFileContent(message, messageText) {
  * @returns {string} Encoded message text
  * @copyright https://github.com/kwaroran/risuAI
  */
-export function encodeStyleTags(text) {
+export function encodeStyleTags(text: any) {
   const styleRegex = /<style>(.+?)<\/style>/gims;
-  return text.replaceAll(styleRegex, (_, match) => {
+  return text.replaceAll(styleRegex, (_: any, match: any) => {
     return `<custom-style>${encodeURIComponent(match)}</custom-style>`;
   });
 }
@@ -545,11 +545,11 @@ export function encodeStyleTags(text) {
  * @returns {string} Sanitized message text
  * @copyright https://github.com/kwaroran/risuAI
  */
-export function decodeStyleTags(text, { prefix } = { prefix: ".mes_text " }) {
+export function decodeStyleTags(text: any, { prefix }: any = { prefix: ".mes_text " }) {
   const styleDecodeRegex = /<custom-style>(.+?)<\/custom-style>/gms;
   const mediaAllowed = isExternalMediaAllowed();
 
-  function sanitizeRule(rule) {
+  function sanitizeRule(rule: any) {
     if (Array.isArray(rule.selectors)) {
       for (let i = 0; i < rule.selectors.length; i++) {
         const selector = rule.selectors[i];
@@ -559,17 +559,17 @@ export function decodeStyleTags(text, { prefix } = { prefix: ".mes_text " }) {
       }
     }
     if (!mediaAllowed && Array.isArray(rule.declarations) && rule.declarations.length > 0) {
-      rule.declarations = rule.declarations.filter((declaration) => !declaration.value.includes("://"));
+      rule.declarations = rule.declarations.filter((declaration: any) => !declaration.value.includes("://"));
     }
   }
 
-  function sanitizeSelector(selector) {
+  function sanitizeSelector(selector: any) {
     // Handle pseudo-classes that can contain nested selectors
     const pseudoClasses = ["has", "not", "where", "is", "matches", "any"];
     const pseudoRegex = new RegExp(`:(${pseudoClasses.join("|")})\\(([^)]+)\\)`, "g");
 
     // First, sanitize any nested selectors within pseudo-classes
-    selector = selector.replace(pseudoRegex, (match, pseudoClass, content) => {
+    selector = selector.replace(pseudoRegex, (match: any, pseudoClass: any, content: any) => {
       // Recursively sanitize the content within the pseudo-class
       const sanitizedContent = sanitizeSimpleSelector(content);
       return `:${pseudoClass}(${sanitizedContent})`;
@@ -579,13 +579,13 @@ export function decodeStyleTags(text, { prefix } = { prefix: ".mes_text " }) {
     return sanitizeSimpleSelector(selector);
   }
 
-  function sanitizeSimpleSelector(selector) {
+  function sanitizeSimpleSelector(selector: any) {
     // Split by spaces but preserve complex selectors
     return selector
       .split(/\s+/)
-      .map((part) => {
+      .map((part: any) => {
         // Handle class selectors, but preserve pseudo-classes and other complex parts
-        return part.replace(/\.([\w-]+)/g, (match, className) => {
+        return part.replace(/\.([\w-]+)/g, (match: any, className: any) => {
           // Don't modify if it's already prefixed with 'custom-'
           if (className.startsWith("custom-")) {
             return match;
@@ -596,13 +596,13 @@ export function decodeStyleTags(text, { prefix } = { prefix: ".mes_text " }) {
       .join(" ");
   }
 
-  function sanitizeRuleSet(ruleSet) {
+  function sanitizeRuleSet(ruleSet: any) {
     if (Array.isArray(ruleSet.selectors) || Array.isArray(ruleSet.declarations)) {
       sanitizeRule(ruleSet);
     }
 
     if (Array.isArray(ruleSet.rules)) {
-      ruleSet.rules = ruleSet.rules.filter((rule) => rule.type !== "import");
+      ruleSet.rules = ruleSet.rules.filter((rule: any) => rule.type !== "import");
 
       for (const mediaRule of ruleSet.rules) {
         sanitizeRuleSet(mediaRule);
@@ -610,7 +610,7 @@ export function decodeStyleTags(text, { prefix } = { prefix: ".mes_text " }) {
     }
   }
 
-  return text.replaceAll(styleDecodeRegex, (_, style) => {
+  return text.replaceAll(styleDecodeRegex, (_: any, style: any) => {
     try {
       const styleCleaned = decodeURIComponent(style).replaceAll(/<br\/>/g, "");
       const ast = css.parse(styleCleaned);
@@ -666,7 +666,7 @@ class StylesPreference {
    * Sets the global styles preference.
    * @param {boolean} allowed - Whether global styles are allowed
    */
-  set(allowed) {
+  set(allowed: any) {
     if (this.avatarId) {
       accountStorage.setItem(this.key, String(allowed));
     }
@@ -679,7 +679,7 @@ class StylesPreference {
  * @param {string} avatarId Avatar ID
  * @returns {string} Formatted HTML text
  */
-export function formatCreatorNotes(text, avatarId) {
+export function formatCreatorNotes(text: any, avatarId: any) {
   const preference = new StylesPreference(avatarId);
   const sanitizeStyles = !preference.get();
   const decodeStyleParam = { prefix: sanitizeStyles ? "#creator_notes_spoiler " : "" };
@@ -746,8 +746,8 @@ async function checkForCreatorNotesStyles() {
     return;
   }
 
-  const notes = characters[this_chid].data?.creator_notes || characters[this_chid].creatorcomment;
-  const avatarId = characters[this_chid].avatar;
+  const notes = (characters as any)[this_chid].data?.creator_notes || (characters as any)[this_chid].creatorcomment;
+  const avatarId = (characters as any)[this_chid].avatar;
   const styleContents = getStyleContentsFromMarkdown(notes);
 
   if (!styleContents) {
@@ -790,7 +790,7 @@ async function checkForCreatorNotesStyles() {
  * Sets the class of the global styles button based on the state.
  * @param {boolean|null} state State of the button
  */
-function setGlobalStylesButtonClass(state) {
+function setGlobalStylesButtonClass(state: any) {
   const button = $("#creators_note_styles_button");
   button.toggleClass("empty", state === null);
   button.toggleClass("allowed", state === true);
@@ -802,7 +802,7 @@ function setGlobalStylesButtonClass(state) {
  * @param {string} text Markdown text
  * @returns {string} The joined contents of all style elements
  */
-function getStyleContentsFromMarkdown(text) {
+function getStyleContentsFromMarkdown(text: any) {
   if (!text) {
     return "";
   }
@@ -844,7 +844,7 @@ export function getCurrentEntityId() {
     return String(selected_group);
   }
 
-  return characters[this_chid]?.avatar ?? null;
+  return (characters as any)[this_chid!]?.avatar ?? null;
 }
 
 export function isExternalMediaAllowed() {
@@ -870,7 +870,7 @@ export function isExternalMediaAllowed() {
  * @param {number} mediaIndex Media index
  * @returns {HTMLElement} Enlarged media element
  */
-function expandMessageMedia(messageId, mediaIndex) {
+function expandMessageMedia(messageId: any, mediaIndex: any) {
   if (isNaN(messageId) || isNaN(mediaIndex)) {
     console.warn("Invalid message ID or media index");
     return;
@@ -973,7 +973,7 @@ function expandMessageMedia(messageId, mediaIndex) {
  * @param {number} mediaIndex Image index
  * @param {JQuery<HTMLElement>} messageBlock Message block element
  */
-async function deleteMessageMedia(messageId, mediaIndex, messageBlock) {
+async function deleteMessageMedia(messageId: any, mediaIndex: any, messageBlock: any) {
   if (isNaN(messageId) || isNaN(mediaIndex)) {
     console.warn("Invalid message ID or media index");
     return;
@@ -1006,7 +1006,7 @@ async function deleteMessageMedia(messageId, mediaIndex, messageBlock) {
         defaultState: true,
       },
     ],
-    onClose: (popup) => {
+    onClose: (popup: any) => {
       deleteFromServer = Boolean(popup.inputResults.get(deleteFromServerId) ?? false);
     },
   });
@@ -1063,7 +1063,7 @@ async function deleteMessageMedia(messageId, mediaIndex, messageBlock) {
  * @param {JQuery<HTMLElement>} messageBlock Message block element
  * @param {MEDIA_DISPLAY} targetDisplay Target display mode
  */
-async function switchMessageMediaDisplay(messageId, messageBlock, targetDisplay) {
+async function switchMessageMediaDisplay(messageId: any, messageBlock: any, targetDisplay: any) {
   if (isNaN(messageId)) {
     console.warn("Invalid message ID");
     return;
@@ -1092,7 +1092,7 @@ async function switchMessageMediaDisplay(messageId, messageBlock, targetDisplay)
  * @param {boolean} [silent=false] If true, do not show error messages
  * @returns {Promise<boolean>} True if media file was deleted, false otherwise.
  */
-export async function deleteMediaFromServer(url, silent = false) {
+export async function deleteMediaFromServer(url: any, silent = false) {
   try {
     const result = await fetch("/api/images/delete", {
       method: "POST",
@@ -1123,7 +1123,7 @@ export async function deleteMediaFromServer(url, silent = false) {
  * @param {boolean} [silent=false] If true, do not show error messages
  * @returns {Promise<boolean>} True if file was deleted, false otherwise.
  */
-export async function deleteFileFromServer(url, silent = false) {
+export async function deleteFileFromServer(url: any, silent = false) {
   try {
     const result = await fetch("/api/files/delete", {
       method: "POST",
@@ -1152,7 +1152,7 @@ export async function deleteFileFromServer(url, silent = false) {
  * Opens file attachment in a modal.
  * @param {FileAttachment} attachment File attachment
  */
-async function openFilePopup(attachment) {
+async function openFilePopup(attachment: any) {
   const fileText = attachment.text || (await getFileAttachment(attachment.url));
 
   const modalTemplate = $("<div><pre><code></code></pre></div>");
@@ -1169,7 +1169,7 @@ async function openFilePopup(attachment) {
  * @param {string} source Attachment source
  * @param {function} callback Callback function
  */
-async function editAttachment(attachment, source, callback) {
+async function editAttachment(attachment: any, source: any, callback: any) {
   const originalFileText = attachment.text || (await getFileAttachment(attachment.url));
   const template = $(await renderExtensionTemplateAsync("attachments", "notepad"));
 
@@ -1216,7 +1216,7 @@ async function editAttachment(attachment, source, callback) {
  * Downloads an attachment to the user's device.
  * @param {FileAttachment} attachment Attachment to download
  */
-async function downloadAttachment(attachment) {
+async function downloadAttachment(attachment: any) {
   const fileText = attachment.text || (await getFileAttachment(attachment.url));
   const blob = new Blob([fileText], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
@@ -1232,10 +1232,10 @@ async function downloadAttachment(attachment) {
  * @param {FileAttachment} attachment Attachment to enable
  * @param {function} callback Success callback
  */
-function enableAttachment(attachment, callback) {
+function enableAttachment(attachment: any, callback: any) {
   ensureAttachmentsExist();
   extension_settings.disabled_attachments = extension_settings.disabled_attachments.filter(
-    (url) => url !== attachment.url,
+    (url: any) => url !== attachment.url,
   );
   saveSettingsDebounced();
   callback();
@@ -1246,7 +1246,7 @@ function enableAttachment(attachment, callback) {
  * @param {FileAttachment} attachment Attachment to disable
  * @param {function} callback Success callback
  */
-function disableAttachment(attachment, callback) {
+function disableAttachment(attachment: any, callback: any) {
   ensureAttachmentsExist();
   extension_settings.disabled_attachments.push(attachment.url);
   saveSettingsDebounced();
@@ -1260,7 +1260,7 @@ function disableAttachment(attachment, callback) {
  * @param {function} callback Success callback
  * @returns {Promise<void>} A promise that resolves when the attachment is moved.
  */
-async function moveAttachment(attachment, source, callback) {
+async function moveAttachment(attachment: any, source: any, callback: any) {
   let selectedTarget = source;
   const targets = getAvailableTargets();
   const template = $(
@@ -1291,7 +1291,7 @@ async function moveAttachment(attachment, source, callback) {
   }
 
   const content = await getFileAttachment(attachment.url);
-  const file = new File([content], attachment.name, { type: "text/plain" });
+  const file = new File([content as any], attachment.name, { type: "text/plain" });
   await deleteAttachment(attachment, source, () => {}, false);
   await uploadFileAttachmentToServer(file, selectedTarget);
   callback();
@@ -1305,7 +1305,7 @@ async function moveAttachment(attachment, source, callback) {
  * @param {boolean} [confirm=true] If true, show a confirmation dialog
  * @returns {Promise<void>} A promise that resolves when the attachment is deleted.
  */
-export async function deleteAttachment(attachment, source, callback, confirm = true) {
+export async function deleteAttachment(attachment: any, source: any, callback: any, confirm = true) {
   if (confirm) {
     const result = await callGenericPopup("Are you sure you want to delete this attachment?", POPUP_TYPE.CONFIRM);
 
@@ -1318,17 +1318,19 @@ export async function deleteAttachment(attachment, source, callback, confirm = t
 
   switch (source) {
     case "global":
-      extension_settings.attachments = extension_settings.attachments.filter((a) => a.url !== attachment.url);
+      extension_settings.attachments = extension_settings.attachments.filter((a: any) => a.url !== attachment.url);
       saveSettingsDebounced();
       break;
     case "chat":
-      chat_metadata.attachments = chat_metadata.attachments.filter((a) => a.url !== attachment.url);
+      chat_metadata.attachments = chat_metadata.attachments.filter((a: any) => a.url !== attachment.url);
       saveMetadataDebounced();
       break;
-    case "character":
-      extension_settings.character_attachments[characters[this_chid]?.avatar] =
-        extension_settings.character_attachments[characters[this_chid]?.avatar].filter((a) => a.url !== attachment.url);
+    case "character": {
+      const charAvatar = (characters as any)[this_chid!]?.avatar ?? "";
+      (extension_settings.character_attachments as any)[charAvatar] =
+        (extension_settings.character_attachments as any)[charAvatar].filter((a: any) => a.url !== attachment.url);
       break;
+    }
   }
 
   if (
@@ -1351,8 +1353,8 @@ export async function deleteAttachment(attachment, source, callback, confirm = t
  * @param {FileAttachment} attachment Attachment to check
  * @returns {boolean} True if attachment is disabled, false otherwise.
  */
-function isAttachmentDisabled(attachment) {
-  return extension_settings.disabled_attachments.some((url) => url === attachment?.url);
+function isAttachmentDisabled(attachment: any) {
+  return extension_settings.disabled_attachments.some((url: any) => url === attachment?.url);
 }
 
 /**
@@ -1364,14 +1366,14 @@ async function openAttachmentManager() {
    * @param {FileAttachment[]} attachments List of attachments
    * @param {string} source Source of the attachments
    */
-  async function renderList(attachments, source) {
+  async function renderList(attachments: any, source: any) {
     /**
      * Sorts attachments by sortField and sortOrder.
      * @param {FileAttachment} a First attachment
      * @param {FileAttachment} b Second attachment
      * @returns {number} Sort order
      */
-    function sortFn(a, b) {
+    function sortFn(a: any, b: any) {
       const sortValueA = a[sortField];
       const sortValueB = b[sortField];
       if (typeof sortValueA === "string" && typeof sortValueB === "string") {
@@ -1385,7 +1387,7 @@ async function openAttachmentManager() {
      * @param {FileAttachment} a Attachment
      * @returns {boolean} True if attachment matches the filter, false otherwise.
      */
-    function filterFn(a) {
+    function filterFn(a: any) {
       if (!filterString) {
         return true;
       }
@@ -1491,7 +1493,7 @@ async function openAttachmentManager() {
           return;
         }
 
-        const bodyListener = (e) => {
+        const bodyListener = (e: any) => {
           if (modal.is(":visible") && !$(e.target).closest(".openActionModalButton").length) {
             modal.hide();
           }
@@ -1503,7 +1505,7 @@ async function openAttachmentManager() {
         };
         document.body.addEventListener("click", bodyListener);
 
-        const popper = Popper.createPopper(button, modal.get(0), { placement: "bottom-end" });
+        const popper = Popper.createPopper(button, modal.get(0) as HTMLElement, { placement: "bottom-end" });
         button.addEventListener("click", () => {
           modal.attr("data-attachment-manager-target", source);
           modal.toggle();
@@ -1515,7 +1517,7 @@ async function openAttachmentManager() {
       .filter(Boolean);
 
     return () => {
-      modalButtonData.forEach((p) => {
+      modalButtonData.forEach((p: any) => {
         const { popper, bodyListener } = p;
         popper.destroy();
         document.body.removeEventListener("click", bodyListener);
@@ -1530,7 +1532,7 @@ async function openAttachmentManager() {
     /** @type {FileAttachment[]} */
     const chatAttachments = chat_metadata.attachments ?? [];
     /** @type {FileAttachment[]} */
-    const characterAttachments = extension_settings.character_attachments?.[characters[this_chid]?.avatar] ?? [];
+    const characterAttachments = (extension_settings.character_attachments as any)?.[(characters as any)[this_chid!]?.avatar] ?? [];
 
     await renderList(globalAttachments, ATTACHMENT_SOURCE.GLOBAL);
     await renderList(chatAttachments, ATTACHMENT_SOURCE.CHAT);
@@ -1541,14 +1543,14 @@ async function openAttachmentManager() {
     template.find(".characterAttachmentsBlock").toggle(!isNotCharacter);
     template.find(".chatAttachmentsBlock").toggle(!isNotInChat);
 
-    const characterName = characters[this_chid]?.name || "Anonymous";
+    const characterName = (characters as any)[this_chid!]?.name || "Anonymous";
     template.find(".characterAttachmentsName").text(characterName);
 
     const chatName = getCurrentChatId() || "Unnamed chat";
     template.find(".chatAttachmentsName").text(chatName);
   }
 
-  const dragDropHandler = new DragAndDropHandler(".popup", async (files, event) => {
+  const dragDropHandler = new DragAndDropHandler(".popup", async (files: any, event: any) => {
     let selectedTarget = ATTACHMENT_SOURCE.GLOBAL;
     const targets = getAvailableTargets();
 
@@ -1589,13 +1591,13 @@ async function openAttachmentManager() {
       return;
     }
 
-    sortField = this.selectedOptions[0].dataset.sortField;
-    sortOrder = this.selectedOptions[0].dataset.sortOrder;
+    sortField = this.selectedOptions[0].dataset.sortField ?? "";
+    sortOrder = this.selectedOptions[0].dataset.sortOrder ?? "";
     accountStorage.setItem("DataBank_sortField", sortField);
     accountStorage.setItem("DataBank_sortOrder", sortOrder);
     renderAttachments();
   });
-  function handleBulkAction(action) {
+  function handleBulkAction(action: any) {
     return async () => {
       const selectedAttachments = document.querySelectorAll(
         ".attachmentListItemCheckboxContainer .attachmentListItemCheckbox:checked",
@@ -1642,14 +1644,14 @@ async function openAttachmentManager() {
   template.find(".bulkActionDisable").on(
     "click",
     handleBulkAction({
-      perform: (attachment) => disableAttachment(attachment, () => {}),
+      perform: (attachment: any) => disableAttachment(attachment, () => {}),
     }),
   );
 
   template.find(".bulkActionEnable").on(
     "click",
     handleBulkAction({
-      perform: (attachment) => enableAttachment(attachment, () => {}),
+      perform: (attachment: any) => enableAttachment(attachment, () => {}),
     }),
   );
 
@@ -1657,7 +1659,7 @@ async function openAttachmentManager() {
     "click",
     handleBulkAction({
       confirmMessage: "Are you sure you want to delete the selected attachments?",
-      perform: async (attachment, source) => await deleteAttachment(attachment, source, () => {}, false),
+      perform: async (attachment: any, source: any) => await deleteAttachment(attachment, source, () => {}, false),
     }),
   );
 
@@ -1718,7 +1720,7 @@ function getAvailableTargets() {
  * @param {function} callback Callback function
  * @returns {Promise<void>} A promise that resolves when the source is scraped.
  */
-async function runScraper(scraperId, target, callback) {
+async function runScraper(scraperId: any, target: any, callback: any) {
   try {
     console.log(`Running scraper ${scraperId} for ${target}`);
     const files = await ScraperManager.runDataBankScraper(scraperId);
@@ -1752,7 +1754,7 @@ async function runScraper(scraperId, target, callback) {
  * @param {string} target Target for the attachment
  * @returns {Promise<string>} Path to the uploaded file
  */
-export async function uploadFileAttachmentToServer(file, target) {
+export async function uploadFileAttachmentToServer(file: any, target: any) {
   const isValid = await validateFile(file);
 
   if (!isValid) {
@@ -1802,10 +1804,12 @@ export async function uploadFileAttachmentToServer(file, target) {
       chat_metadata.attachments.push(attachment);
       saveMetadataDebounced();
       break;
-    case ATTACHMENT_SOURCE.CHARACTER:
-      extension_settings.character_attachments[characters[this_chid]?.avatar].push(attachment);
+    case ATTACHMENT_SOURCE.CHARACTER: {
+      const charAvatar = (characters as any)[this_chid!]?.avatar ?? "";
+      (extension_settings.character_attachments as any)[charAvatar].push(attachment);
       saveSettingsDebounced();
       break;
+    }
   }
 
   return fileUrl;
@@ -1824,13 +1828,13 @@ function ensureAttachmentsExist() {
     chat_metadata.attachments = [];
   }
 
-  if (this_chid !== undefined && characters[this_chid]) {
+  if (this_chid !== undefined && (characters as any)[this_chid]) {
     if (!extension_settings.character_attachments) {
       extension_settings.character_attachments = {};
     }
 
-    if (!Array.isArray(extension_settings.character_attachments[characters[this_chid].avatar])) {
-      extension_settings.character_attachments[characters[this_chid].avatar] = [];
+    if (!Array.isArray((extension_settings.character_attachments as any)[(characters as any)[this_chid].avatar])) {
+      (extension_settings.character_attachments as any)[(characters as any)[this_chid].avatar] = [];
     }
   }
 }
@@ -1844,7 +1848,7 @@ export function getDataBankAttachments(includeDisabled = false) {
   ensureAttachmentsExist();
   const globalAttachments = extension_settings.attachments ?? [];
   const chatAttachments = chat_metadata.attachments ?? [];
-  const characterAttachments = extension_settings.character_attachments?.[characters[this_chid]?.avatar] ?? [];
+  const characterAttachments = (extension_settings.character_attachments as any)?.[(characters as any)[this_chid!]?.avatar] ?? [];
 
   return [...globalAttachments, ...chatAttachments, ...characterAttachments].filter(
     (x) => includeDisabled || !isAttachmentDisabled(x),
@@ -1857,7 +1861,7 @@ export function getDataBankAttachments(includeDisabled = false) {
  * @param {boolean} [includeDisabled=true] If true, include disabled attachments
  * @returns {FileAttachment[]} List of attachments
  */
-export function getDataBankAttachmentsForSource(source, includeDisabled = true) {
+export function getDataBankAttachmentsForSource(source: any, includeDisabled = true) {
   ensureAttachmentsExist();
 
   function getBySource() {
@@ -1867,13 +1871,13 @@ export function getDataBankAttachmentsForSource(source, includeDisabled = true) 
       case ATTACHMENT_SOURCE.CHAT:
         return chat_metadata.attachments ?? [];
       case ATTACHMENT_SOURCE.CHARACTER:
-        return extension_settings.character_attachments?.[characters[this_chid]?.avatar] ?? [];
+        return (extension_settings.character_attachments as any)?.[(characters as any)[this_chid!]?.avatar] ?? [];
     }
 
     return [];
   }
 
-  return getBySource().filter((x) => includeDisabled || !isAttachmentDisabled(x));
+  return getBySource().filter((x: any) => includeDisabled || !isAttachmentDisabled(x));
 }
 
 /**
@@ -1891,10 +1895,10 @@ async function verifyAttachments() {
  * @param {string} source Attachment source
  * @returns {Promise<void>} A promise that resolves when attachments are verified.
  */
-async function verifyAttachmentsForSource(source) {
+async function verifyAttachmentsForSource(source: any) {
   try {
     const attachments = getDataBankAttachmentsForSource(source);
-    const urls = attachments.map((a) => a.url);
+    const urls = attachments.map((a: any) => a.url);
     const response = await fetch("/api/files/verify", {
       method: "POST",
       headers: getRequestHeaders(),
@@ -1950,7 +1954,7 @@ export function restoreNeutralChat() {
  * @param {ConverterFunction} converter Function to convert file
  * @returns {void}
  */
-export function registerFileConverter(mimeType, converter) {
+export function registerFileConverter(mimeType: any, converter: any) {
   if (typeof mimeType !== "string" || typeof converter !== "function") {
     console.error("Invalid converter registration");
     return;
@@ -1961,7 +1965,7 @@ export function registerFileConverter(mimeType, converter) {
     return;
   }
 
-  converters[mimeType] = converter;
+  (converters as Record<string, any>)[mimeType] = converter;
 }
 
 export function addDOMPurifyHooks() {
@@ -2064,7 +2068,7 @@ export function addDOMPurifyHooks() {
       case "OBJECT":
       case "IMG":
         {
-          const isExternalUrl = (url) =>
+          const isExternalUrl = (url: any) =>
             (url.indexOf("://") > 0 || url.indexOf("//") === 0) && !url.startsWith(window.location.origin);
           const src = node.getAttribute("src");
           const data = node.getAttribute("data");
@@ -2133,7 +2137,7 @@ export function addDOMPurifyHooks() {
  * @param {string} direction Swipe direction
  * @returns {Promise<void>}
  */
-async function onImageSwiped(messageId, element, direction) {
+async function onImageSwiped(messageId: any, element: any, direction: any) {
   const animationClass = "fa-fade";
   const messageMedia = element.find(".mes_img, .mes_video");
 
@@ -2228,7 +2232,7 @@ export function initChatUtilities() {
 
   $(document).on("click", ".assistant_note_import", async () => {
     const importFile = async () => {
-      const file = fileInput.files[0];
+      const file = fileInput.files![0];
       if (!file) {
         return;
       }
@@ -2264,12 +2268,12 @@ export function initChatUtilities() {
 
     // Preserve existing files in DataTransfer
     const dataTransfer = new DataTransfer();
-    for (const file of fileInput.files) {
+    for (const file of fileInput.files!) {
       dataTransfer.items.add(file);
     }
 
     $fileInput.off("change").on("change", async () => {
-      for (const file of fileInput.files) {
+    for (const file of fileInput.files!) {
         if (!Array.from(dataTransfer.files).some((f) => isSameFile(f, file))) {
           dataTransfer.items.add(file);
         }
@@ -2366,7 +2370,7 @@ export function initChatUtilities() {
 
   $(document).on("click", "body .mes .mes_text, body .mes .mes_reasoning", function (event) {
     if (!power_user.click_to_edit) return;
-    if (window.getSelection().toString()) return;
+    if (window.getSelection()?.toString()) return;
     if ($(".edit_textarea").length) return;
     $(this).closest(".mes").find(".mes_edit").trigger("click");
     if ($(event.target).closest(".mes_reasoning").length) {
@@ -2380,7 +2384,7 @@ export function initChatUtilities() {
     if (!entityId) return;
     power_user.external_media_allowed_overrides.push(entityId);
     power_user.external_media_forbidden_overrides = power_user.external_media_forbidden_overrides.filter(
-      (v) => v !== entityId,
+      (v: any) => v !== entityId,
     );
     saveSettingsDebounced();
     reloadCurrentChat();
@@ -2390,7 +2394,7 @@ export function initChatUtilities() {
     if (!entityId) return;
     power_user.external_media_forbidden_overrides.push(entityId);
     power_user.external_media_allowed_overrides = power_user.external_media_allowed_overrides.filter(
-      (v) => v !== entityId,
+      (v: any) => v !== entityId,
     );
     saveSettingsDebounced();
     reloadCurrentChat();
@@ -2399,10 +2403,10 @@ export function initChatUtilities() {
     const entityId = getCurrentEntityId();
     if (!entityId) return;
     power_user.external_media_allowed_overrides = power_user.external_media_allowed_overrides.filter(
-      (v) => v !== entityId,
+      (v: any) => v !== entityId,
     );
     power_user.external_media_forbidden_overrides = power_user.external_media_forbidden_overrides.filter(
-      (v) => v !== entityId,
+      (v: any) => v !== entityId,
     );
     saveSettingsDebounced();
     reloadCurrentChat();
@@ -2422,7 +2426,7 @@ export function initChatUtilities() {
    * @property {JQuery<HTMLElement>} mediaBlock The closest media container block
    * @property {number} mediaIndex The media index within the message
    */
-  function getMediaContainerInfo(containerClass = ".mes_media_container") {
+  function getMediaContainerInfo(this: any, containerClass = ".mes_media_container") {
     const messageBlock = $(this).closest(".mes");
     const messageId = Number(messageBlock.attr("mesid"));
     const mediaBlock = $(this).closest(containerClass);
@@ -2435,7 +2439,7 @@ export function initChatUtilities() {
   });
   chatElement.on("click", ".mes_media_enlarge", async function () {
     const { messageId, mediaIndex } = getMediaContainerInfo.call(this);
-    expandMessageMedia(messageId, mediaIndex).click();
+    expandMessageMedia(messageId, mediaIndex)?.click();
   });
   chatElement.on("click", ".mes_media_delete", async function () {
     const { messageId, mediaIndex, messageBlock } = getMediaContainerInfo.call(this);
@@ -2462,7 +2466,7 @@ export function initChatUtilities() {
     $("#file_form").addClass("displayNone");
   });
 
-  document.getElementById("send_textarea").addEventListener("paste", async (event) => {
+  document.getElementById("send_textarea")?.addEventListener("paste", async (event: any) => {
     if (event.clipboardData.files.length === 0) {
       return;
     }
@@ -2473,7 +2477,7 @@ export function initChatUtilities() {
     await handleFileAttach(Array.from(event.clipboardData.files));
   });
 
-  new DragAndDropHandler("#form_sheld", async (files) => {
+  new DragAndDropHandler("#form_sheld", async (files: any) => {
     await handleFileAttach(files);
   });
 
@@ -2482,12 +2486,12 @@ export function initChatUtilities() {
    * @param {File[]} files Files to attach
    * @returns {Promise<void>}
    */
-  async function handleFileAttach(files) {
+  async function handleFileAttach(files: any) {
     if (!(fileInput instanceof HTMLInputElement)) return;
 
     // Workaround for Firefox: Use a DataTransfer object to indirectly set fileInput.files
     const dataTransfer = new DataTransfer();
-    for (const file of fileInput.files) {
+    for (const file of fileInput.files!) {
       dataTransfer.items.add(file);
     }
 

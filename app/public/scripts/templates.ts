@@ -12,7 +12,7 @@ const TEMPLATE_CACHE = new Map();
  * @param {string} url URL to load synchronously
  * @returns {string} Response text
  */
-function getUrlSync(url) {
+function getUrlSync(url: any) {
   console.debug("Loading URL synchronously", url);
   const request = new XMLHttpRequest();
   request.open("GET", url, false); // `false` makes the request synchronous
@@ -30,7 +30,7 @@ function getUrlSync(url) {
  * @param {string} url URL to load asynchronously
  * @returns {Promise<string>} Response text
  */
-function getUrlAsync(url) {
+function getUrlAsync(url: any) {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open("GET", url, true);
@@ -58,13 +58,13 @@ function getUrlAsync(url) {
  * @returns {Promise<string>} Rendered template
  */
 export async function renderTemplateAsync(
-  templateId,
+  templateId: any,
   templateData = {},
   sanitize = true,
   localize = true,
   fullPath = false,
 ) {
-  async function fetchTemplateAsync(pathToTemplate) {
+  async function fetchTemplateAsync(pathToTemplate: any) {
     let template = TEMPLATE_CACHE.get(pathToTemplate);
     if (!template) {
       const templateContent = await getUrlAsync(pathToTemplate);
@@ -105,8 +105,8 @@ export async function renderTemplateAsync(
  *
  * @deprecated Use renderTemplateAsync instead.
  */
-export function renderTemplate(templateId, templateData = {}, sanitize = true, localize = true, fullPath = false) {
-  function fetchTemplateSync(pathToTemplate) {
+export function renderTemplate(templateId: any, templateData = {}, sanitize = true, localize = true, fullPath = false) {
+  function fetchTemplateSync(pathToTemplate: any) {
     let template = TEMPLATE_CACHE.get(pathToTemplate);
     if (!template) {
       const templateContent = getUrlSync(pathToTemplate);

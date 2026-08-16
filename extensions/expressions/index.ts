@@ -127,9 +127,9 @@ const PROMPT_TYPE = {
   full: "full",
 };
 
-let expressionsList = null;
-let lastCharacter;
-let lastMessage = null;
+let expressionsList: any = null;
+let lastCharacter: any;
+let lastMessage: any = null;
 /** @type {{[characterKey: string]: Expression[]}} */
 let spriteCache = {};
 let inApiCall = false;
@@ -144,7 +144,7 @@ export let lastExpression = {};
  * @param {boolean} [isCustom=false] - Whether the expression is custom
  * @returns {ExpressionImage} The placeholder image object
  */
-function getPlaceholderImage(expression, isCustom = false) {
+function getPlaceholderImage(expression: any, isCustom = false) {
   return {
     expression: expression,
     isCustom: isCustom,
@@ -167,7 +167,7 @@ async function forceUpdateVisualNovelMode() {
 
 const updateVisualNovelModeDebounced = debounce(forceUpdateVisualNovelMode, debounce_timeout.quick);
 
-async function updateVisualNovelMode(spriteFolderName, expression) {
+async function updateVisualNovelMode(spriteFolderName: any, expression: any) {
   const vnContainer = $("#visual-novel-wrapper");
 
   await visualNovelRemoveInactive(vnContainer);
@@ -185,13 +185,13 @@ async function updateVisualNovelMode(spriteFolderName, expression) {
   }
 }
 
-async function visualNovelRemoveInactive(container) {
+async function visualNovelRemoveInactive(container: any) {
   const context = getContext();
   const group = context.groups.find((x) => x.id == context.groupId);
-  const removeInactiveCharactersPromises = [];
+  const removeInactiveCharactersPromises: any[] = [];
 
   // remove inactive characters after 1 second
-  container.find(".expression-holder").each((_, current) => {
+  container.find(".expression-holder").each((_: any, current: any) => {
 const promise = new Promise<void>((resolve) => {
         const element = $(current);
       const avatar = element.data("avatar");
@@ -220,7 +220,7 @@ const promise = new Promise<void>((resolve) => {
  * @param {string} expression - The expression to set for the characters
  * @returns {Promise<Array>} - An array of promises that resolve when the sprites are set
  */
-async function visualNovelSetCharacterSprites(vnContainer, spriteFolderName, expression) {
+async function visualNovelSetCharacterSprites(vnContainer: any, spriteFolderName: any, expression: any) {
   const originalExpression = expression;
   const context = getContext();
   const group = context.groups.find((x) => x.id == context.groupId);
@@ -243,19 +243,19 @@ async function visualNovelSetCharacterSprites(vnContainer, spriteFolderName, exp
     /** @type {JQuery<HTMLElement>} */
     let img;
 
-    const memberSpriteFolderName = getSpriteFolderName({ original_avatar: character.avatar }, character.name);
+    const memberSpriteFolderName = getSpriteFolderName({ original_avatar: character.avatar } as any, character.name);
 
     // download images if not downloaded yet
-    if (spriteCache[memberSpriteFolderName] === undefined) {
-      spriteCache[memberSpriteFolderName] = await getSpritesList(memberSpriteFolderName);
+    if ((spriteCache as Record<string, any>)[memberSpriteFolderName] === undefined) {
+      (spriteCache as Record<string, any>)[memberSpriteFolderName] = await getSpritesList(memberSpriteFolderName);
     }
 
     const prevExpressionSrc = expressionImage.find("img").attr("src") || null;
 
     if (
       !originalExpression &&
-      Array.isArray(spriteCache[memberSpriteFolderName]) &&
-      spriteCache[memberSpriteFolderName].length > 0
+      Array.isArray((spriteCache as Record<string, any>)[memberSpriteFolderName]) &&
+      ((spriteCache as Record<string, any>)[memberSpriteFolderName] as any[]).length > 0
     ) {
       expression = await getLastMessageSprite(avatar);
     }
@@ -315,7 +315,7 @@ async function visualNovelSetCharacterSprites(vnContainer, spriteFolderName, exp
  * @param {string} avatar - The avatar of the character to get the last message for
  * @returns {Promise<string>} - The expression label
  */
-async function getLastMessageSprite(avatar) {
+async function getLastMessageSprite(avatar: any) {
   const context = getContext();
   const lastMessage = context.chat
     .slice()
@@ -332,16 +332,16 @@ async function getLastMessageSprite(avatar) {
   return null;
 }
 
-export async function visualNovelUpdateLayers(container) {
+export async function visualNovelUpdateLayers(container: any) {
   const context = getContext();
   const group = context.groups.find((x) => x.id == context.groupId);
   const recentMessages = context.chat
-    .map((x) => x.original_avatar)
-    .filter((x) => x)
+    .map((x: any) => x.original_avatar)
+    .filter((x: any) => x)
     .reverse()
     .filter(onlyUnique);
-  const filteredMembers = group.members.filter((x) => !group.disabled_members.includes(x));
-  const layerIndices = filteredMembers.slice().sort((a, b) => {
+  const filteredMembers = group.members.filter((x: any) => !group.disabled_members.includes(x));
+  const layerIndices = filteredMembers.slice().sort((a: any, b: any) => {
     const aRecentIndex = recentMessages.indexOf(a);
     const bRecentIndex = recentMessages.indexOf(b);
     const aFilteredIndex = filteredMembers.indexOf(a);
@@ -358,9 +358,9 @@ export async function visualNovelUpdateLayers(container) {
     }
   });
 
-  const setLayerIndicesPromises = [];
+  const setLayerIndicesPromises: any[] = [];
 
-  const sortFunction = (a, b) => {
+  const sortFunction = (a: any, b: any) => {
     const avatarA = $(a).data("avatar");
     const avatarB = $(b).data("avatar");
     const indexA = filteredMembers.indexOf(avatarA);
@@ -372,7 +372,7 @@ export async function visualNovelUpdateLayers(container) {
   const pivotalPoint = containerWidth * 0.5;
 
   const images = Array.from($("#visual-novel-wrapper .expression-holder")).sort(sortFunction);
-  let imagesWidth = [];
+  let imagesWidth: any[] = [];
 
   for (const image of images) {
     if (image instanceof HTMLImageElement && !image.complete) {
@@ -402,9 +402,9 @@ export async function visualNovelUpdateLayers(container) {
     // skip repositioning of dragged elements
     if (
       element.data("dragged") ||
-      (power_user.movingUIState[elementID] &&
-        typeof power_user.movingUIState[elementID] === "object" &&
-        Object.keys(power_user.movingUIState[elementID]).length > 0)
+      ((power_user.movingUIState as Record<string, any>)[elementID!] &&
+        typeof (power_user.movingUIState as Record<string, any>)[elementID!] === "object" &&
+        Object.keys((power_user.movingUIState as Record<string, any>)[elementID!]).length > 0)
     ) {
       loadMovingUIState();
       //currentPosition += imagesWidth[index];
@@ -441,7 +441,7 @@ export async function visualNovelUpdateLayers(container) {
  * @param {string} path - The path to the image
  * @returns {Promise<void>} - A promise that resolves when the image is set
  */
-async function setImage(img, path) {
+async function setImage(img: any, path: any) {
   // Cohee: If something goes wrong, uncomment this to return to the old behavior
   /*
     img.attr('src', path);
@@ -481,11 +481,11 @@ async function setImage(img, path) {
       const imgWidth = img.width();
       const imgHeight = img.height();
       const expressionHolder = img.parent();
-      expressionHolder.css("min-width", imgWidth > 100 ? imgWidth : 100);
-      expressionHolder.css("min-height", imgHeight > 100 ? imgHeight : 100);
+      expressionHolder.css("min-width", imgWidth! > 100 ? imgWidth! : 100);
+      expressionHolder.css("min-height", imgHeight! > 100 ? imgHeight! : 100);
 
       //position absolute prevent the original from jumping around during transition
-      img.css("position", "absolute").width(imgWidth).height(imgHeight);
+      img.css("position", "absolute").width(imgWidth!).height(imgHeight!);
       expressionClone.addClass("expression-animating");
       //fade the clone in
       expressionClone
@@ -528,7 +528,7 @@ async function setImage(img, path) {
 
       expressionClone.removeClass("default");
       expressionClone.off("error");
-      expressionClone.on("error", function () {
+      expressionClone.on("error", function (this: any) {
         console.debug("Expression image error", path);
         $(this).attr("src", "");
         $(this).off("error");
@@ -569,7 +569,7 @@ async function moduleWorker({ newChat = false } = {}) {
   }
 
   const currentLastMessage = getLastCharacterMessage();
-  let spriteFolderName = getSpriteFolderName(currentLastMessage, currentLastMessage.name);
+  let spriteFolderName = getSpriteFolderName(currentLastMessage as any, currentLastMessage.name);
 
   // character has no expressions or it is not loaded
   if (Object.keys(spriteCache).length === 0) {
@@ -578,7 +578,7 @@ async function moduleWorker({ newChat = false } = {}) {
   }
 
   const offlineMode = $(".expression_settings .offline_mode");
-  if (!modules.includes("classify") && extension_settings.expressions.api == EXPRESSION_API.extras) {
+  if (!(modules as any).includes("classify") && extension_settings.expressions.api == EXPRESSION_API.extras) {
     $("#open_chat_expressions").show();
     $("#no_chat_expressions").hide();
     offlineMode.css("display", "block");
@@ -600,7 +600,7 @@ async function moduleWorker({ newChat = false } = {}) {
       await forceUpdateVisualNovelMode();
     }
 
-    if (context.groupId && !Array.isArray(spriteCache[spriteFolderName])) {
+    if (context.groupId && !Array.isArray((spriteCache as Record<string, any>)[spriteFolderName])) {
       await validateImages(spriteFolderName, true);
       await forceUpdateVisualNovelMode();
     }
@@ -614,7 +614,7 @@ async function moduleWorker({ newChat = false } = {}) {
 
   // Don't bother classifying if current char has no sprites and no default expressions are enabled
   if (
-    (!Array.isArray(spriteCache[spriteFolderName]) || spriteCache[spriteFolderName].length === 0) &&
+    (!Array.isArray((spriteCache as Record<string, any>)[spriteFolderName]) || ((spriteCache as Record<string, any>)[spriteFolderName] as any[]).length === 0) &&
     !extension_settings.expressions.showDefault
   ) {
     return;
@@ -678,7 +678,7 @@ async function moduleWorker({ newChat = false } = {}) {
       expression = extension_settings.expressions.fallback_expression;
     }
 
-    await sendExpressionCall(spriteFolderName, expression, { force: force, vnMode: vnMode });
+    await sendExpressionCall(spriteFolderName, expression, { force: force, vnMode: vnMode as any });
   } catch (error) {
     console.log(error);
   } finally {
@@ -694,7 +694,7 @@ function getSpriteFolderName(characterMessage = null, characterName = null) {
   let spriteFolderName = characterName ?? context.name2;
   const message = characterMessage ?? getLastCharacterMessage();
   const avatarFileName = getFolderNameByMessage(message);
-  const expressionOverride = extension_settings.expressionOverrides.find((e) => e.name == avatarFileName);
+  const expressionOverride = extension_settings.expressionOverrides.find((e: any) => e.name == avatarFileName);
 
   if (expressionOverride && expressionOverride.path) {
     spriteFolderName = expressionOverride.path;
@@ -703,7 +703,7 @@ function getSpriteFolderName(characterMessage = null, characterName = null) {
   return spriteFolderName;
 }
 
-function getFolderNameByMessage(message) {
+function getFolderNameByMessage(message: any) {
   const context = getContext();
   let avatarPath = "";
 
@@ -736,13 +736,13 @@ function getFolderNameByMessage(message) {
  * @param {string?} [options.overrideSpriteFile=null] - Set if a specific sprite file should be used. Must be sprite file name.
  */
 export async function sendExpressionCall(
-  spriteFolderName,
-  expression,
+  spriteFolderName: any,
+  expression: any,
   { force = false, vnMode = null, overrideSpriteFile = null } = {},
 ) {
-  lastExpression[spriteFolderName.split("/")[0]] = expression;
+  (lastExpression as Record<string, any>)[spriteFolderName.split("/")[0]] = expression;
   if (vnMode === null) {
-    vnMode = isVisualNovelMode();
+    vnMode = isVisualNovelMode() as any;
   }
 
   if (vnMode) {
@@ -759,7 +759,7 @@ export async function sendExpressionCall(
  * @param {string} folder Folder path, can be full or partial with leading slash
  * @returns {Promise<string>} Empty string
  */
-async function setSpriteFolderCommand({ name }, folder) {
+async function setSpriteFolderCommand({ name }: any, folder: any) {
   if (!folder) {
     console.log("Clearing sprite set");
     folder = "";
@@ -787,7 +787,7 @@ async function setSpriteFolderCommand({ name }, folder) {
 
 async function classifyCallback(
   /** @type {{api: string?, filter: string?, prompt: string?}} */ { api = null, filter = null, prompt = null },
-  text,
+  text: any,
 ) {
   if (!text) {
     toastr.error("No text provided");
@@ -798,7 +798,7 @@ async function classifyCallback(
     return "";
   }
 
-  const expressionApi = EXPRESSION_API[api] || extension_settings.expressions.api;
+  const expressionApi = (EXPRESSION_API as Record<string, any>)[api!] || extension_settings.expressions.api;
   const filterAvailable = !isFalseBoolean(filter);
 
   if (expressionApi === EXPRESSION_API.none) {
@@ -806,13 +806,13 @@ async function classifyCallback(
     return "";
   }
 
-  if (!modules.includes("classify") && expressionApi == EXPRESSION_API.extras) {
+  if (!(modules as any).includes("classify") && expressionApi == EXPRESSION_API.extras) {
     toastr.warning("Text classification is disabled or not available");
     return "";
   }
 
   const label = await getExpressionLabel(text, expressionApi, {
-    filterAvailable: filterAvailable,
+    filterAvailable: filterAvailable as any,
     customPrompt: prompt,
   });
   console.debug(`Classification result for "${text}": ${label}`);
@@ -820,7 +820,7 @@ async function classifyCallback(
 }
 
 /** @type {(args: {type: 'expression' | 'sprite'}, searchTerm: string) => Promise<string>} */
-async function setSpriteSlashCommand({ type }, searchTerm) {
+async function setSpriteSlashCommand({ type }: any, searchTerm: any) {
   type ??= "expression";
   searchTerm = searchTerm.trim().toLowerCase();
   if (!searchTerm) {
@@ -829,7 +829,7 @@ async function setSpriteSlashCommand({ type }, searchTerm) {
   }
 
   const currentLastMessage = selected_group ? getLastCharacterMessage() : null;
-  const spriteFolderName = getSpriteFolderName(currentLastMessage, currentLastMessage?.name);
+  const spriteFolderName = getSpriteFolderName(currentLastMessage as any, currentLastMessage?.name);
 
   let label = searchTerm;
 
@@ -841,7 +841,7 @@ async function setSpriteSlashCommand({ type }, searchTerm) {
   // Handle reset as a special term and just reset the sprite via expression call
   if (searchTerm === RESET_SPRITE_LABEL) {
     await sendExpressionCall(spriteFolderName, label, { force: true });
-    return lastExpression[spriteFolderName] ?? "";
+    return (lastExpression as Record<string, any>)[spriteFolderName] ?? "";
   }
 
   switch (type) {
@@ -865,7 +865,7 @@ async function setSpriteSlashCommand({ type }, searchTerm) {
     }
     case "sprite": {
       // Fuzzy search for sprite file
-      const sprites = spriteCache[spriteFolderName].flatMap((x) => x.files);
+      const sprites = (spriteCache as Record<string, any>)[spriteFolderName].flatMap((x: any) => x.files);
       const results = performFuzzySearch(
         "expression-expressions",
         sprites,
@@ -897,7 +897,7 @@ async function setSpriteSlashCommand({ type }, searchTerm) {
 /**
  * @param {string} expressionName - Label of the expression to set as fallback
  */
-function setFallBackExpressionSlashCommand(args, expressionName) {
+function setFallBackExpressionSlashCommand(args: any, expressionName: any) {
   expressionName = expressionName.trim().toLowerCase();
 
   if (!expressionName) return extension_settings?.expressions?.fallback_expression || "";
@@ -928,9 +928,9 @@ function setFallBackExpressionSlashCommand(args, expressionName) {
  * @returns {string} Sprite folder name
  * @throws {Error} If character not found or avatar not set
  */
-function spriteFolderNameFromCharacter(char) {
+function spriteFolderNameFromCharacter(char: any) {
   const avatarFileName = char.avatar.replace(/\.[^/.]+$/, "");
-  const expressionOverride = extension_settings.expressionOverrides.find((e) => e.name === avatarFileName);
+  const expressionOverride = extension_settings.expressionOverrides.find((e: any) => e.name === avatarFileName);
   return expressionOverride?.path ? expressionOverride.path : avatarFileName;
 }
 
@@ -940,12 +940,12 @@ function spriteFolderNameFromCharacter(char) {
  * @param {ExpressionImage[]} existingFiles - An array of existing file objects, each containing a fileName property.
  * @returns {string} - A unique sprite name with the format "expression-index".
  */
-function generateUniqueSpriteName(expression, existingFiles) {
+function generateUniqueSpriteName(expression: any, existingFiles: any) {
   let index = existingFiles.length;
-  let newSpriteName;
+  let newSpriteName: any;
   do {
     newSpriteName = `${expression}-${index++}`;
-  } while (existingFiles.some((file) => withoutExtension(file.fileName) === newSpriteName));
+  } while (existingFiles.some((file: any) => withoutExtension(file.fileName) === newSpriteName));
   return newSpriteName;
 }
 
@@ -967,7 +967,7 @@ function generateUniqueSpriteName(expression, existingFiles) {
  * @param {string} imageUrl Image URI to fetch and upload
  * @returns {Promise<string>} the sprite name
  */
-async function uploadSpriteCommand({ name, label, folder = null, spriteName = null }, imageUrl) {
+async function uploadSpriteCommand({ name, label, folder = null, spriteName = null }: any, imageUrl: any) {
   if (!imageUrl) throw new Error("Image URL is required");
   if (!label || typeof label !== "string") {
     toastr.error(t`Expression label is required`, t`Error Uploading Sprite`);
@@ -997,8 +997,8 @@ async function uploadSpriteCommand({ name, label, folder = null, spriteName = nu
 
   if (!folder) {
     folder = spriteFolderNameFromCharacter(char);
-  } else if (folder.startsWith("/") || folder.startsWith("\\")) {
-    const subfolder = folder.slice(1);
+  } else if ((folder as any).startsWith("/") || (folder as any).startsWith("\\")) {
+    const subfolder = (folder as any).slice(1);
     folder = `${char.name}/${subfolder}`;
   }
 
@@ -1008,10 +1008,10 @@ async function uploadSpriteCommand({ name, label, folder = null, spriteName = nu
     const file = new File([blob], "image.png", { type: "image/png" });
 
     const formData = new FormData();
-    formData.append("name", folder); // this is the folder or character name
+    formData.append("name", folder as any); // this is the folder or character name
     formData.append("label", label); // this is the expression label
     formData.append("avatar", file); // this is the image file
-    formData.append("spriteName", spriteName); // this is a redundant comment
+    formData.append("spriteName", spriteName as any); // this is a redundant comment
 
     await handleFileUpload("/api/sprites/upload", formData);
     console.debug(`[${MODULE_NAME}] Upload of ${imageUrl} completed for ${name} with label ${label}`);
@@ -1031,7 +1031,7 @@ async function uploadSpriteCommand({ name, label, folder = null, spriteName = nu
  * @param {string} text The text to process.
  * @returns {string}
  */
-function sampleClassifyText(text) {
+function sampleClassifyText(text: any) {
   if (!text) {
     return text;
   }
@@ -1064,8 +1064,8 @@ function sampleClassifyText(text) {
  * @param {string[]} labels A list of labels to search for.
  * @returns {Promise<string>} Prompt for the LLM API.
  */
-async function getLlmPrompt(labels) {
-  const labelsString = labels.map((x) => `"${x}"`).join(", ");
+async function getLlmPrompt(labels: any) {
+  const labelsString = labels.map((x: any) => `"${x}"`).join(", ");
   const prompt = substituteParamsExtended(String(extension_settings.expressions.llmPrompt), { labels: labelsString });
   return prompt;
 }
@@ -1076,7 +1076,7 @@ async function getLlmPrompt(labels) {
  * @param {string[]} labels A list of labels to search for.
  * @returns {string} The parsed emotion or the fallback expression.
  */
-function parseLlmResponse(emotionResponse, labels) {
+function parseLlmResponse(emotionResponse: any, labels: any) {
   try {
     const parsedEmotion = JSON.parse(emotionResponse);
     const response = parsedEmotion?.emotion?.trim()?.toLowerCase();
@@ -1115,7 +1115,7 @@ function parseLlmResponse(emotionResponse, labels) {
  * @param {string[]} emotions A list of emotions to search for.
  * @returns {object} The JSON schema for the LLM API.
  */
-function getJsonSchema(emotions) {
+function getJsonSchema(emotions: any) {
   return {
     $schema: "http://json-schema.org/draft-04/schema#",
     type: "object",
@@ -1130,7 +1130,7 @@ function getJsonSchema(emotions) {
   };
 }
 
-function onTextGenSettingsReady(args) {
+function onTextGenSettingsReady(args: any) {
   // Only call if inside an API call
   if (inApiCall && extension_settings.expressions.api === EXPRESSION_API.llm && isJsonSchemaSupported()) {
     const emotions = DEFAULT_EXPRESSIONS;
@@ -1155,12 +1155,12 @@ function onTextGenSettingsReady(args) {
  * @returns {Promise<string?>} - The label of the expression.
  */
 export async function getExpressionLabel(
-  text,
+  text: any,
   expressionsApi = extension_settings.expressions.api,
   { filterAvailable = null, customPrompt = null } = {},
 ) {
   // Return if text is undefined, saving a costly fetch request
-  if ((!modules.includes("classify") && expressionsApi == EXPRESSION_API.extras) || !text) {
+  if ((!(modules as any).includes("classify") && expressionsApi == EXPRESSION_API.extras) || !text) {
     return extension_settings.expressions.fallback_expression;
   }
 
@@ -1201,9 +1201,9 @@ export async function getExpressionLabel(
           return extension_settings.expressions.fallback_expression;
         }
 
-        const expressionsList = await getExpressionsList({ filterAvailable: filterAvailable });
+        const expressionsList = await getExpressionsList({ filterAvailable: filterAvailable as any });
         const prompt =
-          substituteParamsExtended(customPrompt, { labels: expressionsList }) || (await getLlmPrompt(expressionsList));
+          substituteParamsExtended(customPrompt as any, { labels: expressionsList }) || (await getLlmPrompt(expressionsList));
         eventSource.once(event_types.TEXT_COMPLETION_SETTINGS_READY, onTextGenSettingsReady);
 
         let emotionResponse;
@@ -1229,9 +1229,9 @@ export async function getExpressionLabel(
           return extension_settings.expressions.fallback_expression;
         }
 
-        const expressionsList = await getExpressionsList({ filterAvailable: filterAvailable });
+        const expressionsList = await getExpressionsList({ filterAvailable: filterAvailable as any });
         const prompt =
-          substituteParamsExtended(customPrompt, { labels: expressionsList }) || (await getLlmPrompt(expressionsList));
+          substituteParamsExtended(customPrompt as any, { labels: expressionsList }) || (await getLlmPrompt(expressionsList));
         const messages = [{ role: "user", content: text + "\n\n" + prompt }];
 
         const emotionResponse = await generateWebLlmChatPrompt(messages);
@@ -1304,17 +1304,17 @@ function removeExpression() {
  * @param {string} spriteFolderName - The character sprite folder to validate
  * @param {boolean} [forceRedrawCached=false] - Whether to force redrawing the sprites list even if it's already been drawn before
  */
-async function validateImages(spriteFolderName, forceRedrawCached = false) {
+async function validateImages(spriteFolderName: any, forceRedrawCached = false) {
   if (!spriteFolderName) {
     return;
   }
 
   const labels = await getExpressionsList();
 
-  if (spriteCache[spriteFolderName]) {
+  if ((spriteCache as Record<string, any>)[spriteFolderName]) {
     if (forceRedrawCached && $("#image_list").data("name") !== spriteFolderName) {
       console.debug("force redrawing character sprites list");
-      await drawSpritesList(spriteFolderName, labels, spriteCache[spriteFolderName]);
+      await drawSpritesList(spriteFolderName, labels, (spriteCache as Record<string, any>)[spriteFolderName]);
     }
 
     return;
@@ -1322,7 +1322,7 @@ async function validateImages(spriteFolderName, forceRedrawCached = false) {
 
   const sprites = await getSpritesList(spriteFolderName);
   const validExpressions = await drawSpritesList(spriteFolderName, labels, sprites);
-  spriteCache[spriteFolderName] = validExpressions;
+  (spriteCache as Record<string, any>)[spriteFolderName] = validExpressions;
 }
 
 /**
@@ -1330,7 +1330,7 @@ async function validateImages(spriteFolderName, forceRedrawCached = false) {
  * @param {{ path: string, label: string }} sprite
  * @returns {ExpressionImage}
  */
-function getExpressionImageData(sprite) {
+function getExpressionImageData(sprite: any) {
   const fileName = sprite.path.split("/").pop().split("?")[0];
   const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
   return {
@@ -1350,7 +1350,7 @@ function getExpressionImageData(sprite) {
  * @param {Expression[]} sprites - An array of sprites
  * @returns {Promise<Expression[]>} An array of valid expression labels
  */
-async function drawSpritesList(spriteFolderName, labels, sprites) {
+async function drawSpritesList(spriteFolderName: any, labels: any, sprites: any) {
   /** @type {Expression[]} */
   const validExpressions = [];
 
@@ -1366,7 +1366,7 @@ async function drawSpritesList(spriteFolderName, labels, sprites) {
 
   for (const expression of labels.sort()) {
     const isCustom = extension_settings.expressions.custom?.includes(expression);
-    const images = sprites.filter((s) => s.label === expression).flatMap((s) => s.files);
+    const images = sprites.filter((s: any) => s.label === expression).flatMap((s: any) => s.files);
 
     if (images.length === 0) {
       const listItem = await getListItem(expression, {
@@ -1397,7 +1397,7 @@ async function drawSpritesList(spriteFolderName, labels, sprites) {
  * @param {boolean} [args.isCustom=false] If expression is added by user
  * @returns {Promise<string>} Rendered list item template
  */
-async function getListItem(expression, { images, isCustom = false } = {} as any) {
+async function getListItem(expression: any, { images, isCustom = false } = {} as any) {
   return renderExtensionTemplateAsync(MODULE_NAME, "list-item", { expression, images, isCustom: isCustom ?? false });
 }
 
@@ -1409,7 +1409,7 @@ async function getListItem(expression, { images, isCustom = false } = {} as any)
  * @returns {Promise<Expression[]>} A promise that resolves to an array of grouped expression objects, each containing a label and associated image data
  */
 
-async function getSpritesList(name) {
+async function getSpritesList(name: any) {
   console.debug("getting sprites list");
 
   try {
@@ -1418,9 +1418,9 @@ async function getSpritesList(name) {
     const sprites = result.ok ? await result.json() : [];
 
     /** @type {Expression[]} */
-    const grouped = sprites.reduce((acc, sprite) => {
+    const grouped = sprites.reduce((acc: any, sprite: any) => {
       const imageData = getExpressionImageData(sprite);
-      const existingExpression = acc.find((exp) => exp.label === sprite.label);
+      const existingExpression = acc.find((exp: any) => exp.label === sprite.label);
       if (existingExpression) {
         existingExpression.files.push(imageData);
       } else {
@@ -1432,7 +1432,7 @@ async function getSpritesList(name) {
 
     // Sort the sprites for each expression alphabetically, but keep the main expression file at the front
     for (const expression of grouped) {
-      expression.files.sort((a, b) => {
+      expression.files.sort((a: any, b: any) => {
         if (a.title === expression.label) return -1;
         if (b.title === expression.label) return 1;
         return a.title.localeCompare(b.title);
@@ -1461,7 +1461,7 @@ function renderCustomExpressions() {
     extension_settings.expressions.custom = [];
   }
 
-  const customExpressions = extension_settings.expressions.custom.sort((a, b) => a.localeCompare(b));
+  const customExpressions = extension_settings.expressions.custom.sort((a: any, b: any) => a.localeCompare(b));
   $("#expression_custom").empty();
 
   for (const expression of customExpressions) {
@@ -1494,7 +1494,7 @@ async function renderFallbackExpressionPicker() {
   }
 
   /** @type {(value: string, label: string, isSelected: boolean) => void} */
-  function addOption(value, label, isSelected) {
+  function addOption(value: any, label: any, isSelected: any) {
     const option = document.createElement("option");
     option.value = value;
     option.text = label;
@@ -1533,10 +1533,10 @@ export async function getExpressionsList({ filterAvailable = false } = {}) {
 
   // Get expressions with available sprites
   const currentLastMessage = selected_group ? getLastCharacterMessage() : null;
-  const spriteFolderName = getSpriteFolderName(currentLastMessage, currentLastMessage?.name);
+  const spriteFolderName = getSpriteFolderName(currentLastMessage as any, currentLastMessage?.name);
 
-  return expressions.filter((label) => {
-    const expression = spriteCache[spriteFolderName]?.find((x) => x.label === label);
+  return expressions.filter((label: any) => {
+    const expression = (spriteCache as Record<string, any>)[spriteFolderName]?.find((x: any) => x.label === label);
     return (expression?.files.length ?? 0) > 0;
   });
 
@@ -1548,7 +1548,7 @@ export async function getExpressionsList({ filterAvailable = false } = {}) {
     // See if we can retrieve a specific expression list from the API
     try {
       // Check Extras api first, if enabled and that module active
-      if (extension_settings.expressions.api == EXPRESSION_API.extras && modules.includes("classify")) {
+      if (extension_settings.expressions.api == EXPRESSION_API.extras && (modules as any).includes("classify")) {
         const url = new URL(getApiUrl());
         url.pathname = "/api/classify/labels";
 
@@ -1602,17 +1602,17 @@ export async function getExpressionsList({ filterAvailable = false } = {}) {
  * @returns {ExpressionImage?} - The selected sprite
  */
 function chooseSpriteForExpression(
-  spriteFolderName,
-  expression,
+  spriteFolderName: any,
+  expression: any,
   { prevExpressionSrc = null, overrideSpriteFile = null } = {},
 ) {
-  if (!spriteCache[spriteFolderName]) return null;
+  if (!(spriteCache as Record<string, any>)[spriteFolderName]) return null;
   if (expression === RESET_SPRITE_LABEL) return null;
 
   // Search for sprites of that expression - or fallback expression sprites if enabled
-  let sprite = spriteCache[spriteFolderName].find((x) => x.label === expression);
+  let sprite = (spriteCache as Record<string, any>)[spriteFolderName].find((x: any) => x.label === expression);
   if (!(sprite?.files.length > 0) && extension_settings.expressions.fallback_expression) {
-    sprite = spriteCache[spriteFolderName].find((x) => x.label === extension_settings.expressions.fallback_expression);
+    sprite = (spriteCache as Record<string, any>)[spriteFolderName].find((x: any) => x.label === extension_settings.expressions.fallback_expression);
     console.debug(
       "Expression",
       expression,
@@ -1626,7 +1626,7 @@ function chooseSpriteForExpression(
 
   // If a specific sprite file should be set, we are looking it up here
   if (overrideSpriteFile) {
-    const searched = sprite.files.find((x) => x.fileName === overrideSpriteFile);
+    const searched = sprite.files.find((x: any) => x.fileName === overrideSpriteFile);
     if (searched) spriteFile = searched;
     else
       toastr.warning(
@@ -1637,7 +1637,7 @@ function chooseSpriteForExpression(
     // Else calculate next expression, if multiple are allowed
     let possibleFiles = sprite.files;
     if (extension_settings.expressions.rerollIfSame) {
-      possibleFiles = possibleFiles.filter((x) => !prevExpressionSrc || x.imageSrc !== prevExpressionSrc);
+      possibleFiles = possibleFiles.filter((x: any) => !prevExpressionSrc || x.imageSrc !== prevExpressionSrc);
     }
     spriteFile = possibleFiles[Math.floor(Math.random() * possibleFiles.length)];
   }
@@ -1654,27 +1654,27 @@ function chooseSpriteForExpression(
  * @param {string?} [options.overrideSpriteFile=null] - Set if a specific sprite file should be used. Must be sprite file name.
  * @returns {Promise<void>} A promise that resolves when the expression has been set.
  */
-async function setExpression(spriteFolderName, expression, { force = false, overrideSpriteFile = null } = {}) {
+async function setExpression(spriteFolderName: any, expression: any, { force = false, overrideSpriteFile = null } = {}) {
   await validateImages(spriteFolderName);
   const img = $("img.expression");
   const prevExpressionSrc = img.attr("src");
   const expressionClone = img.clone();
 
   const spriteFile = chooseSpriteForExpression(spriteFolderName, expression, {
-    prevExpressionSrc: prevExpressionSrc,
+    prevExpressionSrc: prevExpressionSrc as any,
     overrideSpriteFile: overrideSpriteFile,
   });
   if (spriteFile) {
     if (force && isVisualNovelMode()) {
       const context = getContext();
-      const group = context.groups.find((x) => x.id === context.groupId);
+      const group = context.groups.find((x: any) => x.id === context.groupId);
 
       // If it's a folder, make sure we find the group member based on the actual name
       const memberName = spriteFolderName.split("/")[0] ?? spriteFolderName;
 
       const groupMember = group.members
-        .map((member) => context.characters.find((x) => x.avatar === member))
-        .find((groupMember) => groupMember && groupMember.name === memberName);
+        .map((member: any) => context.characters.find((x: any) => x.avatar === member))
+        .find((groupMember: any) => groupMember && groupMember.name === memberName);
       if (groupMember) {
         await setImage($(`.expression-holder[data-avatar="${groupMember.avatar}"] img`), spriteFile.imageSrc);
         return;
@@ -1708,11 +1708,11 @@ async function setExpression(spriteFolderName, expression, { force = false, over
       const imgWidth = img.width();
       const imgHeight = img.height();
       const expressionHolder = img.parent();
-      expressionHolder.css("min-width", imgWidth > 100 ? imgWidth : 100);
-      expressionHolder.css("min-height", imgHeight > 100 ? imgHeight : 100);
+      expressionHolder.css("min-width", imgWidth! > 100 ? imgWidth! : 100);
+      expressionHolder.css("min-height", imgHeight! > 100 ? imgHeight! : 100);
 
       //position absolute prevent the original from jumping around during transition
-      img.css("position", "absolute").width(imgWidth).height(imgHeight);
+      img.css("position", "absolute").width(imgWidth!).height(imgHeight!);
       expressionClone.addClass("expression-animating");
       //fade the clone in
       expressionClone
@@ -1773,7 +1773,7 @@ async function setExpression(spriteFolderName, expression, { force = false, over
     console.debug("Expression unset - No sprite found", { expression: expression });
   }
 
-  document.getElementById("expression-holder").style.display = "";
+  (document.getElementById("expression-holder") as HTMLElement).style.display = "";
 }
 
 /**
@@ -1781,7 +1781,7 @@ async function setExpression(spriteFolderName, expression, { force = false, over
  * @param {JQuery<HTMLElement>} img - The image element to set the default expression for
  * @param {string} expression - The expression label to use for the default image
  */
-function setDefaultEmojiForImage(img, expression) {
+function setDefaultEmojiForImage(img: any, expression: any) {
   if (extension_settings.expressions.custom?.includes(expression)) {
     console.debug(
       `Can't set default emoji for a custom expression (${expression}). setting to ${DEFAULT_FALLBACK_EXPRESSION} instead.`,
@@ -1802,7 +1802,7 @@ function setDefaultEmojiForImage(img, expression) {
  * @param {JQuery<HTMLElement>} img - The image element to clear the expression for
  * @param {string} expression - The expression label to use
  */
-function setNoneForImage(img, expression) {
+function setNoneForImage(img: any, expression: any) {
   img.attr("src", "");
   img.attr("data-expression", expression);
   img.attr("data-sprite-filename", null);
@@ -1810,7 +1810,7 @@ function setNoneForImage(img, expression) {
   img.removeClass("default");
 }
 
-function onClickExpressionImage() {
+function onClickExpressionImage(this: any) {
   // If there is no expression image and we clicked on the placeholder, we remove the sprite by calling via the expression label
   if ($(this).attr("data-expression-type") === "failure") {
     const label = $(this).attr("data-expression");
@@ -1896,7 +1896,7 @@ async function onClickExpressionRemoveCustom() {
   moduleWorker();
 }
 
-function onExpressionApiChanged() {
+function onExpressionApiChanged(this: any) {
   const tempApi = this.value;
   if (tempApi) {
     extension_settings.expressions.api = Number(tempApi);
@@ -1911,7 +1911,7 @@ function onExpressionApiChanged() {
   }
 }
 
-async function onExpressionFallbackChanged() {
+async function onExpressionFallbackChanged(this: any) {
   const selectedValue = this.value;
 
   switch (selectedValue) {
@@ -1946,7 +1946,7 @@ async function onExpressionFallbackChanged() {
  * @param {FormData} formData FormData object containing the file and other data to upload
  * @returns {Promise<any>} - The response data from the server
  */
-async function handleFileUpload(url, formData) {
+async function handleFileUpload(url: any, formData: any) {
   try {
     const result = await fetch(url, {
       method: "POST",
@@ -1963,7 +1963,7 @@ async function handleFileUpload(url, formData) {
 
     // Refresh sprites list
     const name = formData.get("name").toString();
-    delete spriteCache[name];
+    delete (spriteCache as Record<string, any>)[name];
     await fetchImagesNoCache();
     await validateImages(name);
 
@@ -1980,28 +1980,28 @@ async function handleFileUpload(url, formData) {
  * @param {string} fileName The file name to remove the extension from
  * @returns {string} The file name without the extension
  */
-function withoutExtension(fileName) {
+function withoutExtension(fileName: any) {
   return fileName.replace(/\.[^/.]+$/, "");
 }
 
-function validateExpressionSpriteName(expression, spriteName) {
+function validateExpressionSpriteName(expression: any, spriteName: any) {
   const filenameValidationRegex = new RegExp(`^${expression}(?:[-\\.].*?)?$`);
   const validFileName = filenameValidationRegex.test(spriteName);
   return validFileName;
 }
 
-async function onClickExpressionUpload(event) {
+async function onClickExpressionUpload(this: any, event: any) {
   // Prevents the expression from being set
   event.stopPropagation();
 
-  const expressionListItem = $(this).closest(".expression_list_item");
+  const expressionListItem = $(this as any).closest(".expression_list_item");
 
   const clickedFileName =
     expressionListItem.attr("data-expression-type") !== "failure" ? expressionListItem.attr("data-filename") : null;
   const expression = expressionListItem.data("expression");
   const name = $("#image_list").data("name");
 
-  const handleExpressionUploadChange = async (e) => {
+  const handleExpressionUploadChange = async (e: any) => {
     const file = e.target.files[0];
 
     if (!file || !file.name) {
@@ -2009,12 +2009,12 @@ async function onClickExpressionUpload(event) {
       return;
     }
 
-    const existingFiles = spriteCache[name]?.find((x) => x.label === expression)?.files || [];
+    const existingFiles = (spriteCache as Record<string, any>)[name]?.find((x: any) => x.label === expression)?.files || [];
 
     let spriteName = expression;
 
     if (extension_settings.expressions.allowMultiple) {
-      const matchesExisting = existingFiles.some((x) => x.fileName === file.name);
+      const matchesExisting = existingFiles.some((x: any) => x.fileName === file.name);
       const fileNameWithoutExtension = withoutExtension(file.name);
       const validFileName = validateExpressionSpriteName(expression, fileNameWithoutExtension);
 
@@ -2105,7 +2105,7 @@ async function onClickExpressionOverrideButton() {
   }
 
   const overridePath = String($("#expression_override").val());
-  const existingOverrideIndex = extension_settings.expressionOverrides.findIndex((e) => e.name == avatarFileName);
+  const existingOverrideIndex = extension_settings.expressionOverrides.findIndex((e: any) => e.name == avatarFileName);
 
   // If the path is empty, delete the entry from overrides
   if (overridePath === undefined || overridePath.length === 0) {
@@ -2117,14 +2117,14 @@ async function onClickExpressionOverrideButton() {
     console.debug(`Removed existing override for ${avatarFileName}`);
   } else {
     // Properly override objects and clear the sprite cache of the previously set names
-    const existingOverride = extension_settings.expressionOverrides[existingOverrideIndex];
+    const existingOverride = (extension_settings.expressionOverrides as any[])[existingOverrideIndex];
     if (existingOverride) {
       Object.assign(existingOverride, { path: overridePath });
-      delete spriteCache[existingOverride.name];
+      delete (spriteCache as Record<string, any>)[existingOverride.name];
     } else {
       const characterOverride = { name: avatarFileName, path: overridePath };
       extension_settings.expressionOverrides.push(characterOverride);
-      delete spriteCache[currentLastMessage.name];
+      delete (spriteCache as Record<string, any>)[currentLastMessage.name];
     }
 
     console.debug(
@@ -2153,7 +2153,7 @@ async function onClickExpressionOverrideButton() {
 async function onClickExpressionOverrideRemoveAllButton() {
   // Remove all the overrided entries from sprite cache
   for (const element of extension_settings.expressionOverrides) {
-    delete spriteCache[element.name];
+    delete (spriteCache as Record<string, any>)[element.name];
   }
 
   extension_settings.expressionOverrides = [];
@@ -2179,7 +2179,7 @@ async function onClickExpressionOverrideRemoveAllButton() {
 async function onClickExpressionUploadPackButton() {
   const name = $("#image_list").data("name");
 
-  const handleFileUploadChange = async (e) => {
+  const handleFileUploadChange = async (e: any) => {
     const file = e.target.files[0];
 
     if (!file) {
@@ -2206,11 +2206,11 @@ async function onClickExpressionUploadPackButton() {
   $("#expression_upload_pack").off("change").on("change", handleFileUploadChange).trigger("click");
 }
 
-async function onClickExpressionDelete(event) {
+async function onClickExpressionDelete(this: any, event: any) {
   // Prevents the expression from being set
   event.stopPropagation();
 
-  const expressionListItem = $(this).closest(".expression_list_item");
+  const expressionListItem = $(this as any).closest(".expression_list_item");
   const expression = expressionListItem.data("expression");
 
   if (expressionListItem.attr("data-expression-type") === "failure") {
@@ -2244,7 +2244,7 @@ async function onClickExpressionDelete(event) {
   }
 
   // Refresh sprites list
-  delete spriteCache[name];
+  delete (spriteCache as Record<string, any>)[name];
   await fetchImagesNoCache();
   await validateImages(name);
 }
@@ -2256,7 +2256,7 @@ function setExpressionOverrideHtml(forceClear = false) {
     return;
   }
 
-  const expressionOverride = extension_settings.expressionOverrides.find((e) => e.name == avatarFileName);
+  const expressionOverride = extension_settings.expressionOverrides.find((e: any) => e.name == avatarFileName);
 
   if (expressionOverride && expressionOverride.path) {
     $("#expression_override").val(expressionOverride.path);
@@ -2270,8 +2270,8 @@ function setExpressionOverrideHtml(forceClear = false) {
 }
 
 async function fetchImagesNoCache() {
-  const promises = [];
-  $("#image_list img").each(function () {
+  const promises: any[] = [];
+  $("#image_list img").each(function (this: any) {
     const src = $(this).attr("src");
 
     if (!src) {
@@ -2459,10 +2459,10 @@ export async function init() {
   const localEnumProviders = {
     expressions: () => {
       const currentLastMessage = selected_group ? getLastCharacterMessage() : null;
-      const spriteFolderName = getSpriteFolderName(currentLastMessage, currentLastMessage?.name);
+      const spriteFolderName = getSpriteFolderName(currentLastMessage as any, currentLastMessage?.name);
       const expressions = getCachedExpressions();
-      return expressions.map((expression) => {
-        const spriteCount = spriteCache[spriteFolderName]?.find((x) => x.label === expression)?.files.length ?? 0;
+      return expressions.map((expression: any) => {
+        const spriteCount = (spriteCache as Record<string, any>)[spriteFolderName]?.find((x: any) => x.label === expression)?.files.length ?? 0;
         const isCustom = extension_settings.expressions.custom?.includes(expression);
         const subtitle =
           spriteCount == 0
@@ -2472,7 +2472,7 @@ export async function init() {
               : null;
         return new SlashCommandEnumValue(
           expression,
-          subtitle,
+          subtitle as any,
           isCustom ? enumTypes.name : enumTypes.enum,
           isCustom ? "C" : "D",
         );
@@ -2480,9 +2480,9 @@ export async function init() {
     },
     sprites: () => {
       const currentLastMessage = selected_group ? getLastCharacterMessage() : null;
-      const spriteFolderName = getSpriteFolderName(currentLastMessage, currentLastMessage?.name);
-      const sprites = spriteCache[spriteFolderName]?.flatMap((x) => x.files) ?? [];
-      return sprites.map((x) => {
+      const spriteFolderName = getSpriteFolderName(currentLastMessage as any, currentLastMessage?.name);
+      const sprites = (spriteCache as Record<string, any>)[spriteFolderName]?.flatMap((x: any) => x.files) ?? [];
+      return sprites.map((x: any) => {
         return new SlashCommandEnumValue(
           x.title,
           x.title !== x.expression ? x.expression : null,
@@ -2513,16 +2513,16 @@ export async function init() {
           description: "expression label to set",
           typeList: [ARGUMENT_TYPE.STRING],
           isRequired: true,
-          enumProvider: (executor, _) => {
+          enumProvider: (executor: any, _: any) => {
             // Check if command is used to set a sprite, then use those enums
-            const type = executor.namedArgumentList.find((it) => it.name == "type")?.value || "expression";
+            const type = executor.namedArgumentList.find((it: any) => it.name == "type")?.value || "expression";
             if (type == "sprite") return localEnumProviders.sprites();
             else
               return [
                 ...localEnumProviders.expressions(),
                 new SlashCommandEnumValue(
                   RESET_SPRITE_LABEL,
-                  "Resets the expression (to either default or no sprite)",
+                  "Resets the expression (to either default or no sprite)" as any,
                   enumTypes.enum,
                   "❌",
                 ),
@@ -2544,8 +2544,8 @@ export async function init() {
           typeList: [ARGUMENT_TYPE.STRING],
           isRequired: false,
           enumProvider: () => [
-            new SlashCommandEnumValue("#none", "Sets the fallback expression to no image"),
-            new SlashCommandEnumValue("#emoji", "Sets the fallback expression to emojis"),
+            new SlashCommandEnumValue("#none", "Sets the fallback expression to no image" as any),
+            new SlashCommandEnumValue("#emoji", "Sets the fallback expression to emojis" as any),
             ...localEnumProviders.expressions(),
           ],
         }),
@@ -2605,20 +2605,20 @@ export async function init() {
       name: "expression-last",
       aliases: ["lastsprite"],
       /** @type {(args: object, name: string) => Promise<string>} */
-      callback: async (_, name) => {
+      callback: async (_: any, name: any) => {
         if (typeof name !== "string") throw new Error("name must be a string");
         if (!name) {
           if (selected_group) {
             toastr.error(t`In group chats, you must specify a character name.`, t`No character name specified`);
             return "";
           }
-          name = characters[this_chid]?.avatar;
+          name = (characters as Record<string, any>)[this_chid!]?.avatar;
         }
 
         const char = findChar({ name: name });
         if (!char) toastr.warning(t`Couldn't find character ${name}.`, t`Character not found`);
 
-        const sprite = lastExpression[char?.name ?? name] ?? "";
+        const sprite = (lastExpression as Record<string, any>)[char?.name ?? name] ?? "";
         return sprite;
       },
       returns: "the last set expression for the named character.",
@@ -2638,7 +2638,7 @@ export async function init() {
       name: "expression-list",
       aliases: ["expressions"],
       /** @type {(args: {return: string, filter: string}) => Promise<string>} */
-      callback: async (args) => {
+      callback: async (args: any) => {
         const returnType =
           /** @type {import("/scripts/slash-commands/SlashCommandReturnHelper.js").SlashCommandReturnType} */
           (args.return);
@@ -2646,7 +2646,7 @@ export async function init() {
         const list = await getExpressionsList({ filterAvailable: !isFalseBoolean(args.filter) });
 
         return await slashCommandReturnHelper.doReturn(returnType ?? "pipe", list, {
-          objectToStringFunc: (list) => list.join(", "),
+          objectToStringFunc: (list: any) => list.join(", "),
         });
       },
       namedArgumentList: [
@@ -2722,7 +2722,7 @@ export async function init() {
       name: "expression-upload",
       aliases: ["uploadsprite"],
       /** @type {(args: {name: string, label: string, folder: string?, spriteName: string?}, url: string) => Promise<string>} */
-      callback: async (args, url) => {
+      callback: async (args: any, url: any) => {
         return await uploadSpriteCommand(args, url);
       },
       returns: "the resulting sprite name",

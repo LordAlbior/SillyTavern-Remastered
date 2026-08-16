@@ -112,7 +112,7 @@ class ConnectionManagerSpinner {
   /**
    * @type {AbortController[]}
    */
-  static abortControllers = [];
+  static abortControllers: any[] = [];
 
   /** @type {HTMLElement} */
   spinnerElement;
@@ -127,11 +127,11 @@ class ConnectionManagerSpinner {
 
   start() {
     ConnectionManagerSpinner.abortControllers.push(this.abortController);
-    this.spinnerElement.classList.remove("hidden");
+    this.spinnerElement!.classList.remove("hidden");
   }
 
   stop() {
-    this.spinnerElement.classList.add("hidden");
+    this.spinnerElement!.classList.add("hidden");
   }
 
   isAborted() {
@@ -140,7 +140,7 @@ class ConnectionManagerSpinner {
 
   static abort() {
     for (const controller of ConnectionManagerSpinner.abortControllers) {
-      controller.abort();
+      (controller as any).abort();
     }
     ConnectionManagerSpinner.abortControllers = [];
   }
@@ -169,7 +169,7 @@ function getNamedArguments(args = {}) {
 const profilesProvider = () => [
   new SlashCommandEnumValue(NONE),
   ...extension_settings.connectionManager.profiles.map(
-    (p) => new SlashCommandEnumValue(p.name, null, enumTypes.name, enumIcons.server),
+    (p: any) => new SlashCommandEnumValue(p.name, null, enumTypes.name, enumIcons.server),
   ),
 ];
 
@@ -203,9 +203,9 @@ const profilesProvider = () => [
  * @param {string} value Search value
  * @returns {ConnectionProfile|null} Best match or null
  */
-function findProfileByName(value) {
+function findProfileByName(value: any) {
   // Try to find exact match
-  const profile = extension_settings.connectionManager.profiles.find((p) => p.name === value);
+  const profile = extension_settings.connectionManager.profiles.find((p: any) => p.name === value);
 
   if (profile) {
     return profile;
@@ -229,7 +229,7 @@ function findProfileByName(value) {
  * @param {ConnectionProfile} profile Connection profile
  * @param {boolean} [cleanUp] Whether to clean up the profile
  */
-async function readProfileFromCommands(mode, profile, cleanUp = false) {
+async function readProfileFromCommands(mode: any, profile: any, cleanUp = false) {
   const commands = mode === "cc" ? CC_COMMANDS : TC_COMMANDS;
   const opposingCommands = mode === "cc" ? TC_COMMANDS : CC_COMMANDS;
   const excludeList = Array.isArray(profile.exclude) ? profile.exclude : [];
@@ -241,7 +241,7 @@ async function readProfileFromCommands(mode, profile, cleanUp = false) {
 
       const allowEmpty = ALLOW_EMPTY.includes(command);
       const args = getNamedArguments();
-      const result = await SlashCommandParser.commands[command].callback(args, "");
+      const result = await (SlashCommandParser.commands as Record<string, any>)[command].callback(args, "");
       if (result || (allowEmpty && result === "")) {
         profile[command] = result;
       }
@@ -304,7 +304,7 @@ async function createConnectionProfile(forceName = null) {
       index !== -1 && profile.exclude.splice(index, 1);
     }
   });
-  const isNameTaken = (n) => extension_settings.connectionManager.profiles.some((p) => p.name === n);
+  const isNameTaken = (n: any) => extension_settings.connectionManager.profiles.some((p: any) => p.name === n);
   const suggestedName = getUniqueName(
     collapseSpaces(`${profile.api ?? ""} ${profile.model ?? ""} - ${profile.preset ?? ""}`),
     isNameTaken,
@@ -345,7 +345,7 @@ async function deleteConnectionProfile() {
     return;
   }
 
-  const index = extension_settings.connectionManager.profiles.findIndex((p) => p.id === selectedProfile);
+  const index = extension_settings.connectionManager.profiles.findIndex((p: any) => p.id === selectedProfile);
   if (index === -1) {
     return;
   }
@@ -370,8 +370,8 @@ async function deleteConnectionProfile() {
  * @param {ConnectionProfile} profile Connection profile
  * @returns {Object} Fancy profile
  */
-function makeFancyProfile(profile) {
-  return Object.entries(FANCY_NAMES).reduce((acc, [key, value]) => {
+function makeFancyProfile(profile: any) {
+  return Object.entries(FANCY_NAMES).reduce((acc: any, [key, value]) => {
     const allowEmpty = ALLOW_EMPTY.includes(key);
     if (!profile[key]) {
       if (profile[key] === "" && allowEmpty) {
@@ -390,7 +390,7 @@ function makeFancyProfile(profile) {
     }
 
     if (key === "regex-preset") {
-      const label = extension_settings.regex_presets?.find((p) => p.id === profile[key])?.name;
+      const label = extension_settings.regex_presets?.find((p: any) => p.id === profile[key])?.name;
       if (label) {
         acc[value] = label;
         return acc;
@@ -399,7 +399,7 @@ function makeFancyProfile(profile) {
 
     acc[value] = profile[key];
     return acc;
-  }, {});
+  }, {} as Record<string, any>);
 }
 
 /**
@@ -407,7 +407,7 @@ function makeFancyProfile(profile) {
  * @param {ConnectionProfile} profile Connection profile
  * @returns {Promise<void>}
  */
-async function applyConnectionProfile(profile) {
+async function applyConnectionProfile(profile: any) {
   if (!profile) {
     return;
   }
@@ -432,7 +432,7 @@ async function applyConnectionProfile(profile) {
     }
     try {
       const args = getNamedArguments(allowEmpty ? { force: "true" } : {});
-      await SlashCommandParser.commands[command].callback(args, argument);
+      await (SlashCommandParser.commands as Record<string, any>)[command].callback(args, argument);
     } catch (error) {
       console.error(`Failed to execute command: ${command} ${argument}`, error);
     }
@@ -446,7 +446,7 @@ async function applyConnectionProfile(profile) {
  * @param {ConnectionProfile} profile Connection profile
  * @returns {Promise<void>}
  */
-async function updateConnectionProfile(profile) {
+async function updateConnectionProfile(profile: any) {
   profile.mode = main_api === "openai" ? "cc" : "tc";
   await readProfileFromCommands(profile.mode, profile, true);
 }
@@ -455,7 +455,7 @@ async function updateConnectionProfile(profile) {
  * Renders the connection profile details.
  * @param {HTMLSelectElement} profiles Select element containing connection profiles
  */
-function renderConnectionProfiles(profiles) {
+function renderConnectionProfiles(profiles: any) {
   profiles.innerHTML = "";
   const noneOption = document.createElement("option");
 
@@ -464,7 +464,7 @@ function renderConnectionProfiles(profiles) {
   noneOption.selected = !extension_settings.connectionManager.selectedProfile;
   profiles.appendChild(noneOption);
 
-  for (const profile of extension_settings.connectionManager.profiles.sort((a, b) => a.name.localeCompare(b.name))) {
+  for (const profile of extension_settings.connectionManager.profiles.sort((a: any, b: any) => a.name.localeCompare(b.name))) {
     const option = document.createElement("option");
     option.value = profile.id;
     option.textContent = profile.name;
@@ -477,18 +477,18 @@ function renderConnectionProfiles(profiles) {
  * Renders the content of the details element.
  * @param {HTMLElement} detailsContent Content element of the details
  */
-async function renderDetailsContent(detailsContent) {
+async function renderDetailsContent(detailsContent: any) {
   detailsContent.innerHTML = "";
   if (detailsContent.classList.contains("hidden")) {
     return;
   }
   const selectedProfile = extension_settings.connectionManager.selectedProfile;
-  const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+  const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
   if (profile) {
     const profileForDisplay = makeFancyProfile(profile);
     const templateParams = { profile: profileForDisplay } as { profile: any; omitted?: string };
     if (Array.isArray(profile.exclude) && profile.exclude.length > 0) {
-      templateParams.omitted = profile.exclude.map((e) => FANCY_NAMES[e]).join(", ");
+      templateParams.omitted = profile.exclude.map((e: any) => (FANCY_NAMES as Record<string, any>)[e]).join(", ");
     }
     const template = await renderExtensionTemplateAsync(MODULE_NAME, "view", templateParams);
     detailsContent.innerHTML = template;
@@ -504,7 +504,7 @@ async function renderDetailsContent(detailsContent) {
  * @param {string} value Unnamed argument (the prompt)
  * @returns {Promise<string>} The generated text, optionally with formatted reasoning
  */
-async function generateStreamCallback(args, value) {
+async function generateStreamCallback(args: any, value: any) {
   if (!value) {
     console.warn("WARN: No argument provided for /profile-genstream command");
     return "";
@@ -529,7 +529,7 @@ async function generateStreamCallback(args, value) {
   const onCompleteClosure = args?.onComplete instanceof SlashCommandClosure ? args.onComplete : null;
 
   // Parse delay: 'infinite' or negative = null (stay open), number = delay in ms
-  let completeDelay = 3000; // Default 3 seconds
+  let completeDelay: number | null = 3000; // Default 3 seconds
   if (args?.delay !== undefined) {
     if (typeof args.delay === "string" && args.delay.toLowerCase() === "infinite") {
       completeDelay = null; // Stay until user closes
@@ -549,7 +549,7 @@ async function generateStreamCallback(args, value) {
   // Compose the stop handler: abort the request + optionally invoke user closure
   const onStopHandler = enableStop
     ? async () => {
-        abortController.abort();
+        abortController!.abort();
         if (onStopClosure) {
           try {
             const localClosure = onStopClosure.getCopy();
@@ -575,7 +575,7 @@ async function generateStreamCallback(args, value) {
 
     if (profileIdOrName) {
       // Use try to find profile by id first, then fuse search
-      const profile = profiles.find((p) => p.id === profileIdOrName);
+      const profile = profiles.find((p: any) => p.id === profileIdOrName);
       if (profile) {
         effectiveProfileId = profile.id;
       } else {
@@ -603,7 +603,7 @@ async function generateStreamCallback(args, value) {
       label: generatingLabel,
       icon: ConnectionManagerRequestService.getProfileIcon(effectiveProfileId),
       onStop: onStopHandler,
-    });
+    } as any);
 
     const messages = [
       ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
@@ -654,7 +654,7 @@ async function generateStreamCallback(args, value) {
     } catch (error) {
       // If the user clicked stop, don't retry — show stopped state and return empty
       if (abortController?.signal?.aborted) {
-        display.markStopped({ label: `${generatingLabel} [Stopped]` });
+        display.markStopped({ label: `${generatingLabel} [Stopped]` } as any);
         return buildResultText();
       }
 
@@ -676,7 +676,7 @@ async function generateStreamCallback(args, value) {
       display.show({
         label: generatingLabel,
         icon: ConnectionManagerRequestService.getProfileIcon(effectiveProfileId),
-      });
+      } as any);
       if (finalReasoning) {
         display.updateReasoning(finalReasoning);
       }
@@ -684,7 +684,7 @@ async function generateStreamCallback(args, value) {
     }
 
     // Mark as complete with delay (null = stay open until user closes)
-    display.complete({ label: completedLabel, delay: completeDelay });
+    display.complete({ label: completedLabel, delay: completeDelay } as any);
 
     // Invoke onComplete closure if provided
     if (onCompleteClosure) {
@@ -718,14 +718,14 @@ export async function init() {
   extension_settings.connectionManager = extension_settings.connectionManager || structuredClone(DEFAULT_SETTINGS);
 
   for (const key of Object.keys(DEFAULT_SETTINGS)) {
-    if (extension_settings.connectionManager[key] === undefined) {
-      extension_settings.connectionManager[key] = DEFAULT_SETTINGS[key];
+    if ((extension_settings.connectionManager as Record<string, any>)[key] === undefined) {
+      (extension_settings.connectionManager as Record<string, any>)[key] = (DEFAULT_SETTINGS as Record<string, any>)[key];
     }
   }
 
   const container = document.getElementById("rm_api_block");
   const settings = await renderExtensionTemplateAsync(MODULE_NAME, "settings");
-  container.insertAdjacentHTML("afterbegin", settings);
+  container!.insertAdjacentHTML("afterbegin", settings);
 
   const profiles = document.getElementById("connection_profiles") as HTMLSelectElement;
   renderConnectionProfiles(profiles);
@@ -737,7 +737,7 @@ export async function init() {
       "reload_connection_profile",
       "delete_connection_profile",
     ];
-    profileSpecificButtons.forEach((id) => document.getElementById(id).classList.toggle("disabled", !profileId));
+    profileSpecificButtons.forEach((id) => document.getElementById(id)!.classList.toggle("disabled", !profileId));
   }
   toggleProfileSpecificButtons();
 
@@ -762,7 +762,7 @@ export async function init() {
       return;
     }
 
-    const profile = extension_settings.connectionManager.profiles.find((p) => p.id === profileId);
+    const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === profileId);
 
     if (!profile) {
       console.log(`Profile not found: ${profileId}`);
@@ -774,9 +774,9 @@ export async function init() {
   });
 
   const reloadButton = document.getElementById("reload_connection_profile");
-  reloadButton.addEventListener("click", async () => {
+  reloadButton!.addEventListener("click", async () => {
     const selectedProfile = extension_settings.connectionManager.selectedProfile;
-    const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+    const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
     if (!profile) {
       console.log("No profile selected");
       return;
@@ -788,7 +788,7 @@ export async function init() {
   });
 
   const createButton = document.getElementById("create_connection_profile");
-  createButton.addEventListener("click", async () => {
+  createButton!.addEventListener("click", async () => {
     const profile = await createConnectionProfile();
     if (!profile) {
       return;
@@ -803,9 +803,9 @@ export async function init() {
   });
 
   const updateButton = document.getElementById("update_connection_profile");
-  updateButton.addEventListener("click", async () => {
+  updateButton!.addEventListener("click", async () => {
     const selectedProfile = extension_settings.connectionManager.selectedProfile;
-    const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+    const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
     if (!profile) {
       console.log("No profile selected");
       return;
@@ -820,7 +820,7 @@ export async function init() {
   });
 
   const deleteButton = document.getElementById("delete_connection_profile");
-  deleteButton.addEventListener("click", async () => {
+  deleteButton!.addEventListener("click", async () => {
     await deleteConnectionProfile();
     renderConnectionProfiles(profiles);
     await renderDetailsContent(detailsContent);
@@ -828,9 +828,9 @@ export async function init() {
   });
 
   const editButton = document.getElementById("edit_connection_profile");
-  editButton.addEventListener("click", async () => {
+  editButton!.addEventListener("click", async () => {
     const selectedProfile = extension_settings.connectionManager.selectedProfile;
-    const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+    const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
     if (!profile) {
       console.log("No profile selected");
       return;
@@ -840,16 +840,16 @@ export async function init() {
     }
 
     let saveChanges = false;
-    const sortByViewOrder = (a, b) => Object.keys(FANCY_NAMES).indexOf(a) - Object.keys(FANCY_NAMES).indexOf(b);
+    const sortByViewOrder = (a: any, b: any) => Object.keys(FANCY_NAMES).indexOf(a) - Object.keys(FANCY_NAMES).indexOf(b);
     const commands = profile.mode === "cc" ? CC_COMMANDS : TC_COMMANDS;
     const settings = commands
       .slice()
       .sort(sortByViewOrder)
-      .reduce((acc, command) => {
-        const fancyName = FANCY_NAMES[command];
+      .reduce((acc: any, command) => {
+        const fancyName = (FANCY_NAMES as Record<string, any>)[command];
         acc[fancyName] = !profile.exclude.includes(command);
         return acc;
-      }, {});
+      }, {} as Record<string, any>);
     const template = $(await renderExtensionTemplateAsync(MODULE_NAME, "edit", { name: profile.name, settings }));
     let newName = await callGenericPopup(template, POPUP_TYPE.INPUT, profile.name, {
       customButtons: [
@@ -874,7 +874,7 @@ export async function init() {
       return;
     }
 
-    if (profile.name !== newName && extension_settings.connectionManager.profiles.some((p) => p.name === newName)) {
+    if (profile.name !== newName && extension_settings.connectionManager.profiles.some((p: any) => p.name === newName)) {
       toastr.error("A profile with the same name already exists.");
       return;
     }
@@ -913,9 +913,9 @@ export async function init() {
   /** @type {HTMLElement} */
   const viewDetails = document.getElementById("view_connection_profile");
   const detailsContent = document.getElementById("connection_profile_details_content");
-  viewDetails.addEventListener("click", async () => {
-    viewDetails.classList.toggle("active");
-    detailsContent.classList.toggle("hidden");
+  viewDetails!.addEventListener("click", async () => {
+    viewDetails!.classList.toggle("active");
+    detailsContent!.classList.toggle("hidden");
     await renderDetailsContent(detailsContent);
   });
 
@@ -950,10 +950,10 @@ export async function init() {
           defaultValue: "2000",
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         if (!value || typeof value !== "string") {
           const selectedProfile = extension_settings.connectionManager.selectedProfile;
-          const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+          const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
           if (!profile) {
             return NONE;
           }
@@ -999,7 +999,7 @@ export async function init() {
       name: "profile-list",
       helpString: "List all connection profile names.",
       returns: "list of profile names",
-      callback: () => JSON.stringify(extension_settings.connectionManager.profiles.map((p) => p.name)),
+      callback: () => JSON.stringify(extension_settings.connectionManager.profiles.map((p: any) => p.name)),
     }),
   );
 
@@ -1015,12 +1015,12 @@ export async function init() {
           typeList: [ARGUMENT_TYPE.STRING],
         }),
       ],
-      callback: async (_args, name) => {
+      callback: async (_args: any, name: any) => {
         if (!name || typeof name !== "string") {
           toastr.warning("Please provide a name for the new connection profile.");
           return "";
         }
-        const profile = await createConnectionProfile(name);
+        const profile = await createConnectionProfile(name as any);
         if (!profile) {
           return "";
         }
@@ -1041,7 +1041,7 @@ export async function init() {
       helpString: "Update the selected connection profile.",
       callback: async () => {
         const selectedProfile = extension_settings.connectionManager.selectedProfile;
-        const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+        const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
         if (!profile) {
           toastr.warning("No profile selected.");
           return "";
@@ -1068,10 +1068,10 @@ export async function init() {
           isRequired: false,
         }),
       ],
-      callback: async (_args, value) => {
+      callback: async (_args: any, value: any) => {
         if (!value || typeof value !== "string") {
           const selectedProfile = extension_settings.connectionManager.selectedProfile;
-          const profile = extension_settings.connectionManager.profiles.find((p) => p.id === selectedProfile);
+          const profile = extension_settings.connectionManager.profiles.find((p: any) => p.id === selectedProfile);
           if (!profile) {
             return "";
           }
@@ -1099,8 +1099,8 @@ export async function init() {
           [ARGUMENT_TYPE.BOOLEAN],
           false,
           false,
-          "off",
-          commonEnumProviders.boolean("onOff")(),
+          "off" as any,
+          commonEnumProviders.boolean("onOff")() as any,
         ),
         SlashCommandNamedArgument.fromProps({
           name: "profile",
@@ -1146,7 +1146,7 @@ export async function init() {
           enumList: [
             new SlashCommandEnumValue(
               "infinite",
-              "Keep the streaming display open until manually closed",
+              "Keep the streaming display open until manually closed" as any,
               "command",
               "♾️",
             ),
@@ -1155,8 +1155,8 @@ export async function init() {
               null,
               "number",
               "⌚",
-              () => true,
-              (input) => input,
+              (() => true) as any,
+              ((input: any) => input) as any,
             ),
           ],
         }),

@@ -26,7 +26,7 @@ export function registerActionLoaderSlashCommands() {
    * @param {boolean} [options.throwInvalid=true] - Whether to throw an error for invalid input
    * @returns {(() => Promise<void>)|null} The handler function, or null if no closure
    */
-  function createClosureHandler(closure, { argName = "onStop", throwInvalid = true } = {}) {
+  function createClosureHandler(closure: any, { argName = "onStop", throwInvalid = true } = {}) {
     if (!(closure instanceof SlashCommandClosure)) {
       if (closure && throwInvalid) {
         // Throw error on purpose. This is defined as a syntax error.
@@ -173,7 +173,7 @@ export function registerActionLoaderSlashCommands() {
           isRequired: true,
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         if (!(value instanceof SlashCommandClosure)) {
           // Throw error on purpose. This is defined as a syntax error.
           throw new Error(t`Invalid argument for unnamed argument provided. This is not a closure.`);
@@ -297,7 +297,7 @@ export function registerActionLoaderSlashCommands() {
         }),
       ],
       unnamedArgumentList: [],
-      callback: async (args) => {
+      callback: async (args: any) => {
         const blocking = !isFalseBoolean(String(args.blocking));
         const toastMode = Object.values(ActionLoaderToastMode).includes(String(args.toast))
           ? String(args.toast)
@@ -345,7 +345,7 @@ export function registerActionLoaderSlashCommands() {
           enumProvider: loaderEnumProviders.loaderHandleProvider,
         }),
       ],
-      callback: async (args) => {
+      callback: async (args: any) => {
         const handleId = args.handle ? String(args.handle) : null;
 
         if (handleId) {
@@ -388,7 +388,7 @@ export function registerActionLoaderSlashCommands() {
           enumProvider: loaderEnumProviders.loaderHandleProvider,
         }),
       ],
-      callback: async (args) => {
+      callback: async (args: any) => {
         const handleId = args.handle ? String(args.handle) : null;
 
         if (!handleId) {

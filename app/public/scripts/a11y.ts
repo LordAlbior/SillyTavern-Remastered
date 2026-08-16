@@ -55,25 +55,25 @@ const tabItemSelectors = ["#bg_tabs .bg_tabs_list .bg_tab_button"].join(", ");
 
 /** @type {Record<string, (element: Element) => void>} */
 const a11yRules = {
-  [buttonSelectors]: (element) => {
+  [buttonSelectors]: (element: any) => {
     element.setAttribute("role", "button");
   },
-  [listSelectors]: (element) => {
+  [listSelectors]: (element: any) => {
     element.setAttribute("role", "list");
   },
-  [listItemSelectors]: (element) => {
+  [listItemSelectors]: (element: any) => {
     element.setAttribute("role", "listitem");
   },
-  [toolbarSelectors]: (element) => {
+  [toolbarSelectors]: (element: any) => {
     element.setAttribute("role", "toolbar");
   },
-  [tabListSelectors]: (element) => {
+  [tabListSelectors]: (element: any) => {
     element.setAttribute("role", "tablist");
   },
-  [tabItemSelectors]: (element) => {
+  [tabItemSelectors]: (element: any) => {
     element.setAttribute("role", "tab");
   },
-  "#toast-container .toast": (element) => {
+  "#toast-container .toast": (element: any) => {
     element.setAttribute("role", "status");
   },
 };
@@ -82,7 +82,7 @@ const a11yRules = {
  * Apply accessibility rules to an element.
  * @param {Element} element Element to process.
  */
-function applyA11yRules(element) {
+function applyA11yRules(element: any) {
   try {
     for (const [selector, rule] of Object.entries(a11yRules)) {
       // Apply if the element directly matches the selector

@@ -21,7 +21,7 @@ const SELECT_SAMPLER = {
 };
 
 const textGenObjectStore = localforage.createInstance({ name: "SillyTavern_TextCompletions" });
-let selectedSamplers = {};
+let selectedSamplers: Record<string, any> = {};
 
 // Goal 1: show popup with all samplers for active API
 async function showSamplerSelectPopup() {
@@ -31,10 +31,10 @@ async function showSamplerSelectPopup() {
 
   const listContainer = $('<div id="apiSamplersList" class="flex-container flexNoGap"></div>');
   const APISamplers = await listSamplers(main_api);
-  listContainer.append(APISamplers.toString());
+  listContainer.append(APISamplers!.toString());
   html.append(listContainer);
 
-  const showPromise = new Popup(html, POPUP_TYPE.TEXT, null, {
+  const showPromise = new Popup(html, POPUP_TYPE.TEXT, null as any, {
     wide: true,
     large: true,
     allowVerticalScrolling: true,
@@ -49,7 +49,7 @@ async function showSamplerSelectPopup() {
 
       if (main_api === "textgenerationwebui") {
         $("#prioritizeManuallySelectedSamplers").toggleClass("toggleEnabled", false);
-        await resetApiSelectedSamplers(null, true);
+        await resetApiSelectedSamplers(null as any, true);
       }
 
       await validateDisabledSamplers(true);
@@ -76,7 +76,7 @@ async function showSamplerSelectPopup() {
   if (main_api === "textgenerationwebui") await saveApiSelectedSamplers();
 }
 
-function getRelatedDOMElement(samplerName) {
+function getRelatedDOMElement(samplerName: any) {
   let relatedDOMElement = $(`#${samplerName}_${main_api}`).parent();
   let targetDisplayType = "flex";
   let displayname;
@@ -223,7 +223,7 @@ function setSamplerListListeners() {
     });
 }
 
-function isElementVisibleInDOM(element) {
+function isElementVisibleInDOM(element: any) {
   while (element && element !== document.body) {
     if (window.getComputedStyle(element).display === "none") {
       return false;
@@ -233,7 +233,7 @@ function isElementVisibleInDOM(element) {
   return true;
 }
 
-async function listSamplers(main_api, arrayOnly = false) {
+async function listSamplers(main_api: any, arrayOnly = false) {
   let availableSamplers;
   if (main_api === "textgenerationwebui") {
     availableSamplers = TGsamplerNames;
@@ -258,7 +258,7 @@ async function listSamplers(main_api, arrayOnly = false) {
   const samplersActivatedManually = main_api === "textgenerationwebui" ? getActiveManualApiSamplers() : [];
   const prioritizeManualSamplerSelect = main_api === "textgenerationwebui" ? isSamplerManualPriorityEnabled() : false;
 
-  const samplersListHTML = availableSamplers.reduce((html, sampler) => {
+  const samplersListHTML = availableSamplers!.reduce((html, sampler) => {
     let customColor;
     let { relatedDOMElement, displayname } = getRelatedDOMElement(sampler);
 
@@ -330,7 +330,7 @@ export async function validateDisabledSamplers(redraw = false) {
 
   if (redraw) {
     const samplersHTML = await listSamplers(main_api);
-    $("#apiSamplersList").empty().append(samplersHTML.toString());
+    $("#apiSamplersList").empty().append(samplersHTML!.toString());
     setSamplerListListeners();
   }
 
@@ -392,7 +392,7 @@ export async function resetApiSelectedSamplers(tcApiType = "", silent = false) {
  * @param {string?} tcApiType Name of the target API Type - It picks the currently active TC API type name by default
  * @returns void
  */
-export function setApiSamplersState(samplerName, state, tcApiType = "") {
+export function setApiSamplersState(samplerName: any, state: any, tcApiType = "") {
   if (!textgenerationwebui_settings?.type && !tcApiType) return;
   if (!tcApiType) tcApiType = textgenerationwebui_settings.type;
   if (!selectedSamplers[tcApiType]) selectedSamplers[tcApiType] = {};

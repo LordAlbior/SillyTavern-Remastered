@@ -342,8 +342,8 @@ export const power_user: Record<string, any> = {
     image_overswipe: IMAGE_OVERSWIPE.GENERATE,
 };
 
-let themes = [];
-let movingUIPresets = [];
+let themes: any[] = [];
+let movingUIPresets: any[] = [];
 /** @type {ContextSettings[]} */
 export let context_presets = [];
 
@@ -369,7 +369,7 @@ const contextControls = [
 ];
 
 let browser_has_focus = true;
-const debug_functions = [];
+const debug_functions: any[] = [];
 
 const setHotswapsDebounced = debounce(favsToHotswap);
 
@@ -405,7 +405,7 @@ export function playMessageSound({ force }: { force?: boolean } = {}) {
  * @example
  * collapseNewlines("\n\n\n"); // "\n"
  */
-export function collapseNewlines(x) {
+export function collapseNewlines(x: any) {
     return x.replaceAll(/\n+/g, '\n');
 }
 
@@ -426,7 +426,7 @@ export function collapseNewlines(x) {
  * // and you HAVE to handle the cases where multiple pairs of asterisks exist in the same line
  * "^example * text* * harder problem *\n" // "^example *text* *harder problem*\n"
  */
-export function fixMarkdown(text, forDisplay) {
+export function fixMarkdown(text: any, forDisplay: any) {
     // Find pairs of formatting characters and capture the text in between them
     const format = /([*_]{1,2})([\s\S]*?)\1/gm;
     let matches = [];
@@ -515,7 +515,7 @@ function switchReducedMotion() {
     }
     jQuery.fx.off = power_user.reduced_motion;
     const overrideDuration = power_user.reduced_motion ? 0 : ANIMATION_DURATION_DEFAULT;
-    setAnimationDuration(overrideDuration);
+    setAnimationDuration(overrideDuration as any);
     $('#reduced_motion').prop('checked', power_user.reduced_motion);
     $('#reduced_motion').prop('disabled', osReduced);
     $('#reduced_motion').closest('label').attr('title',
@@ -536,7 +536,7 @@ function switchSwipeNumAllMessages() {
     $('body').toggleClass('swipeAllMessages', !!power_user.show_swipe_num_all_messages);
 }
 
-var originalSliderValues = [];
+var originalSliderValues: any[] = [];
 
 async function switchLabMode({ noReset = false } = {}) {
     /*     if (power_user.enableZenSliders && power_user.enableLabMode) {
@@ -629,7 +629,7 @@ async function switchZenSliders() {
         $('div[id$="_zenslider"]').remove();
     }
 }
-async function CreateZenSliders(elmnt) {
+async function CreateZenSliders(elmnt: any) {
     var originalSlider = elmnt;
     var sliderID = originalSlider.attr('id');
     var sliderMin = Number(originalSlider.attr('min'));
@@ -638,9 +638,9 @@ async function CreateZenSliders(elmnt) {
     var sliderRange = sliderMax - sliderMin;
     var numSteps = 20;
     var decimals = 2;
-    var offVal, allVal;
-    var stepScale;
-    var steps;
+    var offVal: any, allVal: any;
+    var stepScale: any;
+    var steps: any;
     if (sliderID == 'amount_gen') {
         decimals = 0;
         steps = [16, 50, 100, 150, 200, 256, 300, 400, 512, 1024];
@@ -845,7 +845,7 @@ async function CreateZenSliders(elmnt) {
                     .data('newSlider', newSlider);
                 //console.log(`${newSlider.attr('id')} sliderValue = ${sliderValue}, handleText:${handleText, numVal}, stepNum:${stepNumber}, numSteps:${numSteps}, left-margin:${leftMargin}`)
                 var isManualInput = false;
-                var valueBeforeManualInput;
+                var valueBeforeManualInput: any;
                 handle.css('margin-left', `${leftMargin}px`)
 
                     .attr('contenteditable', 'true')
@@ -857,10 +857,10 @@ async function CreateZenSliders(elmnt) {
                         console.log(valueBeforeManualInput);
                         let handleElement = handle.get(0);
                         let range = document.createRange();
-                        range.selectNodeContents(handleElement);
+                        range.selectNodeContents(handleElement as any);
                         let selection = window.getSelection();
-                        selection.removeAllRanges();
-                        selection.addRange(range);
+                        selection!.removeAllRanges();
+                        selection!.addRange(range);
                     })
                     .on('keyup', function (e) {
                         valueBeforeManualInput = numVal;
@@ -900,7 +900,7 @@ async function CreateZenSliders(elmnt) {
         slide: handleSlideEvent,
     });
 
-    function handleSlideEvent(event, ui, type) {
+    function handleSlideEvent(this: any, event: any, ui: any, type: any) {
         var handle = $(this).find('.ui-slider-handle');
         var numVal = parseFloat(Number(ui.value).toFixed(decimals));
         offVal = parseFloat(Number(offVal).toFixed(decimals));
@@ -912,7 +912,7 @@ async function CreateZenSliders(elmnt) {
         var handleText = (ui.value);
         var leftMargin = (stepNumber / numSteps) * 50 * -1;
         var perStepPercent = 1 / numSteps; //how far in % each step should be on the slider
-        var leftPos = newSlider.width() * (stepNumber * perStepPercent); //how big of a left margin to give the slider for manual inputs
+        var leftPos = newSlider.width()! * (stepNumber * perStepPercent); //how big of a left margin to give the slider for manual inputs
         /*         console.log(`
                 numVal: ${numVal},
                 sliderMax: ${sliderMax}
@@ -1081,7 +1081,7 @@ function applyToastrPosition() {
     $(`#toastr_position option[value="${power_user.toastr_position}"]`).prop('selected', true);
 }
 
-function applyChatWidth(type) {
+function applyChatWidth(type: any) {
     if (type === 'forced') {
         let r = document.documentElement;
         r.style.setProperty('--sheldWidth', `${power_user.chat_width}vw`);
@@ -1125,7 +1125,7 @@ function applyThemeColor(type?: string) {
     if (type === 'blurTint') {
         let metaThemeColor = document.querySelector('meta[name=theme-color]');
         document.documentElement.style.setProperty('--SmartThemeBlurTintColor', power_user.blur_tint_color);
-        metaThemeColor.setAttribute('content', power_user.blur_tint_color);
+        metaThemeColor?.setAttribute('content', power_user.blur_tint_color);
     }
     if (type === 'chatTint') {
         document.documentElement.style.setProperty('--SmartThemeChatTintColor', power_user.chat_tint_color);
@@ -1169,7 +1169,7 @@ function applyShadowWidth() {
     $('#shadow_width').val(power_user.shadow_width);
 }
 
-function applyFontScale(type) {
+function applyFontScale(type: any) {
     //this is to allow forced setting on page load, theme swap, etc
     if (type === 'forced') {
         document.documentElement.style.setProperty('--fontScale', String(power_user.font_scale));
@@ -1224,7 +1224,7 @@ function showMediaDisplayReloadPrompt() {
     );
 }
 
-function applyTheme(name) {
+function applyTheme(name: any) {
     const theme = themes.find(x => x.name == name);
 
     if (!theme) {
@@ -1415,7 +1415,7 @@ function applyTheme(name) {
         },
         {
             key: 'media_display',
-            action: (oldValue, newValue) => {
+            action: (oldValue: any, newValue: any) => {
                 $('#media_display').val(power_user.media_display);
                 if (oldValue !== newValue) {
                     showMediaDisplayReloadPrompt();
@@ -1440,7 +1440,7 @@ function applyTheme(name) {
     console.log('theme applied: ' + name);
 }
 
-async function applyMovingUIPreset(name) {
+async function applyMovingUIPreset(name: any) {
     await resetMovablePanels('quiet');
     const movingUIPreset = movingUIPresets.find(x => x.name == name);
 
@@ -1463,7 +1463,7 @@ async function applyMovingUIPreset(name) {
  * @param {string} description Description of the function.
  * @param {function} func Function to be executed.
  */
-export function registerDebugFunction(functionId, name, description, func) {
+export function registerDebugFunction(functionId: any, name: any, description: any, func: any) {
     debug_functions.push({ functionId, name, description, func });
 }
 
@@ -1551,7 +1551,7 @@ function getExampleMessagesBehavior() {
 }
 
 //MARK: loadPowerUser
-export async function loadPowerUserSettings(settings, data) {
+export async function loadPowerUserSettings(settings: any, data: any) {
     const defaultStscript = JSON.parse(JSON.stringify(power_user.stscript));
     // Load from settings.json
     if (settings.power_user !== undefined) {
@@ -1946,7 +1946,7 @@ async function loadContextSettings() {
      * Auto-fix missing fields in the story string
      * @param {ContextSettings} contextSettings Context settings instance
      */
-    function autoFixStoryString(contextSettings) {
+    function autoFixStoryString(contextSettings: any) {
         // Already migrated, no need to fix
         if (!contextSettings || Object.hasOwn(contextSettings, 'story_string_position')) {
             return;
@@ -1958,7 +1958,7 @@ async function loadContextSettings() {
          * @param {string} field Missing field name
          * @param {'start'|'end'} position Position of auto-fix
          */
-        function autoFixMissingField(field, position) {
+        function autoFixMissingField(field: any, position: any) {
             if (storyString.includes(`{{${field}}}`)) {
                 return;
             }
@@ -2025,7 +2025,7 @@ async function loadContextSettings() {
         }
     });
 
-    context_presets.forEach((preset) => {
+    context_presets.forEach((preset: any) => {
         const name = preset.name;
         const option = document.createElement('option');
         option.value = name;
@@ -2036,7 +2036,7 @@ async function loadContextSettings() {
 
     $('#context_presets').on('change', function () {
         const name = String($(this).find(':selected').text());
-        const preset = context_presets.find(x => x.name === name);
+        const preset = context_presets.find((x: any) => x.name === name);
 
         if (!preset) {
             return;
@@ -2072,7 +2072,7 @@ async function loadContextSettings() {
 
         if (power_user.instruct.bind_to_context) {
             // Select matching instruct preset
-            for (const instruct_preset of instruct_presets) {
+            for (const instruct_preset of instruct_presets as any[]) {
                 // If instruct preset matches the context template
                 if (instruct_preset.name === name) {
                     selectInstructPreset(instruct_preset.name, { isAuto: true });
@@ -2098,12 +2098,12 @@ async function loadContextSettings() {
  * @param {Object.<string, { resultMap: Map<string, any> }>} [fuzzySearchCaches=null] - Optional fuzzy search caches
  * @returns {import('fuse.js').FuseResult<T>[]} Results as items with their score
  */
-export function performFuzzySearch(type, data, keys, searchValue, fuzzySearchCaches = null) {
+export function performFuzzySearch(type: any, data: any, keys: any, searchValue: any, fuzzySearchCaches: any = null) {
     // Check cache if provided
     if (fuzzySearchCaches) {
         const cache = fuzzySearchCaches[type];
-        if (cache?.resultMap.has(searchValue)) {
-            return cache.resultMap.get(searchValue);
+        if ((cache as any)?.resultMap.has(searchValue)) {
+            return (cache as any).resultMap.get(searchValue);
         }
     }
 
@@ -2119,7 +2119,7 @@ export function performFuzzySearch(type, data, keys, searchValue, fuzzySearchCac
 
     // Store in cache if provided
     if (fuzzySearchCaches) {
-        fuzzySearchCaches[type].resultMap.set(searchValue, results);
+        (fuzzySearchCaches[type] as any).resultMap.set(searchValue, results);
     }
     return results;
 }
@@ -2130,10 +2130,10 @@ export function performFuzzySearch(type, data, keys, searchValue, fuzzySearchCac
  * @param {Object.<string, { resultMap: Map<string, any> }>} [fuzzySearchCaches=null] - Optional fuzzy search caches
  * @returns {import('fuse.js').FuseResult<any>[]} Results as items with their score
  */
-export function fuzzySearchCharacters(searchValue, fuzzySearchCaches = null) {
+export function fuzzySearchCharacters(searchValue: any, fuzzySearchCaches: any = null) {
     const keys = [
         { name: 'data.name', weight: 20 },
-        { name: '#tags', weight: 10, getFn: (character) => getTagsList(character.avatar).map(x => x.name).join('||') },
+        { name: '#tags', weight: 10, getFn: (character: any) => getTagsList(character.avatar).map((x: any) => x.name).join('||') },
         { name: 'data.description', weight: 3 },
         { name: 'data.mes_example', weight: 3 },
         { name: 'data.scenario', weight: 2 },
@@ -2155,7 +2155,7 @@ export function fuzzySearchCharacters(searchValue, fuzzySearchCaches = null) {
  * @param {Object.<string, { resultMap: Map<string, any> }>} [fuzzySearchCaches=null] - Optional fuzzy search caches
  * @returns {import('fuse.js').FuseResult<any>[]} Results as items with their score
  */
-export function fuzzySearchWorldInfo(data, searchValue, fuzzySearchCaches = null) {
+export function fuzzySearchWorldInfo(data: any, searchValue: any, fuzzySearchCaches: any = null) {
     const keys = [
         { name: 'key', weight: 20 },
         { name: 'group', weight: 15 },
@@ -2176,8 +2176,8 @@ export function fuzzySearchWorldInfo(data, searchValue, fuzzySearchCaches = null
  * @param {Object.<string, { resultMap: Map<string, any> }>} [fuzzySearchCaches=null] - Optional fuzzy search caches
  * @returns {import('fuse.js').FuseResult<any>[]} Results as items with their score
  */
-export function fuzzySearchPersonas(data, searchValue, fuzzySearchCaches = null) {
-    const mappedData = data.map(x => ({
+export function fuzzySearchPersonas(data: any, searchValue: any, fuzzySearchCaches: any = null) {
+    const mappedData = data.map((x: any) => ({
         key: x,
         name: power_user.personas[x] ?? '',
         description: power_user.persona_descriptions[x]?.description ?? '',
@@ -2197,7 +2197,7 @@ export function fuzzySearchPersonas(data, searchValue, fuzzySearchCaches = null)
  * @param {Object.<string, { resultMap: Map<string, any> }>} [fuzzySearchCaches=null] - Optional fuzzy search caches
  * @returns {import('fuse.js').FuseResult<any>[]} Results as items with their score
  */
-export function fuzzySearchTags(searchValue, fuzzySearchCaches = null) {
+export function fuzzySearchTags(searchValue: any, fuzzySearchCaches: any = null) {
     const keys = [
         { name: 'name', weight: 1 },
     ];
@@ -2211,11 +2211,11 @@ export function fuzzySearchTags(searchValue, fuzzySearchCaches = null) {
  * @param {Object.<string, { resultMap: Map<string, any> }>} [fuzzySearchCaches=null] - Optional fuzzy search caches
  * @returns {import('fuse.js').FuseResult<any>[]} Results as items with their score
  */
-export function fuzzySearchGroups(searchValue, fuzzySearchCaches = null) {
+export function fuzzySearchGroups(searchValue: any, fuzzySearchCaches: any = null) {
     const keys = [
         { name: 'name', weight: 20 },
         { name: 'members', weight: 15 },
-        { name: '#tags', weight: 10, getFn: (group) => getTagsList(group.id).map(x => x.name).join('||') },
+        { name: '#tags', weight: 10, getFn: (group: any) => getTagsList(group.id).map((x: any) => x.name).join('||') },
         { name: 'id', weight: 1 },
     ];
 
@@ -2231,7 +2231,7 @@ export function fuzzySearchGroups(searchValue, fuzzySearchCaches = null) {
  * @param {ContextSettings} [options.customContextSettings] Custom context settings.
  * @returns {string} The rendered story string.
  */
-export function renderStoryString(params, { customStoryString = null, customInstructSettings = null, customContextSettings = null } = {}) {
+export function renderStoryString(params: any, { customStoryString = null, customInstructSettings = null, customContextSettings = null } = {}) {
     try {
         const instructSettings = structuredClone(customInstructSettings ?? power_user.instruct);
         const contextSettings = structuredClone(customContextSettings ?? power_user.context);
@@ -2274,9 +2274,9 @@ export function renderStoryString(params, { customStoryString = null, customInst
  * @param {string} storyString - The story string
  * @param {Object} params - The story string parameters
  */
-function validateStoryString(storyString, params) {
+function validateStoryString(storyString: any, params: any) {
     /** @type {{hashCache: {[hash: string]: {fieldsWarned: {[key: string]: boolean}}}}} */
-    const cache = JSON.parse(accountStorage.getItem(storage_keys.storyStringValidationCache)) ?? { hashCache: {} };
+    const cache = JSON.parse(accountStorage.getItem(storage_keys.storyStringValidationCache) as string) ?? { hashCache: {} };
 
     const hash = getStringHash(storyString);
 
@@ -2286,9 +2286,9 @@ function validateStoryString(storyString, params) {
     }
 
     const currentCache = cache.hashCache[hash];
-    const fieldsToWarn = [];
+    const fieldsToWarn: any[] = [];
 
-    function validateMissingField(field, fallbackLegacyField = null) {
+    function validateMissingField(field: any, fallbackLegacyField: any = null) {
         const contains = storyString.includes(`{{${field}}}`) || (!!fallbackLegacyField && storyString.includes(`{{${fallbackLegacyField}}}`));
         if (!contains && params[field]) {
             const wasLogged = currentCache.fieldsWarned[field];
@@ -2305,8 +2305,8 @@ function validateStoryString(storyString, params) {
     validateMissingField('persona');
     validateMissingField('scenario');
     // validateMissingField('system');
-    validateMissingField('wiBefore', 'loreBefore');
-    validateMissingField('wiAfter', 'loreAfter');
+    validateMissingField('wiBefore', 'loreBefore' as any);
+    validateMissingField('wiAfter', 'loreAfter' as any);
 
     if (fieldsToWarn.length > 0) {
         const fieldsList = fieldsToWarn.map(field => `{{${field}}}`).join(', ');
@@ -2317,8 +2317,8 @@ function validateStoryString(storyString, params) {
 }
 
 
-const sortFunc = (a, b) => power_user.sort_order == 'asc' ? compareFunc(a, b) : compareFunc(b, a);
-const compareFunc = (first, second) => {
+const sortFunc = (a: any, b: any) => power_user.sort_order == 'asc' ? compareFunc(a, b) : compareFunc(b, a);
+const compareFunc = (first: any, second: any) => {
     const a = first[power_user.sort_field];
     const b = second[power_user.sort_field];
 
@@ -2347,7 +2347,7 @@ const compareFunc = (first, second) => {
  * @param {boolean} forceSearch Whether to force search sorting
  * @param {import('./filters.js').FilterHelper} [filterHelper=null] Filter helper to use
  */
-export function sortEntitiesList(entities, forceSearch, filterHelper = null) {
+export function sortEntitiesList(entities: any, forceSearch: any, filterHelper: any = null) {
     filterHelper = filterHelper ?? entitiesFilter;
     if (power_user.sort_field == undefined || entities.length === 0) {
         return;
@@ -2360,7 +2360,7 @@ export function sortEntitiesList(entities, forceSearch, filterHelper = null) {
         return;
     }
 
-    entities.sort((a, b) => {
+    entities.sort((a: any, b: any) => {
         // Sort tags/folders will always be at the top. Their original sorting will be kept, to respect manual tag sorting.
         if (a.type === 'tag' || b.type === 'tag') {
             // The one that is a tag will be at the top
@@ -2369,8 +2369,8 @@ export function sortEntitiesList(entities, forceSearch, filterHelper = null) {
 
         // If we have search sorting, we take scores and use those
         if (isSearch) {
-            const aScore = filterHelper.getScore(FILTER_TYPES.SEARCH, `${a.type}.${a.id}`);
-            const bScore = filterHelper.getScore(FILTER_TYPES.SEARCH, `${b.type}.${b.id}`);
+            const aScore = filterHelper!.getScore(FILTER_TYPES.SEARCH, `${a.type}.${a.id}`);
+            const bScore = filterHelper!.getScore(FILTER_TYPES.SEARCH, `${b.type}.${b.id}`);
             return (aScore - bScore);
         }
 
@@ -2431,7 +2431,7 @@ async function deleteTheme() {
  */
 async function exportTheme() {
     const themeFile = await saveTheme(power_user.theme);
-    const fileName = `${themeFile.name}.json`;
+    const fileName = `${(themeFile as any).name}.json`;
     download(JSON.stringify(themeFile, null, 4), fileName, 'application/json');
 }
 
@@ -2440,7 +2440,7 @@ async function exportTheme() {
  * @param {File} file File to import.
  * @returns {Promise<void>} A promise that resolves when the theme is imported.
  */
-async function importTheme(file) {
+async function importTheme(file: any) {
     if (!file) {
         return;
     }
@@ -2465,7 +2465,7 @@ async function importTheme(file) {
     }
 
     themes.push(parsed);
-    await saveTheme(parsed.name, getNewTheme(parsed));
+    await saveTheme(parsed.name, getNewTheme(parsed) as any);
     const option = document.createElement('option');
     option.selected = false;
     option.value = parsed.name;
@@ -2481,7 +2481,7 @@ async function importTheme(file) {
  * @param {object|undefined} theme Theme object. If undefined, the current theme will be saved.
  * @returns {Promise<object>} A promise that resolves when the theme is saved.
  */
-async function saveTheme(name = undefined, theme = undefined) {
+async function saveTheme(name: any = undefined, theme: any = undefined) {
     if (typeof name !== 'string') {
         const newName = await callGenericPopup('Enter a theme preset name:', POPUP_TYPE.INPUT, power_user.theme);
 
@@ -2493,7 +2493,7 @@ async function saveTheme(name = undefined, theme = undefined) {
     }
 
     if (typeof theme !== 'object') {
-        theme = getThemeObject(name);
+        theme = getThemeObject(name) as any;
     }
 
     const response = await fetch('/api/themes/save', {
@@ -2514,8 +2514,8 @@ async function saveTheme(name = undefined, theme = undefined) {
         themes.push(theme);
         const option = document.createElement('option');
         option.selected = true;
-        option.value = name;
-        option.innerText = name;
+        option.value = name as unknown as string;
+        option.innerText = name as unknown as string;
         $('#themes').append(option);
     } else {
         themes[themeIndex] = theme;
@@ -2532,7 +2532,7 @@ async function saveTheme(name = undefined, theme = undefined) {
  * Gets a snapshot of the current theme settings.
  * @param {string} name Name of the theme
  */
-export function getThemeObject(name) {
+export function getThemeObject(name: any) {
     return {
         name,
         blur_strength: power_user.blur_strength,
@@ -2582,11 +2582,11 @@ export function getThemeObject(name) {
  * @param {object} parsed Parsed object to get the theme from.
  * @returns {Theme} Theme assigned to the parsed object.
  */
-function getNewTheme(parsed) {
+function getNewTheme(parsed: any) {
     const theme = getThemeObject(parsed.name);
     for (const key in parsed) {
         if (Object.hasOwn(theme, key)) {
-            theme[key] = parsed[key];
+            (theme as any)[key] = parsed[key];
         }
     }
     return theme;
@@ -2640,14 +2640,14 @@ async function saveMovingUI() {
  * Resets the movable styles of the given element to their unset values.
  * @param {string} id Element ID
  */
-export function resetMovableStyles(id) {
+export function resetMovableStyles(id: any) {
     const panelStyles = ['top', 'left', 'right', 'bottom', 'height', 'width', 'margin'];
 
     const panel = document.getElementById(id);
 
     if (panel) {
-        panelStyles.forEach((style) => {
-            panel.style[style] = '';
+        panelStyles.forEach((style: any) => {
+            (panel.style as any)[style] = '';
         });
     }
 }
@@ -2677,8 +2677,8 @@ async function resetMovablePanels(type?: string) {
     allDraggable.forEach((panel) => {
         if (panel) {
             $(panel).addClass('resizing');
-            panelStyles.forEach((style) => {
-                panel.style[style] = '';
+            panelStyles.forEach((style: any) => {
+                (panel.style as any)[style] = '';
             });
         }
     });
@@ -2690,8 +2690,8 @@ async function resetMovablePanels(type?: string) {
     if (zoomedAvatars.length > 0) {
         zoomedAvatars.forEach((avatar) => {
             avatar.classList.add('resizing');
-            panelStyles.forEach((style) => {
-                avatar.style[style] = '';
+            panelStyles.forEach((style: any) => {
+                (avatar.style as any)[style] = '';
             });
         });
     }
@@ -2730,11 +2730,11 @@ async function resetMovablePanels(type?: string) {
  * @param {string} name
  * @returns {string} The ID of the tag with the given name.
  */
-function findTagIdByName(name) {
+function findTagIdByName(name: any) {
     const matchTypes = [
-        (a, b) => a === b,
-        (a, b) => a.startsWith(b),
-        (a, b) => a.includes(b),
+        (a: any, b: any) => a === b,
+        (a: any, b: any) => a.startsWith(b),
+        (a: any, b: any) => a.includes(b),
     ];
 
     // Only get tags that contain at least one record in the tag_map
@@ -2755,7 +2755,7 @@ function findTagIdByName(name) {
     }
 }
 
-async function doRandomChat(_, tagName) {
+async function doRandomChat(_: any, tagName: any) {
     /**
      * Gets the ID of a random character.
      * @returns {string} The order index of the randomly selected character.
@@ -2785,11 +2785,11 @@ async function doRandomChat(_, tagName) {
         return;
     }
     setCharacterId(characterId);
-    setActiveCharacter(characters[characterId]?.avatar);
+    setActiveCharacter((characters as any)[characterId]?.avatar);
     setActiveGroup(null);
     await delay(1);
     await reloadCurrentChat();
-    return characters[characterId]?.name;
+    return (characters as any)[characterId]?.name;
 }
 
 /**
@@ -2797,8 +2797,8 @@ async function doRandomChat(_, tagName) {
  * @param {number} mesId
  * @returns JQuery<HTMLElement>
  */
-async function loadUntilMesId(mesId) {
-    let target;
+async function loadUntilMesId(mesId: any) {
+    let target: any;
 
     while (getFirstDisplayedMessageId() > mesId && getFirstDisplayedMessageId() !== 0) {
         await showMoreMessages();
@@ -2818,7 +2818,7 @@ async function loadUntilMesId(mesId) {
     return target;
 }
 
-async function doMesCut(_, text) {
+async function doMesCut(_: any, text: any) {
     console.debug(`was asked to cut message id #${text}`);
     const range = stringToRange(text, 0, chat.length - 1);
 
@@ -2845,7 +2845,7 @@ async function doMesCut(_, text) {
         }
 
         setEditedMessageId(mesIDToCut);
-        await deleteMessage(mesIDToCut, null, false);
+        await deleteMessage(mesIDToCut, null as any, false);
     }
 
     await saveChatConditional();
@@ -2853,7 +2853,7 @@ async function doMesCut(_, text) {
     return cutText;
 }
 
-async function doDelMode(_, text) {
+async function doDelMode(_: any, text: any) {
     //reject invalid args
     if (text && isNaN(text)) {
         toastr.warning('Must enter a number or nothing.');
@@ -2887,7 +2887,7 @@ function doResetPanels() {
     return '';
 }
 
-async function setAvgBG(args) {
+async function setAvgBG(args: any) {
     const nameOverride = args?.name ? String(args.name).trim() : '';
     const bgOverride = args?.bg ? String(args.bg).trim() : '';
     const force = isTrueBoolean(args?.force?.toString());
@@ -2941,14 +2941,14 @@ async function setAvgBG(args) {
     Object.assign(theme, palette);
 
     // Save as a new theme
-    await saveTheme(themeName, theme);
+    await saveTheme(themeName, theme as any);
     applyTheme(themeName);
 
     toastr.success(`Theme "${themeName}" generated and applied.`);
     return '';
 }
 
-async function setThemeCallback(_, themeName) {
+async function setThemeCallback(_: any, themeName: any) {
     if (!themeName) {
         // allow reporting of the theme name if called without args
         // for use in ST Scripts via pipe
@@ -2978,7 +2978,7 @@ async function setThemeCallback(_, themeName) {
     return '';
 }
 
-async function setmovingUIPreset(_, text) {
+async function setmovingUIPreset(_: any, text: any) {
     // @ts-ignore
     const fuse = new Fuse(movingUIPresets, {
         keys: [
@@ -3002,13 +3002,13 @@ async function setmovingUIPreset(_, text) {
     return '';
 }
 
-const EPHEMERAL_STOPPING_STRINGS = [];
+const EPHEMERAL_STOPPING_STRINGS: any[] = [];
 
 /**
  * Adds a stopping string to the list of stopping strings that are only used for the next generation.
  * @param {string} value The stopping string to add
  */
-export function addEphemeralStoppingString(value) {
+export function addEphemeralStoppingString(value: any) {
     if (!EPHEMERAL_STOPPING_STRINGS.includes(value)) {
         console.debug('Adding ephemeral stopping string:', value);
         EPHEMERAL_STOPPING_STRINGS.push(value);
@@ -3029,7 +3029,7 @@ export function flushEphemeralStoppingStrings() {
  * @param {string} text The text to check
  * @returns {boolean} If the generated text should be filtered
  */
-export function generatedTextFiltered(text) {
+export function generatedTextFiltered(text: any) {
     /**
      * Checks if the given text contains any of the blacklisted words.
      * @param {string} text The text to check
@@ -3037,7 +3037,7 @@ export function generatedTextFiltered(text) {
      * @param {number} threshold The number of blacklisted words that need to be present to trigger the check
      * @returns {boolean} Whether the text contains blacklisted words
      */
-    function containsBlacklistedWords(text, blacklist, threshold) {
+    function containsBlacklistedWords(text: any, blacklist: any, threshold: any) {
         const regex = new RegExp(`\\b(${blacklist.join('|')})\\b`, 'gi');
         const matches = text.match(regex) || [];
         return matches.length >= threshold;
@@ -3090,7 +3090,7 @@ export function getCustomStoppingStrings(limit: any = undefined) {
 
             // Substitute params if necessary
             if (power_user.custom_stopping_strings_macro) {
-                strings = strings.map(x => substituteParams(x));
+                strings = strings.map((x: any) => substituteParams(x));
             }
 
             return strings;
@@ -3115,7 +3115,7 @@ export function getCustomStoppingStrings(limit: any = undefined) {
 
 export function forceCharacterEditorTokenize() {
     $('[data-token-counter]').each(function () {
-        $(document.getElementById($(this).data('token-counter'))).data('last-value-hash', '');
+        $(document.getElementById(String($(this).data('token-counter'))) as any).data('last-value-hash', '');
     });
     $('#rm_ch_create_block').trigger('input');
     $('#character_popup').trigger('input');
@@ -3261,7 +3261,7 @@ jQuery(() => {
     });
 
     $('#bind_model_templates').on('input', function () {
-        if (bindModelTemplates(power_user, online_status)) {
+        if (bindModelTemplates(power_user, online_status) as any) {
             saveSettingsDebounced();
         }
     });
@@ -3956,7 +3956,7 @@ jQuery(() => {
     });
 
     $('#stscript_autocomplete_font_scale').on('input', function () {
-        const value = $(this).val();
+        const value = $(this).val() ?? '';
         $('#stscript_autocomplete_font_scale_counter').val(value);
         power_user.stscript.autocomplete.font.scale = Number(value);
         document.body.style.setProperty('--ac-font-scale', value.toString());
@@ -3964,7 +3964,7 @@ jQuery(() => {
         saveSettingsDebounced();
     });
     $('#stscript_autocomplete_font_scale_counter').on('input', function () {
-        const value = $(this).val();
+        const value = $(this).val() ?? '';
         $('#stscript_autocomplete_font_scale').val(value);
         power_user.stscript.autocomplete.font.scale = Number(value);
         document.body.style.setProperty('--ac-font-scale', value.toString());
@@ -3973,7 +3973,7 @@ jQuery(() => {
     });
 
     $('#stscript_autocomplete_width_left').on('input', function () {
-        const value = $(this).val();
+        const value = $(this).val() ?? '';
         power_user.stscript.autocomplete.width.left = Number(value);
         (this.closest('.doubleRangeInputContainer') as HTMLElement).style.setProperty('--value', value.toString());
         window.dispatchEvent(new Event('resize', { bubbles: true }));
@@ -3981,7 +3981,7 @@ jQuery(() => {
     });
 
     $('#stscript_autocomplete_width_right').on('input', function () {
-        const value = $(this).val();
+        const value = $(this).val() ?? '';
         power_user.stscript.autocomplete.width.right = Number(value);
         (this.closest('.doubleRangeInputContainer') as HTMLElement).style.setProperty('--value', value.toString());
         window.dispatchEvent(new Event('resize', { bubbles: true }));
@@ -4058,14 +4058,14 @@ jQuery(() => {
         const inputElement = this instanceof HTMLInputElement && this;
 
         try {
-            const file = inputElement?.files?.[0];
+            const file = (inputElement as any)?.files?.[0];
             await importTheme(file);
         } catch (error) {
             console.error('Error importing UI theme', error);
             toastr.error(String(error), 'Failed to import UI theme');
         } finally {
             if (inputElement) {
-                inputElement.value = null;
+                inputElement.value = null as any;
             }
         }
     });
@@ -4075,7 +4075,7 @@ jQuery(() => {
     });
 
     $('#media_display').on('input', async function () {
-        power_user.media_display = $(this).val().toString();
+        power_user.media_display = ($(this).val() as any).toString();
         saveSettingsDebounced();
         if (isMediaDisplayReloadNeeded()) {
             await reloadCurrentChat();
@@ -4083,7 +4083,7 @@ jQuery(() => {
     });
 
     $('#image_overswipe').on('input', function () {
-        power_user.image_overswipe = $(this).val().toString();
+        power_user.image_overswipe = ($(this).val() as any).toString();
         saveSettingsDebounced();
     });
 
@@ -4114,7 +4114,7 @@ jQuery(() => {
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'newchat',
         /** @type {(args: { delete: string?}, string) => Promise<''>} */
-        callback: async (args, _) => {
+        callback: async (args: any, _: any) => {
             await doNewChat({ deleteCurrentChat: isTrueBoolean(args.delete) });
             return '';
         },
@@ -4248,14 +4248,14 @@ jQuery(() => {
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'css-var',
         /** @param {{to: string, varname: string }} args @param {string} value @returns {string} */
-        callback: (args, value) => {
+        callback: (args: any, value: any) => {
             // Map enum to target selector
-            const targetSelector = {
+            const targetSelector = ({
                 chat: '#chat',
                 background: '#bg1',
                 gallery: '#gallery',
                 zoomedAvatar: 'div.zoomed_avatar',
-            }[args.to || 'chat'];
+            } as Record<string, any>)[args.to || 'chat'];
 
             if (!targetSelector) {
                 toastr.error(`Invalid target: ${args.to}`);
@@ -4382,7 +4382,7 @@ jQuery(() => {
                 isRequired: false,
             }),
         ],
-        callback: (args, value) => {
+        callback: (args: any, value: any) => {
             const force = isTrueBoolean(String(args?.force ?? false));
             value = String(value ?? '').trim();
 
@@ -4442,7 +4442,7 @@ jQuery(() => {
                 isRequired: false,
             }),
         ],
-        callback: (args, value) => {
+        callback: (args: any, value: any) => {
             const force = isTrueBoolean(String(args?.force ?? false));
 
             // Skip processing if no value and not forced

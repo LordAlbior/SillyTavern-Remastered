@@ -60,9 +60,9 @@ const activeExtensions = new Set();
 const extensionLoadErrors = new Set();
 
 const getApiUrl = () => extension_settings.apiUrl;
-const sortManifestsByOrder = (a, b) =>
+const sortManifestsByOrder = (a: any, b: any) =>
   parseInt(a.loading_order) - parseInt(b.loading_order) || String(a.display_name).localeCompare(String(b.display_name));
-const sortManifestsByName = (a, b) =>
+const sortManifestsByName = (a: any, b: any) =>
   String(a.display_name).localeCompare(String(b.display_name)) || parseInt(a.loading_order) - parseInt(b.loading_order);
 let connectedToApi = false;
 
@@ -82,7 +82,7 @@ const defaultUrl = "http://localhost:5100";
  * @param {string} url URL to check
  * @returns {boolean} True if the URL matches the pattern, false otherwise (or not a valid URL)
  */
-export const isOfficialExtension = (url) => {
+export const isOfficialExtension = (url: any) => {
   try {
     return /^https:\/\/github\.com\/SillyTavern\/(.+)$/i.test(new URL(url).href);
   } catch (e) {
@@ -92,7 +92,7 @@ export const isOfficialExtension = (url) => {
 
 let requiresReload = false;
 let stateChanged = false;
-let saveMetadataTimeout = null;
+let saveMetadataTimeout: any = null;
 
 export function cancelDebouncedMetadataSave() {
   if (saveMetadataTimeout) {
@@ -139,8 +139,8 @@ export function saveMetadataDebounced() {
  * @deprecated Use renderExtensionTemplateAsync instead.
  */
 export function renderExtensionTemplate(
-  extensionName,
-  templateId,
+  extensionName: any,
+  templateId: any,
   templateData = {},
   sanitize = true,
   localize = true,
@@ -163,8 +163,8 @@ export function renderExtensionTemplate(
  * @returns {Promise<string>} Rendered HTML
  */
 export function renderExtensionTemplateAsync(
-  extensionName,
-  templateId,
+  extensionName: any,
+  templateId: any,
   templateData = {},
   sanitize = true,
   localize = true,
@@ -293,7 +293,7 @@ const menuInterval = setInterval(showHideExtensionsMenu, 1000);
  * @param {string} externalId External ID of the extension (excluding or including the leading 'third-party/')
  * @returns {string} Type of the extension (global, local, system, or empty string if not found)
  */
-function getExtensionType(externalId) {
+function getExtensionType(externalId: any) {
   const id = Object.keys(extensionTypes).find(
     (id) => id === externalId || (id.startsWith("third-party") && id.endsWith(externalId)),
   );
@@ -306,7 +306,7 @@ function getExtensionType(externalId) {
  * @param {RequestInit} args Request arguments
  * @returns {Promise<Response>} Response from the fetch
  */
-export async function doExtrasFetch(endpoint, args: any = {}) {
+export async function doExtrasFetch(endpoint: any, args: any = {}) {
   if (!args) {
     args = {};
   }
@@ -335,7 +335,7 @@ export async function doExtrasFetch(endpoint, args: any = {}) {
  * @param {string} [options.prefix] Optional prefix to ignore when generating the selector (e.g. "third-party")
  * @returns {string} CSS selector for the extension, with the prefix removed if it was present and specified in options
  */
-function getNameSelector(name, { prefix = "third-party" } = {}) {
+function getNameSelector(name: any, { prefix = "third-party" } = {}) {
   const nameWithoutPrefix = prefix && name.startsWith(prefix) ? name.slice(prefix.length) : name;
   return CSS.escape(nameWithoutPrefix);
 }
@@ -360,12 +360,12 @@ async function discoverExtensions() {
   }
 }
 
-function onDisableExtensionClick() {
+function onDisableExtensionClick(this: any) {
   const name = $(this).data("name");
   disableExtension(name, false);
 }
 
-function onEnableExtensionClick() {
+function onEnableExtensionClick(this: any) {
   const name = $(this).data("name");
   enableExtension(name, false);
 }
@@ -376,12 +376,12 @@ function onEnableExtensionClick() {
  * @param {JQuery<HTMLElement>} toggleContainer
  * @returns {Object[]} Updated extensionsToToggle array
  */
-function onToggleAllExtensions(extensionsToToggle, toggleContainer) {
+function onToggleAllExtensions(extensionsToToggle: any, toggleContainer: any) {
   const extensionNames = Object.keys(manifests);
   const thirdPartyExtensions = extensionNames.filter((name) => ["local", "global"].includes(getExtensionType(name)));
 
-  const checkIfDisabled = (name) => {
-    const toggle = extensionsToToggle.find((ext) => ext.name === name);
+  const checkIfDisabled = (name: any) => {
+    const toggle = extensionsToToggle.find((ext: any) => ext.name === name);
     return toggle ? !toggle.enable : extension_settings.disabledExtensions.includes(name);
   };
 
@@ -405,7 +405,7 @@ function onToggleAllExtensions(extensionsToToggle, toggleContainer) {
     const doToggleExtension = enable ? isDisabled : !isDisabled;
 
     if (doToggleExtension) {
-      const toggle = extensionsToToggle.find((ext) => ext.name === name);
+      const toggle = extensionsToToggle.find((ext: any) => ext.name === name);
 
       if (toggle) {
         toggle.toggleHandler = toggleHandler;
@@ -432,7 +432,7 @@ function onToggleAllExtensions(extensionsToToggle, toggleContainer) {
  * @param {'install' | 'update' | 'delete' | 'clean' | 'enable' | 'disable' | 'activate'} hookName The hook to check
  * @returns {boolean}
  */
-function hasExtensionHook(name, hookName) {
+function hasExtensionHook(name: any, hookName: any) {
   const fullName = name.startsWith("third-party") ? name : `third-party${name}`;
   const manifest = manifests[fullName];
   if (!manifest || !manifest.hooks || typeof manifest.hooks !== "object") {
@@ -450,7 +450,7 @@ function hasExtensionHook(name, hookName) {
  * @param {'install' | 'update' | 'delete' | 'clean' | 'enable' | 'disable' | 'activate'} hookName The hook to call
  * @returns {Promise<void>}
  */
-async function callExtensionHook(name, hookName) {
+async function callExtensionHook(name: any, hookName: any) {
   const manifest = manifests[name];
 
   if (!manifest) {
@@ -523,9 +523,9 @@ async function callExtensionHook(name, hookName) {
  * @param {string} name Extension name
  * @param {boolean} [reload=true] If true, reload the page after enabling the extension
  */
-export async function enableExtension(name, reload = true) {
+export async function enableExtension(name: any, reload = true) {
   await callExtensionHook(name, "enable");
-  extension_settings.disabledExtensions = extension_settings.disabledExtensions.filter((x) => x !== name);
+  extension_settings.disabledExtensions = extension_settings.disabledExtensions.filter((x: any) => x !== name);
   stateChanged = true;
   await saveSettings();
   if (reload) {
@@ -540,7 +540,7 @@ export async function enableExtension(name, reload = true) {
  * @param {string} name Extension name
  * @param {boolean} [reload=true] If true, reload the page after disabling the extension
  */
-export async function disableExtension(name, reload = true) {
+export async function disableExtension(name: any, reload = true) {
   await callExtensionHook(name, "disable");
   extension_settings.disabledExtensions.push(name);
   stateChanged = true;
@@ -558,7 +558,7 @@ export async function disableExtension(name, reload = true) {
  * @param {string} name - The name of the extension to find
  * @returns {{name: string, enabled: boolean}|null} Object with name and enabled properties, or null if not found
  */
-export function findExtension(name) {
+export function findExtension(name: any) {
   const internalExtensionName = extensionNames.find((extName) => {
     return equalsIgnoreCaseAndAccents(extName, name) || equalsIgnoreCaseAndAccents(extName, `third-party/${name}`);
   });
@@ -574,7 +574,7 @@ export function findExtension(name) {
  * @param {string} name - Extension name or internal key
  * @returns {object|null} Cloned manifest object, or null if not found
  */
-export function getExtensionManifest(name) {
+export function getExtensionManifest(name: any) {
   const found = extensionNames.find(
     (extName) =>
       equalsIgnoreCaseAndAccents(extName, name) || equalsIgnoreCaseAndAccents(extName, `third-party/${name}`),
@@ -588,7 +588,7 @@ export function getExtensionManifest(name) {
  * @param {string[]} names Array of extension names
  * @returns {Promise<Record<string, object>>} Object with extension names as keys and their manifests as values
  */
-async function getManifests(names) {
+async function getManifests(names: any) {
   const obj: Record<string, any> = {};
   const promises = [];
 
@@ -647,11 +647,11 @@ async function activateExtensions() {
 
     // Module requirements: pass if 'requires' is undefined, null, or not an array; check subset if it's an array
     let meetsModuleRequirements = true;
-    let missingModules = [];
+    let missingModules: any[] = [];
     if (extrasRequirements !== undefined) {
       if (Array.isArray(extrasRequirements)) {
         meetsModuleRequirements = isSubsetOf(modules, extrasRequirements);
-        missingModules = extrasRequirements.filter((req) => !modules.includes(req));
+        missingModules = extrasRequirements.filter((req: any) => !(modules as any[]).includes(req));
       } else {
         console.warn(
           `Extension ${name}: manifest.json 'requires' field is not an array. Loading allowed, but any intended requirements were not verified to exist.`,
@@ -661,8 +661,8 @@ async function activateExtensions() {
 
     // Extension dependencies: pass if 'dependencies' is undefined or not an array; check subset and disabled status if it's an array
     let meetsExtensionDeps = true;
-    let missingDependencies = [];
-    let disabledDependencies = [];
+    let missingDependencies: any[] = [];
+    let disabledDependencies: any[] = [];
     if (extensionDependencies !== undefined) {
       if (Array.isArray(extensionDependencies)) {
         // Check if all dependencies exist
@@ -752,7 +752,7 @@ async function connectClickHandler() {
   await connectToApi(baseUrl);
 }
 
-function autoConnectInputHandler() {
+function autoConnectInputHandler(this: any) {
   const value = $(this).prop("checked");
   extension_settings.autoConnect = !!value;
 
@@ -774,7 +774,7 @@ async function addExtensionsButtonAndMenu() {
   const dropdown = $("#extensionsMenu");
   let isDropdownVisible = false;
 
-  const popper = Popper.createPopper(button.get(0), dropdown.get(0), {
+  const popper = Popper.createPopper(button.get(0)!, dropdown.get(0)!, {
     placement: "top-start",
   });
 
@@ -814,7 +814,7 @@ function notifyUpdatesInputHandler() {
  * @param {string} baseUrl Extras API base URL
  * @returns {Promise<void>}
  */
-async function connectToApi(baseUrl) {
+async function connectToApi(baseUrl: any) {
   if (!baseUrl) {
     return;
   }
@@ -842,7 +842,7 @@ async function connectToApi(baseUrl) {
  * Updates the status of Extras API connection.
  * @param {boolean} success Whether the connection was successful
  */
-function updateStatus(success) {
+function updateStatus(success: any) {
   connectedToApi = success;
   const _text = success ? t`Connected to API` : t`Could not connect to API`;
   const _class = success ? "success" : "failure";
@@ -856,7 +856,7 @@ function updateStatus(success) {
  * @param {object} manifest Extension manifest
  * @returns {Promise<void>} When the CSS is loaded
  */
-function addExtensionStyle(name, manifest) {
+function addExtensionStyle(name: any, manifest: any) {
   if (!manifest.css) {
     return Promise.resolve();
   }
@@ -888,7 +888,7 @@ function addExtensionStyle(name, manifest) {
  * @param {object} manifest Extension manifest
  * @returns {Promise<void>} When the script is loaded
  */
-function addExtensionScript(name, manifest) {
+function addExtensionScript(name: any, manifest: any) {
   if (!manifest.js) {
     return Promise.resolve();
   }
@@ -923,7 +923,7 @@ function addExtensionScript(name, manifest) {
  * @param {string} name Extension name
  * @param {object} manifest Manifest object
  */
-function addExtensionLocale(name, manifest) {
+function addExtensionLocale(name: any, manifest: any) {
   // No i18n data in the manifest
   if (!manifest.i18n || typeof manifest.i18n !== "object") {
     return Promise.resolve();
@@ -965,7 +965,7 @@ function addExtensionLocale(name, manifest) {
  * @param {string} checkboxClass - The class for the checkbox HTML element.
  * @return {HTMLElement} - The element that represents the extension.
  */
-function generateExtensionElement(name, manifest, isActive, isDisabled, isExternal, checkboxClass) {
+function generateExtensionElement(name: any, manifest: any, isActive: any, isDisabled: any, isExternal: any, checkboxClass: any) {
   function getExtensionIcon() {
     const type = getExtensionType(name);
     const icon = document.createElement("i");
@@ -1097,7 +1097,7 @@ function generateExtensionElement(name, manifest, isActive, isDisabled, isExtern
    * @param {string} iconClasses Classes for the icon
    * @returns {HTMLButtonElement} The created button element
    */
-  function makeActionButton(cls, dataName, title, iconClasses) {
+  function makeActionButton(cls: any, dataName: any, title: any, iconClasses: any) {
     const btn = document.createElement("button");
     btn.classList.add(cls, "menu_button");
     btn.dataset.name = dataName;
@@ -1142,7 +1142,7 @@ function generateExtensionElement(name, manifest, isActive, isDisabled, isExtern
  * @param {Array} extension - An array where the first element is the extension name and the second element is the extension manifest.
  * @return {{isExternal: boolean, extensionElement: HTMLElement}} - An object with 'isExternal' indicating whether the extension is external, and 'extensionElement' for the extension's HTML element.
  */
-function getExtensionData(extension) {
+function getExtensionData(extension: any) {
   const name = extension[0];
   const manifest = extension[1];
   const isActive = activeExtensions.has(name);
@@ -1209,7 +1209,7 @@ async function showExtensionsDetails() {
   try {
     // If we are updating an extension, the "old" popup is still active. We should close that.
     let initialScrollTop = 0;
-    const oldPopup = Popup.util.popups.find((popup) => popup.content.querySelector(".extensions_info"));
+    const oldPopup = (Popup.util.popups as any[]).find((popup: any) => popup.content.querySelector(".extensions_info"));
     if (oldPopup) {
       initialScrollTop = oldPopup.content.scrollTop;
       await oldPopup.completeCancelled();
@@ -1250,7 +1250,7 @@ async function showExtensionsDetails() {
     const extensions = Object.entries(manifests)
       .sort((a, b) => sortFn(a[1], b[1]))
       .map(getExtensionData);
-    let extensionsToToggle = [];
+    let extensionsToToggle: any[] = [];
 
     extensions.forEach((value) => {
       const { isExternal, extensionElement } = value;
@@ -1266,7 +1266,7 @@ async function showExtensionsDetails() {
       .append(getModuleInformation());
 
     {
-      const updateAction = async (force) => {
+      const updateAction = async (force: any) => {
         requiresReload = true;
         await autoUpdateExtensions(force);
         await popup.complete(POPUP_RESULT.AFFIRMATIVE);
@@ -1314,7 +1314,7 @@ async function showExtensionsDetails() {
             .find(`.extension_block[data-name="${getNameSelector(name)}"] .extension_toggle input`)
             .off("click")
             .one("click", () => {
-              extensionsToToggle = extensionsToToggle.filter((ext) => ext.name !== name);
+              extensionsToToggle = extensionsToToggle.filter((ext: any) => ext.name !== name);
             });
         }
 
@@ -1359,13 +1359,13 @@ async function showExtensionsDetails() {
 
     let waitingForSave = false;
 
-    const popup = new Popup(extensionsMenu, POPUP_TYPE.TEXT, "", {
+    const popup = new Popup(extensionsMenu, POPUP_TYPE.TEXT, "", ({
       okButton: t`Close`,
       wide: true,
       large: true,
-      customButtons: [],
+      customButtons: [] as any,
       allowVerticalScrolling: true,
-      onClosing: async () => {
+      onClosing: async (): Promise<any> => {
         if (waitingForSave) {
           return false;
         }
@@ -1398,7 +1398,7 @@ async function showExtensionsDetails() {
 
         return true;
       },
-    });
+    } as any));
     popupPromise = popup.show();
     popup.content.scrollTop = initialScrollTop;
     checkForUpdatesManual(sortFn, abortController.signal).finally(() => loadingEl.remove());
@@ -1421,7 +1421,7 @@ async function showExtensionsDetails() {
  * If the extension is already up to date, it displays a success message.
  * If the extension is not up to date, it updates the extension and displays a success message with the new commit hash.
  */
-async function onUpdateClick() {
+async function onUpdateClick(this: any) {
   const isCurrentUserAdmin = isAdmin();
   const extensionName = $(this).data("name");
   const isGlobal = getExtensionType(extensionName) === "global";
@@ -1443,7 +1443,7 @@ async function onUpdateClick() {
  * @param {boolean} quiet If true, don't show a success message
  * @param {number?} timeout Timeout in milliseconds to wait for the update to complete. If null, no timeout is set.
  */
-async function updateExtension(extensionName, quiet, timeout = null) {
+async function updateExtension(extensionName: any, quiet: any, timeout = null) {
   try {
     const signal = timeout ? AbortSignal.timeout(timeout) : undefined;
     const response = await fetch("/api/extensions/update", {
@@ -1493,7 +1493,7 @@ async function updateExtension(extensionName, quiet, timeout = null) {
  * Creates a popup for the user to confirm before delete.
  * If the extension has a 'clean' hook, an optional checkbox to also run the cleanup is shown.
  */
-async function onDeleteClick() {
+async function onDeleteClick(this: any) {
   const extensionName = $(this).data("name");
   const isCurrentUserAdmin = isAdmin();
   const isGlobal = getExtensionType(extensionName) === "global";
@@ -1510,7 +1510,7 @@ async function onDeleteClick() {
     : null;
 
   const popup = new Popup(t`Are you sure you want to delete ${escapeHtml(extensionName)}?`, POPUP_TYPE.CONFIRM, "", {
-    customInputs,
+    customInputs: customInputs as any,
   });
   const confirmation = await popup.show();
   if (confirmation === POPUP_RESULT.AFFIRMATIVE) {
@@ -1523,7 +1523,7 @@ async function onDeleteClick() {
  * Handles the click event for the clean button of an extension.
  * Runs the extension's 'clean' hook after user confirmation, then reloads the page.
  */
-async function onCleanClick() {
+async function onCleanClick(this: any) {
   const extensionName = $(this).data("name");
 
   const confirmation = await Popup.show.confirm(
@@ -1542,7 +1542,7 @@ async function onCleanClick() {
  * @param {string} extensionName Extension name (without 'third-party' prefix)
  * @returns {Promise<void>}
  */
-async function cleanExtension(extensionName) {
+async function cleanExtension(extensionName: any) {
   const fullExtensionName = extensionName.startsWith("third-party") ? extensionName : `third-party${extensionName}`;
   await callExtensionHook(fullExtensionName, "clean");
 
@@ -1553,7 +1553,7 @@ async function cleanExtension(extensionName) {
   delay(1000).then(() => location.reload());
 }
 
-async function onBranchClick() {
+async function onBranchClick(this: any) {
   const extensionName = $(this).data("name");
   const isCurrentUserAdmin = isAdmin();
   const isGlobal = getExtensionType(extensionName) === "global";
@@ -1591,7 +1591,7 @@ async function onBranchClick() {
   await switchExtensionBranch(extensionName, isGlobal, newBranch);
 }
 
-async function onMoveClick() {
+async function onMoveClick(this: any) {
   const extensionName = $(this).data("name");
   const isCurrentUserAdmin = isAdmin();
   const isGlobal = getExtensionType(extensionName) === "global";
@@ -1626,7 +1626,7 @@ async function onMoveClick() {
  * @param {string} destination Destination type
  * @returns {Promise<void>}
  */
-async function moveExtension(extensionName, source, destination) {
+async function moveExtension(extensionName: any, source: any, destination: any) {
   try {
     const result = await fetch("/api/extensions/move", {
       method: "POST",
@@ -1658,7 +1658,7 @@ async function moveExtension(extensionName, source, destination) {
  * @param {string} extensionName Extension name to delete
  * @param {boolean} [shouldClean=false] Whether to also run the 'clean' hook before deleting
  */
-export async function deleteExtension(extensionName, shouldClean = false) {
+export async function deleteExtension(extensionName: any, shouldClean = false) {
   const fullExtensionName = extensionName.startsWith("third-party") ? extensionName : `third-party${extensionName}`;
 
   if (shouldClean) {
@@ -1696,7 +1696,7 @@ export async function deleteExtension(extensionName, shouldClean = false) {
  * This object includes the currentBranchName, currentCommitHash, isUpToDate, and remoteUrl.
  * @throws {error} - If there is an error during the fetch operation, it logs the error to the console.
  */
-async function getExtensionVersion(extensionName, abortSignal) {
+async function getExtensionVersion(extensionName: any, abortSignal: any) {
   try {
     const response = await fetch("/api/extensions/version", {
       method: "POST",
@@ -1729,7 +1729,7 @@ async function getExtensionVersion(extensionName, abortSignal) {
  * @property {boolean} current Whether this branch is the current one
  * @property {string} label The commit label of the branch
  */
-async function getExtensionBranches(extensionName, isGlobal) {
+async function getExtensionBranches(extensionName: any, isGlobal: any) {
   try {
     const response = await fetch("/api/extensions/branches", {
       method: "POST",
@@ -1761,7 +1761,7 @@ async function getExtensionBranches(extensionName, isGlobal) {
  * @param {string} branch Branch name to switch to
  * @returns {Promise<void>}
  */
-async function switchExtensionBranch(extensionName, isGlobal, branch) {
+async function switchExtensionBranch(extensionName: any, isGlobal: any, branch: any) {
   try {
     const response = await fetch("/api/extensions/switch", {
       method: "POST",
@@ -1795,7 +1795,7 @@ async function switchExtensionBranch(extensionName, isGlobal, branch) {
  * @param {string} [branch] Optional branch to install, if not provided the default branch will be used
  * @returns {Promise<boolean>} True if the extension was installed successfully, false otherwise
  */
-export async function installExtension(url, global, branch = "") {
+export async function installExtension(url: any, global: any, branch = "") {
   try {
     const parsedUrl = new URL(url);
     if (!["http:", "https:"].includes(parsedUrl.protocol)) {
@@ -1823,7 +1823,7 @@ export async function installExtension(url, global, branch = "") {
           customInputs: [
             { id: "dontAskAgain", type: "checkbox", label: t`Don't show this warning again`, defaultState: false },
           ],
-          onClose: (popup) => {
+          onClose: (popup: any) => {
             if (!popup.result) {
               return;
             }
@@ -1886,7 +1886,7 @@ export async function installExtension(url, global, branch = "") {
  * @param {boolean} versionChanged Is this a version change?
  * @param {boolean} enableAutoUpdate Enable auto-update
  */
-export async function loadExtensionSettings(settings, versionChanged, enableAutoUpdate) {
+export async function loadExtensionSettings(settings: any, versionChanged: any, enableAutoUpdate: any) {
   if (settings.extension_settings) {
     Object.assign(extension_settings, settings.extension_settings);
   }
@@ -1899,8 +1899,8 @@ export async function loadExtensionSettings(settings, versionChanged, enableAuto
   // Activate offline extensions
   await eventSource.emit(event_types.EXTENSIONS_FIRST_LOAD);
   const extensions = await discoverExtensions();
-  extensionNames = extensions.map((x) => x.name);
-  extensionTypes = Object.fromEntries(extensions.map((x) => [x.name, x.type]));
+  extensionNames = extensions.map((x: any) => x.name);
+  extensionTypes = Object.fromEntries(extensions.map((x: any) => [x.name, x.type]));
   manifests = await getManifests(extensionNames);
 
   if (versionChanged && enableAutoUpdate) {
@@ -1923,9 +1923,9 @@ export function doDailyExtensionUpdatesCheck() {
 
 const concurrencyLimit = 5;
 let activeRequestsCount = 0;
-const versionCheckQueue = [];
+const versionCheckQueue: any[] = [];
 
-function enqueueVersionCheck(fn) {
+function enqueueVersionCheck(fn: any) {
   return new Promise((resolve, reject) => {
     versionCheckQueue.push(() => fn().then(resolve).catch(reject));
     processVersionCheckQueue();
@@ -1950,7 +1950,7 @@ function processVersionCheckQueue() {
  * @param {AbortSignal} abortSignal Signal to abort the operation
  * @returns {Promise<any[]>}
  */
-async function checkForUpdatesManual(sortFn, abortSignal) {
+async function checkForUpdatesManual(sortFn: any, abortSignal: any) {
   const promises = [];
   for (const id of Object.keys(manifests)
     .filter((x) => x.startsWith("third-party"))
@@ -2025,7 +2025,7 @@ async function checkForUpdatesManual(sortFn, abortSignal) {
  * @param {boolean} force Skip nag check
  * @returns {Promise<any>}
  */
-async function checkForExtensionUpdates(force) {
+async function checkForExtensionUpdates(force: any) {
   if (!force) {
     const STORAGE_NAG_KEY = "extension_update_nag";
     const currentDate = new Date().toDateString();
@@ -2039,7 +2039,7 @@ async function checkForExtensionUpdates(force) {
   }
 
   const isCurrentUserAdmin = isAdmin();
-  const updatesAvailable = [];
+  const updatesAvailable: any[] = [];
   const promises = [];
 
   for (const [id, manifest] of Object.entries(manifests)) {
@@ -2075,7 +2075,7 @@ async function checkForExtensionUpdates(force) {
   await Promise.allSettled(promises);
 
   if (updatesAvailable.length > 0) {
-    toastr.info(`${updatesAvailable.map((x) => `• ${x}`).join("\n")}`, t`Extension updates available`);
+    toastr.info(`${updatesAvailable.map((x: any) => `• ${x}`).join("\n")}`, t`Extension updates available`);
   }
 }
 
@@ -2084,7 +2084,7 @@ async function checkForExtensionUpdates(force) {
  * @param {boolean} forceAll Include disabled and not auto-updating
  * @returns {Promise<void>}
  */
-async function autoUpdateExtensions(forceAll) {
+async function autoUpdateExtensions(forceAll: any) {
   if (!Object.values(manifests).some((x) => x.auto_update)) {
     return;
   }
@@ -2109,7 +2109,7 @@ async function autoUpdateExtensions(forceAll) {
     }
     if ((forceAll || manifest.auto_update) && id.startsWith("third-party")) {
       console.debug(`Auto-updating 3rd-party extension: ${manifest.display_name} (${id})`);
-      promises.push(updateExtension(id.replace("third-party", ""), true, autoUpdateTimeout));
+      promises.push(updateExtension(id.replace("third-party", ""), true, autoUpdateTimeout as any));
     }
   }
   await Promise.allSettled(promises);
@@ -2123,11 +2123,11 @@ async function autoUpdateExtensions(forceAll) {
  * @param {string} type Generation type
  * @returns {Promise<boolean>} True if generation should be aborted
  */
-export async function runGenerationInterceptors(chat, contextSize, type) {
+export async function runGenerationInterceptors(chat: any, contextSize: any, type: any) {
   let aborted = false;
   let exitImmediately = false;
 
-  const abort = (/** @type {boolean} */ immediately) => {
+  const abort = (/** @type {boolean} */ immediately: any) => {
     aborted = true;
     exitImmediately = immediately;
   };
@@ -2136,9 +2136,9 @@ export async function runGenerationInterceptors(chat, contextSize, type) {
     .filter((x) => x.generate_interceptor)
     .sort((a, b) => sortManifestsByOrder(a, b))) {
     const interceptorKey = manifest.generate_interceptor;
-    if (typeof globalThis[interceptorKey] === "function") {
+    if (typeof (globalThis as any)[interceptorKey] === "function") {
       try {
-        await globalThis[interceptorKey](chat, contextSize, abort, type);
+        await (globalThis as any)[interceptorKey](chat, contextSize, abort, type);
       } catch (e) {
         console.error(`Failed running interceptor for ${manifest.display_name}`, e);
       }
@@ -2171,7 +2171,7 @@ export const UNSET_VALUE = "__@@UNSET@@__";
  * @param {any} value Field value
  * @returns {Promise<void>} When the field is written
  */
-export async function writeExtensionField(characterId, key, value) {
+export async function writeExtensionField(characterId: any, key: any, value: any) {
   const context = getContext();
   const character = context.characters[characterId];
   if (!character) {
@@ -2253,7 +2253,7 @@ export async function writeExtensionField(characterId, key, value) {
  *   automatically skip characters where the field is missing/`undefined`.
  * @returns {Promise<BulkExtensionFieldResult>} Summary of the bulk operation
  */
-export async function writeExtensionFieldBulk(avatars, key, value, { filterPath } = {} as { filterPath?: string }) {
+export async function writeExtensionFieldBulk(avatars: any, key: any, value: any, { filterPath } = {} as { filterPath?: string }) {
   const context = getContext();
   const extensionPath = `data.extensions.${key}`;
   const isUnset = value === UNSET_VALUE;
@@ -2315,7 +2315,7 @@ export async function writeExtensionFieldBulk(avatars, key, value, { filterPath 
 
   // If the currently active character was updated, sync the hidden input
   if (context.characterId !== undefined) {
-    const activeChar = context.characters[context.characterId];
+    const activeChar = context.characters[context.characterId as any];
     if (activeChar && updatedSet.has(activeChar.avatar) && activeChar.json_data) {
       $("#character_json_data").val(activeChar.json_data);
     }
@@ -2357,7 +2357,7 @@ export async function openThirdPartyExtensionMenu(suggestUrl = "") {
 
   const customButtons = isCurrentUserAdmin ? [installForAllButton] : [];
   const customInputs = [branchNameInput];
-  const popup = new Popup(html, POPUP_TYPE.INPUT, suggestUrl ?? "", { okButton, customButtons, customInputs });
+  const popup = new Popup(html, POPUP_TYPE.INPUT, suggestUrl ?? "", { okButton, customButtons: customButtons as any, customInputs: customInputs as any });
   const input = await popup.show();
 
   if (!input) {
@@ -2384,7 +2384,7 @@ export const EMPTY_AUTHOR = Object.freeze({
  * @param {string} url - The URL of the repository.
  * @returns {{name: string, url: string}} Object containing the author's name and URL, or empty strings if not found.
  */
-export function getAuthorFromUrl(url) {
+export function getAuthorFromUrl(url: any) {
   const result = structuredClone(EMPTY_AUTHOR) as { name: string; url: string };
 
   try {

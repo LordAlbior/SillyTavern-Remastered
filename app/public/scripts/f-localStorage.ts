@@ -3,21 +3,21 @@
 /**
  * @deprecated THIS FUNCTION IS OBSOLETE. DO NOT USE
  */
-export function SaveLocal(target, val) {
+export function SaveLocal(target: any, val: any) {
   localStorage.setItem(target, val);
   console.debug("SaveLocal -- " + target + " : " + val);
 }
 /**
  * @deprecated THIS FUNCTION IS OBSOLETE. DO NOT USE
  */
-export function LoadLocal(target) {
+export function LoadLocal(target: any) {
   console.debug("LoadLocal -- " + target);
   return localStorage.getItem(target);
 }
 /**
  * @deprecated THIS FUNCTION IS OBSOLETE. DO NOT USE
  */
-export function LoadLocalBool(target) {
+export function LoadLocalBool(target: any) {
   const result = localStorage.getItem(target) === "true";
   return result;
 }
@@ -28,7 +28,7 @@ export function CheckLocal() {
   console.log("----------local storage---------");
   var i;
   for (i = 0; i < localStorage.length; i++) {
-    console.log(localStorage.key(i) + " : " + localStorage.getItem(localStorage.key(i)));
+    console.log(localStorage.key(i) + " : " + localStorage.getItem(localStorage.key(i) ?? ""));
   }
   console.log("------------------------------");
 }

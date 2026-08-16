@@ -14,7 +14,7 @@ export function isSegmenterSupported() {
  * @param {string} htmlContent HTML content to segment
  * @param {'word'|'grapheme'|'sentence'} [granularity='word'] Text split granularity
  */
-export function segmentTextInElement(htmlElement, htmlContent, granularity = "word") {
+export function segmentTextInElement(htmlElement: any, htmlContent: any, granularity = "word") {
   htmlElement.innerHTML = htmlContent;
 
   if (!isSegmenterSupported()) {
@@ -44,7 +44,7 @@ export function segmentTextInElement(htmlElement, htmlContent, granularity = "wo
   // Split every text node into segments using spans
   for (const textNode of textNodes) {
     const fragment = document.createDocumentFragment();
-    const segments = segmenter.segment(textNode.data);
+    const segments = segmenter.segment((textNode as any).data);
     for (const segment of segments) {
       // TODO: Apply a different class for different segment length/content?
       // For now, just use a single class for all segments.
@@ -53,7 +53,7 @@ export function segmentTextInElement(htmlElement, htmlContent, granularity = "wo
       span.className = "text_segment";
       fragment.appendChild(span);
     }
-    textNode.replaceWith(fragment);
+    (textNode as any).replaceWith(fragment);
   }
 }
 
@@ -62,7 +62,7 @@ export function segmentTextInElement(htmlElement, htmlContent, granularity = "wo
  * @param {HTMLElement} messageTextElement Message text element
  * @param {string} htmlContent New HTML content to apply
  */
-export function applyStreamFadeIn(messageTextElement, htmlContent) {
+export function applyStreamFadeIn(messageTextElement: any, htmlContent: any) {
   const targetElement = /** @type {HTMLElement} */ (messageTextElement.cloneNode());
   segmentTextInElement(targetElement, htmlContent);
   morphdom(messageTextElement, targetElement);

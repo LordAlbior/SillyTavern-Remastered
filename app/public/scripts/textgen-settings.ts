@@ -265,10 +265,10 @@ export const textgenerationwebui_settings = {
 
 export { showSamplerControls as showTGSamplerControls };
 
-export let textgenerationwebui_banned_in_macros = [];
+export let textgenerationwebui_banned_in_macros: any[] = [];
 
-export let textgenerationwebui_presets = [];
-export let textgenerationwebui_preset_names = [];
+export let textgenerationwebui_presets: any[] = [];
+export let textgenerationwebui_preset_names: any[] = [];
 
 export const setting_names = [
   "temp",
@@ -389,11 +389,11 @@ export function getTextGenServer(type = null) {
     case OPENROUTER:
       return OPENROUTER_SERVER;
     default:
-      return textgenerationwebui_settings.server_urls[selectedType] ?? "";
+      return (textgenerationwebui_settings.server_urls as Record<string, any>)[selectedType] ?? "";
   }
 }
 
-async function selectPreset(name) {
+async function selectPreset(name: any) {
   const preset = textgenerationwebui_presets[textgenerationwebui_preset_names.indexOf(name)];
 
   if (!preset) {
@@ -407,11 +407,11 @@ async function selectPreset(name) {
   }
   setGenerationParamsFromPreset(preset);
   BIAS_CACHE.delete(BIAS_KEY);
-  displayLogitBias(preset.logit_bias, BIAS_KEY);
+  displayLogitBias((preset as any).logit_bias, BIAS_KEY);
   saveSettingsDebounced();
 }
 
-export function formatTextGenURL(value) {
+export function formatTextGenURL(value: any) {
   try {
     const noFormatTypes = [MANCER, TOGETHERAI, INFERMATICAI, DREAMGEN, OPENROUTER];
     if (noFormatTypes.includes(textgenerationwebui_settings.type)) {
@@ -426,8 +426,8 @@ export function formatTextGenURL(value) {
   return null;
 }
 
-function convertPresets(presets) {
-  return Array.isArray(presets) ? presets.map((p) => JSON.parse(p)) : [];
+function convertPresets(presets: any) {
+  return Array.isArray(presets) ? presets.map((p: any) => JSON.parse(p)) : [];
 }
 
 function getTokenizerForTokenIds() {
@@ -438,7 +438,7 @@ function getTokenizerForTokenIds() {
 
   if (
     power_user.tokenizer === tokenizers.API_CURRENT &&
-    TEXTGEN_TOKENIZERS.includes(textgenerationwebui_settings.type)
+    (TEXTGEN_TOKENIZERS as any[]).includes(textgenerationwebui_settings.type)
   ) {
     return tokenizers.API_CURRENT;
   }
@@ -464,7 +464,7 @@ function getTokenizerForTokenIds() {
  * @typedef {{banned_tokens: string, banned_strings: string[]}} TokenBanResult
  * @returns {TokenBanResult} String with comma-separated banned token IDs
  */
-function getCustomTokenBans(settings = null) {
+function getCustomTokenBans(settings: any = null) {
   settings = settings ?? textgenerationwebui_settings;
   if (
     !settings.send_banned_tokens ||
@@ -477,15 +477,15 @@ function getCustomTokenBans(settings = null) {
   }
 
   const tokenizer = getTokenizerForTokenIds();
-  const banned_tokens = [];
-  const banned_strings = [];
-  const sequences = []
+  const banned_tokens: any[] = [];
+  const banned_strings: any[] = [];
+  const sequences: any[] = ([] as any[])
     .concat(settings.banned_tokens.split("\n"))
     .concat(settings.global_banned_tokens.split("\n"))
     .concat(textgenerationwebui_banned_in_macros)
-    .filter((x) => x.length > 0)
+    .filter((x: any) => x.length > 0)
     .filter(onlyUnique)
-    .map((x) => substituteParams(x));
+    .map((x: any) => substituteParams(x));
 
   //debug
   if (textgenerationwebui_banned_in_macros.length) {
@@ -542,7 +542,7 @@ function getCustomTokenBans(settings = null) {
  * @param {boolean} isEnabled Kill switch state
  * @param {string} title Label title
  */
-function toggleBannedStringsKillSwitch(isEnabled, title) {
+function toggleBannedStringsKillSwitch(isEnabled: any, title: any) {
   $("#send_banned_tokens_textgenerationwebui").prop("checked", isEnabled);
   $("#send_banned_tokens_label").find(".menu_button").toggleClass("toggleEnabled", isEnabled).prop("title", title);
   textgenerationwebui_settings.send_banned_tokens = isEnabled;
@@ -554,7 +554,7 @@ function toggleBannedStringsKillSwitch(isEnabled, title) {
  * @param {TextCompletionSettings} settings Text completion settings
  * @returns {object} Logit bias object
  */
-function calculateLogitBias(settings = null) {
+function calculateLogitBias(settings: any = null) {
   settings = settings ?? textgenerationwebui_settings;
 
   if (!Array.isArray(settings.logit_bias) || settings.logit_bias.length === 0) {
@@ -570,7 +570,7 @@ function calculateLogitBias(settings = null) {
    * @param {number[]} sequence
    * @returns {object} Accumulated logit bias object
    */
-  function addBias(bias, sequence) {
+  function addBias(bias: any, sequence: any) {
     if (sequence.length === 0) {
       return;
     }
@@ -588,7 +588,7 @@ function calculateLogitBias(settings = null) {
   return result;
 }
 
-export async function loadTextGenSettings(data, loadedSettings) {
+export async function loadTextGenSettings(data: any, loadedSettings: any) {
   await loadApiSelectedSamplers();
   textgenerationwebui_presets = convertPresets(data.textgenerationwebui_presets);
   textgenerationwebui_preset_names = data.textgenerationwebui_preset_names ?? [];
@@ -596,15 +596,15 @@ export async function loadTextGenSettings(data, loadedSettings) {
 
   if (loadedSettings.api_server_textgenerationwebui) {
     for (const type of Object.keys(SERVER_INPUTS)) {
-      textgenerationwebui_settings.server_urls[type] = loadedSettings.api_server_textgenerationwebui;
+      (textgenerationwebui_settings.server_urls as Record<string, any>)[type] = loadedSettings.api_server_textgenerationwebui;
     }
     delete loadedSettings.api_server_textgenerationwebui;
   }
 
   for (const [type, selector] of Object.entries(SERVER_INPUTS)) {
     const control = $(selector);
-    control.val(textgenerationwebui_settings.server_urls[type] ?? "").on("input", function () {
-      textgenerationwebui_settings.server_urls[type] = String($(this).val()).trim();
+    control.val((textgenerationwebui_settings.server_urls as Record<string, any>)[type] ?? "").on("input", function () {
+      (textgenerationwebui_settings.server_urls as Record<string, any>)[type] = String($(this).val()).trim();
       saveSettingsDebounced();
     });
   }
@@ -625,14 +625,14 @@ export async function loadTextGenSettings(data, loadedSettings) {
   }
 
   for (const i of setting_names) {
-    const value = textgenerationwebui_settings[i];
+    const value = (textgenerationwebui_settings as Record<string, any>)[i];
     (setSettingByName as any)(i, value);
   }
 
   $("#textgen_type").val(textgenerationwebui_settings.type);
   $("#openrouter_providers_text").val(textgenerationwebui_settings.openrouter_providers).trigger("change");
   $("#openrouter_quantizations_text").val(textgenerationwebui_settings.openrouter_quantizations).trigger("change");
-  showSamplerControls(textgenerationwebui_settings.type);
+  showSamplerControls(textgenerationwebui_settings.type as any);
   BIAS_CACHE.delete(BIAS_KEY);
   displayLogitBias(textgenerationwebui_settings.logit_bias, BIAS_KEY);
 
@@ -650,7 +650,7 @@ export async function loadTextGenSettings(data, loadedSettings) {
  * Sorts the sampler items by the given order.
  * @param {any[]} orderArray Sampler order array.
  */
-function sortKoboldItemsByOrder(orderArray) {
+function sortKoboldItemsByOrder(orderArray: any) {
   console.debug("Preset samplers order: " + orderArray);
   const $draggableItems = $("#koboldcpp_order");
 
@@ -661,21 +661,21 @@ function sortKoboldItemsByOrder(orderArray) {
   }
 }
 
-function sortLlamacppItemsByOrder(orderArray) {
+function sortLlamacppItemsByOrder(orderArray: any) {
   console.debug("Preset samplers order: ", orderArray);
   const $container = $("#llamacpp_samplers_sortable");
 
-  orderArray.forEach((name) => {
+  orderArray.forEach((name: any) => {
     const $item = $container.find(`[data-name="${name}"]`).detach();
     $container.append($item);
   });
 }
 
-function sortOobaItemsByOrder(orderArray) {
+function sortOobaItemsByOrder(orderArray: any) {
   console.debug("Preset samplers order: ", orderArray);
   const $container = $("#sampler_priority_container");
 
-  orderArray.forEach((name) => {
+  orderArray.forEach((name: any) => {
     const $item = $container.find(`[data-name="${name}"]`).detach();
     $container.append($item);
   });
@@ -685,11 +685,11 @@ function sortOobaItemsByOrder(orderArray) {
  * Sorts the Aphrodite sampler items by the given order.
  * @param {string[]} orderArray Sampler order array.
  */
-function sortAphroditeItemsByOrder(orderArray) {
+function sortAphroditeItemsByOrder(orderArray: any) {
   console.debug("Preset samplers order: ", orderArray);
   const $container = $("#sampler_priority_container_aphrodite");
 
-  orderArray.forEach((name) => {
+  orderArray.forEach((name: any) => {
     const $item = $container.find(`[data-name="${name}"]`).detach();
     $container.append($item);
   });
@@ -871,7 +871,7 @@ export function initTextGenSettings() {
   $("#koboldcpp_order").sortable({
     delay: getSortableDelay(),
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       $("#koboldcpp_order")
         .children()
         .each(function () {
@@ -892,7 +892,7 @@ export function initTextGenSettings() {
   $("#llamacpp_samplers_sortable").sortable({
     delay: getSortableDelay(),
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       $("#llamacpp_samplers_sortable")
         .children()
         .each(function () {
@@ -914,7 +914,7 @@ export function initTextGenSettings() {
   $("#sampler_priority_container").sortable({
     delay: getSortableDelay(),
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       $("#sampler_priority_container")
         .children()
         .each(function () {
@@ -929,7 +929,7 @@ export function initTextGenSettings() {
   $("#sampler_priority_container_aphrodite").sortable({
     delay: getSortableDelay(),
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       $("#sampler_priority_container_aphrodite")
         .children()
         .each(function () {
@@ -995,13 +995,13 @@ export function initTextGenSettings() {
       }
     }
 
-    showSamplerControls(type);
+    showSamplerControls(type as any);
     setOnlineStatus("no_connection");
     BIAS_CACHE.delete(BIAS_KEY);
 
     $("#main_api").trigger("change");
 
-    if (!SERVER_INPUTS[type] || textgenerationwebui_settings.server_urls[type]) {
+    if (!SERVER_INPUTS[type] || (textgenerationwebui_settings.server_urls as Record<string, any>)[type]) {
       $("#api_button_textgenerationwebui").trigger("click");
     }
 
@@ -1095,25 +1095,25 @@ export function initTextGenSettings() {
     $(document).on("input", `#${i}_textgenerationwebui`, function () {
       const isCheckbox = $(this).attr("type") == "checkbox";
       const isText = $(this).attr("type") == "text" || $(this).is("textarea");
-      const id = $(this).attr("x-setting-id");
+      const id = $(this).attr("x-setting-id") as string;
 
       if (isCheckbox) {
         const value = $(this).prop("checked");
-        textgenerationwebui_settings[id] = value;
+        (textgenerationwebui_settings as Record<string, any>)[id] = value;
       } else if (isText) {
         const value = $(this).val();
-        textgenerationwebui_settings[id] = value;
+        (textgenerationwebui_settings as Record<string, any>)[id] = value;
       } else {
         const value = Number($(this).val());
         $(`#${id}_counter_textgenerationwebui`).val(value);
-        textgenerationwebui_settings[id] = value;
+        (textgenerationwebui_settings as Record<string, any>)[id] = value;
         //special handling for vLLM/Aphrodite using -1 as disabled instead of 0
         if (
           $(this).attr("id") === "top_k_textgenerationwebui" &&
           [INFERMATICAI, APHRODITE, VLLM].includes(textgenerationwebui_settings.type) &&
           value === 0
         ) {
-          textgenerationwebui_settings[id] = -1;
+          (textgenerationwebui_settings as Record<string, any>)[id] = -1;
           $(this).val(-1);
         }
       }
@@ -1133,7 +1133,7 @@ export function initTextGenSettings() {
       return;
     }
 
-    textgenerationwebui_settings.openrouter_providers = selectedProviders;
+    textgenerationwebui_settings.openrouter_providers = selectedProviders as any;
 
     updateOpenRouterProvidersWarning("#openrouter_providers_text");
     saveSettingsDebounced();
@@ -1151,7 +1151,7 @@ export function initTextGenSettings() {
       return;
     }
 
-    textgenerationwebui_settings.openrouter_quantizations = selectedQuantizations;
+    textgenerationwebui_settings.openrouter_quantizations = selectedQuantizations as any;
 
     saveSettingsDebounced();
   });
@@ -1193,7 +1193,7 @@ export function initTextGenSettings() {
  * @param {string?} apiType API Type selected in API Connections - Currently selected one by default
  * @returns void
  */
-function showSamplerControls(apiType = null) {
+function showSamplerControls(apiType: any = null) {
   $("#textgenerationwebui_api-settings [data-tg-samplers], #textgenerationwebui_api [data-tg-samplers]").each(
     function (idx, elem) {
       const typeSpecificControlled = $(elem).data("tg-type") !== undefined;
@@ -1211,11 +1211,11 @@ function showSamplerControls(apiType = null) {
 
   $("#textgenerationwebui_api-settings [data-tg-samplers], #textgenerationwebui_api [data-tg-samplers]").each(
     function () {
-      const tgSamplers = $(this)
-        .attr("data-tg-samplers")
+      const tgSamplers = ($(this)
+        .attr("data-tg-samplers") as string)
         .split(",")
-        .map((x) => x.trim())
-        .filter((str) => str !== "");
+        .map((x: any) => x.trim())
+        .filter((str: any) => str !== "");
 
       for (const tgSampler of tgSamplers) {
         if (samplersActivatedManually.includes(tgSampler)) {
@@ -1229,15 +1229,15 @@ function showSamplerControls(apiType = null) {
   );
 }
 
-function showTypeSpecificControls(apiType) {
+function showTypeSpecificControls(apiType: any) {
   $("[data-tg-type]").each(function () {
     const mode = String($(this).attr("data-tg-type-mode") ?? "")
       .toLowerCase()
       .trim();
-    const tgTypes = $(this)
-      .attr("data-tg-type")
+    const tgTypes = ($(this)
+      .attr("data-tg-type") as string)
       .split(",")
-      .map((x) => x.trim());
+      .map((x: any) => x.trim());
 
     if (mode === "except") {
       $(this)[tgTypes.includes(apiType) ? "hide" : "show"]();
@@ -1261,7 +1261,7 @@ function showTypeSpecificControls(apiType) {
  * @param {any[]} target - Target array
  * @returns {void}
  */
-function insertMissingArrayItems(source, target) {
+function insertMissingArrayItems(source: any, target: any) {
   if (source === target || !Array.isArray(source) || !Array.isArray(target)) {
     return;
   }
@@ -1274,7 +1274,7 @@ function insertMissingArrayItems(source, target) {
   }
 }
 
-function setSettingByName(setting, value, trigger) {
+function setSettingByName(setting: any, value: any, trigger: any) {
   if ("extensions" === setting) {
     value = value || {};
     textgenerationwebui_settings.extensions = value;
@@ -1323,7 +1323,7 @@ function setSettingByName(setting, value, trigger) {
   }
 
   if ("logit_bias" === setting) {
-    textgenerationwebui_settings.logit_bias = Array.isArray(value) ? value : [];
+    textgenerationwebui_settings.logit_bias = (Array.isArray(value) ? value : []) as any;
     return;
   }
 
@@ -1365,7 +1365,7 @@ function setSettingByName(setting, value, trigger) {
  * @returns {Promise<(function(): AsyncGenerator<{swipes: [], text: string, toolCalls: [], logprobs: {token: string, topLogprobs: Candidate[]}|null}, void, *>)|*>}
  * @throws {Error} - If the response status is not OK, or from within the generator
  */
-export async function generateTextGenWithStreaming(generate_data, signal) {
+export async function generateTextGenWithStreaming(generate_data: any, signal: any) {
   generate_data.stream = true;
 
   const response = await fetch("/api/backends/text-completions/generate", {
@@ -1390,8 +1390,8 @@ export async function generateTextGenWithStreaming(generate_data, signal) {
     let text = "";
     /** @type {import('./logprobs.js').TokenLogprobs | null} */
     let logprobs = null;
-    const swipes = [];
-    const toolCalls = [];
+    const swipes: any[] = [];
+    const toolCalls: any[] = [];
     const state = { reasoning: "" };
     while (true) {
       const { done, value } = await reader.read();
@@ -1429,7 +1429,7 @@ export async function generateTextGenWithStreaming(generate_data, signal) {
  * @param {Object} logprobs - logprobs object returned from the API
  * @returns {import('./logprobs.js').TokenLogprobs | null} - converted logprobs
  */
-export function parseTextgenLogprobs(token, logprobs) {
+export function parseTextgenLogprobs(token: any, logprobs: any) {
   if (!logprobs) {
     return null;
   }
@@ -1462,13 +1462,13 @@ export function parseTextgenLogprobs(token, logprobs) {
       // 3. After commit 89d604f uses OpenAI-compatible format with "completion_probabilities" and "token"/"logprob" keys.
       //    Note that it is also the *actual* logprob (negative number), so we need to convert to [0, 1].
       if (logprobs?.[0]?.probs) {
-        const candidates = logprobs?.[0]?.probs?.map((x) => [x.tok_str, x.prob]);
+        const candidates = logprobs?.[0]?.probs?.map((x: any) => [x.tok_str, x.prob]);
         if (!candidates) {
           return null;
         }
         return { token, topLogprobs: candidates };
       } else if (logprobs?.[0].top_logprobs) {
-        const candidates = logprobs?.[0]?.top_logprobs?.map((x) => [x.token, Math.exp(x.logprob)]);
+        const candidates = logprobs?.[0]?.top_logprobs?.map((x: any) => [x.token, Math.exp(x.logprob)]);
         if (!candidates) {
           return null;
         }
@@ -1481,7 +1481,7 @@ export function parseTextgenLogprobs(token, logprobs) {
   }
 }
 
-export function parseTabbyLogprobs(data) {
+export function parseTabbyLogprobs(data: any) {
   const text = data?.choices?.[0]?.text;
   const offsets = data?.choices?.[0]?.logprobs?.text_offset;
 
@@ -1490,13 +1490,13 @@ export function parseTabbyLogprobs(data) {
   }
 
   // Convert string offsets list to tokens
-  const tokens = offsets?.map((offset, index) => {
+  const tokens = offsets?.map((offset: any, index: any) => {
     const nextOffset = offsets[index + 1] || text.length;
     return text.substring(offset, nextOffset);
   });
 
-  const topLogprobs = data?.choices?.[0]?.logprobs?.top_logprobs?.map((x) => ({ top_logprobs: [x] }));
-  return tokens?.map((token, index) => parseTextgenLogprobs(token, topLogprobs[index])) || null;
+  const topLogprobs = data?.choices?.[0]?.logprobs?.top_logprobs?.map((x: any) => ({ top_logprobs: [x] }));
+  return tokens?.map((token: any, index: any) => parseTextgenLogprobs(token, topLogprobs[index])) || null;
 }
 
 /**
@@ -1506,7 +1506,7 @@ export function parseTabbyLogprobs(data) {
  * @returns {void} Nothing.
  * @throws {Error} If the response contains an error message, throws Error with the message.
  */
-function tryParseStreamingError(response, decoded) {
+function tryParseStreamingError(response: any, decoded: any) {
   let data: any = {};
 
   try {
@@ -1528,15 +1528,15 @@ function tryParseStreamingError(response, decoded) {
  * @param {string} string Input string
  * @returns {number[]} Array of integers
  */
-function toIntArray(string) {
+function toIntArray(string: any) {
   if (!string) {
     return [];
   }
 
   return string
     .split(",")
-    .map((x) => parseInt(x))
-    .filter((x) => !isNaN(x));
+    .map((x: any) => parseInt(x))
+    .filter((x: any) => !isNaN(x));
 }
 
 /**
@@ -1544,7 +1544,7 @@ function toIntArray(string) {
  * @param {TextCompletionSettings} settings Text completion settings to use
  * @returns {string} model name
  */
-export function getTextGenModel(settings = null) {
+export function getTextGenModel(settings: any = null) {
   settings = settings ?? textgenerationwebui_settings;
   switch (settings.type) {
     case OOBA:
@@ -1607,7 +1607,7 @@ export function isJsonSchemaSupported() {
  * @param {TextCompletionSettings} settings Text completion settings to use
  * @returns {boolean} Whether dynamic temperature supported
  */
-function isDynamicTemperatureSupported(settings = null) {
+function isDynamicTemperatureSupported(settings: any = null) {
   settings = settings ?? textgenerationwebui_settings;
   return settings.dynatemp && DYNATEMP_BLOCK?.dataset?.tgType?.includes(settings.type);
 }
@@ -1631,7 +1631,7 @@ export function getLogprobsNumber(type = null) {
  * @param {string} str Input string
  * @returns {string} Output string
  */
-export function replaceMacrosInList(str) {
+export function replaceMacrosInList(str: any) {
   if (!str || typeof str !== "string") {
     return str;
   }
@@ -1667,13 +1667,13 @@ export function replaceMacrosInList(str) {
  * @returns {object} Final generation parameters object appropriate for the text completion source
  */
 export function createTextGenGenerationData(
-  settings,
-  model,
+  settings: any,
+  model: any,
   finalPrompt = null,
   maxTokens = null,
   isImpersonate = false,
   isContinue = false,
-  cfgValues = null,
+  cfgValues: any = null,
   type = "quiet",
 ): Record<string, any> {
   settings = settings ?? textgenerationwebui_settings;
@@ -1906,7 +1906,7 @@ export function createTextGenGenerationData(
         ? Object.entries(params.logit_bias).map(([key, value]) => [Number(key), value])
         : [];
     const tokenBans = toIntArray(banned_tokens);
-    logitBiasArray.push(...tokenBans.map((x) => [Number(x), false]));
+    logitBiasArray.push(...tokenBans.map((x: any) => [Number(x), false]));
     const sequenceBreakers = params.parseSequenceBreakers();
     const llamaCppParams = {
       logit_bias: logitBiasArray,
@@ -1935,7 +1935,7 @@ export function createTextGenGenerationData(
   return params;
 }
 
-export async function getTextGenGenerationData(finalPrompt, maxTokens, isImpersonate, isContinue, cfgValues, type) {
+export async function getTextGenGenerationData(finalPrompt: any, maxTokens: any, isImpersonate: any, isContinue: any, cfgValues: any, type: any) {
   const model = getTextGenModel(textgenerationwebui_settings);
   const params = createTextGenGenerationData(
     textgenerationwebui_settings,

@@ -47,7 +47,7 @@ export class RegexProvider {
    * @param {string} regexString The regex string to retrieve
    * @returns {RegExp?} Compiled regex or null if invalid
    */
-  get(regexString) {
+  get(regexString: any) {
     const isCached = this.#cache.has(regexString);
     const regex = isCached ? this.#cache.get(regexString) : regexFromString(regexString);
 
@@ -101,7 +101,7 @@ export function getRegexScripts(options: { allowedOnly?: boolean } = DEFAULT_GET
  * @returns {RegexScript[]} An array of regex scripts for the specified type.
  */
 export function getScriptsByType(
-  scriptType,
+  scriptType: any,
   { allowedOnly }: { allowedOnly?: boolean } = DEFAULT_GET_REGEX_SCRIPTS_OPTIONS,
 ) {
   switch (scriptType) {
@@ -110,10 +110,10 @@ export function getScriptsByType(
     case SCRIPT_TYPES.GLOBAL:
       return extension_settings.regex ?? [];
     case SCRIPT_TYPES.SCOPED: {
-      if (allowedOnly && !extension_settings?.character_allowed_regex?.includes(characters?.[this_chid]?.avatar)) {
+      if (allowedOnly && !extension_settings?.character_allowed_regex?.includes(characters?.[this_chid as any]?.avatar)) {
         return [];
       }
-      const scopedScripts = characters[this_chid]?.data?.extensions?.regex_scripts;
+      const scopedScripts = characters[this_chid as any]?.data?.extensions?.regex_scripts;
       return Array.isArray(scopedScripts) ? scopedScripts : [];
     }
     case SCRIPT_TYPES.PRESET: {
@@ -139,7 +139,7 @@ export function getScriptsByType(
  * @param {SCRIPT_TYPES} scriptType The type of regex scripts to save.
  * @returns {Promise<void>}
  */
-export async function saveScriptsByType(scripts, scriptType) {
+export async function saveScriptsByType(scripts: any, scriptType: any) {
   switch (scriptType) {
     case SCRIPT_TYPES.GLOBAL:
       extension_settings.regex = scripts;
@@ -164,7 +164,7 @@ export async function saveScriptsByType(scripts, scriptType) {
  * @param {Character|undefined} character
  * @returns {boolean}
  */
-export function isScopedScriptsAllowed(character) {
+export function isScopedScriptsAllowed(character: any) {
   return !!extension_settings?.character_allowed_regex?.includes(character?.avatar);
 }
 
@@ -173,7 +173,7 @@ export function isScopedScriptsAllowed(character) {
  * @param {Character|undefined} character
  * @returns {void}
  */
-export function allowScopedScripts(character) {
+export function allowScopedScripts(character: any) {
   const avatar = character?.avatar;
   if (!avatar) {
     return;
@@ -192,7 +192,7 @@ export function allowScopedScripts(character) {
  * @param {Character|undefined} character
  * @returns {void}
  */
-export function disallowScopedScripts(character) {
+export function disallowScopedScripts(character: any) {
   const avatar = character?.avatar;
   if (!avatar) {
     return;
@@ -213,7 +213,7 @@ export function disallowScopedScripts(character) {
  * @param {string} presetName Preset name
  * @returns {boolean} True if allowed, false if not
  */
-export function isPresetScriptsAllowed(apiId, presetName) {
+export function isPresetScriptsAllowed(apiId: any, presetName: any) {
   if (!apiId || !presetName) {
     return false;
   }
@@ -226,7 +226,7 @@ export function isPresetScriptsAllowed(apiId, presetName) {
  * @param {string} presetName Preset name
  * @returns {void}
  */
-export function allowPresetScripts(apiId, presetName) {
+export function allowPresetScripts(apiId: any, presetName: any) {
   if (!apiId || !presetName) {
     return;
   }
@@ -245,7 +245,7 @@ export function allowPresetScripts(apiId, presetName) {
  * @param {string} presetName Preset name
  * @returns {void}
  */
-export function disallowPresetScripts(apiId, presetName) {
+export function disallowPresetScripts(apiId: any, presetName: any) {
   if (!apiId || !presetName) {
     return;
   }
@@ -302,7 +302,7 @@ export const substitute_find_regex = {
   ESCAPED: 2,
 };
 
-function sanitizeRegexMacro(x) {
+function sanitizeRegexMacro(x: any) {
   return x && typeof x === "string"
     ? x.replaceAll(/[\n\r\t\v\f\0.^$*+?{}[\]\\/|()]/gs, (s) => {
         switch (s) {
@@ -415,7 +415,7 @@ export function getRegexedString(
  * @returns {string} The new string
  */
 export function runRegexScript(
-  regexScript,
+  regexScript: any,
   rawString: string,
   { characterOverride }: { characterOverride?: string } = {},
 ) {
@@ -449,7 +449,7 @@ export function runRegexScript(
   newString = rawString.replace(findRegex, function (match) {
     const args = [...arguments];
     const replaceString = regexScript.replaceString.replace(/{{match}}/gi, "$0");
-    const replaceWithGroups = replaceString.replaceAll(/\$(\d+)|\$<([^>]+)>/g, (_, num, groupName) => {
+    const replaceWithGroups = replaceString.replaceAll(/\$(\d+)|\$<([^>]+)>/g, (_: any, num: any, groupName: any) => {
       if (num) {
         // Handle numbered capture groups ($1, $2, etc.)
         match = args[Number(num)];

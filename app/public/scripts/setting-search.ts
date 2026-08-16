@@ -15,7 +15,7 @@ async function searchSettings() {
  * @param {HTMLElement | Text | Document | Comment} element Settings block HTML element
  * @returns {boolean} True if the element is a child of a header element, false otherwise
  */
-function isParentHeader(element) {
+function isParentHeader(element: any) {
   return $(element).closest("h4, h3").length > 0;
 }
 
@@ -24,7 +24,7 @@ function isParentHeader(element) {
  * @param {HTMLElement | Text | Document | Comment} element Settings block HTML element
  * @param {string} searchString Search string
  */
-function highlightMatchingElements(element, searchString) {
+function highlightMatchingElements(element: any, searchString: any) {
   $(element)
     .contents()
     .each(function () {

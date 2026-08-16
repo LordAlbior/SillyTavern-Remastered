@@ -7,18 +7,18 @@ class GSVITtsProvider {
   // Config //
   //########//
 
-  settings;
+  settings: any;
   ready = false;
   separator = ". ";
 
   characterList = {};
-  voices = [];
+  voices: any[] = [];
   /**
    * Perform any text processing before passing to TTS engine.
    * @param {string} text Input text
    * @returns {string} Processed text
    */
-  processText(text) {
+  processText(text: any) {
     text = text.replace("<br>", "\n"); // Replace <br> with newline
     return text;
   }
@@ -58,7 +58,7 @@ class GSVITtsProvider {
     }
     const characterList = await response.json();
     this.characterList = characterList;
-    this.voices = Object.keys(characterList);
+    this.voices = Object.keys(characterList) as any[];
   }
 
   get settingsHtml() {
@@ -67,12 +67,12 @@ class GSVITtsProvider {
         <select id="gsvi_api_language">`;
 
     for (const language in this.languageLabels) {
-      if (this.languageLabels[language] == this.settings?.language) {
-        html += `<option value="${this.languageLabels[language]}" selected="selected">${language}</option>`;
+      if ((this.languageLabels as Record<string, any>)[language] == this.settings?.language) {
+        html += `<option value="${(this.languageLabels as Record<string, any>)[language]}" selected="selected">${language}</option>`;
         continue;
       }
 
-      html += `<option value="${this.languageLabels[language]}">${language}</option>`;
+      html += `<option value="${(this.languageLabels as Record<string, any>)[language]}">${language}</option>`;
     }
 
     html += `
@@ -140,7 +140,7 @@ class GSVITtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length === 0) {
       console.info("Using default TTS Provider settings");
@@ -218,17 +218,17 @@ class GSVITtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.fetchCharacterList();
     }
-    if (!this.voices.includes(voiceName)) {
+    if (!(this.voices as any[]).includes(voiceName)) {
       throw `TTS Voice name ${voiceName} not found`;
     }
     return { name: voiceName, voice_id: voiceName, preview_url: false, lang: "zh-CN" };
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -245,7 +245,7 @@ class GSVITtsProvider {
     return voices;
   }
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     console.info(`Generating new TTS for voice_id ${voiceId}`);
 
     const params = new URLSearchParams();
@@ -263,7 +263,7 @@ class GSVITtsProvider {
   }
 
   // Interface not used by GSVI TTS
-  async fetchTtsFromHistory(history_item_id) {
+  async fetchTtsFromHistory(history_item_id: any) {
     return Promise.resolve(history_item_id);
   }
 }

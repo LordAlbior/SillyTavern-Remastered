@@ -22,7 +22,7 @@ import {
  * @param {number} messageId
  * @returns {boolean}
  */
-export function canOpenSwipePickerForMessage(messageId) {
+export function canOpenSwipePickerForMessage(messageId: any) {
   const message = chat[messageId];
 
   if (!message) {
@@ -47,7 +47,7 @@ export function canOpenSwipePickerForMessage(messageId) {
  * @param {number} messageId
  * @returns {boolean}
  */
-export function canJumpToSwipeForMessage(messageId) {
+export function canJumpToSwipeForMessage(messageId: any) {
   const message = chat[messageId];
   return canOpenSwipePickerForMessage(messageId) && isSwipingAllowed() && isMessageSwipeable(messageId, message);
 }
@@ -57,7 +57,7 @@ export function canJumpToSwipeForMessage(messageId) {
  * @param {number} messageId
  * @returns {Promise<void>}
  */
-async function openSwipePicker(messageId) {
+async function openSwipePicker(messageId: any) {
   const message = chat[messageId];
 
   if (!canOpenSwipePickerForMessage(messageId)) {
@@ -85,9 +85,9 @@ async function openSwipePicker(messageId) {
   wrapper.appendChild(listContainer);
 
   /** @type {Popup} */
-  let popup;
+  let popup: any;
   /** @type {HTMLInputElement} */
-  let swipeIdInput;
+  let swipeIdInput: any;
   /** @type {number|null} */
   let branchActionSwipeId = null;
 
@@ -97,7 +97,7 @@ async function openSwipePicker(messageId) {
     }
   }
 
-  function setSelectedSwipe(nextSwipeId) {
+  function setSelectedSwipe(nextSwipeId: any) {
     selectedSwipeId = clamp(Number(nextSwipeId), 0, message.swipes.length - 1);
     listContainer.querySelectorAll(".swipe_picker_block").forEach((element) => {
       const isSelected = Number(element.getAttribute("data-swipe-id")) === selectedSwipeId;
@@ -126,7 +126,7 @@ async function openSwipePicker(messageId) {
     }
   }
 
-  function canDeleteSwipeFromPicker(swipeId) {
+  function canDeleteSwipeFromPicker(swipeId: any) {
     if ((message?.swipes?.length ?? 0) <= 1) {
       return false;
     }
@@ -137,7 +137,7 @@ async function openSwipePicker(messageId) {
 
   async function renderSwipeList() {
     const swipeBlocks = await Promise.all(
-      message.swipes.map(async (swipe, index) => {
+      message.swipes.map(async (swipe: any, index: any) => {
         const swipeText = String(swipe ?? "");
         const template = $("#past_chat_template .select_chat_block_wrapper").clone();
         const block = template.find(".select_chat_block");
@@ -218,7 +218,7 @@ async function openSwipePicker(messageId) {
               const result = await callGenericPopup(
                 t`Are you sure you want to delete swipe #${index + 1}?`,
                 POPUP_TYPE.CONFIRM,
-                null,
+                null as any,
                 {
                   okButton: t`Delete Swipe`,
                   cancelButton: t`Cancel`,
@@ -331,7 +331,7 @@ async function openSwipePicker(messageId) {
         swipeIdInput.select();
       }
     },
-    onClosing: (popup) => {
+    onClosing: (popup: any) => {
       if (popup.result !== POPUP_RESULT.AFFIRMATIVE) {
         return true;
       }
@@ -354,7 +354,7 @@ async function openSwipePicker(messageId) {
       setSelectedSwipe(targetSwipeNumber - 1);
       return true;
     },
-  });
+  } as any);
 
   popup.dlg.classList.add("swipe_picker_popup");
   popup.closeButton.style.display = "block";
@@ -440,7 +440,7 @@ export function initSwipePicker() {
    * Click handler for opening the swipe picker when clicking on the swipe counter.
    * @param {JQuery.Event | Event} e Event object
    */
-  async function onSwipeCounterClick(e) {
+  async function onSwipeCounterClick(this: any, e: any) {
     e.preventDefault();
     e.stopPropagation();
 

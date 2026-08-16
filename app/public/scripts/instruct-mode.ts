@@ -54,7 +54,7 @@ const controls = [
  * @param {object} settings Instruct mode settings.
  * @returns {void}
  */
-function migrateInstructModeSettings(settings) {
+function migrateInstructModeSettings(settings: any) {
   // Separator sequence => Output suffix
   if (settings.separator_sequence !== undefined) {
     settings.output_suffix = settings.separator_sequence || "";
@@ -89,8 +89,8 @@ function migrateInstructModeSettings(settings) {
   };
 
   for (const key in defaults) {
-    if (settings[key] === undefined) {
-      settings[key] = defaults[key];
+    if ((settings as Record<string, any>)[key] === undefined) {
+      (settings as Record<string, any>)[key] = (defaults as Record<string, any>)[key];
     }
   }
 
@@ -107,7 +107,7 @@ function migrateInstructModeSettings(settings) {
  * Loads instruct mode settings from the given data object.
  * @param {object} data Settings data object.
  */
-export async function loadInstructMode(data) {
+export async function loadInstructMode(data: any) {
   if (data.instruct !== undefined) {
     instruct_presets = data.instruct;
   }
@@ -145,7 +145,7 @@ export async function loadInstructMode(data) {
     }
   });
 
-  instruct_presets.forEach((preset) => {
+  instruct_presets.forEach((preset: any) => {
     const name = preset.name;
     const option = document.createElement("option");
     option.value = name;
@@ -182,8 +182,8 @@ export function updateBindModelTemplatesState() {
  * @param {boolean} [options.quiet=false] Suppress toast messages.
  * @param {boolean} [options.isAuto=false] Is auto-select.
  */
-export function selectContextPreset(preset, { quiet = false, isAuto = false } = {}) {
-  const presetExists = context_presets.some((x) => x.name === preset);
+export function selectContextPreset(preset: any, { quiet = false, isAuto = false } = {}) {
+  const presetExists = context_presets.some((x: any) => x.name === preset);
   if (!presetExists) {
     console.warn(`Context template "${preset}" not found`);
     return;
@@ -207,8 +207,8 @@ export function selectContextPreset(preset, { quiet = false, isAuto = false } = 
  * @param {boolean} [options.quiet=false] Suppress toast messages.
  * @param {boolean} [options.isAuto=false] Is auto-select.
  */
-export function selectInstructPreset(preset, { quiet = false, isAuto = false } = {}) {
-  const presetExists = instruct_presets.some((x) => x.name === preset);
+export function selectInstructPreset(preset: any, { quiet = false, isAuto = false } = {}) {
+  const presetExists = instruct_presets.some((x: any) => x.name === preset);
   if (!presetExists) {
     console.warn(`Instruct template "${preset}" not found`);
     return;
@@ -238,7 +238,7 @@ export function selectInstructPreset(preset, { quiet = false, isAuto = false } =
  * @param {string} modelId Model name reported by the API.
  * @returns {boolean} True if instruct preset was activated by model id, false otherwise.
  */
-export function autoSelectInstructPreset(modelId) {
+export function autoSelectInstructPreset(modelId: any) {
   const modelTemplatesMap = power_user.model_templates_mappings[modelId];
 
   if (modelTemplatesMap) {
@@ -262,7 +262,7 @@ export function autoSelectInstructPreset(modelId) {
   // Select matching instruct preset
   let foundMatch = false;
 
-  for (const preset of instruct_presets) {
+  for (const preset of instruct_presets as any[]) {
     // If activation regex is set, check if it matches the model id
     if (preset.activation_regex) {
       try {
@@ -283,7 +283,7 @@ export function autoSelectInstructPreset(modelId) {
 
   // If no match was found, auto-select instruct preset
   if (!foundMatch && power_user.instruct.bind_to_context) {
-    for (const instruct_preset of instruct_presets) {
+    for (const instruct_preset of instruct_presets as any[]) {
       // If instruct preset matches the context template
       if (instruct_preset.name === power_user.context.preset) {
         selectInstructPreset(instruct_preset.name, { isAuto: true });
@@ -311,10 +311,10 @@ export function getInstructStoppingSequences({ customInstruct = null, useStopStr
    * @param {string} sequence Sequence string.
    * @returns {void}
    */
-  function addInstructSequence(sequence) {
+  function addInstructSequence(sequence: any) {
     // Cohee: oobabooga's textgen always appends newline before the sequence as a stopping string
     // But it's a problem for Metharme which doesn't use newlines to separate them.
-    const wrap = (s) => (instruct.wrap ? "\n" + s : s);
+    const wrap = (s: any) => (instruct.wrap ? "\n" + s : s);
     // Sequence must be a non-empty string
     if (typeof sequence === "string" && sequence.length > 0) {
       // If sequence is just a whitespace or newline - we don't want to make it a stopping string
@@ -356,7 +356,7 @@ export function getInstructStoppingSequences({ customInstruct = null, useStopStr
     combined_sequence.join("\n").split("\n").filter(onlyUnique).forEach(addInstructSequence);
   }
 
-  if (useStopStrings ?? power_user.context.use_stop_strings) {
+  if ((useStopStrings as any) ?? power_user.context.use_stop_strings) {
     if (power_user.context.chat_start) {
       result.push(`\n${substituteParams(power_user.context.chat_start)}`);
     }
@@ -388,14 +388,14 @@ export const force_output_sequence = {
  * @returns {string} Formatted instruct mode chat message.
  */
 export function formatInstructModeChat(
-  name,
-  mes,
-  isUser,
-  isNarrator,
-  forceAvatar,
-  name1,
-  name2,
-  forceOutputSequence,
+  name: any,
+  mes: any,
+  isUser: any,
+  isNarrator: any,
+  forceAvatar: any,
+  name1: any,
+  name2: any,
+  forceOutputSequence: any,
   customInstruct = null,
 ) {
   const instruct = structuredClone(customInstruct ?? power_user.instruct);
@@ -480,7 +480,7 @@ export function formatInstructModeChat(
  * @returns {string} Formatted instruct mode system prompt.
  * @deprecated Currently doesn't do anything useful.
  */
-export function formatInstructModeSystemPrompt(systemPrompt, _customInstruct = null) {
+export function formatInstructModeSystemPrompt(systemPrompt: any, _customInstruct = null) {
   return systemPrompt || "";
 }
 
@@ -492,7 +492,7 @@ export function formatInstructModeSystemPrompt(systemPrompt, _customInstruct = n
  * @param {InstructSettings} [params.customInstruct] Custom instruct mode settings.
  * @returns {string} Formatted instruct mode story string.
  */
-export function formatInstructModeStoryString(storyString, { customContext = null, customInstruct = null } = {}) {
+export function formatInstructModeStoryString(storyString: any, { customContext = null, customInstruct = null } = {}) {
   if (!storyString) {
     return "";
   }
@@ -525,13 +525,13 @@ export function formatInstructModeStoryString(storyString, { customContext = nul
  * @param {string} name2 Character name.
  * @returns {string[]} Formatted example messages string.
  */
-export function formatInstructModeExamples(mesExamplesArray, name1, name2) {
+export function formatInstructModeExamples(mesExamplesArray: any, name1: any, name2: any) {
   const blockHeading = power_user.context.example_separator
     ? `${substituteParams(power_user.context.example_separator)}\n`
     : "";
 
   if (power_user.instruct.skip_examples) {
-    return mesExamplesArray.map((x) => x.replace(/<START>\n/i, blockHeading));
+    return mesExamplesArray.map((x: any) => x.replace(/<START>\n/i, blockHeading));
   }
 
   const includeNames = power_user.instruct.names_behavior === names_behavior_types.ALWAYS;
@@ -569,7 +569,7 @@ export function formatInstructModeExamples(mesExamplesArray, name1, name2) {
 
   for (const item of mesExamplesArray) {
     const cleanedItem = item.replace(/<START>/i, "{Example Dialogue:}").replace(/\r/gm, "");
-    const blockExamples = parseExampleIntoIndividual(cleanedItem, includeGroupNames);
+    const blockExamples = parseExampleIntoIndividual(cleanedItem, includeGroupNames as any);
 
     if (blockExamples.length === 0) {
       continue;
@@ -597,7 +597,7 @@ export function formatInstructModeExamples(mesExamplesArray, name1, name2) {
   }
 
   if (formattedExamples.length === 0) {
-    return mesExamplesArray.map((x) => x.replace(/<START>\n/i, blockHeading));
+    return mesExamplesArray.map((x: any) => x.replace(/<START>\n/i, blockHeading));
   }
   return formattedExamples;
 }
@@ -615,13 +615,13 @@ export function formatInstructModeExamples(mesExamplesArray, name1, name2) {
  * @returns {string} Formatted instruct mode last prompt line.
  */
 export function formatInstructModePrompt(
-  name,
-  isImpersonate,
-  promptBias,
-  name1,
-  name2,
-  isQuiet,
-  isQuietToLoud,
+  name: any,
+  isImpersonate: any,
+  promptBias: any,
+  name1: any,
+  name2: any,
+  isQuiet: any,
+  isQuietToLoud: any,
   customInstruct = null,
 ) {
   const instruct = structuredClone(customInstruct ?? power_user.instruct);
@@ -691,8 +691,8 @@ export function formatInstructModePrompt(
  * Select context template matching instruct preset.
  * @param {string} name Preset name.
  */
-function selectMatchingContextTemplate(name) {
-  for (const context_preset of context_presets) {
+function selectMatchingContextTemplate(name: any) {
+  for (const context_preset of context_presets as any[]) {
     // If context template matches the instruct preset
     if (context_preset.name === name) {
       selectContextPreset(context_preset.name, { isAuto: true });
@@ -707,7 +707,7 @@ function selectMatchingContextTemplate(name) {
  * values are functions, those functions will be called and their return values are used.
  * @returns {import('./macros.js').Macro[]} Macro objects.
  */
-export function getInstructMacros(env) {
+export function getInstructMacros(env: any) {
   /** @type {{ key: string,value: string, enabled: boolean }[]} */
   const instructMacros = [
     // Instruct template macros
@@ -865,7 +865,7 @@ jQuery(() => {
 
   $("#instruct_presets").on("change", function () {
     const name = String($(this).find(":selected").val());
-    const preset = instruct_presets.find((x) => x.name === name);
+    const preset = instruct_presets.find((x: any) => x.name === name);
 
     if (!preset) {
       return;

@@ -32,7 +32,7 @@ function updateSettings() {
   loadSettings();
 }
 
-function setCharCfg(tempValue, setting) {
+function setCharCfg(tempValue: any, setting: any) {
   const avatarName = getCharaFilename();
 
   // Assign temp object
@@ -58,7 +58,7 @@ function setCharCfg(tempValue, setting) {
   let existingCharaCfg;
 
   if (extension_settings.cfg.chara) {
-    existingCharaCfgIndex = extension_settings.cfg.chara.findIndex((e) => e.name === avatarName);
+    existingCharaCfgIndex = extension_settings.cfg.chara.findIndex((e: any) => e.name === avatarName);
     existingCharaCfg = extension_settings.cfg.chara[existingCharaCfgIndex];
   }
 
@@ -92,7 +92,7 @@ function setCharCfg(tempValue, setting) {
   return true;
 }
 
-function setChatCfg(tempValue, setting) {
+function setChatCfg(tempValue: any, setting: any) {
   switch (setting) {
     case settingType.guidance_scale:
       chat_metadata[metadataKeys.guidance_scale] = tempValue;
@@ -188,7 +188,7 @@ function loadSettings() {
   $("#chat_cfg_positive_prompt").val(chat_metadata[metadataKeys.positive_prompt] ?? "");
   $("#groupchat_cfg_use_chara").prop("checked", chat_metadata[metadataKeys.groupchat_individual_chars] ?? false);
   if (chat_metadata[metadataKeys.prompt_combine]?.length > 0) {
-    chat_metadata[metadataKeys.prompt_combine].forEach((element) => {
+      chat_metadata[metadataKeys.prompt_combine].forEach((element: any) => {
       $(`input[name="cfg_prompt_combine"][value="${element}"]`).prop("checked", true);
     });
   }
@@ -213,7 +213,7 @@ function loadSettings() {
 
   // Set character CFG if it exists
   if (!selected_group) {
-    const charaCfg = extension_settings.cfg.chara.find((e) => e.name === getCharaFilename());
+    const charaCfg = extension_settings.cfg.chara.find((e: any) => e.name === getCharaFilename());
     $("#chara_cfg_guidance_scale").val(charaCfg?.guidance_scale ?? 1.0);
     $("#chara_cfg_guidance_scale_counter").val(charaCfg?.guidance_scale?.toFixed(2) ?? (1.0).toFixed(2));
     $("#chara_cfg_negative_prompt").val(charaCfg?.negative_prompt ?? "");
@@ -415,7 +415,7 @@ export function getGuidanceScale() {
     return;
   }
 
-  const charaCfg = extension_settings.cfg.chara?.find((e) => e.name === getCharaFilename(this_chid));
+  const charaCfg = extension_settings.cfg.chara?.find((e: any) => e.name === getCharaFilename(this_chid as unknown as null));
   const chatGuidanceScale = chat_metadata[metadataKeys.guidance_scale];
   const groupchatCharOverride = chat_metadata[metadataKeys.groupchat_individual_chars] ?? false;
 
@@ -467,7 +467,7 @@ function getCustomSeparator() {
  * @param {boolean} quiet Whether to suppress console output
  * @returns {{value: string, depth: number}} The CFG prompt and insertion depth
  */
-export function getCfgPrompt(guidanceScale, isNegative, quiet = false) {
+export function getCfgPrompt(guidanceScale: any, isNegative: any, quiet = false) {
   const splitCfgPrompt = [];
 
   const cfgPromptCombine = chat_metadata[metadataKeys.prompt_combine] ?? [];
@@ -477,7 +477,7 @@ export function getCfgPrompt(guidanceScale, isNegative, quiet = false) {
     );
   }
 
-  const charaCfg = extension_settings.cfg.chara?.find((e) => e.name === getCharaFilename(this_chid));
+  const charaCfg = extension_settings.cfg.chara?.find((e: any) => e.name === getCharaFilename(this_chid as unknown as null));
   if (guidanceScale.type === cfgType.chara || cfgPromptCombine.includes(cfgType.chara)) {
     splitCfgPrompt.unshift(substituteParams(isNegative ? charaCfg.negative_prompt : charaCfg.positive_prompt));
   }

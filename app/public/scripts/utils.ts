@@ -18,8 +18,8 @@ import { groups, selected_group } from './group-chats.ts';
 import { getCurrentLocale, t } from './i18n.ts';
 import { importWorldInfo } from './world-info.ts';
 
-export const shiftUpByOne = (e, i, a) => a[i] = e + 1;
-export const shiftDownByOne = (e, i, a) => a[i] = e - 1;
+export const shiftUpByOne = (e: any, i: any, a: any) => a[i] = e + 1;
+export const shiftDownByOne = (e: any, i: any, a: any) => a[i] = e - 1;
 
 /**
  * Pagination status string template.
@@ -27,7 +27,7 @@ export const shiftDownByOne = (e, i, a) => a[i] = e - 1;
  */
 export const PAGINATION_TEMPLATE = '<%= rangeStart %>-<%= rangeEnd %> .. <%= totalNumber %>';
 
-export const localizePagination = function (container) {
+export const localizePagination = function (container: any) {
     container.find('[title="Next page"]').attr('title', t`Next page`);
     container.find('[title="Previous page"]').attr('title', t`Previous page`);
     container.find('[title="First page"]').attr('title', t`First page`);
@@ -64,13 +64,13 @@ export function canUseNegativeLookbehind() {
  * @param {number[]} sizeChangerOptions Array of page size options
  * @returns {string} The rendered dropdown element as a string
  */
-export const renderPaginationDropdown = function (pageSize, sizeChangerOptions) {
+export const renderPaginationDropdown = function (pageSize: any, sizeChangerOptions: any) {
     const sizeSelect = document.createElement('select');
     sizeSelect.classList.add('J-paginationjs-size-select');
 
     if (sizeChangerOptions.indexOf(pageSize) === -1) {
         sizeChangerOptions.unshift(pageSize);
-        sizeChangerOptions.sort((a, b) => a - b);
+        sizeChangerOptions.sort((a: any, b: any) => a - b);
     }
 
     for (let i = 0; i < sizeChangerOptions.length; i++) {
@@ -86,7 +86,7 @@ export const renderPaginationDropdown = function (pageSize, sizeChangerOptions) 
     return sizeSelect.outerHTML;
 };
 
-export const paginationDropdownChangeHandler = function (event, size) {
+export const paginationDropdownChangeHandler = function (event: any, size: any) {
     let dropdown = $(event?.originalEvent?.currentTarget || event.delegateTarget).find('select');
     dropdown.find('[selected]').removeAttr('selected');
     dropdown.find(`[value=${size}]`).attr('selected', '');
@@ -106,7 +106,7 @@ export const navigation_option = {
  * @param {any} item The item to check.
  * @returns {boolean} True if the item is an object, false otherwise.
  */
-export function isObject(item) {
+export function isObject(item: any) {
     return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
@@ -116,7 +116,7 @@ export function isObject(item) {
  * @param {object} source The source object
  * @returns {object} Merged object
  */
-export function deepMerge(target, source) {
+export function deepMerge(target: any, source: any) {
     let output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach(key => {
@@ -138,7 +138,7 @@ export function deepMerge(target, source) {
  * @param {object} obj Object to ensure is a plain object
  * @return {object} A plain object, or an empty object if the input is not an object.
  */
-export function ensurePlainObject(obj) {
+export function ensurePlainObject(obj: any) {
     if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
         return {};
     }
@@ -151,7 +151,7 @@ export function ensurePlainObject(obj) {
  * @param {string?} str
  * @returns {string}
  */
-export function escapeHtml(str) {
+export function escapeHtml(str: any) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -166,11 +166,11 @@ export function escapeHtml(str) {
  * @param {string} replacement Replacement for invalid characters
  * @returns {string} Sanitized string
  */
-export function sanitizeSelector(str, replacement = '_') {
+export function sanitizeSelector(str: any, replacement = '_') {
     return String(str).replace(/[^a-z0-9_-]/ig, replacement);
 }
 
-export function isValidUrl(value) {
+export function isValidUrl(value: any) {
     try {
         new URL(value);
         return true;
@@ -184,7 +184,7 @@ export function isValidUrl(value) {
  * @param {string} url URL to check
  * @returns {boolean} True if the URL is external, false otherwise
  */
-export function isExternalUrl(url) {
+export function isExternalUrl(url: any) {
     return (url.indexOf('://') > 0 || url.indexOf('//') === 0) && !url.startsWith(window.location.origin);
 }
 
@@ -193,7 +193,7 @@ export function isExternalUrl(url) {
  * @param {string} value String to check
  * @returns {boolean} True if the string is a valid UUID, false otherwise.
  */
-export function isUuid(value) {
+export function isUuid(value: any) {
     // Regular expression to match UUIDs
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidRegex.test(value);
@@ -205,7 +205,7 @@ export function isUuid(value) {
  * @param {string} type Type to convert to
  * @returns {any} Converted value
  */
-export function convertValueType(value, type) {
+export function convertValueType(value: any, type: any) {
     if (value instanceof SlashCommandClosure || typeof type !== 'string') {
         return value;
     }
@@ -276,7 +276,7 @@ export function convertValueType(value, type) {
  * @param {number} max The maximum value.
  * @returns {{ start: number, end: number }} The parsed range.
  */
-export function stringToRange(input, min, max) {
+export function stringToRange(input: any, min: any, max: any) {
     let start, end;
 
     if (typeof input !== 'string') {
@@ -305,7 +305,7 @@ export function stringToRange(input, min, max) {
  * @param {any} array The array being processed.
  * @returns {boolean} True if the value is unique, false otherwise.
  */
-export function onlyUnique(value, index, array) {
+export function onlyUnique(value: any, index: any, array: any) {
     return array.indexOf(value) === index;
 }
 
@@ -325,7 +325,7 @@ export { onlyUniqueJson } from "./constants.ts";
  * @param {*} item - The item to remove from the array
  * @returns {boolean} - Returns true if the item was successfully removed, false otherwise.
  */
-export function removeFromArray(array, item) {
+export function removeFromArray(array: any, item: any) {
     const index = array.indexOf(item);
     if (index === -1) return false;
     array.splice(index, 1);
@@ -337,8 +337,8 @@ export function removeFromArray(array, item) {
  * @param {any[]} arr - The array to normalize.
  * @returns {any[]} The normalized array.
  */
-export function normalizeArray(arr) {
-    return [...new Set((arr ?? []).map(s => typeof s === 'string' ? s.trim() : s).filter(Boolean))];
+export function normalizeArray(arr: any) {
+    return [...new Set((arr ?? []).map((s: any) => typeof s === 'string' ? s.trim() : s).filter(Boolean))];
 }
 
 /**
@@ -349,7 +349,7 @@ export function normalizeArray(arr) {
  * isDigitsOnly('123'); // true
  * isDigitsOnly('abc'); // false
  */
-export function isDigitsOnly(str) {
+export function isDigitsOnly(str: any) {
     return /^\d+$/.test(str);
 }
 
@@ -361,7 +361,7 @@ export function getSortableDelay() {
     return isMobile() ? 750 : 50;
 }
 
-export async function bufferToBase64(buffer) {
+export async function bufferToBase64(buffer: any) {
     // use a FileReader to generate a base64 data URI:
     const base64url = await new Promise<string>(resolve => {
         const reader = new FileReader();
@@ -379,7 +379,7 @@ export async function bufferToBase64(buffer) {
  * @example
  * shuffle([1, 2, 3]); // [2, 3, 1]
  */
-export function shuffle(array) {
+export function shuffle(array: any) {
     let currentIndex = array.length,
         randomIndex;
 
@@ -400,7 +400,7 @@ export function shuffle(array) {
  * @param {string} fileName File name.
  * @param {string} contentType File content type.
  */
-export function download(content, fileName, contentType) {
+export function download(content: any, fileName: any, contentType: any) {
     const a = document.createElement('a');
     const file = new Blob([content], { type: contentType });
     a.href = URL.createObjectURL(file);
@@ -415,7 +415,7 @@ export function download(content, fileName, contentType) {
  * @param {any} params Fetch parameters.
  * @returns {Promise<string>} A promise that resolves to the data URI.
  */
-export async function urlContentToDataUri(url, params) {
+export async function urlContentToDataUri(url: any, params: any) {
     const response = await fetch(url, params);
     const blob = await response.blob();
     return await new Promise((resolve, reject) => {
@@ -436,7 +436,7 @@ export async function urlContentToDataUri(url, params) {
  * @param {File} b Second file
  * @returns {boolean} True if the files are probably the same, false otherwise.
  */
-export function isSameFile(a, b) {
+export function isSameFile(a: any, b: any) {
     return a.lastModified === b.lastModified && a.name === b.name && a.size === b.size && a.type === b.type;
 }
 
@@ -445,7 +445,7 @@ export function isSameFile(a, b) {
  * @param {Blob} file The file to read.
  * @returns {Promise<string>} A promise that resolves to the file's text.
  */
-export function getFileText(file) {
+export function getFileText(file: any) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsText(file);
@@ -462,7 +462,7 @@ export function getFileText(file) {
  * Returns a promise that resolves to the file's array buffer.
  * @param {Blob} file The file to read.
  */
-export function getFileBuffer(file) {
+export function getFileBuffer(file: any) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsArrayBuffer(file);
@@ -480,7 +480,7 @@ export function getFileBuffer(file) {
  * @param {Blob} file The file to read.
  * @returns {Promise<string>} A promise that resolves to the base64 encoded string.
  */
-export function getBase64Async(file) {
+export function getBase64Async(file: any) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -498,12 +498,12 @@ export function getBase64Async(file) {
  * @param {Blob} file The file to read.
  * @returns {Promise<any>} A promise that resolves to the parsed JSON object.
  */
-export async function parseJsonFile(file) {
+export async function parseJsonFile(file: any) {
     return new Promise<any>((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsText(file);
-        fileReader.onload = event => resolve(JSON.parse(String(event.target.result)));
-        fileReader.onerror = error => reject(error);
+        fileReader.onload = (event: any) => resolve(JSON.parse(String(event.target!.result)));
+        fileReader.onerror = (error: any) => reject(error);
     });
 }
 
@@ -517,7 +517,7 @@ export async function parseJsonFile(file) {
  * @param {number} [seed=0] The seed to use for the hash.
  * @returns {number} The hash code.
  */
-export function getStringHash(str, seed = 0) {
+export function getStringHash(str: any, seed = 0) {
     if (typeof str !== 'string') {
         return 0;
     }
@@ -541,7 +541,7 @@ export function getStringHash(str, seed = 0) {
  * @param {string} text - The text to copy to the clipboard.
  * @returns {Promise<void>} A promise that resolves when the text has been copied to the clipboard.
  */
-export function copyText(text) {
+export function copyText(text: any) {
     if (navigator.clipboard) {
         return navigator.clipboard.writeText(text);
     }
@@ -569,9 +569,9 @@ const debounceMap = new WeakMap();
  * @param {debounce_timeout|number} [timeout=debounce_timeout.default] The timeout based on the common enum values, or in milliseconds.
  * @returns {function} The debounced function.
  */
-export function debounce(func, timeout = debounce_timeout.standard) {
-    let timer;
-    let fn = (...args) => {
+export function debounce(this: any, func: any, timeout = debounce_timeout.standard) {
+    let timer: any;
+    let fn = (...args: any[]) => {
         clearTimeout(timer);
         timer = setTimeout(() => { func.apply(this, args); }, timeout);
         debounceMap.set(func, timer);
@@ -587,13 +587,13 @@ export function debounce(func, timeout = debounce_timeout.standard) {
  * @param {Number} [timeout=300] The timeout in milliseconds.
  * @returns {Function} The debounced function.
  */
-export function debounceAsync(func, timeout = debounce_timeout.standard) {
-    let timer;
+export function debounceAsync(this: any, func: any, timeout = debounce_timeout.standard) {
+    let timer: any;
     /**@type {Promise}*/
-    let debouncePromise;
+    let debouncePromise: any;
     /**@type {Function}*/
-    let debounceResolver;
-    return (...args) => {
+    let debounceResolver: any;
+    return (...args: any[]) => {
         clearTimeout(timer);
         if (!debouncePromise) {
             debouncePromise = new Promise(resolve => {
@@ -613,7 +613,7 @@ export function debounceAsync(func, timeout = debounce_timeout.standard) {
  * Does nothing if the function is not debounced or not scheduled.
  * @param {function} func The function to cancel. Either the original or the debounced function.
  */
-export function cancelDebounce(func) {
+export function cancelDebounce(func: any) {
     if (debounceMap.has(func)) {
         clearTimeout(debounceMap.get(func));
         debounceMap.delete(func);
@@ -626,9 +626,9 @@ export function cancelDebounce(func) {
  * @param {number} [limit=300] The limit in milliseconds.
  * @returns {function} The throttled function.
  */
-export function throttle(func, limit = 300) {
-    let lastCall;
-    return (...args) => {
+export function throttle(this: any, func: any, limit = 300) {
+    let lastCall: any;
+    return (...args: any[]) => {
         const now = Date.now();
         if (!lastCall || (now - lastCall) >= limit) {
             lastCall = now;
@@ -643,16 +643,16 @@ export function throttle(func, limit = 300) {
  * @param {number} [limit=300] The limit in milliseconds.
  * @returns {function} The throttled function.
  */
-export function debouncedThrottle(func, limit = 300) {
-    let last, deferTimer;
+export function debouncedThrottle(func: any, limit = 300) {
+    let last: any, deferTimer: any;
     let db = debounce(func);
 
-    return function () {
+    return function (this: any) {
         let now = +new Date, args = Array.from(arguments) as any[];
         if (!last || (last && now < last + limit)) {
             clearTimeout(deferTimer);
             db.apply(this, args);
-            deferTimer = setTimeout(function () {
+            deferTimer = setTimeout(function (this: any) {
                 last = now;
                 func.apply(this, args);
             }, limit);
@@ -668,12 +668,12 @@ export function debouncedThrottle(func, limit = 300) {
  * @param {Element} el The element to check.
  * @returns {boolean} True if the element is in the viewport, false otherwise.
  */
-export function isElementInViewport(el) {
+export function isElementInViewport(el: any) {
     if (!el) {
         return false;
     }
     if (typeof jQuery === 'function' && el instanceof jQuery) {
-        el = el[0];
+        el = (el as any)[0];
     }
     var rect = el.getBoundingClientRect();
     return (
@@ -696,10 +696,10 @@ export function isElementInViewport(el) {
  *        When set to 0, the intention is to also check if the basename (without applied index) is free.
  * @returns {string|null} A unique name. Null if no unique name could be found in `maxTries`.
  */
-export function getUniqueName(baseName, exists, { nameBuilder = null, maxTries = 1000, startIndex = 1 } = {}) {
-    nameBuilder ??= (baseName, i) => i === 0 ? baseName : `${baseName} (${i})`;
+export function getUniqueName(baseName: any, exists: any, { nameBuilder = null, maxTries = 1000, startIndex = 1 }: any = {}) {
+    nameBuilder ??= (baseName: any, i: any) => i === 0 ? baseName : `${baseName} (${i})`;
     let i = startIndex;
-    let name;
+    let name: any;
     while (i < maxTries + startIndex) {
         name = nameBuilder(baseName, i);
         if (!exists(name)) {
@@ -715,7 +715,7 @@ export function getUniqueName(baseName, exists, { nameBuilder = null, maxTries =
  * @param {number} ms The number of milliseconds to wait.
  * @returns {Promise<void>} A promise that resolves after the specified number of milliseconds.
  */
-export function delay(ms) {
+export function delay(ms: any) {
     return new Promise((res) => setTimeout(res, ms));
 }
 
@@ -725,8 +725,8 @@ export function delay(ms) {
  * @param {any[]} b Array B
  * @returns {boolean} True if B is a subset of A, false otherwise.
  */
-export function isSubsetOf(a, b) {
-    return (Array.isArray(a) && Array.isArray(b)) ? b.every(val => a.includes(val)) : false;
+export function isSubsetOf(a: any, b: any) {
+    return (Array.isArray(a) && Array.isArray(b)) ? b.every((val: any) => a.includes(val)) : false;
 }
 
 /**
@@ -736,7 +736,7 @@ export function isSubsetOf(a, b) {
  * @example
  * incrementString('Hello, world! 1'); // 'Hello, world! 2'
  */
-export function incrementString(str) {
+export function incrementString(str: any) {
     // Find the trailing number or it will match the empty string
     const count = str.match(/\d*$/);
 
@@ -752,9 +752,9 @@ export function incrementString(str) {
  * @example
  * stringFormat('Hello, {0}!', 'world'); // 'Hello, world!'
  */
-export function stringFormat(format) {
+export function stringFormat(format: any) {
     const args = Array.prototype.slice.call(arguments, 1);
-    return format.replace(/{(\d+)}/g, function (match, number) {
+    return format.replace(/{(\d+)}/g, function (match: any, number: any) {
         return typeof args[number] != 'undefined'
             ? args[number]
             : match;
@@ -766,12 +766,12 @@ export function stringFormat(format) {
  * @param {Element} element The element to save the caret position of.
  * @returns {{ start: number, end: number }} An object with the start and end offsets of the caret.
  */
-export function saveCaretPosition(element) {
+export function saveCaretPosition(element: any) {
     // Get the current selection
     const selection = window.getSelection();
 
     // If the selection is empty, return null
-    if (selection.rangeCount === 0) {
+    if (!selection || selection.rangeCount === 0) {
         return null;
     }
 
@@ -799,7 +799,7 @@ export function saveCaretPosition(element) {
  * @param {Element} element The element to restore the caret position of.
  * @param {{ start: any; end: any; }} position An object with the start and end offsets of the caret.
  */
-export function restoreCaretPosition(element, position) {
+export function restoreCaretPosition(element: any, position: any) {
     // If the position is null, do nothing
     if (!position) {
         return;
@@ -816,11 +816,12 @@ export function restoreCaretPosition(element, position) {
 
     // Create a new selection object and set the range
     const selection = window.getSelection();
+    if (!selection) return;
     selection.removeAllRanges();
     selection.addRange(range);
 }
 
-export async function resetScrollHeight(element) {
+export async function resetScrollHeight(element: any) {
     $(element).css('height', '0px');
     $(element).css('height', $(element).prop('scrollHeight') + 3 + 'px');
 }
@@ -830,7 +831,7 @@ export async function resetScrollHeight(element) {
  * @param {JQuery<HTMLElement>} element The element to initialize the scroll height of.
  * @returns {Promise<void>} A promise that resolves when the scroll height has been initialized.
  */
-export async function initScrollHeight(element) {
+export async function initScrollHeight(element: any) {
     await delay(1);
 
     const curHeight = Number($(element).css('height').replace('px', ''));
@@ -852,7 +853,7 @@ export async function initScrollHeight(element) {
  * @param {any} b The second element.
  * @returns {number} A negative number if a is before b, a positive number if a is after b, or 0 if they are equal.
  */
-export function sortByCssOrder(a, b) {
+export function sortByCssOrder(a: any, b: any) {
     const _a = Number($(a).css('order'));
     const _b = Number($(b).css('order'));
     return _a - _b;
@@ -864,7 +865,7 @@ export function sortByCssOrder(a, b) {
  * @returns {string} The trimmed string if trimming is enabled; otherwise, returns the original string
  */
 
-export function trimSpaces(input) {
+export function trimSpaces(input: any) {
     if (!input || typeof input !== 'string') {
         return input;
     }
@@ -878,12 +879,12 @@ export function trimSpaces(input) {
  * @example
  * trimToEndSentence('Hello, world! I am from'); // 'Hello, world!'
  */
-export function trimToEndSentence(input) {
+export function trimToEndSentence(input: any) {
     if (!input) {
         return '';
     }
 
-    const isEmoji = x => /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu.test(x);
+    const isEmoji = (x: any) => /(\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu.test(x);
     const punctuation = new Set(['.', '!', '?', '*', '"', ')', '}', '`', ']', '$', '。', '！', '？', '”', '）', '】', '’', '」', '_']); // extend this as you see fit
     let last = -1;
 
@@ -909,7 +910,7 @@ export function trimToEndSentence(input) {
     return characters.slice(0, last + 1).join('').trimEnd();
 }
 
-export function trimToStartSentence(input) {
+export function trimToStartSentence(input: any) {
     if (!input) {
         return '';
     }
@@ -943,7 +944,7 @@ export function trimToStartSentence(input) {
  *
  * @return Formatted string.
  */
-export function humanFileSize(bytes, si = false, dp = 1) {
+export function humanFileSize(bytes: any, si = false, dp = 1) {
     const thresh = si ? 1000 : 1024;
 
     if (Math.abs(bytes) < thresh) {
@@ -970,7 +971,7 @@ export function humanFileSize(bytes, si = false, dp = 1) {
  * @param {number} seconds - Time in seconds
  * @returns {string} Formatted time string
  */
-export function formatTime(seconds) {
+export function formatTime(seconds: any) {
     if (!isFinite(seconds) || isNaN(seconds)) {
         return '0:00';
     }
@@ -989,7 +990,7 @@ export function formatTime(seconds) {
  * countOccurrences('Hello, world!', 'l'); // 3
  * countOccurrences('Hello, world!', 'x'); // 0
  */
-export function countOccurrences(string, character) {
+export function countOccurrences(string: any, character: any) {
     let count = 0;
 
     for (let i = 0; i < string.length; i++) {
@@ -1006,7 +1007,7 @@ export function countOccurrences(string, character) {
  * @param {string} arg String to check
  * @returns {boolean} True if the string is true, false otherwise.
  */
-export function isTrueBoolean(arg) {
+export function isTrueBoolean(arg: any) {
     return ['on', 'true', '1'].includes(arg?.trim()?.toLowerCase());
 }
 
@@ -1015,7 +1016,7 @@ export function isTrueBoolean(arg) {
  * @param {string} arg String to check
  * @returns {boolean} True if the string is false, false otherwise.
  */
-export function isFalseBoolean(arg) {
+export function isFalseBoolean(arg: any) {
     return ['off', 'false', '0'].includes(arg?.trim()?.toLowerCase());
 }
 
@@ -1024,7 +1025,7 @@ export function isFalseBoolean(arg) {
  * @param {string} value String to parse
  * @returns {string[]} The parsed array.
  */
-export function parseStringArray(value) {
+export function parseStringArray(value: any) {
     if (!value || typeof value !== 'string') return [];
 
     try {
@@ -1032,9 +1033,9 @@ export function parseStringArray(value) {
         if (!Array.isArray(parsedValue)) {
             throw new Error('Not an array');
         }
-        return parsedValue.map(x => String(x));
+        return parsedValue.map((x: any) => String(x));
     } catch (e) {
-        return value.split(',').map(x => x.trim()).filter(x => x);
+        return value.split(',').map((x: any) => x.trim()).filter((x: any) => x);
     }
 }
 
@@ -1046,7 +1047,7 @@ export function parseStringArray(value) {
  * isOdd(3); // true
  * isOdd(4); // false
  */
-export function isOdd(number) {
+export function isOdd(number: any) {
     return number % 2 !== 0;
 }
 
@@ -1056,7 +1057,7 @@ export function isOdd(number) {
  * @param {import('moment').Moment} b The second moment object.
  * @returns {number} A negative number if a is before b, a positive number if a is after b, or 0 if they are equal.
  */
-export function sortMoments(a, b) {
+export function sortMoments(a: any, b: any) {
     if (a.isBefore(b)) {
         return 1;
     } else if (a.isAfter(b)) {
@@ -1074,7 +1075,7 @@ const dateCache = new Map();
  * @param {MessageTimestamp} timestamp String or number representing a date.
  * @returns {import('moment').Moment} Moment object
  */
-export function timestampToMoment(timestamp) {
+export function timestampToMoment(timestamp: any) {
     if (dateCache.has(timestamp)) {
         return dateCache.get(timestamp);
     }
@@ -1091,7 +1092,7 @@ export function timestampToMoment(timestamp) {
  * @param {MessageTimestamp} timestamp - The timestamp to parse. It can be a string or a number.
  * @returns {string} - If the timestamp is valid, returns an ISO 8601 string.
  */
-function parseTimestamp(timestamp) {
+function parseTimestamp(timestamp: any) {
     if (!timestamp) return;
 
     // Date object
@@ -1115,7 +1116,7 @@ function parseTimestamp(timestamp) {
     let dtFmt = [];
 
     // meridiem-based format
-    const convertFromMeridiemBased = (_, month, day, year, hour, minute, meridiem) => {
+    const convertFromMeridiemBased = (_: any, month: any, day: any, year: any, hour: any, minute: any, meridiem: any) => {
         const monthNum = moment().month(month).format('MM');
         const hour24 = meridiem.toLowerCase() === 'pm' ? (parseInt(hour, 10) % 12) + 12 : parseInt(hour, 10) % 12;
         return `${year}-${monthNum}-${day.padStart(2, '0')}T${hour24.toString().padStart(2, '0')}:${minute.padStart(2, '0')}:00`;
@@ -1124,7 +1125,7 @@ function parseTimestamp(timestamp) {
     dtFmt.push({ callback: convertFromMeridiemBased, pattern: /(\w+)\s(\d{1,2}),\s(\d{4})\s(\d{1,2}):(\d{1,2})(am|pm)/i });
 
     // ST "humanized" format patterns
-    const convertFromHumanized = (_, year, month, day, hour, min, sec, ms) => {
+    const convertFromHumanized = (_: any, year: any, month: any, day: any, hour: any, min: any, sec: any, ms: any) => {
         ms = typeof ms !== 'undefined' ? `.${ms.padStart(3, '0')}` : '';
         return `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${min.padStart(2, '0')}:${sec.padStart(2, '0')}${ms}Z`;
     };
@@ -1138,7 +1139,7 @@ function parseTimestamp(timestamp) {
     for (const x of dtFmt) {
         let rgxMatch = timestamp.match(x.pattern);
         if (!rgxMatch) continue;
-        return x.callback(...rgxMatch);
+        return (x.callback as any)(...rgxMatch);
     }
 
     return;
@@ -1152,7 +1153,7 @@ function parseTimestamp(timestamp) {
  * @example
  * splitRecursive('Hello, world!', 3); // ['Hel', 'lo,', 'wor', 'ld!']
 */
-export function splitRecursive(input, length, delimiters = ['\n\n', '\n', ' ', '']) {
+export function splitRecursive(input: any, length: any, delimiters = ['\n\n', '\n', ' ', '']) {
     // Invalid length
     if (length <= 0) {
         return [input];
@@ -1161,7 +1162,7 @@ export function splitRecursive(input, length, delimiters = ['\n\n', '\n', ' ', '
     const delim = delimiters[0] ?? '';
     const parts = input.split(delim);
 
-    const flatParts = parts.flatMap(p => {
+    const flatParts = parts.flatMap((p: any) => {
         if (p.length < length) return p;
         return splitRecursive(p, length, delimiters.slice(1));
     });
@@ -1194,7 +1195,7 @@ export function splitRecursive(input, length, delimiters = ['\n\n', '\n', ' ', '
  * @example
  * isDataURL('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...'); // true
  */
-export function isDataURL(str) {
+export function isDataURL(str: any) {
     const regex = /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)*;?)?(base64)?,([a-z0-9!$&',()*+;=\-_%.~:@/?#]+)?$/i;
     return typeof str === 'string' && regex.test(str);
 }
@@ -1204,7 +1205,7 @@ export function isDataURL(str) {
  * @param {string} dataUrl Image data URL
  * @returns {Promise<{ width: number, height: number }>} Image size
  */
-export function getImageSizeFromDataURL(dataUrl) {
+export function getImageSizeFromDataURL(dataUrl: any) {
     const image = new Image();
     image.src = dataUrl;
     return new Promise((resolve, reject) => {
@@ -1222,7 +1223,7 @@ export function getImageSizeFromDataURL(dataUrl) {
  * @param {string} dataUrl Video data URL
  * @returns {Promise<number>} Duration in seconds
  */
-export function getVideoDurationFromDataURL(dataUrl) {
+export function getVideoDurationFromDataURL(dataUrl: any) {
     const video = document.createElement('video');
     video.src = dataUrl;
     return new Promise((resolve, reject) => {
@@ -1243,7 +1244,7 @@ export function getVideoDurationFromDataURL(dataUrl) {
  * @param {string} [type='image/jpeg'] MIME type of the thumbnail
  * @returns {Promise<string>} Promise that resolves to a data URL of the video thumbnail
  */
-export function getVideoThumbnail(videoUrl, maxWidth = null, maxHeight = null, type = 'image/jpeg') {
+export function getVideoThumbnail(videoUrl: any, maxWidth = null, maxHeight = null, type = 'image/jpeg') {
     const video = document.createElement('video');
     video.src = videoUrl;
     return new Promise((resolve, reject) => {
@@ -1255,6 +1256,7 @@ export function getVideoThumbnail(videoUrl, maxWidth = null, maxHeight = null, t
             // Create a canvas to draw the thumbnail
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
+            if (!ctx) return reject(new Error('Failed to get canvas context'));
             const { thumbnailWidth, thumbnailHeight } = calculateThumbnailSize(video.videoWidth, video.videoHeight, maxWidth, maxHeight);
 
             canvas.width = thumbnailWidth;
@@ -1282,7 +1284,7 @@ export function getVideoThumbnail(videoUrl, maxWidth = null, maxHeight = null, t
  * @param {number?} maxHeight Max height (null = no limit)
  * @returns {{ thumbnailWidth: number, thumbnailHeight: number }} Thumbnail size
  */
-export function calculateThumbnailSize(width, height, maxWidth, maxHeight) {
+export function calculateThumbnailSize(width: any, height: any, maxWidth: any, maxHeight: any) {
     // Calculate the thumbnail dimensions while maintaining the aspect ratio
     const aspectRatio = width / height;
     let thumbnailWidth = maxWidth;
@@ -1318,7 +1320,7 @@ export function calculateThumbnailSize(width, height, maxWidth, maxHeight) {
  * @param {string} dataUrl Audio data URL
  * @returns {Promise<number>} Duration in seconds
  */
-export function getAudioDurationFromDataURL(dataUrl) {
+export function getAudioDurationFromDataURL(dataUrl: any) {
     const audio = document.createElement('audio');
     audio.src = dataUrl;
     return new Promise((resolve, reject) => {
@@ -1338,9 +1340,9 @@ export function getAudioDurationFromDataURL(dataUrl) {
  * @param {string?} [options.manualAvatarKey=null] - Manually take the following avatar key, instead of using the chid to determine the name
  * @returns {string?} The filename of the character avatar without extension, or null if the character ID is invalid
  */
-export function getCharaFilename(chid = null, { manualAvatarKey = null } = {}) {
+export function getCharaFilename(chid = null, { manualAvatarKey = null }: any = {}) {
     const context = getContext();
-    const fileName = manualAvatarKey ?? context.characters[chid ?? context.characterId]?.avatar;
+    const fileName = manualAvatarKey ?? context.characters[chid ?? context.characterId as any]?.avatar;
 
     return fileName?.replace(/\.[^/.]+$/, '') ?? null;
 }
@@ -1352,8 +1354,8 @@ export function getCharaFilename(chid = null, { manualAvatarKey = null } = {}) {
  * @example
  * extractAllWords('Hello, world!'); // ['hello', 'world']
  */
-export function extractAllWords(value) {
-    const words = [];
+export function extractAllWords(value: any) {
+    const words: any[] = [];
 
     if (!value) {
         return words;
@@ -1373,7 +1375,7 @@ export function extractAllWords(value) {
  * @example
  * escapeRegex('^Hello$'); // '\\^Hello\\$'
  */
-export function escapeRegex(string) {
+export function escapeRegex(string: any) {
     return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
@@ -1383,7 +1385,7 @@ export function escapeRegex(string) {
  * @returns {RegExp} The regular expression instance.
  * @copyright Originally from: https://github.com/IonicaBizau/regex-parser.js/blob/master/lib/index.js
  */
-export function regexFromString(input) {
+export function regexFromString(input: any) {
     try {
         // Parse input
         var m = input.match(/(\/?)(.+)\1([a-z]*)/i);
@@ -1408,7 +1410,7 @@ export class Stopwatch {
      * Initializes a Stopwatch class.
      * @param {number} interval Update interval in milliseconds. Must be a finite number above zero.
      */
-    constructor(interval) {
+    constructor(interval: any) {
         if (isNaN(interval) || !isFinite(interval) || interval <= 0) {
             console.warn('Invalid interval for Stopwatch, setting to 1');
             interval = 1;
@@ -1423,7 +1425,7 @@ export class Stopwatch {
      * @param {(arg0: any) => any} action Action function
      * @returns Promise<void>
      */
-    async tick(action) {
+    async tick(action: any) {
         const passed = (Date.now() - this.lastAction);
 
         if (passed < this.interval) {
@@ -1452,7 +1454,7 @@ export class RateLimiter {
      *    console.log('Waited 1000ms');
      * });
      */
-    constructor(interval) {
+    constructor(interval: any) {
         this.interval = interval;
         this.lastResolveTime = 0;
         this.pendingResolve = Promise.resolve();
@@ -1463,7 +1465,7 @@ export class RateLimiter {
      * @param {AbortSignal} abortSignal An optional AbortSignal to abort the wait.
      * @returns {Promise<void>} A promise that resolves when the remaining time has elapsed.
      */
-    _waitRemainingTime(abortSignal) {
+    _waitRemainingTime(abortSignal: any) {
         const currentTime = Date.now();
         const elapsedTime = currentTime - this.lastResolveTime;
         const remainingTime = Math.max(0, this.interval - elapsedTime);
@@ -1487,7 +1489,7 @@ export class RateLimiter {
      * @param {AbortSignal} abortSignal An optional AbortSignal to abort the wait.
      * @returns {Promise<void>} A promise that resolves when the next interval has elapsed.
      */
-    async waitForResolve(abortSignal) {
+    async waitForResolve(abortSignal: any) {
         await this.pendingResolve;
         this.pendingResolve = this._waitRemainingTime(abortSignal);
 
@@ -1505,7 +1507,7 @@ export class RateLimiter {
  * @param {string} identifier The identifier to look for in the PNG tEXT data.
  * @returns {object} The extracted JSON object.
  */
-export function extractDataFromPng(data, identifier = 'chara') {
+export function extractDataFromPng(data: any, identifier = 'chara') {
     console.log('Attempting PNG import...');
     let uint8 = new Uint8Array(4);
     let uint32 = new Uint32Array(uint8.buffer);
@@ -1619,7 +1621,7 @@ export function extractDataFromPng(data, identifier = 'chara') {
  * @param {string} fileName - The name of the file to sanitize
  * @returns {Promise<string>} A Promise that resolves to the sanitized filename if successful, or rejects with an error message if unsuccessful
  */
-export async function getSanitizedFilename(fileName) {
+export async function getSanitizedFilename(fileName: any) {
     try {
         const result = await fetch('/api/files/sanitize-filename', {
             method: 'POST',
@@ -1654,7 +1656,7 @@ export async function getSanitizedFilename(fileName) {
  * @returns {Promise<string>} - Resolves to the saved image's path on the server.
  *                              Rejects with an error if the upload fails.
  */
-export async function saveBase64AsFile(base64Data, subFolder, fileName, extension) {
+export async function saveBase64AsFile(base64Data: any, subFolder: any, fileName: any, extension: any) {
     // Prepare the request body
     const requestBody = {
         image: base64Data,
@@ -1685,7 +1687,7 @@ export async function saveBase64AsFile(base64Data, subFolder, fileName, extensio
  * @param {File} file The file to get the extension from
  * @returns {string} The file extension of the given file
  */
-export function getFileExtension(file) {
+export function getFileExtension(file: any) {
     return file.name.substring((file.name.lastIndexOf('.') + file.name.length) % file.name.length + 1).toLowerCase().trim();
 }
 
@@ -1695,7 +1697,7 @@ export function getFileExtension(file) {
  * @param {string} text The UTF-8 string
  * @returns {string} The Base64-encoded string
  */
-export function convertTextToBase64(text) {
+export function convertTextToBase64(text: any) {
     const encoder = new TextEncoder();
     const utf8Bytes = encoder.encode(text);
     /**
@@ -1703,7 +1705,7 @@ export function convertTextToBase64(text) {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array/toBase64|MDN Reference}
      */
     if ('toBase64' in Uint8Array.prototype) {
-        return utf8Bytes.toBase64();
+        return (utf8Bytes as any).toBase64();
     }
     // Creates binary string, where each character's code point directly matches the byte value (0-255).
     let binaryString = '';
@@ -1721,7 +1723,7 @@ export function convertTextToBase64(text) {
  * @param {string} type - The type of file to load: "css" or "js".
  * @returns {Promise} - Resolves when the file has loaded, rejects if there's an error or invalid type.
  */
-export function loadFileToDocument(url, type) {
+export function loadFileToDocument(url: any, type: any) {
     return new Promise((resolve, reject) => {
         let element;
 
@@ -1784,7 +1786,7 @@ export async function promptForAvatarFile() {
  * @param {string} input - "prompt" to open file picker, base64 data URL, or local file path
  * @returns {Promise<string|null>} Base64 data URL or null if invalid/cancelled
  */
-export async function resolveAvatarData(input) {
+export async function resolveAvatarData(input: any) {
     if (!input || typeof input !== 'string') {
         return null;
     }
@@ -1864,7 +1866,7 @@ export const supportedImageMimeTypes = Object.freeze([
  * @param {File} file Input file
  * @returns {Promise<File>} A promise that resolves to the supported file.
  */
-export async function ensureImageFormatSupported(file) {
+export async function ensureImageFormatSupported(file: any) {
     if (supportedImageMimeTypes.includes(file.type) || !file.type.startsWith('image/')) {
         return file;
     }
@@ -1878,7 +1880,7 @@ export async function ensureImageFormatSupported(file) {
  * @param {string} type Target file type
  * @returns {Promise<File>} A promise that resolves to the converted file.
  */
-export async function convertImageFile(inputFile, type = 'image/png') {
+export async function convertImageFile(inputFile: any, type = 'image/png') {
     const base64 = await getBase64Async(inputFile);
     const thumbnail = await createThumbnail(base64, null, null, type) as string;
     const blob = await fetch(thumbnail).then(res => res.blob());
@@ -1894,7 +1896,7 @@ export async function convertImageFile(inputFile, type = 'image/png') {
  * @param {string} [type='image/jpeg'] The type of the thumbnail.
  * @returns {Promise<string>} A promise that resolves to the thumbnail data URL.
  */
-export function createThumbnail(dataUrl, maxWidth = null, maxHeight = null, type = 'image/jpeg') {
+export function createThumbnail(dataUrl: any, maxWidth = null, maxHeight = null, type = 'image/jpeg') {
     // Someone might pass in a base64 encoded string without the data URL prefix
     if (!dataUrl.includes('data:')) {
         dataUrl = `data:image/jpeg;base64,${dataUrl}`;
@@ -1906,6 +1908,7 @@ export function createThumbnail(dataUrl, maxWidth = null, maxHeight = null, type
         img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
+            if (!ctx) return reject(new Error('Failed to get canvas context'));
             const { thumbnailWidth, thumbnailHeight } = calculateThumbnailSize(img.width, img.height, maxWidth, maxHeight);
 
             // Set the canvas dimensions and draw the resized image
@@ -1937,7 +1940,7 @@ export function createThumbnail(dataUrl, maxWidth = null, maxHeight = null, type
  * @param {boolean} [options.rejectOnTimeout=true] Whether to reject the promise on timeout or resolve it.
  * @returns {Promise<void>} A promise that resolves when the condition is true.
  */
-export async function waitUntilCondition(condition, timeout = 1000, interval = 100, options = {}) {
+export async function waitUntilCondition(condition: any, timeout = 1000, interval = 100, options: any = {}) {
     const { rejectOnTimeout = true } = options as any;
 
     return new Promise<void>((resolve, reject) => {
@@ -1979,11 +1982,11 @@ export function uuidv4() {
  * @param {string} s String to process
  * @returns {string} String with collapsed spaces
  */
-export function collapseSpaces(s) {
+export function collapseSpaces(s: any) {
     return s.replace(/\s+/g, ' ').trim();
 }
 
-function postProcessText(text, collapse = true) {
+function postProcessText(text: any, collapse = true) {
     // Remove carriage returns
     text = text.replace(/\r/g, '');
     // Replace tabs with spaces
@@ -1994,12 +1997,12 @@ function postProcessText(text, collapse = true) {
     if (collapse) {
         text = collapseNewlines(text);
         // Trim leading and trailing whitespace, and remove empty lines
-        text = text.split('\n').map(l => l.trim()).filter(Boolean).join('\n');
+        text = text.split('\n').map((l: any) => l.trim()).filter(Boolean).join('\n');
     } else {
         // Replace more than 4 newlines with 4 newlines
         text = text.replace(/\n{4,}/g, '\n\n\n\n');
         // Trim lines that contain nothing but whitespace
-        text = text.split('\n').map(l => /^\s+$/.test(l) ? '' : l).join('\n');
+        text = text.split('\n').map((l: any) => /^\s+$/.test(l) ? '' : l).join('\n');
     }
     // Collapse multiple spaces into one (except for newlines)
     text = text.replace(/ {2,}/g, ' ');
@@ -2014,7 +2017,7 @@ function postProcessText(text, collapse = true) {
  * @param {string} [textSelector='body'] The fallback selector for the text to parse.
  * @returns {Promise<string>} A promise that resolves to the parsed text.
  */
-export async function getReadableText(document, textSelector = 'body') {
+export async function getReadableText(document: any, textSelector = 'body') {
     if (isProbablyReaderable(document)) {
         const parser = new Readability(document);
         const article = parser.parse() as any;
@@ -2032,7 +2035,7 @@ export async function getReadableText(document, textSelector = 'body') {
  * @param {Blob} blob PDF file blob
  * @returns {Promise<string>} A promise that resolves to the parsed text.
  */
-export async function extractTextFromPDF(blob) {
+export async function extractTextFromPDF(blob: any) {
     if (!('pdfjsLib' in window)) {
         await import('../lib/pdf.min.mjs');
         await import('../lib/pdf.worker.min.mjs');
@@ -2044,7 +2047,7 @@ export async function extractTextFromPDF(blob) {
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
-        const text = textContent.items.map(item => item.str).join(' ');
+        const text = textContent.items.map((item: any) => item.str).join(' ');
         pages.push(text);
     }
     return postProcessText(pages.join('\n'));
@@ -2055,7 +2058,7 @@ export async function extractTextFromPDF(blob) {
  * @param {Blob} blob HTML content blob
  * @returns {Promise<string>} A promise that resolves to the parsed text.
  */
-export async function extractTextFromHTML(blob, textSelector = 'body') {
+export async function extractTextFromHTML(blob: any, textSelector = 'body') {
     const html = await blob.text();
     const domParser = new DOMParser();
     const document = domParser.parseFromString(DOMPurify.sanitize(html), 'text/html');
@@ -2067,13 +2070,13 @@ export async function extractTextFromHTML(blob, textSelector = 'body') {
  * @param {Blob} blob Markdown content blob
  * @returns {Promise<string>} A promise that resolves to the parsed text.
  */
-export async function extractTextFromMarkdown(blob) {
+export async function extractTextFromMarkdown(blob: any) {
     const markdown = await blob.text();
     const text = postProcessText(markdown, false);
     return text;
 }
 
-export async function extractTextFromEpub(blob) {
+export async function extractTextFromEpub(blob: any) {
     if (!('ePub' in window)) {
         await import('../lib/jszip.min.js');
         await import('../lib/epub.min.js');
@@ -2081,9 +2084,9 @@ export async function extractTextFromEpub(blob) {
 
     const book = ePub(blob);
     await book.ready;
-    const sectionPromises = [];
+    const sectionPromises: any[] = [];
 
-    book.spine.each((section) => {
+    book.spine.each((section: any) => {
         const sectionPromise = (async () => {
             const chapter = await book.load(section.href);
             if (!(chapter instanceof Document) || !chapter.body?.textContent) {
@@ -2096,7 +2099,7 @@ export async function extractTextFromEpub(blob) {
     });
 
     const content = await Promise.all(sectionPromises);
-    const text = content.filter(text => text);
+    const text = content.filter((text: any) => text);
     return postProcessText(text.join('\n'), false);
 }
 
@@ -2105,7 +2108,7 @@ export async function extractTextFromEpub(blob) {
  * @param {File} blob File to extract text from
  * @returns {Promise<string>} A promise that resolves to the extracted text.
  */
-export async function extractTextFromOffice(blob) {
+export async function extractTextFromOffice(blob: any) {
     async function checkPluginAvailability() {
         try {
             const result = await fetch('/api/plugins/office/probe', {
@@ -2148,7 +2151,7 @@ export async function extractTextFromOffice(blob) {
  * @param {any} value Value to set
  * @returns {void}
  */
-export function setValueByPath(obj, path, value) {
+export function setValueByPath(obj: any, path: any, value: any) {
     const keyParts = path.split('.');
     let currentObject = obj;
 
@@ -2170,7 +2173,7 @@ export function setValueByPath(obj, path, value) {
  * @param {object} obj Object to delete from
  * @param {string} path Dot-separated key path (e.g. "data.extensions.myKey")
  */
-export function deleteValueByPath(obj, path) {
+export function deleteValueByPath(obj: any, path: any) {
     const keyParts = path.split('.');
     let current = obj;
     for (let i = 0; i < keyParts.length - 1; i++) {
@@ -2187,7 +2190,7 @@ export function deleteValueByPath(obj, path) {
  * @param {JQuery<HTMLElement>} element - The element to flash
  * @param {number} timespan - A number in milliseconds how the flash should last (default is 2000ms.  Multiples of 1000ms work best, as they end with the flash animation being at 100% opacity)
  */
-export function flashHighlight(element, timespan = 2000) {
+export function flashHighlight(element: any, timespan = 2000) {
     const flashDuration = 2000; // Duration of a single flash cycle in milliseconds
 
     element.addClass('flash animated');
@@ -2214,8 +2217,8 @@ export function flashHighlight(element, timespan = 2000) {
  * @param {HTMLElement} control - The control element to check for animation
  * @returns {boolean} Whether the control has an animation applied
  */
-export function hasAnimation(control) {
-    const animatioName = getComputedStyle(control, null)['animation-name'];
+export function hasAnimation(control: any) {
+    const animatioName = (getComputedStyle(control, null) as any)['animation-name'];
     return animatioName != 'none';
 }
 
@@ -2226,7 +2229,7 @@ export function hasAnimation(control) {
  * @param {(control:*?) => void} callback - The callback function to be executed when the animation ends
  * @param {number} [timeout=500] - The timeout in milliseconds to wait for the animation to end before executing the callback
  */
-export function runAfterAnimation(control, callback, timeout = 500) {
+export function runAfterAnimation(control: any, callback: any, timeout = 500) {
     if (hasAnimation(control)) {
         Promise.race([
             new Promise((r) => setTimeout(r, timeout)), // Fallback timeout
@@ -2256,8 +2259,8 @@ export { compareIgnoreCaseAndAccents, sortIgnoreCaseAndAccents };
  * @param {string} searchTerm - The substring to search for in the text
  * @returns {boolean} true if the searchTerm is found within the text, otherwise returns false
  */
-export function includesIgnoreCaseAndAccents(text, searchTerm) {
-    return compareIgnoreCaseAndAccents(text, searchTerm, (a, b) => a?.includes(b) === true);
+export function includesIgnoreCaseAndAccents(text: any, searchTerm: any) {
+    return compareIgnoreCaseAndAccents(text, searchTerm, (a: any, b: any) => a?.includes(b) === true);
 }
 
 /**
@@ -2268,8 +2271,8 @@ export function includesIgnoreCaseAndAccents(text, searchTerm) {
  * @param {string} b - The second string to compare
  * @returns {boolean} true if the strings are equal, otherwise returns false
  */
-export function equalsIgnoreCaseAndAccents(a, b) {
-    return compareIgnoreCaseAndAccents(a, b, (a, b) => a === b);
+export function equalsIgnoreCaseAndAccents(a: any, b: any) {
+    return compareIgnoreCaseAndAccents(a, b, (a: any, b: any) => a === b);
 }
 
 /**
@@ -2285,7 +2288,7 @@ export function equalsIgnoreCaseAndAccents(a, b) {
  * @param {string} option - The option
  * @returns {string} A hashed version of that option
  */
-export function getSelect2OptionId(option) {
+export function getSelect2OptionId(option: any) {
     return String(getStringHash(option));
 }
 
@@ -2298,15 +2301,15 @@ export function getSelect2OptionId(option) {
  * @param {boolean} [options.select=false] - Whether the options should be selected right away
  * @param {object} [options.changeEventArgs=null] - Optional event args being passed into the "change" event when its triggered because a new options is selected
  */
-export function select2ModifyOptions(element, items, { select = false, changeEventArgs = null } = {}) {
+export function select2ModifyOptions(element: any, items: any, { select = false, changeEventArgs = null }: any = {}) {
     if (!items.length) return;
     /** @type {Select2Option[]} */
-    const dataItems = items.map(x => typeof x === 'string' ? { id: getSelect2OptionId(x), text: x } : x);
+    const dataItems = items.map((x: any) => typeof x === 'string' ? { id: getSelect2OptionId(x), text: x } : x);
 
-    const optionsToSelect = [];
-    const newOptions = [];
+    const optionsToSelect: any[] = [];
+    const newOptions: any[] = [];
 
-    dataItems.forEach(item => {
+    dataItems.forEach((item: any) => {
         // Set the value, creating a new option if necessary
         if (element.find('option[value=\'' + item.id + '\']').length) {
             if (select) optionsToSelect.push(item.id);
@@ -2330,12 +2333,12 @@ export function select2ModifyOptions(element, items, { select = false, changeEve
  * @param {function():Select2Option[]} dataProvider - The provider/function to retrieve the data - can be as simple as "() => myData" for arrays
  * @return {{transport: (params, success, failure) => any}} The ajax object with the transport function to use on the select2 ajax property
  */
-export function dynamicSelect2DataViaAjax(dataProvider) {
-    function dynamicSelect2DataTransport(params, success, failure) {
+export function dynamicSelect2DataViaAjax(dataProvider: any) {
+    function dynamicSelect2DataTransport(params: any, success: any, failure: any) {
         var items = dataProvider();
         // fitering if params.data.q available
         if (params.data && params.data.q) {
-            items = items.filter(function (item) {
+            items = items.filter(function (item: any) {
                 return includesIgnoreCaseAndAccents(item.text, params.data.q);
             });
         }
@@ -2356,7 +2359,7 @@ export function dynamicSelect2DataViaAjax(dataProvider) {
  * @param {JQuery<HTMLElement>|HTMLElement} element - The element to check
  * @returns {boolean} Whether this is a choice element
  */
-export function isSelect2ChoiceElement(element) {
+export function isSelect2ChoiceElement(element: any) {
     const $element = $(element);
     return ($element.hasClass('select2-selection__choice__display') || $element.parents('.select2-selection__choice__display').length > 0);
 }
@@ -2371,14 +2374,14 @@ export function isSelect2ChoiceElement(element) {
  * @param {boolean} [options.closeDrawer=false] - Whether the drawer should be closed and focus removed after the choice item was clicked
  * @param {boolean} [options.openDrawer=false] - Whether the drawer should be opened, even if this click would normally close it
  */
-export function select2ChoiceClickSubscribe(control, action, { buttonStyle = false, closeDrawer = false, openDrawer = false } = {}) {
+export function select2ChoiceClickSubscribe(control: any, action: any, { buttonStyle = false, closeDrawer = false, openDrawer = false }: any = {}) {
     // Add class for styling (hover color, changed cursor, etc)
     control.addClass('select2_choice_clickable');
     if (buttonStyle) control.addClass('select2_choice_clickable_buttonstyle');
 
     // Get the real container below and create a click handler on that one
     const select2Container = control.next('span.select2-container');
-    select2Container.on('click', function (event) {
+    select2Container.on('click', function (event: any) {
         const isChoice = isSelect2ChoiceElement(event.target);
         if (isChoice) {
             event.preventDefault();
@@ -2404,11 +2407,11 @@ export function select2ChoiceClickSubscribe(control, action, { buttonStyle = fal
  * @param {string} regexStr - The javascript compatible regex string
  * @returns {string} The html representation of the highlighted regex
  */
-export function highlightRegex(regexStr) {
+export function highlightRegex(regexStr: any) {
     // Function to escape special characters for safety or readability
-    const escape = (str) => str.replace(/[&<>"'\x01]/g, match => ({
+    const escape = (str: any) => str.replace(/[&<>"'\x01]/g, (match: any) => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;', '\x01': '\\x01',
-    })[match]);
+    } as any)[match]);
 
     // Replace special characters with their escaped forms
     regexStr = escape(regexStr);
@@ -2439,8 +2442,8 @@ export function highlightRegex(regexStr) {
     const patterns = getPatterns();
 
     // Function to replace each pattern with a highlighted HTML span
-    const wrapPattern = (pattern, className) => {
-        regexStr = regexStr.replace(pattern, match => `<span class="${className}">${match}</span>`);
+    const wrapPattern = (pattern: any, className: any) => {
+        regexStr = regexStr.replace(pattern, (match: any) => `<span class="${className}">${match}</span>`);
     };
 
     // Apply highlighting patterns
@@ -2467,8 +2470,8 @@ export function highlightRegex(regexStr) {
  * @param {(existingName:string)=>void} [options.deleteAction=null] - Optional action to execute wen deleting an existing data object on overwrite
  * @returns {Promise<boolean>} True if the user confirmed the overwrite or there is no overwrite needed, false otherwise
  */
-export async function checkOverwriteExistingData(type, existingNames, name, { interactive = false, actionName = 'Overwrite', deleteAction = null } = {}) {
-    const existing = existingNames.find(x => equalsIgnoreCaseAndAccents(x, name));
+export async function checkOverwriteExistingData(type: any, existingNames: any, name: any, { interactive = false, actionName = 'Overwrite', deleteAction = null }: any = {}) {
+    const existing = existingNames.find((x: any) => equalsIgnoreCaseAndAccents(x, name));
     if (!existing) {
         return true;
     }
@@ -2497,7 +2500,7 @@ export async function checkOverwriteExistingData(type, existingNames, name, { in
  * @param {(n: number) => string} [numberFormatter=(n) => ` #${n}`] - The function used to format the counter
  * @returns {string} The generated free name
  */
-export function getFreeName(name, list, numberFormatter = (n) => ` #${n}`) {
+export function getFreeName(name: any, list: any, numberFormatter = (n: any) => ` #${n}`) {
     if (!list.includes(name)) {
         return name;
     }
@@ -2516,7 +2519,7 @@ export function getFreeName(name, list, numberFormatter = (n) => ` #${n}`) {
  * @param {HTMLElement} drawer - The drawer element to toggle
  * @param {boolean} [expand=true] - Whether to expand or collapse the drawer
  */
-export function toggleDrawer(drawer, expand = true) {
+export function toggleDrawer(drawer: any, expand = true) {
     /** @type {HTMLElement} */
     const icon = drawer.querySelector(':scope > .inline-drawer-header .inline-drawer-icon');
     /** @type {HTMLElement} */
@@ -2554,7 +2557,7 @@ export function toggleDrawer(drawer, expand = true) {
  * @param {string} name - The name of the dataset property
  * @param {string|null} value - The value to set - If null, the dataset property will be removed
  */
-export function setDatasetProperty(element, name, value) {
+export function setDatasetProperty(element: any, name: any, value: any) {
     if (value === null) {
         delete element.dataset[name];
     } else {
@@ -2562,15 +2565,16 @@ export function setDatasetProperty(element, name, value) {
     }
 }
 
-export async function fetchFaFile(name) {
+export async function fetchFaFile(name: any) {
     const style = document.createElement('style');
     style.innerHTML = await (await fetch(`/css/${name}`)).text();
     document.head.append(style);
     const sheet = style.sheet;
     style.remove();
+    if (!sheet) return [];
     return [...sheet.cssRules]
-        .filter(rule => (rule instanceof CSSStyleRule && rule.style?.content))
-        .map(rule => rule['selectorText'].split(/,\s*/).map(selector => selector.split('::').shift().slice(1)))
+        .filter((rule: any) => (rule instanceof CSSStyleRule && rule.style?.content))
+        .map((rule: any) => rule['selectorText'].split(/,\s*/).map((selector: any) => selector.split('::').shift().slice(1)))
     ;
 }
 
@@ -2598,12 +2602,12 @@ export async function showFontAwesomePicker(customList = null) {
                 qry.placeholder = 'Filter icons';
                 qry.autofocus = true;
                 const qryDebounced = debounce(() => {
-                    const result = faList.filter(fa => fa.find(className => className.includes(qry.value.toLowerCase())));
+                    const result = faList.filter((fa: any) => fa.find((className: any) => className.includes(qry.value.toLowerCase())));
                     for (const fa of faList) {
                         if (!result.includes(fa)) {
-                            fas[fa].classList.add('hidden');
+                            (fas as any)[fa].classList.add('hidden');
                         } else {
-                            fas[fa].classList.remove('hidden');
+                            (fas as any)[fa].classList.remove('hidden');
                         }
                     }
                 });
@@ -2616,11 +2620,11 @@ export async function showFontAwesomePicker(customList = null) {
             grid.classList.add('faPicker');
             for (const fa of faList) {
                 const opt = document.createElement('div'); {
-                    fas[fa] = opt;
+                    (fas as any)[fa] = opt;
                     opt.classList.add('menu_button');
                     opt.classList.add('fa-solid');
                     opt.classList.add(fa[0]);
-                    opt.title = fa.map(it => it.slice(3)).join(', ');
+                    opt.title = fa.map((it: any) => it.slice(3)).join(', ');
                     opt.dataset.result = POPUP_RESULT.AFFIRMATIVE.toString();
                     opt.addEventListener('click', () => value = fa[0]);
                     grid.append(opt);
@@ -2629,8 +2633,8 @@ export async function showFontAwesomePicker(customList = null) {
             dom.append(grid);
         }
     }
-    let value = '';
-    const picker = new Popup(dom, POPUP_TYPE.TEXT, null, { allowVerticalScrolling: true, okButton: 'No Icon', cancelButton: 'Cancel' });
+    let value: any = '';
+    const picker = new Popup(dom, POPUP_TYPE.TEXT, null as any, { allowVerticalScrolling: true, okButton: 'No Icon' as any, cancelButton: 'Cancel' as any });
     await picker.show();
     if (picker.result == POPUP_RESULT.AFFIRMATIVE) {
         return value;
@@ -2651,27 +2655,27 @@ export async function showFontAwesomePicker(customList = null) {
  * @property {string} avatar - The avatar of the persona
  * @property {string} name - The name of the persona
  */
-export function findPersona({ name = null, allowAvatar = true, insensitive = true, preferCurrentPersona = true, quiet = false } = {}) {
+export function findPersona({ name = null, allowAvatar = true, insensitive = true, preferCurrentPersona = true, quiet = false }: any = {}) {
     /** @type {PersonaViewModel[]} */
     const personas = Object.entries(power_user.personas).map(([avatar, name]) => ({ avatar, name }));
-    const matches = (/** @type {PersonaViewModel} */ persona) => !name || (allowAvatar && persona.avatar === name) || (insensitive ? equalsIgnoreCaseAndAccents(persona.name, name) : persona.name === name);
+    const matches = (/** @type {PersonaViewModel} */ persona: any) => !name || (allowAvatar && persona.avatar === name) || (insensitive ? equalsIgnoreCaseAndAccents(persona.name, name) : persona.name === name);
 
     // If we have a current persona and prefer it, return that if it matches
-    const currentPersona = personas.find(a => a.avatar === user_avatar);
+    const currentPersona = personas.find((a: any) => a.avatar === user_avatar);
     if (preferCurrentPersona && currentPersona && matches(currentPersona)) {
         return currentPersona;
     }
 
     // If allowAvatar is true, search by avatar first
     if (allowAvatar && name) {
-        const personaByAvatar = personas.find(a => a.avatar === name);
+        const personaByAvatar = personas.find((a: any) => a.avatar === name);
         if (personaByAvatar && matches(personaByAvatar)) {
             return personaByAvatar;
         }
     }
 
     // Search for matching personas by name
-    const matchingPersonas = personas.filter(a => matches(a));
+    const matchingPersonas = personas.filter((a: any) => matches(a));
     if (matchingPersonas.length > 1) {
         if (!quiet) toastr.warning(t`Multiple personas found for given conditions.`);
         else console.warn(t`Multiple personas found for given conditions. Returning the first match.`);
@@ -2691,22 +2695,22 @@ export function findPersona({ name = null, allowAvatar = true, insensitive = tru
  * @param {boolean} [options.quiet=false] - Whether to suppress warnings
  * @returns {Character?} - The found character or null if not found
  */
-export function findChar({ name = null, allowAvatar = true, insensitive = true, filteredByTags = null, preferCurrentChar = true, quiet = false } = {}) {
-    const matches = (char) => !name || (allowAvatar && char.avatar === name) || (insensitive ? equalsIgnoreCaseAndAccents(char.name, name) : char.name === name);
+export function findChar({ name = null, allowAvatar = true, insensitive = true, filteredByTags = null, preferCurrentChar = true, quiet = false }: any = {}) {
+    const matches = (char: any) => !name || (allowAvatar && char.avatar === name) || (insensitive ? equalsIgnoreCaseAndAccents(char.name, name) : char.name === name);
 
     // Filter characters by tags if provided
-    let filteredCharacters = characters;
+    let filteredCharacters: any[] = characters;
     if (filteredByTags) {
-        filteredCharacters = characters.filter(char => {
+        filteredCharacters = characters.filter((char: any) => {
             const charTags = getTagsList(char.avatar, false);
-            return filteredByTags.every(tagName => charTags.some(x => x.name == tagName));
+            return (filteredByTags as any[]).every((tagName: any) => charTags.some((x: any) => x.name == tagName));
         });
     }
 
     // Get the current character(s)
     /** @type {any[]} */
-    const currentChars = selected_group ? groups.find(group => group.id === selected_group)?.members.map(member => filteredCharacters.find(char => char.avatar === member))
-        : filteredCharacters.filter(char => characters[this_chid]?.avatar === char.avatar);
+    const currentChars: any[] = selected_group ? (groups as any[]).find((group: any) => group.id === selected_group)?.members.map((member: any) => filteredCharacters.find((char: any) => char.avatar === member))
+        : filteredCharacters.filter((char: any) => characters[this_chid as any]?.avatar === char.avatar);
 
     // If we have a current char and prefer it, return that if it matches
     if (preferCurrentChar) {
@@ -2722,7 +2726,7 @@ export function findChar({ name = null, allowAvatar = true, insensitive = true, 
 
     // If allowAvatar is true, search by avatar first
     if (allowAvatar && name) {
-        const characterByAvatar = filteredCharacters.find(char => char.avatar === name || (!name.endsWith('.png') && char.avatar === `${name}.png`));
+        const characterByAvatar = filteredCharacters.find((char: any) => char.avatar === name || (!name.endsWith('.png') && char.avatar === `${name}.png`));
         if (characterByAvatar) {
             return characterByAvatar;
         }
@@ -2744,9 +2748,9 @@ export function findChar({ name = null, allowAvatar = true, insensitive = true, 
  * @throws {Error} If the character is not found
  * @returns {number} The index of the character in the characters array
  */
-export function getCharIndex(char) {
+export function getCharIndex(char: any) {
     if (!char) throw new Error('Character is undefined');
-    const index = characters.findIndex(c => c.avatar === char.avatar);
+    const index = characters.findIndex((c: any) => c.avatar === char.avatar);
     if (index === -1) throw new Error(`Character not found: ${char.avatar}`);
     return index;
 }
@@ -2757,7 +2761,7 @@ export function getCharIndex(char) {
  * @param {any[]} b - The second array
  * @returns {boolean} True if the arrays are equal, false otherwise
  */
-export function arraysEqual(a, b) {
+export function arraysEqual(a: any, b: any) {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length !== b.length) return false;
@@ -2774,7 +2778,7 @@ export function arraysEqual(a, b) {
  * @param {string | HTMLElement?} content - The message to display inside the information block (supports HTML) or an HTML element
  * @param {'hint' | 'info' | 'warning' | 'error'} [type='info'] - The type of message, which determines the styling of the information block
  */
-export function setInfoBlock(target, content, type = 'info') {
+export function setInfoBlock(target: any, content: any, type = 'info') {
     if (!content) {
         clearInfoBlock(target);
         return;
@@ -2796,7 +2800,7 @@ export function setInfoBlock(target, content, type = 'info') {
  * Clears the content and style of an information block.
  * @param {string | HTMLElement} target - The CSS selector or the HTML element of the information block
  */
-export function clearInfoBlock(target) {
+export function clearInfoBlock(target: any) {
     const infoBlock = typeof target === 'string' ? document.querySelector(target) : target;
     if (infoBlock && infoBlock.classList.contains('info-block')) {
         infoBlock.className = '';
@@ -2810,7 +2814,7 @@ export function clearInfoBlock(target) {
  * @param {import('select2').OptGroupData|import('select2').OptionData} data
  * @return {import('select2').OptGroupData|import('select2').OptionData|null}
  */
-export function textValueMatcher(params, data) {
+export function textValueMatcher(params: any, data: any) {
     // Always return the object if there is nothing to compare
     if (params.term == null || params.term.trim() === '') {
         return data;
@@ -2843,8 +2847,8 @@ export function textValueMatcher(params, data) {
         return textValueMatcher(params, match);
     }
 
-    const textMatch = compareIgnoreCaseAndAccents(data.text, params.term, (a, b) => a.indexOf(b) > -1);
-    const valueMatch = data.element instanceof HTMLOptionElement && compareIgnoreCaseAndAccents(data.element.value, params.term, (a, b) => a.indexOf(b) > -1);
+    const textMatch = compareIgnoreCaseAndAccents(data.text, params.term, (a: any, b: any) => a.indexOf(b) > -1);
+    const valueMatch = data.element instanceof HTMLOptionElement && compareIgnoreCaseAndAccents(data.element.value, params.term, (a: any, b: any) => a.indexOf(b) > -1);
 
     if (textMatch || valueMatch) {
         return data;
@@ -2860,7 +2864,7 @@ export function textValueMatcher(params, data) {
  * @param {string} minVersion The target version number to test against
  * @returns {boolean} True if srcVersion >= minVersion, false if not
  */
-export function versionCompare(srcVersion, minVersion) {
+export function versionCompare(srcVersion: any, minVersion: any) {
     return (srcVersion || '0.0.0').localeCompare(minVersion, undefined, { numeric: true, sensitivity: 'base' }) > -1;
 }
 
@@ -2872,16 +2876,16 @@ export function versionCompare(srcVersion, minVersion) {
  * @param {{[unnamedArgName: string]: string}} [valueObj=null] - The user-built object containing context for the warning (e.g., { uid: uid }).
  * @returns {void}
  */
-export function logSlashCommandWarn(message, args, valueObj = null) {
+export function logSlashCommandWarn(message: any, args: any, valueObj: any = null) {
     if (valueObj !== null && valueObj !== undefined) {
         console.warn(message, valueObj, stripInternalArgs(args));
     } else {
         console.warn(message, stripInternalArgs(args));
     }
     return;
-    function stripInternalArgs(args) {
+    function stripInternalArgs(args: any) {
         // strip all args/properties that start with an underscore
-        const result = {};
+        const result: any = {};
         for (const [key, value] of Object.entries(args)) {
             if (!key.startsWith('_')) {
                 result[key] = value;
@@ -2900,7 +2904,7 @@ export function logSlashCommandWarn(message, args, valueObj = null) {
  * @param {number} [params.visibilityThreshold] Scroll position (px) to show the button (default: 300)
  * @returns {() => void} Cleanup function to remove event listeners
  */
-export function setupScrollToTop({ scrollContainerId, buttonId, drawerId, visibilityThreshold = 300 }) {
+export function setupScrollToTop({ scrollContainerId, buttonId, drawerId, visibilityThreshold = 300 }: any) {
     const scrollContainer = document.getElementById(scrollContainerId);
     const btn = document.getElementById(buttonId);
     const drawer = document.getElementById(drawerId);
@@ -2922,7 +2926,7 @@ export function setupScrollToTop({ scrollContainerId, buttonId, drawerId, visibi
     scrollContainer.addEventListener('scroll', onScroll, { passive: true });
 
     // Scroll to top on click (button semantics provide keyboard activation natively)
-    const onActivate = (/** @type {MouseEvent} */ e) => {
+    const onActivate = (/** @type {MouseEvent} */ e: any) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -2931,7 +2935,7 @@ export function setupScrollToTop({ scrollContainerId, buttonId, drawerId, visibi
     };
     btn.addEventListener('click', onActivate);
 
-    let frameHandle = null;
+    let frameHandle: any = null;
     const resizeObserver = new ResizeObserver(() => {
         if (frameHandle !== null) {
             cancelAnimationFrame(frameHandle);
@@ -2960,7 +2964,7 @@ export function setupScrollToTop({ scrollContainerId, buttonId, drawerId, visibi
  * @param {string|null} [options.preserveFileName=null] Optional file name to use for the imported content.
  * @returns {Promise<void>} A promise that resolves when the import is complete.
  */
-export async function importFromExternalUrl(url, { preserveFileName = null } = {}) {
+export async function importFromExternalUrl(url: any, { preserveFileName = null }: any = {}) {
     let request;
 
     if (isValidUrl(url)) {
@@ -2987,7 +2991,7 @@ export async function importFromExternalUrl(url, { preserveFileName = null } = {
 
     const data = await request.blob();
     const customContentType = request.headers.get('X-Custom-Content-Type');
-    let fileName = request.headers.get('Content-Disposition').split('filename=')[1].replace(/"/g, '');
+    let fileName = request.headers.get('Content-Disposition')!.split('filename=')[1].replace(/"/g, '');
     const file = new File([data], fileName, { type: data.type });
 
     const extraData = new Map();
@@ -3018,7 +3022,7 @@ export async function importFromExternalUrl(url, { preserveFileName = null } = {
  * @param {number} max The maximum for value.
  * @returns {number} The clamped value.
  */
-export const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+export const clamp = (value: any, min: any, max: any) => Math.min(Math.max(value, min), max);
 
 /**
  * Shakes the targetElement.
@@ -3027,10 +3031,10 @@ export const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
  * @param {number} duration Duration in milliseconds.
  * @param {string} easing CSS easing function.
  */
-export function shakeElement(targetElement, distance = 10, duration = 100, easing = 'ease-in-out') {
+export function shakeElement(targetElement: any, distance = 10, duration = 100, easing = 'ease-in-out') {
     // Don't call the JQuery animation.
     // https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
-    if (targetElement instanceof jQuery) targetElement = targetElement[0];
+    if (targetElement instanceof jQuery) targetElement = (targetElement as any)[0];
 
     return targetElement.animate([
         { transform: 'translateX(0)' },
@@ -3046,7 +3050,7 @@ export function shakeElement(targetElement, distance = 10, duration = 100, easin
  * @param {string?} [errorMessage='']
  * @returns {Promise<never>} A promise that rejects.
  */
-export function createTimeout(ms, errorMessage = '') {
+export function createTimeout(ms: any, errorMessage = '') {
     errorMessage ??= `Operation timed out after ${ms}ms.`;
     return new Promise((_, reject) => {
         setTimeout(() => reject(new Error(errorMessage)), ms);
@@ -3060,12 +3064,12 @@ export function createTimeout(ms, errorMessage = '') {
  * @param {(e: TouchEvent) => void} callback Callback to invoke on long-press, `this` is the matched element
  * @param {number} [delay=500] Long-press duration in ms
  */
-export function addLongPressEvent(selector, callback, delay = 500) {
-    let timer = null;
+export function addLongPressEvent(selector: any, callback: any, delay = 500) {
+    let timer: any = null;
     let fired = false;
-    let target = null;
+    let target: any = null;
 
-    document.addEventListener('touchstart', function (event) {
+    document.addEventListener('touchstart', function (event: any) {
         if (!(event.target instanceof Element)) return;
         const el = event.target.closest(selector);
         if (!el) return;
@@ -3082,7 +3086,7 @@ export function addLongPressEvent(selector, callback, delay = 500) {
     document.addEventListener('touchmove', cancelTimer);
     document.addEventListener('touchcancel', cancelTimer);
 
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', function (event: any) {
         if (fired && target && target.contains(event.target)) {
             event.preventDefault();
             event.stopImmediatePropagation();

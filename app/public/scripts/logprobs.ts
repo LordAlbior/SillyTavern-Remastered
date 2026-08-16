@@ -98,7 +98,7 @@ function renderAlternativeTokensView() {
   }
 
   const prefix = continueFrom || "";
-  const tokenSpans = [];
+  const tokenSpans: any[] = [];
   REROLL_BUTTON.toggle(!!prefix);
 
   if (prefix) {
@@ -108,7 +108,7 @@ function renderAlternativeTokensView() {
     const words = prefix.split(/\s+/);
     const delimiters = prefix.match(/\s+/g) || []; // Capture the actual delimiters
 
-    words.forEach((word, i) => {
+    words.forEach((word: any, i: any) => {
       const span = $("<span></span>");
       span.text(`${word} `);
 
@@ -128,7 +128,7 @@ function renderAlternativeTokensView() {
     });
   }
 
-  messageLogprobs.forEach((tokenData, i) => {
+  messageLogprobs.forEach((tokenData: any, i: any) => {
     const { token } = tokenData;
     const span = $("<span></span>");
     const text = toVisibleWhitespace(token);
@@ -145,15 +145,15 @@ function renderAlternativeTokensView() {
   // scroll past long prior context
   if (prefix) {
     const element = view.find(".logprobs_output_token").first();
-    const scrollOffset = element.offset().top - element.parent().offset().top;
+    const scrollOffset = element.offset()!.top - element.parent()!.offset()!.top;
     element.parent().scrollTop(scrollOffset);
   }
 }
 
-function addKeyboardProps(element) {
+function addKeyboardProps(element: any) {
   element.attr("role", "button");
   element.attr("tabindex", "0");
-  element.keydown((e) => {
+  element.keydown((e: any) => {
     if (e.key === "Enter" || e.key === " ") {
       element.click();
     }
@@ -181,9 +181,9 @@ function renderTopLogprobs() {
 
   let sum = 0;
   const nodes = [];
-  const candidates = topLogprobs
-    .sort(([, logA], [, logB]) => logB - logA)
-    .map(([text, log]) => {
+  const candidates = (topLogprobs as any[])
+    .sort(([, logA]: any, [, logB]: any) => logB - logA)
+    .map(([text, log]: any) => {
       if (log <= 0) {
         const probability = Math.exp(log);
         sum += probability;
@@ -234,7 +234,7 @@ function renderTopLogprobs() {
  * @param {TokenLogprobs} logprobs - logprob data for the selected token
  * @param {Node|JQuery} span - target span node that was clicked
  */
-function onSelectedTokenChanged(logprobs, span) {
+function onSelectedTokenChanged(logprobs: any, span: any) {
   $(".logprobs_output_token.selected").removeClass("selected");
   if (state.selectedTokenLogprobs === logprobs) {
     state.selectedTokenLogprobs = null;
@@ -253,7 +253,7 @@ function onSelectedTokenChanged(logprobs, span) {
  * @param {TokenLogprobs} tokenLogprobs - logprob data for selected alternative
  * @param {string} alternative - selected alternative token's text
  */
-function onAlternativeClicked(tokenLogprobs, alternative) {
+function onAlternativeClicked(tokenLogprobs: any, alternative: any) {
   if (!checkGenerateReady()) {
     return;
   }
@@ -266,9 +266,9 @@ function onAlternativeClicked(tokenLogprobs, alternative) {
   }
 
   const { messageLogprobs, continueFrom } = getActiveMessageLogprobData();
-  const replaceIndex = messageLogprobs.findIndex((x) => x === tokenLogprobs);
+  const replaceIndex = messageLogprobs.findIndex((x: any) => x === tokenLogprobs);
 
-  const tokens = messageLogprobs.slice(0, replaceIndex + 1).map(({ token }) => token);
+  const tokens = messageLogprobs.slice(0, replaceIndex + 1).map(({ token }: any) => token);
   tokens[replaceIndex] = String(alternative).replace(/^[▁Ġ]/g, " ").replace(/Ċ/g, "\n");
 
   const prefix = continueFrom || "";
@@ -288,7 +288,7 @@ function onAlternativeClicked(tokenLogprobs, alternative) {
  * @returns {void}
  * @param offset
  */
-function onPrefixClicked(offset = undefined) {
+function onPrefixClicked(offset: any = undefined) {
   if (!checkGenerateReady()) {
     return;
   }
@@ -312,7 +312,7 @@ function checkGenerateReady() {
  *
  * @param prompt
  */
-function addGeneration(prompt) {
+function addGeneration(prompt: any) {
   const messageId = chat.length - 1;
   if (prompt && prompt.length > 0) {
     createSwipe(messageId, prompt);
@@ -370,7 +370,7 @@ function onToggleLogprobsPanel() {
  * @param {number} messageId - target chat message ID
  * @param {string} prompt - initial prompt text which will be continued
  */
-function createSwipe(messageId, prompt) {
+function createSwipe(messageId: any, prompt: any) {
   // need to call `cleanUpMessage` on our new prompt, because we were working
   // with raw model output and our new prompt is missing trimming/macro replacements
   let cleanedPrompt = cleanUpMessage({
@@ -456,7 +456,7 @@ function createSwipe(messageId, prompt) {
  * @param {string} input
  * @returns {string}
  */
-function toVisibleWhitespace(input) {
+function toVisibleWhitespace(input: any) {
   return input.replace(/ /g, "·").replace(/[▁Ġ]/g, "·").replace(/[Ċ\n]/g, "↵");
 }
 
@@ -468,7 +468,7 @@ function toVisibleWhitespace(input) {
  * @param {Node|JQuery} span - target span node to be wrapped
  * @returns {NodeArray} - array of nodes to be appended to the parent element
  */
-function withVirtualWhitespace(text, span) {
+function withVirtualWhitespace(text: any, span: any) {
   /** @type {NodeArray} */
   const result = [span];
   if (text.match(/^\s/)) {
@@ -510,7 +510,7 @@ function withVirtualWhitespace(text, span) {
  * @param {TokenLogprobs[]} logprobs - array of logprobs data for each token
  * @param {string | null} continueFrom  - for 'continue' generations, the prompt
  */
-export function saveLogprobsForActiveMessage(logprobs, continueFrom) {
+export function saveLogprobsForActiveMessage(logprobs: any, continueFrom: any) {
   if (!logprobs) {
     // non-streaming APIs could return null data
     return;
@@ -544,7 +544,7 @@ export function saveLogprobsForActiveMessage(logprobs, continueFrom) {
   }
 }
 
-function getMessageHash(message) {
+function getMessageHash(message: any) {
   // We don't use the swipe ID as a hash component because it's not stable,
   // deleting a swipe will change the ID of all subsequent swipes.
   const hashParams = {
@@ -575,7 +575,7 @@ function getActiveMessageLogprobData() {
  *
  * @param {TokenLogprobs[]} input - logprobs data with numeric token IDs
  */
-function convertTokenIdLogprobsToText(input) {
+function convertTokenIdLogprobsToText(input: any) {
   const api = getGeneratingApi();
   if (api !== "novel") {
     // should have been checked by the caller
@@ -586,7 +586,7 @@ function convertTokenIdLogprobsToText(input) {
 
   /** @type {any[]} Flatten unique token IDs across all logprobs */
   const tokenIds = Array.from(
-    new Set(input.flatMap((logprobs) => logprobs.topLogprobs.map(([token]) => token).concat(logprobs.token))),
+    new Set(input.flatMap((logprobs: any) => logprobs.topLogprobs.map(([token]: any) => token).concat(logprobs.token))),
   );
 
   // Submit token IDs to tokenizer to get token text, then build ID->text map
@@ -595,9 +595,9 @@ function convertTokenIdLogprobsToText(input) {
   const tokenIdText = new Map(tokenIds.map((id, i) => [id, chunks[i]]));
 
   // Fixup logprobs data with token text
-  input.forEach((logprobs) => {
+  input.forEach((logprobs: any) => {
     logprobs.token = tokenIdText.get(logprobs.token);
-    logprobs.topLogprobs = logprobs.topLogprobs.map(([token, logprob]) => [tokenIdText.get(token), logprob]);
+    logprobs.topLogprobs = logprobs.topLogprobs.map(([token, logprob]: any) => [tokenIdText.get(token), logprob]);
   });
 }
 

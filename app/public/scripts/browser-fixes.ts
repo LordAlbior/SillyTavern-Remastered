@@ -11,11 +11,11 @@ function sanitizeInlineQuotationOnCopy() {
     }
 
     const selection = window.getSelection();
-    if (!selection.anchorNode?.parentElement.closest(".mes_text")) {
+    if (!selection!.anchorNode?.parentElement!.closest(".mes_text")) {
       return;
     }
 
-    const range = selection.getRangeAt(0).cloneContents();
+    const range = selection!.getRangeAt(0).cloneContents();
     const tempDOM = document.createDocumentFragment();
 
     /**
@@ -23,7 +23,7 @@ function sanitizeInlineQuotationOnCopy() {
      * @param {Node} node Input node
      * @returns {Node} Processed node
      */
-    function processNode(node) {
+    function processNode(node: any) {
       if (node.nodeType === Node.ELEMENT_NODE && node.nodeName.toLowerCase() === "q") {
         // Transform <q> to <span>, preserve children
         const span = document.createElement("span");
@@ -49,7 +49,7 @@ function sanitizeInlineQuotationOnCopy() {
     newRange.selectNodeContents(tempDOM);
 
     event.preventDefault();
-    event.clipboardData.setData("text/plain", newRange.toString());
+    event.clipboardData!.setData("text/plain", newRange.toString());
   });
 }
 

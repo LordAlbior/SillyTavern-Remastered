@@ -3,13 +3,13 @@ import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
 export { TtsWebuiProvider };
 
 class TtsWebuiProvider {
-  settings;
-  voices = [];
+  settings: any;
+  voices: any[] = [];
   separator = " . ";
 
   audioElement = document.createElement("audio");
-  audioContext = null;
-  audioWorkletNode = null;
+  audioContext: any = null;
+  audioWorkletNode: any = null;
   currentVolume = 1.0; // Track current volume
 
   defaultSettings = {
@@ -193,7 +193,7 @@ class TtsWebuiProvider {
     return html;
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -381,18 +381,18 @@ class TtsWebuiProvider {
     console.info("TTS voices refreshed");
   }
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((oaicVoice) => oaicVoice.name == voiceName)[0];
+    const match = (this.voices as any[]).filter((oaicVoice: any) => oaicVoice.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found`;
     }
     return match;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
 
     if (this.settings.streaming) {
@@ -418,7 +418,7 @@ class TtsWebuiProvider {
       const responseJson = await response.json();
       console.info("Discovered voices from provider:", responseJson);
 
-      this.voices = responseJson.voices.map(({ value, label }) => ({
+      this.voices = responseJson.voices.map(({ value, label }: any) => ({
         name: label,
         voice_id: value,
         lang: "en-US",
@@ -430,7 +430,7 @@ class TtsWebuiProvider {
     }
 
     // Fallback to configured voices
-    this.voices = this.settings.available_voices.map((name) => ({
+    this.voices = this.settings.available_voices.map((name: any) => ({
       name,
       voice_id: name,
       lang: "en-US",
@@ -439,7 +439,7 @@ class TtsWebuiProvider {
     return this.voices;
   }
 
-  async initAudioWorklet(wavSampleRate) {
+  async initAudioWorklet(wavSampleRate: any) {
     this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: wavSampleRate });
 
     // Load the PCM processor from separate file
@@ -449,7 +449,7 @@ class TtsWebuiProvider {
     this.audioWorkletNode.connect(this.audioContext.destination);
   }
 
-  parseWavHeader(buffer) {
+  parseWavHeader(buffer: any) {
     const view = new DataView(buffer);
     // Sample rate is at bytes 24-27 (little endian)
     const sampleRate = view.getUint32(24, true);
@@ -461,16 +461,16 @@ class TtsWebuiProvider {
     return { sampleRate, channels, bitsPerSample };
   }
 
-  async processStreamingAudio(response) {
+  async processStreamingAudio(response: any) {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
     const reader = response.body.getReader();
     let headerParsed = false;
-    let wavInfo = null;
+    let wavInfo: any = null;
 
-    const processStream = async ({ done, value }) => {
+    const processStream = async ({ done, value }: any) => {
       if (done) {
         return;
       }
@@ -502,7 +502,7 @@ class TtsWebuiProvider {
     await processStream(firstChunk);
   }
 
-  async previewTtsVoice(voiceId) {
+  async previewTtsVoice(voiceId: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
 
@@ -526,7 +526,7 @@ class TtsWebuiProvider {
     }
   }
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     console.info(`Generating new TTS for voice_id ${voiceId}`);
 
     const settings = this.settings;
@@ -550,8 +550,8 @@ class TtsWebuiProvider {
       "chunk_overlap_method",
       "seed",
     ];
-    const getParams = (settings) =>
-      Object.fromEntries(Object.entries(settings).filter(([key]) => chatterboxParams.includes(key)));
+    const getParams = (settings: any) =>
+      Object.fromEntries(Object.entries(settings).filter(([key]: any) => chatterboxParams.includes(key)));
 
     const requestBody = {
       model: settings.model,
@@ -563,7 +563,7 @@ class TtsWebuiProvider {
       params: getParams(settings),
     };
 
-    const headers = {
+    const headers: any = {
       "Content-Type": "application/json",
       "Cache-Control": streaming ? "no-cache" : undefined,
     };
@@ -586,7 +586,7 @@ class TtsWebuiProvider {
     return response;
   }
 
-  setVolume(volume) {
+  setVolume(volume: any) {
     // Clamp volume between 0.0 and 2.0 (0% to 200%)
     this.currentVolume = Math.max(0, Math.min(2.0, volume));
 

@@ -49,7 +49,7 @@ async function getUserList() {
  * @param {string} handle User handle
  * @returns {Promise<void>}
  */
-async function sendRecoveryPart1(handle) {
+async function sendRecoveryPart1(handle: any) {
   const response = await fetch("/api/users/recover-step1", {
     method: "POST",
     headers: {
@@ -74,7 +74,7 @@ async function sendRecoveryPart1(handle) {
  * @param {string} newPassword New password
  * @returns {Promise<void>}
  */
-async function sendRecoveryPart2(handle, code, newPassword) {
+async function sendRecoveryPart2(handle: any, code: any, newPassword: any) {
   const recoveryData = {
     handle,
     code,
@@ -105,7 +105,7 @@ async function sendRecoveryPart2(handle, code, newPassword) {
  * @param {string} password User's password
  * @returns {Promise<void>}
  */
-async function performLogin(handle, password) {
+async function performLogin(handle: any, password: any) {
   const userInfo = {
     handle: handle,
     password: password,
@@ -143,7 +143,7 @@ async function performLogin(handle, password) {
  * @param {object} user User object
  * @returns {Promise<void>}
  */
-async function onUserSelected(user) {
+async function onUserSelected(user: any) {
   // No password, just log in
   if (!user.password) {
     return await performLogin(user.handle, "");
@@ -179,7 +179,7 @@ async function onUserSelected(user) {
  * Displays an error message to the user.
  * @param {string} message Error message
  */
-function displayError(message) {
+function displayError(message: any) {
   $("#errorMessage").text(message);
 }
 
@@ -224,7 +224,7 @@ function onCancelRecoveryClick() {
  * Configures the login page for normal login.
  * @param {import('../../src/users').UserViewModel[]} userList List of users
  */
-function configureNormalLogin(userList) {
+function configureNormalLogin(userList: any) {
   console.log("Discreet login is disabled");
   $("#handleEntryBlock").hide();
   $("#normalLoginPrompt").show();
@@ -289,10 +289,10 @@ function configureDiscreetLogin() {
   } else {
     configureNormalLogin(userList);
   }
-  document.getElementById("shadow_popup").style.opacity = "";
+  document.getElementById("shadow_popup")!.style.opacity = "";
   $("#cancelRecovery").on("click", onCancelRecoveryClick);
   $(document).on("keydown", (evt) => {
-    if (evt.key === "Enter" && document.activeElement.tagName === "INPUT") {
+    if (evt.key === "Enter" && document.activeElement!.tagName === "INPUT") {
       if ($("#passwordRecoveryBlock").is(":visible")) {
         $("#sendRecovery").trigger("click");
       } else {

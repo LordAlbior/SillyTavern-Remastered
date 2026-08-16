@@ -169,7 +169,7 @@ export class ActionLoaderHandle {
    * @param {ActionLoaderToastMode} toastMode - Toast mode
    * @param {string} stopTooltip - Tooltip for stop button
    */
-  #createToast(message, title, toastMode, stopTooltip) {
+  #createToast(message: any, title: any, toastMode: any, stopTooltip: any) {
     const toastContent = document.createElement("div");
     toastContent.className = "action-loader-toast";
 
@@ -203,7 +203,7 @@ export class ActionLoaderHandle {
       extendedTimeOut: 0,
       tapToDismiss: false,
       escapeHtml: false,
-    });
+    }) as any;
   }
 
   /**
@@ -275,7 +275,7 @@ export class ActionLoaderHandle {
     // Call custom stop handler or default
     if (this.#onStop) {
       try {
-        await this.#onStop();
+        await (this.#onStop as any)();
       } catch (e) {
         console.error("Error executing onStop handler", e);
       }
@@ -297,7 +297,7 @@ export class ActionLoaderHandle {
     // Call custom hide handler if provided
     if (this.#onHide) {
       try {
-        await this.#onHide();
+        await (this.#onHide as any)();
       } catch (e) {
         console.error("Error executing onHide handler", e);
       }
@@ -431,10 +431,10 @@ export function showActionLoader(options = {}) {
  * @param {ActionLoaderHandle|null} [handle=null] - Specific handle to hide, or undefined to hide all
  * @returns {Promise<boolean>} Whether any loader was hidden
  */
-export async function hideActionLoader(handle = null) {
+export async function hideActionLoader(handle: any = null) {
   if (handle instanceof ActionLoaderHandle) {
-    if (handle.isActive) {
-      await handle.hide();
+    if ((handle as any).isActive) {
+      await (handle as any).hide();
       return true;
     }
     return false;
@@ -461,7 +461,7 @@ export function getActiveLoaderHandles() {
  * @param {string} id - The handle ID
  * @returns {ActionLoaderHandle|undefined} The handle, or undefined if not found
  */
-export function getLoaderHandleById(id) {
+export function getLoaderHandleById(id: any) {
   for (const handle of activeHandles) {
     if ((handle as any).id === id) {
       return handle;
@@ -475,7 +475,7 @@ export function getLoaderHandleById(id) {
 // ============================================================================
 
 /** @type {Popup|null} The current loader overlay popup */
-let loaderPopup = null;
+let loaderPopup: any = null;
 
 /** Whether the initial HTML preloader has been removed */
 let preloaderYoinked = false;
@@ -504,7 +504,7 @@ export function createDefaultLoaderOverlay() {
  * @param {string|HTMLElement|null} customContent - Custom overlay content
  * @returns {string|HTMLElement} Content for Popup
  */
-function getOverlayContent(customContent) {
+function getOverlayContent(customContent: any) {
   if (typeof customContent === "string") {
     return customContent;
   }
@@ -535,7 +535,7 @@ function showOverlay(customContent = null) {
 
   const content = getOverlayContent(customContent);
 
-  loaderPopup = new Popup(content, POPUP_TYPE.DISPLAY, null, {
+  loaderPopup = new Popup(content, POPUP_TYPE.DISPLAY, null as any, {
     allowEscapeClose: false,
     transparent: true,
     animation: "none",
@@ -590,7 +590,7 @@ async function hideOverlay() {
 
       loaderPopup
         .complete(POPUP_RESULT.AFFIRMATIVE)
-        .catch((err) => console.error("Error completing loaderPopup:", err))
+        .catch((err: any) => console.error("Error completing loaderPopup:", err))
         .finally(() => {
           loaderPopup = null;
           resolve();

@@ -9,9 +9,9 @@ class SpeechT5TtsProvider {
   // Config //
   //########//
 
-  settings;
+  settings: any;
   ready = false;
-  voices = [];
+  voices: any[] = [];
   separator = " .. ";
   audioElement = document.createElement("audio");
 
@@ -46,7 +46,7 @@ class SpeechT5TtsProvider {
     saveTtsProviderSettings();
   }
 
-  async previewTtsVoice(voiceId) {
+  async previewTtsVoice(voiceId: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
 
@@ -63,7 +63,7 @@ class SpeechT5TtsProvider {
     this.audioElement.onended = () => URL.revokeObjectURL(url);
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Pupulate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -95,7 +95,7 @@ class SpeechT5TtsProvider {
       $("#speecht5_tts_speaker_upload").trigger("click");
     });
     $("#speecht5_tts_speaker_upload").on("change", async (event) => {
-      const file = (event.target as HTMLInputElement).files[0];
+      const file = (event.target as HTMLInputElement).files![0];
       if (file.size != 2048) {
         toastr.error("Invalid speaker file size, expected 2048 bytes");
         return;
@@ -126,7 +126,7 @@ class SpeechT5TtsProvider {
         return;
       }
 
-      const speaker = this.settings.speakers.find((s) => s.voice_id === this.settings.speaker);
+      const speaker = this.settings.speakers.find((s: any) => s.voice_id === this.settings.speaker);
       if (!speaker) {
         toastr.error("Speaker not found");
         return;
@@ -154,11 +154,11 @@ class SpeechT5TtsProvider {
     return Promise.resolve();
   }
 
-  async getVoice(voiceName) {
-    return this.settings.speakers.find((s) => s.voice_id === voiceName);
+  async getVoice(voiceName: any) {
+    return this.settings.speakers.find((s: any) => s.voice_id === voiceName);
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -167,7 +167,7 @@ class SpeechT5TtsProvider {
     return this.settings.speakers;
   }
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     console.info(`Generating new TTS for voice_id ${voiceId}`);
     const speaker = await this.getVoice(voiceId);
 
@@ -194,7 +194,7 @@ class SpeechT5TtsProvider {
     return response;
   }
 
-  async fetchTtsFromHistory(history_item_id) {
+  async fetchTtsFromHistory(history_item_id: any) {
     return Promise.resolve(history_item_id);
   }
 }

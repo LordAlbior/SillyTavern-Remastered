@@ -47,8 +47,8 @@ class VolcengineTtsProvider {
       lang: "cl",
     },
   ];
-  settings;
-  /** @type {function} */ handler;
+  settings: any;
+  /** @type {function} */ handler: any;
   audioElement = document.createElement("audio");
   defaultSettings = {
     voiceMap: {},
@@ -58,15 +58,15 @@ class VolcengineTtsProvider {
     provider_endpoint: "https://openspeech.bytedance.com/api/v3/tts/unidirectional",
   };
 
-  processText(text) {
+  processText(text: any) {
     return text.split("...").join("");
   }
 
   constructor() {
-    this.handler = async function (/** @type {string} */ key) {
+    this.handler = async function (this: any, /** @type {string} */ key: any) {
       if (![SECRET_KEYS.VOLCENGINE_APP_ID, SECRET_KEYS.VOLCENGINE_ACCESS_KEY].includes(key)) return;
-      $("#volcengine-tts-app-id").toggleClass("success", !!secret_state[SECRET_KEYS.VOLCENGINE_APP_ID]);
-      $("#volcengine-tts-access-key").toggleClass("success", !!secret_state[SECRET_KEYS.VOLCENGINE_ACCESS_KEY]);
+      $("#volcengine-tts-app-id").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.VOLCENGINE_APP_ID]);
+      $("#volcengine-tts-access-key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.VOLCENGINE_ACCESS_KEY]);
       await this.onRefreshClick();
     }.bind(this);
   }
@@ -77,7 +77,7 @@ class VolcengineTtsProvider {
     });
   }
 
-  async previewTtsVoice(voice) {
+  async previewTtsVoice(voice: any) {
     const text = "Hello! Nice to meet you!";
     const audio = await this.generateTts(text, voice);
     const audioElement = new Audio(URL.createObjectURL(await audio.blob()));
@@ -133,7 +133,7 @@ class VolcengineTtsProvider {
     return html;
   }
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     const allVoices = this.getAllVoices();
     return allVoices.find((voice) => voice.name == voiceName);
   }
@@ -184,7 +184,7 @@ class VolcengineTtsProvider {
     $("#volcengine-tts-speed_counter").val(speed);
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -215,17 +215,17 @@ class VolcengineTtsProvider {
     const speedInput = $("#volcengine-tts-speed");
     const speedCounter = $("#volcengine-tts-speed_counter");
 
-    speedInput.val(this.settings.speed).on("input change", (e) => {
+    speedInput.val(this.settings.speed).on("input change", (e: any) => {
       const value = $(e.target).val();
-      speedCounter.val(value);
+      speedCounter.val(value ?? '');
       this.settings.speed = value;
       saveTtsProviderSettings();
       this.changeTTSSettings();
     });
 
-    speedCounter.val(this.settings.speed).on("input change", (e) => {
+    speedCounter.val(this.settings.speed).on("input change", (e: any) => {
       const value = $(e.target).val();
-      speedInput.val(value);
+      speedInput.val(value ?? '');
       this.settings.speed = value;
       saveTtsProviderSettings();
       this.changeTTSSettings();
@@ -236,8 +236,8 @@ class VolcengineTtsProvider {
       .on("change", this.onSettingsChange.bind(this));
 
     // Initialize secret keys UI
-    $("#volcengine-tts-app-id").toggleClass("success", !!secret_state[SECRET_KEYS.VOLCENGINE_APP_ID]);
-    $("#volcengine-tts-access-key").toggleClass("success", !!secret_state[SECRET_KEYS.VOLCENGINE_ACCESS_KEY]);
+    $("#volcengine-tts-app-id").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.VOLCENGINE_APP_ID]);
+    $("#volcengine-tts-access-key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.VOLCENGINE_ACCESS_KEY]);
     [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
       eventSource.on(event, this.handler);
     });
@@ -291,11 +291,11 @@ class VolcengineTtsProvider {
     await Promise.allSettled([this.changeTTSSettings()]);
   }
 
-  async generateTts(text, speaker) {
+  async generateTts(text: any, speaker: any) {
     const response = await this.fetchTtsGeneration(text, speaker);
     return response;
   }
-  async fetchTtsGeneration(text, voice_speaker) {
+  async fetchTtsGeneration(text: any, voice_speaker: any) {
     console.info(`Generating new TTS for voice_id ${voice_speaker}`);
     const response = await fetch("/api/volcengine/generate-voice", {
       method: "POST",

@@ -1,7 +1,7 @@
 /** @type {CSSStyleSheet} */
-let dynamicStyleSheet = null;
+let dynamicStyleSheet: any = null;
 /** @type {CSSStyleSheet} */
-let dynamicExtensionStyleSheet = null;
+let dynamicExtensionStyleSheet: any = null;
 
 /**
  * An observer that will check if any new stylesheets are added to the head
@@ -32,10 +32,10 @@ const observer = new MutationObserver((mutations) => {
  * @param {object} [options] - Optional configuration options
  * @param {boolean} [options.fromExtension=false] - Indicates if the styles are from an extension
  */
-function applyDynamicFocusStyles(styleSheet, { fromExtension = false } = {}) {
+function applyDynamicFocusStyles(styleSheet: any, { fromExtension = false } = {}) {
   /** @typedef {{ type: 'media'|'supports'|'container', conditionText: string }} WrapperCond */
   /** @type {{baseSelector: string, rule: CSSStyleRule, wrappers: WrapperCond[]}[]} */
-  const hoverRules = [];
+  const hoverRules: any[] = [];
   /** @type {Set<string>} */
   const focusRules = new Set();
 
@@ -47,8 +47,8 @@ function applyDynamicFocusStyles(styleSheet, { fromExtension = false } = {}) {
    * @param {WrapperCond[]} wrappers
    * @returns {string}
    */
-  function wrapperSignature(wrappers) {
-    return wrappers.map((w) => `${w.type}:${w.conditionText}`).join(";");
+  function wrapperSignature(wrappers: any) {
+    return wrappers.map((w: any) => `${w.type}:${w.conditionText}`).join(";");
   }
 
   /**
@@ -56,13 +56,13 @@ function applyDynamicFocusStyles(styleSheet, { fromExtension = false } = {}) {
    * @param {CSSRuleList} rules - The CSS rules to process
    * @param {WrapperCond[]} wrappers - Current chain of wrapper conditions (@media/@supports/etc.)
    */
-  function processRules(rules, wrappers = []) {
+  function processRules(rules: any, wrappers: any[] = []) {
     Array.from(rules).forEach((rule) => {
       if (rule instanceof CSSImportRule) {
         // Make sure that @import rules are processed recursively
         // If the @import has media conditions, treat them as wrappers as well
         /** @type {WrapperCond[]} */
-        const extra =
+        const extra: any[] =
           rule.media && rule.media.mediaText ? [{ type: "media", conditionText: rule.media.mediaText }] : [];
         processImportedStylesheet(rule.styleSheet, [...wrappers, ...extra]);
       } else if (rule instanceof CSSStyleRule) {
@@ -104,7 +104,7 @@ function applyDynamicFocusStyles(styleSheet, { fromExtension = false } = {}) {
    * @param {CSSStyleSheet} sheet - The imported stylesheet to process
    * @param {WrapperCond[]} wrappers - Wrapper conditions inherited from (at)import media
    */
-  function processImportedStylesheet(sheet, wrappers = []) {
+  function processImportedStylesheet(sheet: any, wrappers: any[] = []) {
     if (sheet && sheet.cssRules) {
       processRules(sheet.cssRules, wrappers);
     }
@@ -116,7 +116,7 @@ function applyDynamicFocusStyles(styleSheet, { fromExtension = false } = {}) {
   let targetStyleSheet = null;
 
   // Now finally create the dynamic focus rules
-  hoverRules.forEach(({ baseSelector, rule, wrappers }) => {
+  hoverRules.forEach(({ baseSelector, rule, wrappers }: any) => {
     if (!focusRules.has(`${baseSelector}|${wrapperSignature(wrappers)}`)) {
       // Only initialize the dynamic stylesheet if needed
       targetStyleSheet ??= getDynamicStyleSheet({ fromExtension });
@@ -140,7 +140,7 @@ function applyDynamicFocusStyles(styleSheet, { fromExtension = false } = {}) {
       if (wrappers.length > 0) {
         // Build nested blocks from outermost to innermost
         // Example: @media (x) { @supports (y) { <rule> } }
-        focusRule = wrappers.reduceRight((inner, w) => {
+        focusRule = wrappers.reduceRight((inner: any, w: any) => {
           if (w.type === "media") return `@media ${w.conditionText} { ${inner} }`;
           if (w.type === "supports") return `@supports ${w.conditionText} { ${inner} }`;
           if (w.type === "container") return `@container ${w.conditionText} { ${inner} }`;

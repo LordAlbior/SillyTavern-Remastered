@@ -2,14 +2,14 @@ import { escapeRegex } from "../utils.ts";
 import { SlashCommandParser } from "./SlashCommandParser.ts";
 
 export class SlashCommandBrowser {
-  /**@type {SlashCommand[]}*/ cmdList;
-  /**@type {HTMLElement}*/ dom;
-  /**@type {HTMLElement}*/ search;
-  /**@type {HTMLElement}*/ details;
-  /**@type {Object.<string,HTMLElement>}*/ itemMap = {};
-  /**@type {MutationObserver}*/ mo;
+  /**@type {SlashCommand[]}*/ cmdList: any;
+  /**@type {HTMLElement}*/ dom: any;
+  /**@type {HTMLElement}*/ search: any;
+  /**@type {HTMLElement}*/ details: any;
+  /**@type {Object.<string,HTMLElement>}*/ itemMap: any = {};
+  /**@type {MutationObserver}*/ mo: any;
 
-  renderInto(parent) {
+  renderInto(parent: any) {
     if (!this.dom) {
       const queryRegex = /(?:(?:^|\s+)([^\s"][^\s]*?)(?:\s+|$))|(?:(?:^|\s+)"(.*?)(?:"|$)(?:\s+|$))/;
       const root = document.createElement("div");
@@ -35,8 +35,8 @@ export class SlashCommandBrowser {
               if (query.slice(-1) === '"' && !/(?:^|\s+)"/.test(query)) {
                 query = `"${query}`;
               }
-              const fuzzyList = [];
-              const quotedList = [];
+              const fuzzyList: any[] = [];
+              const quotedList: any[] = [];
               while (query.length > 0) {
                 const match = queryRegex.exec(query);
                 if (!match) break;
@@ -58,13 +58,13 @@ export class SlashCommandBrowser {
               for (const cmd of this.cmdList) {
                 const targets = [
                   cmd.name,
-                  ...cmd.namedArgumentList.map((it) => it.name),
-                  ...cmd.namedArgumentList.map((it) => it.description),
-                  ...cmd.namedArgumentList.flatMap((it) => it.enumList.map((e) => e.value)),
-                  ...cmd.namedArgumentList.flatMap((it) => it.typeList),
-                  ...cmd.unnamedArgumentList.map((it) => it.description),
-                  ...cmd.unnamedArgumentList.flatMap((it) => it.enumList.map((e) => e.value)),
-                  ...cmd.unnamedArgumentList.flatMap((it) => it.typeList),
+                  ...cmd.namedArgumentList.map((it: any) => it.name),
+                  ...cmd.namedArgumentList.map((it: any) => it.description),
+                  ...cmd.namedArgumentList.flatMap((it: any) => it.enumList.map((e: any) => e.value)),
+                  ...cmd.namedArgumentList.flatMap((it: any) => it.typeList),
+                  ...cmd.unnamedArgumentList.map((it: any) => it.description),
+                  ...cmd.unnamedArgumentList.flatMap((it: any) => it.enumList.map((e: any) => e.value)),
+                  ...cmd.unnamedArgumentList.flatMap((it: any) => it.typeList),
                   ...cmd.aliases,
                   cmd.helpString,
                 ];
@@ -90,13 +90,13 @@ export class SlashCommandBrowser {
           const list = document.createElement("div");
           list.classList.add("autoComplete");
           this.cmdList = Object.keys(SlashCommandParser.commands)
-            .filter((key) => SlashCommandParser.commands[key].name === key) // exclude aliases
+            .filter((key) => (SlashCommandParser.commands as Record<string, any>)[key].name === key) // exclude aliases
             .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-            .map((key) => SlashCommandParser.commands[key]);
+            .map((key) => (SlashCommandParser.commands as Record<string, any>)[key]);
           for (const cmd of this.cmdList) {
             const item = cmd.renderHelpItem();
             this.itemMap[cmd.name] = item;
-            let details;
+            let details: any;
             item.addEventListener("click", () => {
               if (!details) {
                 details = document.createElement("div");
@@ -145,7 +145,7 @@ export class SlashCommandBrowser {
     return this.dom;
   }
 
-  handleKeyDown(evt) {
+  handleKeyDown(evt: any) {
     if (!evt.shiftKey && !evt.altKey && evt.ctrlKey && evt.key.toLowerCase() === "f") {
       if (!this.dom.closest("body")) return;
       if (this.dom.closest(".mes") && !this.dom.closest(".last_mes")) return;

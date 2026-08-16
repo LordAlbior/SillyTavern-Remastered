@@ -111,7 +111,7 @@ export class TextCompletionService {
     temperature,
     min_p,
     ...props
-  }) {
+  }: any) {
     const payload = {
       stream,
       prompt,
@@ -126,9 +126,9 @@ export class TextCompletionService {
     };
 
     // Remove undefined values to avoid API errors
-    Object.keys(payload).forEach((key) => {
-      if (payload[key] === undefined) {
-        delete payload[key];
+    Object.keys(payload).forEach((key: any) => {
+      if ((payload as Record<string, any>)[key] === undefined) {
+        delete (payload as Record<string, any>)[key];
       }
     });
 
@@ -143,7 +143,7 @@ export class TextCompletionService {
    * @returns {Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
    * @throws {Error}
    */
-  static async sendRequest(data, extractData = true, signal = null) {
+  static async sendRequest(data: any, extractData = true, signal = null) {
     if (!data.stream) {
       const response = await fetch(getGenerateUrl(TextCompletionService.TYPE), {
         method: "POST",
@@ -165,8 +165,8 @@ export class TextCompletionService {
       return {
         content: extractMessageFromData(json, TextCompletionService.TYPE),
         reasoning: extractReasoningFromData(json, {
-          mainApi: TextCompletionService.TYPE,
-          textGenType: data.api_type,
+          mainApi: TextCompletionService.TYPE as any,
+          textGenType: data.api_type as any,
           ignoreShowThoughts: true,
         }),
       };
@@ -188,11 +188,11 @@ export class TextCompletionService {
     }
 
     const eventStream = new EventSourceStream() as any;
-    response.body.pipeThrough(eventStream);
+    response.body!.pipeThrough(eventStream);
     const reader = eventStream.readable.getReader();
     return async function* streamData() {
       let text = "";
-      const swipes = [];
+      const swipes: any[] = [];
       const state = { reasoning: "" };
       while (true) {
         const { done, value } = await reader.read();
@@ -205,7 +205,7 @@ export class TextCompletionService {
 
         if (data?.choices?.[0]?.index > 0) {
           const swipeIndex = data.choices[0].index - 1;
-          swipes[swipeIndex] = (swipes[swipeIndex] || "") + data.choices[0].text;
+          (swipes as any[])[swipeIndex] = ((swipes as any[])[swipeIndex] || "") + data.choices[0].text;
         } else {
           const newText = data?.choices?.[0]?.text || data?.content || "";
           text += newText;
@@ -223,7 +223,7 @@ export class TextCompletionService {
    * @param {InstructSettings|string} instructPreset Either the name of an instruct preset or the instruct preset object itself.
    * @param {Partial<InstructSettings>} instructSettings Optional instruct settings
    */
-  static constructPrompt(prompt, instructPreset, instructSettings) {
+  static constructPrompt(prompt: any, instructPreset: any, instructSettings: any) {
     // InstructPreset may either be a name or itself a preset
     if (typeof instructPreset === "string") {
       const instructPresetManager = getPresetManager("instruct");
@@ -310,7 +310,7 @@ export class TextCompletionService {
    * @returns {Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
    * @throws {Error}
    */
-  static async processRequest(requestData, options = {}, extractData = true, signal = null) {
+  static async processRequest(requestData: any, options = {}, extractData = true, signal = null) {
     const { presetName, instructName } = options as any;
 
     // remove any undefined params in given request data
@@ -332,7 +332,7 @@ export class TextCompletionService {
           );
           const stoppingStrings = getInstructStoppingSequences({
             customInstruct: instructPreset,
-            useStopStrings: false,
+            useStopStrings: false as any,
           });
           requestData.stop = stoppingStrings;
           requestData.stopping_strings = stoppingStrings;
@@ -402,8 +402,8 @@ export class TextCompletionService {
           if (sequences) {
             sequences
               .split("\n")
-              .filter((line) => line.trim() !== "")
-              .forEach((line) => {
+              .filter((line: any) => line.trim() !== "")
+              .forEach((line: any) => {
                 message = message.replaceAll(line, "");
               });
           }
@@ -424,7 +424,7 @@ export class TextCompletionService {
    * @param {Object} overridePayload - Additional parameters to override payload values
    * @returns {Object} - Formatted payload for text completion API
    */
-  static presetToGeneratePayload(preset, overridePreset = {}, overridePayload = {}) {
+  static presetToGeneratePayload(preset: any, overridePreset: any = {}, overridePayload: any = {}) {
     if (!preset || typeof preset !== "object") {
       throw new Error("Invalid preset: must be an object");
     }
@@ -436,7 +436,7 @@ export class TextCompletionService {
     const settings = structuredClone(textgenerationwebui_settings);
     for (const [key, value] of Object.entries(preset)) {
       if (!setting_names.includes(key)) continue;
-      settings[key] = value;
+      (settings as Record<string, any>)[key] = value;
     }
 
     // convert to a generation payload
@@ -474,7 +474,7 @@ export class ChatCompletionService {
     proxy_password,
     custom_prompt_post_processing,
     ...props
-  }) {
+  }: any) {
     const payload = {
       stream,
       messages,
@@ -491,9 +491,9 @@ export class ChatCompletionService {
     };
 
     // Remove undefined values to avoid API errors
-    Object.keys(payload).forEach((key) => {
-      if (payload[key] === undefined) {
-        delete payload[key];
+    Object.keys(payload).forEach((key: any) => {
+      if ((payload as Record<string, any>)[key] === undefined) {
+        delete (payload as Record<string, any>)[key];
       }
     });
 
@@ -508,7 +508,7 @@ export class ChatCompletionService {
    * @returns {Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
    * @throws {Error}
    */
-  static async sendRequest(data, extractData = true, signal = null) {
+  static async sendRequest(data: any, extractData = true, signal = null) {
     const response = await fetch("/api/backends/chat-completions/generate", {
       method: "POST",
       headers: getRequestHeaders(),
@@ -530,7 +530,7 @@ export class ChatCompletionService {
       const result = {
         content: extractMessageFromData(json, ChatCompletionService.TYPE),
         reasoning: extractReasoningFromData(json, {
-          mainApi: ChatCompletionService.TYPE,
+          mainApi: ChatCompletionService.TYPE as any,
           textGenType: data.chat_completion_source,
           ignoreShowThoughts: true,
         }),
@@ -555,11 +555,11 @@ export class ChatCompletionService {
     }
 
     const eventStream = new EventSourceStream() as any;
-    response.body.pipeThrough(eventStream);
+    response.body!.pipeThrough(eventStream);
     const reader = eventStream.readable.getReader();
     return async function* streamData() {
       let text = "";
-      const swipes = [];
+      const swipes: any[] = [];
       const state = { reasoning: "", images: [], signature: "", toolSignatures: {} };
       while (true) {
         const { done, value } = await reader.read();
@@ -595,7 +595,7 @@ export class ChatCompletionService {
    * @returns {Promise<ExtractedData | (() => AsyncGenerator<StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
    * @throws {Error}
    */
-  static async processRequest(requestData, options, extractData = true, signal = null) {
+  static async processRequest(requestData: any, options: any, extractData = true, signal = null) {
     const { presetName } = options;
     requestData = ChatCompletionService.createRequestData(requestData);
 
@@ -626,7 +626,7 @@ export class ChatCompletionService {
    * @param {Object} overridePayload - Additional parameters to override payload values
    * @returns {Promise<any>} - Formatted payload for chat completion API
    */
-  static async presetToGeneratePayload(preset, overridePreset = {}, overridePayload = {}) {
+  static async presetToGeneratePayload(preset: any, overridePreset: any = {}, overridePayload: any = {}) {
     if (!preset || typeof preset !== "object") {
       throw new Error("Invalid preset: must be an object");
     }
@@ -640,15 +640,15 @@ export class ChatCompletionService {
     // Convert from preset to ChatCompletionSettings
     const settings = structuredClone(oai_settings);
     for (const [key, value] of Object.entries(preset)) {
-      const settingToUpdate = settingsToUpdate[key];
+      const settingToUpdate = (settingsToUpdate as Record<string, any>)[key];
       if (!settingToUpdate) continue;
-      settings[settingToUpdate[1]] = value;
+      (settings as Record<string, any>)[settingToUpdate[1]] = value;
     }
 
     // Ensure api-url is properly applied for all sources that accept it
-    ["custom_url", "vertexai_region", "zai_endpoint", "siliconflow_endpoint", "minimax_endpoint"].forEach((field) => {
+    ["custom_url", "vertexai_region", "zai_endpoint", "siliconflow_endpoint", "minimax_endpoint"].forEach((field: any) => {
       // The order is: connection profile => CC preset => CC settings
-      overridePayload[field] = overridePayload[field] || settings[field] || oai_settings[field];
+      (overridePayload as Record<string, any>)[field] = (overridePayload as Record<string, any>)[field] || (settings as Record<string, any>)[field] || (oai_settings as Record<string, any>)[field];
     });
 
     // Convert from settings to generation payload

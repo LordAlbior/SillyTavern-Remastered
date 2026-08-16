@@ -84,7 +84,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
    * @param {MacroDefinition} macro - The macro definition from MacroRegistry.
    * @param {MacroAutoCompleteContext|EnhancedMacroAutoCompleteOptions|null} [contextOrOptions] - Context for argument hints, or options object.
    */
-  constructor(macro, contextOrOptions = null) {
+  constructor(macro: any, contextOrOptions: any = null) {
     // Use the macro name as the autocomplete key
     super(macro.name, enumIcons.macro);
     this.#macro = macro;
@@ -99,11 +99,11 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
       ) {
         // It's an options object
         this.#options = /** @type {EnhancedMacroAutoCompleteOptions} */ (contextOrOptions);
-        this.#noBraces = this.#options.noBraces ?? false;
-        this.#paddingAfter = this.#options.paddingAfter ?? "";
+        this.#noBraces = (this.#options as any).noBraces ?? false;
+        this.#paddingAfter = (this.#options as any).paddingAfter ?? "";
 
         // If noBraces mode with closeWithBraces, complete with name + padding + }}
-        if (this.#options.closeWithBraces) {
+        if ((this.#options as any).closeWithBraces) {
           this.valueProvider = () => `${macro.name}${this.#paddingAfter}}}`;
           this.makeSelectable = true;
         }
@@ -127,7 +127,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
     }
 
     // {{//}} needs special handling. If we autocomplete right after **one** slash is already typed, we need to replace that, as it's treated as a flag otherwise.
-    const fullText = this.#options?.fullText ?? this.#context?.fullText ?? "";
+    const fullText = (this.#options as any)?.fullText ?? (this.#context as any)?.fullText ?? "";
     if (macro.name === "//" && fullText.endsWith("/")) {
       this.replacementStartOffset = (this.replacementStartOffset ?? 0) - 1; // Cut the leading slash
     }
@@ -219,13 +219,13 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
     }
 
     // Show scoped content info banner if we're in scoped content
-    if (this.#context?.isInScopedContent) {
+    if ((this.#context as any)?.isInScopedContent) {
       const scopedInfo = this.#renderScopedContentInfo();
       if (scopedInfo) frag.append(scopedInfo);
     }
 
     // Determine current argument index for highlighting
-    const currentArgIndex = this.#context?.currentArgIndex ?? -1;
+    const currentArgIndex = (this.#context as any)?.currentArgIndex ?? -1;
 
     // For most warnings, we can still highlight which argument we are currently at.
     // This even goes for "too many arguments" when navigating the cursor back to
@@ -256,7 +256,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
   #getArityWarning() {
     if (!this.#context) return null;
 
-    const argCount = this.#context.args.length;
+    const argCount = (this.#context as any).args.length;
     const maxArgs = this.#macro.maxArgs;
     //const minArgs = this.#macro.minArgs;
     const hasList = this.#macro.list !== null;
@@ -269,7 +269,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
     // Check for space-separated arg on macro that doesn't support it
     // Space-separated syntax provides 1 arg; with scoped content you can provide a 2nd arg
     // So it's valid for macros with maxArgs <= 2 (or with list args)
-    if (this.#context.hasSpaceArgContent) {
+    if ((this.#context as any).hasSpaceArgContent) {
       if (maxArgs === 0 && !hasList) {
         return "This macro does not accept any arguments. Remove the space or use a different macro.";
       }
@@ -280,7 +280,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
 
     // Check if trying to add args to a no-arg macro via ::
     // List-arg macros can accept args even if maxArgs === 0
-    if (this.#context.separatorCount > 0 && maxArgs === 0 && !hasList) {
+    if ((this.#context as any).separatorCount > 0 && maxArgs === 0 && !hasList) {
       return "This macro does not accept any arguments.";
     }
 
@@ -308,7 +308,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
    * @param {string} message - The warning message.
    * @returns {HTMLElement}
    */
-  #renderWarning(message) {
+  #renderWarning(message: any) {
     const warning = document.createElement("div");
     warning.classList.add("macro-ac-warning");
 
@@ -329,13 +329,13 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
    * @returns {HTMLElement|null}
    */
   #renderScopedContentInfo() {
-    if (!this.#context?.isInScopedContent) return null;
+    if (!(this.#context as any)?.isInScopedContent) return null;
 
     const info = document.createElement("div");
     info.classList.add("macro-ac-scoped-info");
 
     // If the scoped content is optional, show a prominent OPTIONAL badge
-    if (this.#context.isScopedContentOptional) {
+    if ((this.#context as any).isScopedContentOptional) {
       const optionalBadge = document.createElement("span");
       optionalBadge.classList.add("macro-ac-optional-badge");
       optionalBadge.textContent = "OPTIONAL";
@@ -347,10 +347,10 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
     info.append(icon);
 
     const text = document.createElement("span");
-    const closingHint = this.#context.isScopedContentOptional
-      ? `Can optionally close with <code>{{/${this.#context.scopedMacroName}}}</code>`
-      : `Close with <code>{{/${this.#context.scopedMacroName}}}</code>`;
-    text.innerHTML = `Typing <strong>scoped content</strong> for <code>{{${this.#context.scopedMacroName}}}</code>. ${closingHint}`;
+    const closingHint = (this.#context as any).isScopedContentOptional
+      ? `Can optionally close with <code>{{/${(this.#context as any).scopedMacroName}}}</code>`
+      : `Close with <code>{{/${(this.#context as any).scopedMacroName}}}</code>`;
+    text.innerHTML = `Typing <strong>scoped content</strong> for <code>{{${(this.#context as any).scopedMacroName}}}</code>. ${closingHint}`;
     info.append(text);
 
     return info;
@@ -361,9 +361,9 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
    * @returns {HTMLElement|null}
    */
   #renderArgumentHint() {
-    if (!this.#context || this.#context.currentArgIndex < 0) return null;
+    if (!this.#context || (this.#context as any).currentArgIndex < 0) return null;
 
-    const argIndex = this.#context.currentArgIndex;
+    const argIndex = (this.#context as any).currentArgIndex;
     const isListArg = argIndex >= this.#macro.maxArgs;
 
     // If we're beyond unnamed args and there's no list, no hint
@@ -379,7 +379,7 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
     if (isListArg) {
       // List argument hint
       const listIndex = argIndex - this.#macro.maxArgs + 1;
-      const totalListItems = this.#context.args.length - this.#macro.maxArgs;
+      const totalListItems = (this.#context as any).args.length - this.#macro.maxArgs;
 
       const text = document.createElement("span");
       text.innerHTML = `<strong>List item ${listIndex}</strong>${listIndex < totalListItems ? ` (of ${totalListItems})` : ""}`;
@@ -453,7 +453,7 @@ export class MacroFlagAutoCompleteOption extends AutoCompleteOption {
   /**
    * @param {import('../macros/engine/MacroFlags.js').MacroFlagDefinition} flagDef - The flag definition.
    */
-  constructor(flagDef) {
+  constructor(flagDef: any) {
     // Use the flag symbol as the name, with a flag icon
     // Display name includes both symbol and name for clarity
     super(flagDef.type, "🚩");
@@ -626,7 +626,7 @@ const VARIABLE_SHORTHAND_NAME_PATTERN = new RegExp(`^${MACRO_VARIABLE_SHORTHAND_
  * @param {string} name - The variable name to validate.
  * @returns {boolean} True if the name is valid for shorthand syntax.
  */
-export function isValidVariableShorthandName(name) {
+export function isValidVariableShorthandName(name: any) {
   if (!name || typeof name !== "string") return false;
   return VARIABLE_SHORTHAND_NAME_PATTERN.test(name);
 }
@@ -643,7 +643,7 @@ export class VariableShorthandAutoCompleteOption extends AutoCompleteOption {
   /**
    * @param {VariableShorthandDefinition} varDef - The variable shorthand definition.
    */
-  constructor(varDef) {
+  constructor(varDef: any) {
     // Use the prefix symbol as the name, with a variable icon
     super(varDef.type, "📦");
     this.#varDef = varDef;
@@ -770,7 +770,7 @@ export class VariableNameAutoCompleteOption extends AutoCompleteOption {
    * @param {boolean} [isNewVariable=false] - Whether this is a "create new variable" option.
    * @param {boolean} [isInvalidName=false] - Whether this name is invalid for shorthand syntax.
    */
-  constructor(varName, scope, isNewVariable = false, isInvalidName = false) {
+  constructor(varName: any, scope: any, isNewVariable = false, isInvalidName = false) {
     const icon = scope === "local" ? "L" : "G";
     super(varName, icon);
     this.#varName = varName;
@@ -937,7 +937,7 @@ export class VariableNameAutoCompleteOption extends AutoCompleteOption {
  * @param {string} op - The operator to check.
  * @returns {boolean} True if the operator could be a prefix of a longer operator.
  */
-function isShortOperatorPrefix(op) {
+function isShortOperatorPrefix(op: any) {
   // These operators could have longer variants typed after them
   const shortPrefixes = [">", "<", "=", "|", "?", "+", "-", "!"];
   return shortPrefixes.includes(op);
@@ -1099,7 +1099,7 @@ export class VariableOperatorAutoCompleteOption extends AutoCompleteOption {
   /**
    * @param {{ symbol: string, name: string, description: string, needsValue: boolean }} operatorDef - The operator definition.
    */
-  constructor(operatorDef) {
+  constructor(operatorDef: any) {
     super(operatorDef.symbol, "⚡");
     this.#operatorDef = operatorDef;
   }
@@ -1175,7 +1175,7 @@ export class VariableValueContextAutoCompleteOption extends AutoCompleteOption {
    * @param {{ symbol: string, name: string, description: string, needsValue: boolean }} operatorDef - The operator definition.
    * @param {string} [currentValue=''] - The value currently being typed.
    */
-  constructor(operatorDef, currentValue = "") {
+  constructor(operatorDef: any, currentValue = "") {
     super("value", "📝");
     this.#operatorDef = operatorDef;
     this.#currentValue = currentValue;
@@ -1273,7 +1273,7 @@ export class MacroClosingTagAutoCompleteOption extends AutoCompleteOption {
    * @param {boolean} [options.isOptional=false] - Whether this closing tag is for an optional scope.
    * @param {number} [options.nestingLevel=0] - Nesting level (0 = innermost).
    */
-  constructor(macroName, options = {} as any) {
+  constructor(macroName: any, options = {} as any) {
     // The closing tag is what we're suggesting - use /macroName as the name for matching
     const closingTag = `/${macroName}`;
     super(closingTag, "{/");
@@ -1425,7 +1425,7 @@ export class MacroClosingTagAutoCompleteOption extends AutoCompleteOption {
  * @param {number} cursorOffset - Cursor position within macroText.
  * @returns {MacroAutoCompleteContext}
  */
-export function parseMacroContext(macroText, cursorOffset) {
+export function parseMacroContext(macroText: any, cursorOffset: any) {
   let i = 0;
 
   // Skip leading whitespace (but NOT newlines - those stop macro parsing for autocomplete)
@@ -1888,7 +1888,7 @@ export class SimpleAutoCompleteOption extends AutoCompleteOption {
   #description;
 
   /** @type {string|null} */
-  #detailedDescription;
+  #detailedDescription: string | null = null;
 
   /**
    * @param {Object} config - Configuration for the option.
@@ -1898,7 +1898,7 @@ export class SimpleAutoCompleteOption extends AutoCompleteOption {
    * @param {string} [config.detailedDescription] - Longer description for details panel (supports HTML). Falls back to description if not provided.
    * @param {string} [config.type='simple'] - Type identifier for CSS/data attributes.
    */
-  constructor({ name, symbol = " ", description = "", detailedDescription = null, type = "simple" }) {
+  constructor({ name, symbol = " ", description = "", detailedDescription = null, type = "simple" }: any) {
     super(name, symbol, type);
     this.#description = description;
     this.#detailedDescription = detailedDescription;
@@ -1934,7 +1934,7 @@ export class SimpleAutoCompleteOption extends AutoCompleteOption {
     specs.classList.add("specs");
     const nameSpan = document.createElement("span");
     nameSpan.classList.add("name", "monospace");
-    this.name.split("").forEach((char) => {
+    this.name.split("").forEach((char: any) => {
       const span = document.createElement("span");
       span.textContent = char;
       nameSpan.append(span);

@@ -8,9 +8,9 @@ class XTTSTtsProvider {
   // Config //
   //########//
 
-  settings;
+  settings: any;
   ready = false;
-  voices = [];
+  voices: any[] = [];
   separator = ". ";
 
   /**
@@ -18,7 +18,7 @@ class XTTSTtsProvider {
    * @param {string} text Input text
    * @returns {string} Processed text
    */
-  processText(text) {
+  processText(text: any) {
     // Replace fancy ellipsis with "..."
     text = text.replace(/…/g, "...");
     // Remove quotes
@@ -69,12 +69,12 @@ class XTTSTtsProvider {
         <select id="xtts_api_language">`;
 
     for (const language in this.languageLabels) {
-      if (this.languageLabels[language] == this.settings?.language) {
-        html += `<option value="${this.languageLabels[language]}" selected="selected">${language}</option>`;
+      if ((this.languageLabels as Record<string, any>)[language] == this.settings?.language) {
+        html += `<option value="${(this.languageLabels as Record<string, any>)[language]}" selected="selected">${language}</option>`;
         continue;
       }
 
-      html += `<option value="${this.languageLabels[language]}">${language}</option>`;
+      html += `<option value="${(this.languageLabels as Record<string, any>)[language]}">${language}</option>`;
     }
 
     html += `
@@ -146,7 +146,7 @@ class XTTSTtsProvider {
     this.changeTTSSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Pupulate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -165,7 +165,7 @@ class XTTSTtsProvider {
 
     const apiCheckInterval = setInterval(() => {
       // Use Extras API if TTS support is enabled
-      if (modules.includes("tts") || modules.includes("xtts-tts")) {
+      if ((modules as any[]).includes("tts") || (modules as any[]).includes("xtts-tts")) {
         const baseUrl = new URL(getApiUrl());
         baseUrl.pathname = "/api/tts";
         this.settings.provider_endpoint = baseUrl.toString();
@@ -249,18 +249,18 @@ class XTTSTtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((XTTSVoice) => XTTSVoice.name == voiceName)[0];
+    const match = this.voices.filter((XTTSVoice: any) => XTTSVoice.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found`;
     }
     return match;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -303,7 +303,7 @@ class XTTSTtsProvider {
     return response;
   }
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     console.info(`Generating new TTS for voice_id ${voiceId}`);
 
     if (this.settings.streaming) {
@@ -334,7 +334,7 @@ class XTTSTtsProvider {
   }
 
   // Interface not used by XTTS TTS
-  async fetchTtsFromHistory(history_item_id) {
+  async fetchTtsFromHistory(history_item_id: any) {
     return Promise.resolve(history_item_id);
   }
 }

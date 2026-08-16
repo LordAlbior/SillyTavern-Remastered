@@ -4,7 +4,7 @@ export class MacroAutoCompleteOption extends AutoCompleteOption {
   /**@type {string}*/ fullName;
   /**@type {string}*/ description;
 
-  constructor(name, fullName, description) {
+  constructor(name: any, fullName: any, description: any) {
     super(name, "{}");
     this.fullName = fullName;
     this.description = description;

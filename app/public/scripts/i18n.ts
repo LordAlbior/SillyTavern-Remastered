@@ -5,23 +5,23 @@ const overrideLanguage = localStorage.getItem(storageKey);
 const localeFile = String(
   overrideLanguage || navigator.language || (navigator as any).userLanguage || "en",
 ).toLowerCase();
-var langs;
+var langs: any[];
 // Don't change to let/const! It will break module loading.
 // eslint-disable-next-line prefer-const
-var localeData;
+var localeData: Record<string, any>;
 
 /** @type {Set<string>|null} Array of translations keys if they should be tracked - if not tracked then null */
-let trackMissingDynamicTranslate = null;
+let trackMissingDynamicTranslate: Set<string> | null = null;
 
 /** Injected by power-user.ts to register debug-menu functions (breaks i18n ↔ power-user cycle). */
-let debugRegisterHook = null;
-export function registerDebugHook(hook) {
+let debugRegisterHook: any = null;
+export function registerDebugHook(hook: any) {
     debugRegisterHook = hook;
 }
 
 /** Injected by secrets.ts to refresh secret displays on locale change (breaks i18n ↔ secrets cycle). */
-let secretDisplayHook = null;
-export function registerSecretDisplayHook(hook) {
+let secretDisplayHook: any = null;
+export function registerSecretDisplayHook(hook: any) {
     secretDisplayHook = hook;
 }
 export const getCurrentLocale = () => localeFile;
@@ -31,7 +31,7 @@ export const getCurrentLocale = () => localeFile;
  * @param {string} localeId Locale ID (e.g. 'fr-fr' or 'zh-cn')
  * @param {Record<string, string>} data Localization data to add
  */
-export function addLocaleData(localeId, data) {
+export function addLocaleData(localeId: string, data: Record<string, any>) {
   if (!localeData) {
     console.warn("Localization data not loaded yet. Additional data will not be added.");
     return;
@@ -90,12 +90,12 @@ const observer = new MutationObserver((mutations) => {
  * @param  {...any} values - Values for placeholders in the template string
  * @returns {string} Translated and formatted string
  */
-export function t(strings, ...values) {
-  const str = strings.reduce((result, string, i) => result + string + (values[i] !== undefined ? `\${${i}}` : ""), "");
+export function t(strings: any, ...values: any[]) {
+  const str = strings.reduce((result: any, string: any, i: any) => result + string + (values[i] !== undefined ? `\${${i}}` : ""), "");
   const translatedStr = translate(str);
 
   // Replace indexed placeholders with actual values
-  return translatedStr.replace(/\$\{(\d+)\}/g, (match, index) => values[index]);
+  return translatedStr.replace(/\$\{(\d+)\}/g, (match: any, index: any) => values[index]);
 }
 
 /**
@@ -110,7 +110,7 @@ export function t(strings, ...values) {
  * @param {string?} key - The key to use for translation. If not provided, text is used as the key.
  * @returns {string} - The translated text
  */
-export function translate(text, key = null) {
+export function translate(text: any, key: any = null) {
   const translationKey = key || text;
   if (translationKey === null || translationKey === undefined) {
     console.trace("WARN: No translation key provided");
@@ -127,7 +127,7 @@ export function translate(text, key = null) {
  * @param {string} language Language code
  * @returns {Promise<Record<string, string>>} Locale data
  */
-async function getLocaleData(language) {
+async function getLocaleData(language: any) {
   const supportedLang = findLang(language);
   if (!supportedLang) {
     return {};
@@ -148,8 +148,8 @@ async function getLocaleData(language) {
  * Gets a language object for the given language code.
  * @param {string} language Language code
  */
-function findLang(language) {
-  const supportedLang = langs.find((x) => x.lang === language);
+function findLang(language: any) {
+  const supportedLang = langs.find((x: any) => x.lang === language);
 
   const isEn = language.startsWith("en"); // includes 'en', and more specific locales like 'en-us', 'en-au', etc
   if (!supportedLang && !isEn) {
@@ -162,7 +162,7 @@ function findLang(language) {
  * Translates a given element based on its data-i18n attribute.
  * @param {Element} element The element to translate
  */
-function translateElement(element) {
+function translateElement(element: any) {
   const keys = element.getAttribute("data-i18n").split(";"); // Multi-key entries are ; delimited
   for (const key of keys) {
     const attributeMatch = key.match(/\[(\S+)\](.+)/); // [attribute]key
@@ -215,13 +215,13 @@ async function getMissingTranslations() {
           const attributeMatch = key.match(/\[(\S+)\](.+)/); // [attribute]key
           if (attributeMatch) {
             // attribute-tagged key
-            const localizedValue = localeData?.[attributeMatch[2]];
+            const localizedValue = (localeData as Record<string, any>)?.[attributeMatch[2]];
             if (!localizedValue) {
               missingData.push({ key, language: language.lang, value: String($(this).attr(attributeMatch[1])) });
             }
           } else {
             // No attribute tag, treat as 'text'
-            const localizedValue = localeData?.[key];
+            const localizedValue = (localeData as Record<string, any>)?.[key];
             if (!localizedValue) {
               missingData.push({ key, language: language.lang, value: $(this).text().trim() });
             }
@@ -231,15 +231,15 @@ async function getMissingTranslations() {
   }
 
   // Remove duplicates
-  const uniqueMissingData = [];
+  const uniqueMissingData: any[] = [];
   for (const { key, language, value } of missingData) {
-    if (!uniqueMissingData.some((x) => x.key === key && x.language === language && x.value === value)) {
+    if (!uniqueMissingData.some((x: any) => x.key === key && x.language === language && x.value === value)) {
       uniqueMissingData.push({ key, language, value });
     }
   }
 
   // Sort by language, then key
-  uniqueMissingData.sort((a, b) => a.language.localeCompare(b.language) || a.key.localeCompare(b.key));
+  uniqueMissingData.sort((a: any, b: any) => a.language.localeCompare(b.language) || a.key.localeCompare(b.key));
 
   // Map to { language: { key: value } }
   const missingDataMap = Object.fromEntries(uniqueMissingData.map(({ key, value }) => [key, value]));
@@ -278,7 +278,7 @@ export function applyLocale(root = document) {
   });
 
   if (root !== document) {
-    return $root.get(0).body.innerHTML;
+    return $root.get(0)!.body.innerHTML;
   }
 }
 

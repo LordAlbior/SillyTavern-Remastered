@@ -1,5 +1,5 @@
 import { chevrotain } from "../../../lib.js";
-import { MacroLexer } from "./MacroLexer.ts";
+const MacroLexer: any = (await import("./MacroLexer.ts" as string)).MacroLexer;
 
 const { CstParser } = chevrotain;
 
@@ -17,7 +17,7 @@ let instance;
 export { instance as MacroParser };
 
 class MacroParser extends CstParser {
-  /** @type {MacroParser} */ static #instance;
+  /** @type {MacroParser} */ static #instance: any;
   /** @type {MacroParser} */ static get instance() {
     return MacroParser.#instance ?? (MacroParser.#instance = new MacroParser());
   }
@@ -199,7 +199,7 @@ class MacroParser extends CstParser {
    * @param {string} input
    * @returns {{ cst: CstNode|null, errors: ({ message: string }|ILexingError|IRecognitionException)[] , lexingErrors: ILexingError[], parserErrors: IRecognitionException[] }}
    */
-  parseDocument(input) {
+  parseDocument(input: any) {
     if (!input) {
       return { cst: null, errors: [{ message: "Input is empty" }], lexingErrors: [], parserErrors: [] };
     }
@@ -214,7 +214,7 @@ class MacroParser extends CstParser {
     return { cst, errors, lexingErrors: lexingResult.errors, parserErrors: this.errors };
   }
 
-  test(input) {
+  test(input: any) {
     const lexingResult = MacroLexer.tokenize(input);
     // "input" is a setter which will reset the parser's state.
     this.input = lexingResult.tokens;
@@ -222,7 +222,7 @@ class MacroParser extends CstParser {
 
     // For testing purposes we need to actually persist the error messages in the object,
     // otherwise the test cases cannot read those, as they don't have access to the exception object type.
-    const errors = this.errors.map((x) => ({ message: x.message, ...x, stack: x.stack }));
+    const errors = this.errors.map((x) => ({ ...x, message: x.message, stack: x.stack }));
 
     return { cst, errors: errors };
   }

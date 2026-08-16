@@ -18,7 +18,7 @@ interface Scraper {
   iconAvailable: boolean;
   init?(): Promise<void>;
   isAvailable(): Promise<boolean>;
-  scrape(): Promise<File[]>;
+  scrape(): Promise<File[] | undefined>;
 }
 
 interface ScraperInfo {
@@ -33,14 +33,14 @@ export class ScraperManager {
   /**
    * @type {Scraper[]}
    */
-  static #scrapers = [];
+  static #scrapers: any[] = [];
 
   /**
    * Register a scraper to be used by the Data Bank.
    * @param {Scraper} scraper Instance of a scraper to register
    */
-  static async registerDataBankScraper(scraper) {
-    if (ScraperManager.#scrapers.some((s) => s.id === scraper.id)) {
+  static async registerDataBankScraper(scraper: any) {
+    if (ScraperManager.#scrapers.some((s: any) => s.id === scraper.id)) {
       console.warn(`Scraper with ID ${scraper.id} already registered`);
       return;
     }
@@ -57,7 +57,7 @@ export class ScraperManager {
    * @returns {ScraperInfo[]} List of scrapers available for the Data Bank
    */
   static getDataBankScrapers() {
-    return ScraperManager.#scrapers.map((s) => ({
+    return ScraperManager.#scrapers.map((s: any) => ({
       id: s.id,
       name: s.name,
       description: s.description,
@@ -71,7 +71,7 @@ export class ScraperManager {
    * @param {string} scraperId ID of the scraper to run
    * @returns {Promise<File[]>} List of files scraped by the scraper
    */
-  static runDataBankScraper(scraperId) {
+  static runDataBankScraper(scraperId: any) {
     const scraper = ScraperManager.#scrapers.find((s) => s.id === scraperId);
     if (!scraper) {
       console.warn(`Scraper with ID ${scraperId} not found`);
@@ -85,7 +85,7 @@ export class ScraperManager {
    * @param {string} scraperId ID of the scraper to check
    * @returns {Promise<boolean>} Whether the scraper is available
    */
-  static isScraperAvailable(scraperId) {
+  static isScraperAvailable(scraperId: any) {
     const scraper = ScraperManager.#scrapers.find((s) => s.id === scraperId);
     if (!scraper) {
       console.warn(`Scraper with ID ${scraperId} not found`);
@@ -126,7 +126,7 @@ class Notepad implements Scraper {
    * Create a text file from a string.
    * @returns {Promise<File[]>} File attachments scraped from the text
    */
-  async scrape() {
+  async scrape(): Promise<File[] | undefined> {
     const template = $(await renderExtensionTemplateAsync("attachments", "notepad", {}));
     let fileName = `Untitled - ${new Date().toLocaleString()}`;
     let text = "";
@@ -188,7 +188,7 @@ class WebScraper implements Scraper {
    * @param {Blob} blob Blob of the HTML file
    * @returns {Promise<string>} Title of the HTML file
    */
-  async getTitleFromHtmlBlob(blob) {
+  async getTitleFromHtmlBlob(blob: any) {
     const text = await blob.text();
     const titleMatch = text.match(/<title>(.*?)<\/title>/i);
     return titleMatch ? titleMatch[1] : "";
@@ -198,7 +198,7 @@ class WebScraper implements Scraper {
    * Scrape file attachments from a webpage.
    * @returns {Promise<File[]>} File attachments scraped from the webpage
    */
-  async scrape() {
+  async scrape(): Promise<File[] | undefined> {
     const template = $(await renderExtensionTemplateAsync("attachments", "web-scrape", {}));
     const linksString = await callGenericPopup(template, POPUP_TYPE.INPUT, "", {
       wide: false,
@@ -319,7 +319,7 @@ class MediaWikiScraper implements Scraper {
     }
   }
 
-  async scrape() {
+  async scrape(): Promise<File[] | undefined> {
     let url = "";
     let filter = "";
     let output = "single";
@@ -380,7 +380,7 @@ class MediaWikiScraper implements Scraper {
 
     if (output === "single") {
       const combinedContent = data
-        .map((a) => String(a.title).trim() + "\n\n" + String(a.content).trim())
+        .map((a: any) => String(a.title).trim() + "\n\n" + String(a.content).trim())
         .join("\n\n\n\n");
       const file = new File([combinedContent], `${url}.txt`, { type: "text/plain" });
       return [file];
@@ -432,7 +432,7 @@ class FandomScraper implements Scraper {
    * @param {string} fandom URL or name of the fandom
    * @returns {string} ID of the fandom
    */
-  getFandomId(fandom) {
+  getFandomId(fandom: any) {
     try {
       const url = new URL(fandom);
       return url.hostname.split(".")[0] || fandom;
@@ -441,7 +441,7 @@ class FandomScraper implements Scraper {
     }
   }
 
-  async scrape() {
+  async scrape(): Promise<File[] | undefined> {
     let fandom = "";
     let filter = "";
     let output = "single";
@@ -502,7 +502,7 @@ class FandomScraper implements Scraper {
 
     if (output === "single") {
       const combinedContent = data
-        .map((a) => String(a.title).trim() + "\n\n" + String(a.content).trim())
+        .map((a: any) => String(a.title).trim() + "\n\n" + String(a.content).trim())
         .join("\n\n\n\n");
       const file = new File([combinedContent], `${fandom}.txt`, { type: "text/plain" });
       return [file];
@@ -512,7 +512,7 @@ class FandomScraper implements Scraper {
   }
 }
 
-const iso6391Codes = [
+const iso6391Codes: any[] = [
   "aa",
   "ab",
   "ae",
@@ -722,7 +722,7 @@ class YouTubeScraper implements Scraper {
     SlashCommandParser.addCommandObject(
       SlashCommand.fromProps({
         name: "yt-script",
-        callback: async (args, url) => {
+        callback: async (args: any, url: any) => {
           try {
             if (!url) {
               throw new Error("URL or ID of the YouTube video is required");
@@ -745,8 +745,8 @@ class YouTubeScraper implements Scraper {
             ARGUMENT_TYPE.STRING,
             false,
             false,
-            "",
-            iso6391Codes,
+            "" as any,
+            iso6391Codes as any,
           ),
         ],
         unnamedArgumentList: [
@@ -769,7 +769,7 @@ class YouTubeScraper implements Scraper {
    * @param {string} url URL of the YouTube video
    * @returns {string} ID of the YouTube video
    */
-  parseId(url) {
+  parseId(url: any) {
     // If the URL is already an ID, return it
     if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
       return url;
@@ -785,7 +785,7 @@ class YouTubeScraper implements Scraper {
    * Scrape transcript from a YouTube video.
    * @returns {Promise<File[]>} File attachments scraped from the YouTube video
    */
-  async scrape() {
+  async scrape(): Promise<File[] | undefined> {
     let lang = "";
     const template = $(await renderExtensionTemplateAsync("attachments", "youtube-scrape", {}));
     const videoUrl = await callGenericPopup(template, POPUP_TYPE.INPUT, "", {
@@ -817,7 +817,7 @@ class YouTubeScraper implements Scraper {
    * @param {string} lang Video language
    * @returns {Promise<{ transcript: string, id: string }>} Transcript of the YouTube video with the video ID
    */
-  async getScript(videoUrl, lang) {
+  async getScript(videoUrl: any, lang: any) {
     const id = this.parseId(String(videoUrl).trim());
 
     const result = await fetch("/api/search/transcript", {

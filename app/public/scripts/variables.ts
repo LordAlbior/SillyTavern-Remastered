@@ -19,7 +19,7 @@ import { isFalseBoolean, convertValueType, isTrueBoolean } from './utils.ts';
 
 const MAX_LOOPS = 100;
 
-export function getLocalVariable(name, args: Record<string, any> = {}) {
+export function getLocalVariable(name: any, args: Record<string, any> = {}) {
     if (!chat_metadata.variables) {
         chat_metadata.variables = {};
     }
@@ -45,7 +45,7 @@ export function getLocalVariable(name, args: Record<string, any> = {}) {
     return (localVariable?.trim?.() === '' || isNaN(Number(localVariable))) ? (localVariable || '') : Number(localVariable);
 }
 
-export function setLocalVariable(name, value, args: Record<string, any> = {}) {
+export function setLocalVariable(name: any, value: any, args: Record<string, any> = {}) {
     if (!name) {
         throw new Error('Variable name cannot be empty or undefined.');
     }
@@ -80,7 +80,7 @@ export function setLocalVariable(name, value, args: Record<string, any> = {}) {
     return value;
 }
 
-export function getGlobalVariable(name, args: Record<string, any> = {}) {
+export function getGlobalVariable(name: any, args: Record<string, any> = {}) {
     let globalVariable = extension_settings.variables.global[args.key ?? name];
     if (args.index !== undefined) {
         try {
@@ -102,7 +102,7 @@ export function getGlobalVariable(name, args: Record<string, any> = {}) {
     return (globalVariable?.trim?.() === '' || isNaN(Number(globalVariable))) ? (globalVariable || '') : Number(globalVariable);
 }
 
-export function setGlobalVariable(name, value, args: Record<string, any> = {}) {
+export function setGlobalVariable(name: any, value: any, args: Record<string, any> = {}) {
     if (!name) {
         throw new Error('Variable name cannot be empty or undefined.');
     }
@@ -133,7 +133,7 @@ export function setGlobalVariable(name, value, args: Record<string, any> = {}) {
     return value;
 }
 
-export function addLocalVariable(name, value) {
+export function addLocalVariable(name: any, value: any) {
     const currentValue = getLocalVariable(name) || 0;
     try {
         const parsedValue = JSON.parse(currentValue);
@@ -163,7 +163,7 @@ export function addLocalVariable(name, value) {
     return newValue;
 }
 
-export function addGlobalVariable(name, value) {
+export function addGlobalVariable(name: any, value: any) {
     const currentValue = getGlobalVariable(name) || 0;
     try {
         const parsedValue = JSON.parse(currentValue);
@@ -193,19 +193,19 @@ export function addGlobalVariable(name, value) {
     return newValue;
 }
 
-export function incrementLocalVariable(name) {
+export function incrementLocalVariable(name: any) {
     return addLocalVariable(name, 1);
 }
 
-export function incrementGlobalVariable(name) {
+export function incrementGlobalVariable(name: any) {
     return addGlobalVariable(name, 1);
 }
 
-export function decrementLocalVariable(name) {
+export function decrementLocalVariable(name: any) {
     return addLocalVariable(name, -1);
 }
 
-export function decrementGlobalVariable(name) {
+export function decrementGlobalVariable(name: any) {
     return addGlobalVariable(name, -1);
 }
 
@@ -215,7 +215,7 @@ export function decrementGlobalVariable(name) {
  * @param {SlashCommandScope} scope Scope
  * @returns {string} Variable value or the string literal
  */
-export function resolveVariable(name, scope = null) {
+export function resolveVariable(name: any, scope: any = null) {
     if (scope?.existsVariable(name)) {
         return scope.getVariable(name);
     }
@@ -238,29 +238,29 @@ export function resolveVariable(name, scope = null) {
 export function getVariableMacros() {
     return [
         // Replace {{setvar::name::value}} with empty string and set the variable name to value
-        { regex: /{{setvar::([^:]+)::([^}]*)}}/gi, replace: (_, name, value) => { setLocalVariable(name.trim(), value); return ''; } },
+        { regex: /{{setvar::([^:]+)::([^}]*)}}/gi, replace: (_: any, name: any, value: any) => { setLocalVariable(name.trim(), value); return ''; } },
         // Replace {{addvar::name::value}} with empty string and add value to the variable value
-        { regex: /{{addvar::([^:]+)::([^}]+)}}/gi, replace: (_, name, value) => { addLocalVariable(name.trim(), value); return ''; } },
+        { regex: /{{addvar::([^:]+)::([^}]+)}}/gi, replace: (_: any, name: any, value: any) => { addLocalVariable(name.trim(), value); return ''; } },
         // Replace {{incvar::name}} with empty string and increment the variable name by 1
-        { regex: /{{incvar::([^}]+)}}/gi, replace: (_, name) => incrementLocalVariable(name.trim()) },
+        { regex: /{{incvar::([^}]+)}}/gi, replace: (_: any, name: any) => incrementLocalVariable(name.trim()) },
         // Replace {{decvar::name}} with empty string and decrement the variable name by 1
-        { regex: /{{decvar::([^}]+)}}/gi, replace: (_, name) => decrementLocalVariable(name.trim()) },
+        { regex: /{{decvar::([^}]+)}}/gi, replace: (_: any, name: any) => decrementLocalVariable(name.trim()) },
         // Replace {{getvar::name}} with the value of the variable name
-        { regex: /{{getvar::([^}]+)}}/gi, replace: (_, name) => getLocalVariable(name.trim()) },
+        { regex: /{{getvar::([^}]+)}}/gi, replace: (_: any, name: any) => getLocalVariable(name.trim()) },
         // Replace {{setglobalvar::name::value}} with empty string and set the global variable name to value
-        { regex: /{{setglobalvar::([^:]+)::([^}]*)}}/gi, replace: (_, name, value) => { setGlobalVariable(name.trim(), value); return ''; } },
+        { regex: /{{setglobalvar::([^:]+)::([^}]*)}}/gi, replace: (_: any, name: any, value: any) => { setGlobalVariable(name.trim(), value); return ''; } },
         // Replace {{addglobalvar::name::value}} with empty string and add value to the global variable value
-        { regex: /{{addglobalvar::([^:]+)::([^}]+)}}/gi, replace: (_, name, value) => { addGlobalVariable(name.trim(), value); return ''; } },
+        { regex: /{{addglobalvar::([^:]+)::([^}]+)}}/gi, replace: (_: any, name: any, value: any) => { addGlobalVariable(name.trim(), value); return ''; } },
         // Replace {{incglobalvar::name}} with empty string and increment the global variable name by 1
-        { regex: /{{incglobalvar::([^}]+)}}/gi, replace: (_, name) => incrementGlobalVariable(name.trim()) },
+        { regex: /{{incglobalvar::([^}]+)}}/gi, replace: (_: any, name: any) => incrementGlobalVariable(name.trim()) },
         // Replace {{decglobalvar::name}} with empty string and decrement the global variable name by 1
-        { regex: /{{decglobalvar::([^}]+)}}/gi, replace: (_, name) => decrementGlobalVariable(name.trim()) },
+        { regex: /{{decglobalvar::([^}]+)}}/gi, replace: (_: any, name: any) => decrementGlobalVariable(name.trim()) },
         // Replace {{getglobalvar::name}} with the value of the global variable name
-        { regex: /{{getglobalvar::([^}]+)}}/gi, replace: (_, name) => getGlobalVariable(name.trim()) },
+        { regex: /{{getglobalvar::([^}]+)}}/gi, replace: (_: any, name: any) => getGlobalVariable(name.trim()) },
     ];
 }
 
-async function listVariablesCallback(args) {
+async function listVariablesCallback(args: any) {
     /** @type {import('./slash-commands/SlashCommandReturnHelper.js').SlashCommandReturnType} */
     let returnType = args.return;
 
@@ -276,7 +276,7 @@ async function listVariablesCallback(args) {
     const localVariables = includeLocalVariables ? Object.entries(chat_metadata.variables).map(([name, value]) => `${name}: ${value}`) : [];
     const globalVariables = includeGlobalVariables ? Object.entries(extension_settings.variables.global).map(([name, value]) => `${name}: ${value}`) : [];
 
-    const buildTextValue = (_) => {
+    const buildTextValue = (_: any) => {
         const localVariablesString = localVariables.length > 0 ? localVariables.join('\n\n') : 'No local variables';
         const globalVariablesString = globalVariables.length > 0 ? globalVariables.join('\n\n') : 'No global variables';
         const chatName = getCurrentChatId();
@@ -301,7 +301,7 @@ async function listVariablesCallback(args) {
  * @param {NamedArguments} args
  * @param {(string|SlashCommandClosure)[]} value
  */
-async function whileCallback(args, value) {
+async function whileCallback(args: any, value: any) {
     if (args.guard instanceof SlashCommandClosure) throw new Error('argument \'guard\' cannot be a closure for command /while');
     const isGuardOff = isFalseBoolean(args.guard?.toString());
     const iterations = isGuardOff ? Number.MAX_SAFE_INTEGER : MAX_LOOPS;
@@ -327,8 +327,8 @@ async function whileCallback(args, value) {
             } else {
                 commandResult = await executeSubCommands(command, args._scope, args._parserFlags, args._abortController);
             }
-            if (commandResult.isAborted) break;
-            if (commandResult.isBreak) break;
+            if (commandResult?.isAborted) break;
+            if (commandResult?.isBreak) break;
         } else {
             break;
         }
@@ -347,7 +347,7 @@ async function whileCallback(args, value) {
  * @param {UnnamedArguments} value
  * @returns
  */
-async function timesCallback(args, value) {
+async function timesCallback(args: any, value: any) {
     if (args.guard instanceof SlashCommandClosure) throw new Error('argument \'guard\' cannot be a closure for command /while');
     let repeats;
     let command;
@@ -373,8 +373,8 @@ async function timesCallback(args, value) {
         } else {
             result = await executeSubCommands(command.replace(/\{\{timesIndex\}\}/g, i.toString()), args._scope, args._parserFlags, args._abortController);
         }
-        if (result.isAborted) break;
-        if (result.isBreak) break;
+        if (result?.isAborted) break;
+        if (result?.isBreak) break;
     }
 
     return result?.pipe ?? '';
@@ -385,7 +385,7 @@ async function timesCallback(args, value) {
  * @param {NamedArguments} args
  * @param {(string|SlashCommandClosure)[]} value
  */
-async function ifCallback(args, value) {
+async function ifCallback(args: any, value: any) {
     const { a, b, rule } = parseBooleanOperands(args);
     const result = evalBoolean(rule, a, b);
 
@@ -419,7 +419,7 @@ async function ifCallback(args, value) {
  * @param {string} name Local variable name
  * @returns {boolean} True if the local variable exists, false otherwise
  */
-export function existsLocalVariable(name) {
+export function existsLocalVariable(name: any) {
     return chat_metadata.variables && chat_metadata.variables[name] !== undefined;
 }
 
@@ -428,7 +428,7 @@ export function existsLocalVariable(name) {
  * @param {string} name Global variable name
  * @returns {boolean} True if the global variable exists, false otherwise
  */
-export function existsGlobalVariable(name) {
+export function existsGlobalVariable(name: any) {
     return extension_settings.variables.global && extension_settings.variables.global[name] !== undefined;
 }
 
@@ -437,12 +437,12 @@ export function existsGlobalVariable(name) {
  * @param {object} args Command arguments
  * @returns {{a: string | number, b: string | number?, rule: string}} Boolean operands
  */
-export function parseBooleanOperands(args) {
+export function parseBooleanOperands(args: any) {
     // Resolution order: numeric literal, local variable, global variable, string literal
     /**
      * @param {string} operand Boolean operand candidate
      */
-    function getOperand(operand) {
+    function getOperand(operand: any) {
         if (operand === undefined) {
             return undefined;
         }
@@ -491,7 +491,7 @@ export function parseBooleanOperands(args) {
  * @param {string|number?} b The right operand
  * @returns {boolean} True if the rule yields true, false otherwise
  */
-export function evalBoolean(rule, a, b) {
+export function evalBoolean(rule: any, a: any, b: any) {
     if (a === undefined) {
         throw new Error('Left operand is not provided');
     }
@@ -568,7 +568,7 @@ export function evalBoolean(rule, a, b) {
  * @param {SlashCommandAbortController} [abortController] The abort controller to use.
  * @returns {Promise<SlashCommandClosureResult>} Closure execution result
  */
-async function executeSubCommands(command, scope = null, parserFlags = null, abortController = null) {
+async function executeSubCommands(command: any, scope: any = null, parserFlags: any = null, abortController: any = null) {
     if (command.startsWith('"') && command.endsWith('"')) {
         command = command.slice(1, -1);
     }
@@ -589,7 +589,7 @@ async function executeSubCommands(command, scope = null, parserFlags = null, abo
  * @param {string} name Variable name to delete
  * @returns {string} Empty string
  */
-export function deleteLocalVariable(name) {
+export function deleteLocalVariable(name: any) {
     if (!existsLocalVariable(name)) {
         console.warn(`The local variable "${name}" does not exist.`);
         return '';
@@ -605,7 +605,7 @@ export function deleteLocalVariable(name) {
  * @param {string} name Variable name to delete
  * @returns {string} Empty string
  */
-export function deleteGlobalVariable(name) {
+export function deleteGlobalVariable(name: any) {
     if (!existsGlobalVariable(name)) {
         console.warn(`The global variable "${name}" does not exist.`);
         return '';
@@ -622,7 +622,7 @@ export function deleteGlobalVariable(name) {
  * @param {SlashCommandScope} scope Scope
  * @returns {number[]} An array of numeric values
  */
-function parseNumericSeries(value, scope = null) {
+function parseNumericSeries(value: any, scope: any = null) {
     if (typeof value === 'number') {
         return [value];
     }
@@ -641,15 +641,15 @@ function parseNumericSeries(value, scope = null) {
         }
     }
 
-    const array = values.map(i => typeof i === 'string' ? i.trim() : i)
-        .filter(i => i !== '')
-        .map(i => isNaN(Number(i)) ? Number(resolveVariable(String(i), scope)) : Number(i))
-        .filter(i => !isNaN(i));
+    const array = values.map((i: any) => typeof i === 'string' ? i.trim() : i)
+        .filter((i: any) => i !== '')
+        .map((i: any) => isNaN(Number(i)) ? Number(resolveVariable(String(i), scope)) : Number(i))
+        .filter((i: any) => !isNaN(i));
 
     return array;
 }
 
-function performOperation(value, operation, singleOperand = false, scope = null) {
+function performOperation(value: any, operation: any, singleOperand: any = false, scope: any = null) {
     function getResult() {
         if (!value) {
             return 0;
@@ -674,28 +674,28 @@ function performOperation(value, operation, singleOperand = false, scope = null)
     return String(result);
 }
 
-function addValuesCallback(args, value) {
-    return performOperation(value, (array) => array.reduce((a, b) => a + b, 0), false, args._scope);
+function addValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => array.reduce((a: any, b: any) => a + b, 0), false, args._scope);
 }
 
-function mulValuesCallback(args, value) {
-    return performOperation(value, (array) => array.reduce((a, b) => a * b, 1), false, args._scope);
+function mulValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => array.reduce((a: any, b: any) => a * b, 1), false, args._scope);
 }
 
-function minValuesCallback(args, value) {
-    return performOperation(value, (array) => Math.min(...array), false, args._scope);
+function minValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => Math.min(...array), false, args._scope);
 }
 
-function maxValuesCallback(args, value) {
-    return performOperation(value, (array) => Math.max(...array), false, args._scope);
+function maxValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => Math.max(...array), false, args._scope);
 }
 
-function subValuesCallback(args, value) {
-    return performOperation(value, (array) => array.reduce((a, b) => a - b, array.shift() ?? 0), false, args._scope);
+function subValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => array.reduce((a: any, b: any) => a - b, array.shift() ?? 0), false, args._scope);
 }
 
-function divValuesCallback(args, value) {
-    return performOperation(value, (array) => {
+function divValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => {
         if (array[1] === 0) {
             console.warn('Division by zero.');
             return 0;
@@ -704,8 +704,8 @@ function divValuesCallback(args, value) {
     }, false, args._scope);
 }
 
-function modValuesCallback(args, value) {
-    return performOperation(value, (array) => {
+function modValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => {
         if (array[1] === 0) {
             console.warn('Division by zero.');
             return 0;
@@ -714,35 +714,35 @@ function modValuesCallback(args, value) {
     }, false, args._scope);
 }
 
-function powValuesCallback(args, value) {
-    return performOperation(value, (array) => Math.pow(array[0], array[1]), false, args._scope);
+function powValuesCallback(args: any, value: any) {
+    return performOperation(value, (array: any) => Math.pow(array[0], array[1]), false, args._scope);
 }
 
-function sinValuesCallback(args, value) {
+function sinValuesCallback(args: any, value: any) {
     return performOperation(value, Math.sin, true, args._scope);
 }
 
-function cosValuesCallback(args, value) {
+function cosValuesCallback(args: any, value: any) {
     return performOperation(value, Math.cos, true, args._scope);
 }
 
-function logValuesCallback(args, value) {
+function logValuesCallback(args: any, value: any) {
     return performOperation(value, Math.log, true, args._scope);
 }
 
-function roundValuesCallback(args, value) {
+function roundValuesCallback(args: any, value: any) {
     return performOperation(value, Math.round, true, args._scope);
 }
 
-function absValuesCallback(args, value) {
+function absValuesCallback(args: any, value: any) {
     return performOperation(value, Math.abs, true, args._scope);
 }
 
-function sqrtValuesCallback(args, value) {
+function sqrtValuesCallback(args: any, value: any) {
     return performOperation(value, Math.sqrt, true, args._scope);
 }
 
-function lenValuesCallback(value) {
+function lenValuesCallback(value: any) {
     let parsedValue = value;
     try {
         parsedValue = JSON.parse(value);
@@ -764,7 +764,7 @@ function lenValuesCallback(value) {
     }
 }
 
-function randValuesCallback(from, to, args) {
+function randValuesCallback(from: any, to: any, args: any) {
     const range = to - from;
     const value = from + Math.random() * range;
     if (args.round == 'round') {
@@ -779,7 +779,7 @@ function randValuesCallback(from, to, args) {
     return value;
 }
 
-function customSortComparitor(a, b) {
+function customSortComparitor(a: any, b: any) {
     if (typeof a != typeof b) {
         a = typeof a;
         b = typeof b;
@@ -787,8 +787,8 @@ function customSortComparitor(a, b) {
     return a > b ? 1 : a < b ? -1 : 0;
 }
 
-function sortArrayObjectCallback(args, value) {
-    let parsedValue;
+function sortArrayObjectCallback(args: any, value: any) {
+    let parsedValue: any;
     if (typeof value == 'string') {
         try {
             parsedValue = JSON.parse(value);
@@ -819,7 +819,7 @@ function sortArrayObjectCallback(args, value) {
  * @param {string|SlashCommandClosure|(string|SlashCommandClosure)[]} value Name and optional value for the variable.
  * @returns The variable's value
  */
-function letCallback(args, value) {
+function letCallback(args: any, value: any) {
     if (!Array.isArray(value)) value = [value];
     if (args.key !== undefined) {
         const key = args.key;
@@ -851,7 +851,7 @@ function letCallback(args, value) {
  * @param {string|SlashCommandClosure|(string|SlashCommandClosure)[]} value Name and optional value for the variable.
  * @returns The variable's value
  */
-function varCallback(args, value) {
+function varCallback(args: any, value: any) {
     if (!Array.isArray(value)) value = [value];
     if (args.key !== undefined) {
         const key = args.key;
@@ -880,7 +880,7 @@ function varCallback(args, value) {
  * @param {SlashCommandClosure} value
  * @returns {string}
  */
-function closureSerializeCallback(args, value) {
+function closureSerializeCallback(args: any, value: any) {
     if (!(value instanceof SlashCommandClosure)) {
         throw new Error('unnamed argument must be a closure');
     }
@@ -892,7 +892,7 @@ function closureSerializeCallback(args, value) {
  * @param {UnnamedArguments} value
  * @returns {SlashCommandClosure}
  */
-function closureDeserializeCallback(args, value) {
+function closureDeserializeCallback(args: any, value: any) {
     const parser = new SlashCommandParser();
     const closure = parser.parse(value, true, args._parserFlags, args._abortController);
     closure.scope.parent = args._scope;
@@ -915,9 +915,9 @@ export function registerVariableCommands() {
                 isRequired: false,
                 forceEnum: true,
                 enumList: [
-                    new SlashCommandEnumValue('all', 'All variables', enumTypes.enum, enumIcons.variable),
-                    new SlashCommandEnumValue('local', 'Local variables', enumTypes.enum, enumIcons.localVariable),
-                    new SlashCommandEnumValue('global', 'Global variables', enumTypes.enum, enumIcons.globalVariable),
+                    new SlashCommandEnumValue('all', 'All variables' as any, enumTypes.enum, enumIcons.variable),
+                    new SlashCommandEnumValue('local', 'Local variables' as any, enumTypes.enum, enumIcons.localVariable),
+                    new SlashCommandEnumValue('global', 'Global variables' as any, enumTypes.enum, enumIcons.globalVariable),
                 ],
             }),
             SlashCommandNamedArgument.fromProps({
@@ -932,7 +932,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'setvar',
-        callback: (args, value) => String(setLocalVariable(args.key || args.name, value, args)),
+        callback: (args: any, value: any) => String(setLocalVariable(args.key || args.name, value, args)),
         aliases: ['setchatvar'],
         returns: 'the set variable value',
         namedArgumentList: [
@@ -981,7 +981,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'getvar',
-        callback: (args, value) => String(getLocalVariable(value, args)),
+        callback: (args: any, value: any) => String(getLocalVariable(value, args)),
         aliases: ['getchatvar'],
         returns: 'the variable value',
         namedArgumentList: [
@@ -1025,7 +1025,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'addvar',
-        callback: (args, value) => String(addLocalVariable(args.key || args.name, value)),
+        callback: (args: any, value: any) => String(addLocalVariable(args.key || args.name, value)),
         aliases: ['addchatvar'],
         returns: 'the new variable value',
         namedArgumentList: [
@@ -1059,7 +1059,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'setglobalvar',
-        callback: (args, value) => String(setGlobalVariable(args.key || args.name, value, args)),
+        callback: (args: any, value: any) => String(setGlobalVariable(args.key || args.name, value, args)),
         returns: 'the set global variable value',
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1107,7 +1107,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'getglobalvar',
-        callback: (args, value) => String(getGlobalVariable(value, args)),
+        callback: (args: any, value: any) => String(getGlobalVariable(value, args)),
         returns: 'global variable value',
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1149,7 +1149,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'addglobalvar',
-        callback: (args, value) => String(addGlobalVariable(args.key || args.name, value)),
+        callback: (args: any, value: any) => String(addGlobalVariable(args.key || args.name, value)),
         returns: 'the new variable value',
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1182,7 +1182,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'incvar',
-        callback: (_, value) => String(incrementLocalVariable(value)),
+        callback: (_: any, value: any) => String(incrementLocalVariable(value)),
         aliases: ['incchatvar'],
         returns: 'the new variable value',
         unnamedArgumentList: [
@@ -1211,7 +1211,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'decvar',
-        callback: (_, value) => String(decrementLocalVariable(value)),
+        callback: (_: any, value: any) => String(decrementLocalVariable(value)),
         aliases: ['decchatvar'],
         returns: 'the new variable value',
         unnamedArgumentList: [
@@ -1240,7 +1240,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'incglobalvar',
-        callback: (_, value) => String(incrementGlobalVariable(value)),
+        callback: (_: any, value: any) => String(incrementGlobalVariable(value)),
         returns: 'the new variable value',
         unnamedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1268,7 +1268,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'decglobalvar',
-        callback: (_, value) => String(decrementGlobalVariable(value)),
+        callback: (_: any, value: any) => String(decrementGlobalVariable(value)),
         returns: 'the new variable value',
         unnamedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1318,15 +1318,15 @@ export function registerVariableCommands() {
                 typeList: [ARGUMENT_TYPE.STRING],
                 defaultValue: 'eq',
                 enumList: [
-                    new SlashCommandEnumValue('eq', 'a == b (strings & numbers)'),
-                    new SlashCommandEnumValue('neq', 'a !== b (strings & numbers)'),
-                    new SlashCommandEnumValue('in', 'a includes b (strings & numbers as strings)'),
-                    new SlashCommandEnumValue('nin', 'a not includes b (strings & numbers as strings)'),
-                    new SlashCommandEnumValue('gt', 'a > b (numbers)'),
-                    new SlashCommandEnumValue('gte', 'a >= b (numbers)'),
-                    new SlashCommandEnumValue('lt', 'a < b (numbers)'),
-                    new SlashCommandEnumValue('lte', 'a <= b (numbers)'),
-                    new SlashCommandEnumValue('not', '!a (truthy)'),
+                    new SlashCommandEnumValue('eq', 'a == b (strings & numbers)' as any),
+                    new SlashCommandEnumValue('neq', 'a !== b (strings & numbers)' as any),
+                    new SlashCommandEnumValue('in', 'a includes b (strings & numbers as strings)' as any),
+                    new SlashCommandEnumValue('nin', 'a not includes b (strings & numbers as strings)' as any),
+                    new SlashCommandEnumValue('gt', 'a > b (numbers)' as any),
+                    new SlashCommandEnumValue('gte', 'a >= b (numbers)' as any),
+                    new SlashCommandEnumValue('lt', 'a < b (numbers)' as any),
+                    new SlashCommandEnumValue('lte', 'a <= b (numbers)' as any),
+                    new SlashCommandEnumValue('not', '!a (truthy)' as any),
                 ],
                 forceEnum: true,
             }),
@@ -1419,15 +1419,15 @@ export function registerVariableCommands() {
                 typeList: [ARGUMENT_TYPE.STRING],
                 defaultValue: 'eq',
                 enumList: [
-                    new SlashCommandEnumValue('eq', 'a == b (strings & numbers)'),
-                    new SlashCommandEnumValue('neq', 'a !== b (strings & numbers)'),
-                    new SlashCommandEnumValue('in', 'a includes b (strings & numbers as strings)'),
-                    new SlashCommandEnumValue('nin', 'a not includes b (strings & numbers as strings)'),
-                    new SlashCommandEnumValue('gt', 'a > b (numbers)'),
-                    new SlashCommandEnumValue('gte', 'a >= b (numbers)'),
-                    new SlashCommandEnumValue('lt', 'a < b (numbers)'),
-                    new SlashCommandEnumValue('lte', 'a <= b (numbers)'),
-                    new SlashCommandEnumValue('not', '!a (truthy)'),
+                    new SlashCommandEnumValue('eq', 'a == b (strings & numbers)' as any),
+                    new SlashCommandEnumValue('neq', 'a !== b (strings & numbers)' as any),
+                    new SlashCommandEnumValue('in', 'a includes b (strings & numbers as strings)' as any),
+                    new SlashCommandEnumValue('nin', 'a not includes b (strings & numbers as strings)' as any),
+                    new SlashCommandEnumValue('gt', 'a > b (numbers)' as any),
+                    new SlashCommandEnumValue('gte', 'a >= b (numbers)' as any),
+                    new SlashCommandEnumValue('lt', 'a < b (numbers)' as any),
+                    new SlashCommandEnumValue('lte', 'a <= b (numbers)' as any),
+                    new SlashCommandEnumValue('not', '!a (truthy)' as any),
                 ],
                 forceEnum: true,
             }),
@@ -1491,7 +1491,7 @@ export function registerVariableCommands() {
         returns: 'result of the last executed command',
         namedArgumentList: [
             new SlashCommandNamedArgument(
-                'guard', 'disable loop iteration limit', [ARGUMENT_TYPE.STRING], false, false, null, commonEnumProviders.boolean('onOff')(),
+                'guard', 'disable loop iteration limit', [ARGUMENT_TYPE.STRING], false, false, null, commonEnumProviders.boolean('onOff')() as any,
             ),
         ],
         unnamedArgumentList: [
@@ -1532,7 +1532,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'flushvar',
-        callback: async (_, value) => deleteLocalVariable(value instanceof SlashCommandClosure ? (await value.execute())?.pipe : String(value)),
+        callback: async (_: any, value: any) => deleteLocalVariable(value instanceof SlashCommandClosure ? (await value.execute())?.pipe : String(value)),
         aliases: ['flushchatvar'],
         unnamedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1558,7 +1558,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'flushglobalvar',
-        callback: async (_, value) => deleteGlobalVariable(value instanceof SlashCommandClosure ? (await value.execute())?.pipe : String(value)),
+        callback: async (_: any, value: any) => deleteGlobalVariable(value instanceof SlashCommandClosure ? (await value.execute())?.pipe : String(value)),
         namedArgumentList: [],
         unnamedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -1585,7 +1585,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'add',
-        callback: (args, value) => addValuesCallback(args, value),
+        callback: (args: any, value: any) => addValuesCallback(args, value),
         returns: 'sum of the provided values',
         unnamedArgumentList: [
             SlashCommandArgument.fromProps({
@@ -1620,7 +1620,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'mul',
-        callback: (args, value) => mulValuesCallback(args, value),
+        callback: (args: any, value: any) => mulValuesCallback(args, value),
         returns: 'product of the provided values',
         unnamedArgumentList: [
             SlashCommandArgument.fromProps({
@@ -2037,7 +2037,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'len',
-        callback: (_, value) => String(lenValuesCallback(value)),
+        callback: (_: any, value: any) => String(lenValuesCallback(value)),
         aliases: ['length'],
         returns: 'length of the provided value',
         unnamedArgumentList: [
@@ -2121,7 +2121,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'rand',
-        callback: (args, value) => String(randValuesCallback(Number(args.from ?? 0), Number(args.to ?? (value ? value : 1)), args)),
+        callback: (args: any, value: any) => String(randValuesCallback(Number(args.from ?? 0), Number(args.to ?? (value ? value : 1)), args)),
         returns: 'random number',
         namedArgumentList: [
             new SlashCommandNamedArgument(
@@ -2130,7 +2130,7 @@ export function registerVariableCommands() {
                 [ARGUMENT_TYPE.NUMBER],
                 false,
                 false,
-                '0',
+                '0' as any,
             ),
             new SlashCommandNamedArgument(
                 'to',
@@ -2138,7 +2138,7 @@ export function registerVariableCommands() {
                 [ARGUMENT_TYPE.NUMBER],
                 false,
                 false,
-                '1',
+                '1' as any,
             ),
             new SlashCommandNamedArgument(
                 'round',
@@ -2147,7 +2147,7 @@ export function registerVariableCommands() {
                 false,
                 false,
                 null,
-                ['round', 'ceil', 'floor'],
+                ['round', 'ceil', 'floor'] as any,
             ),
         ],
         helpString: `
@@ -2175,7 +2175,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'var',
-        callback: (/** @type {NamedArguments} */ args, value) => varCallback(args, value),
+        callback: (/** @type {NamedArguments} */ args: any, value: any) => varCallback(args, value),
         returns: 'the variable value',
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -2240,7 +2240,7 @@ export function registerVariableCommands() {
     }));
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'let',
-        callback: (/** @type {NamedArguments} */ args, value) => letCallback(args, value),
+        callback: (/** @type {NamedArguments} */ args: any, value: any) => letCallback(args, value),
         returns: 'the variable value',
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -2292,7 +2292,7 @@ export function registerVariableCommands() {
          * @param {SlashCommandClosure} value
          * @returns {string}
          */
-        callback: (args, value) => closureSerializeCallback(args, value),
+        callback: (args: any, value: any) => closureSerializeCallback(args, value),
         unnamedArgumentList: [
             SlashCommandArgument.fromProps({
                 description: 'the closure to serialize',
@@ -2322,7 +2322,7 @@ export function registerVariableCommands() {
          * @param {UnnamedArguments} value
          * @returns {SlashCommandClosure}
          */
-        callback: (args, value) => closureDeserializeCallback(args, value),
+        callback: (args: any, value: any) => closureDeserializeCallback(args, value),
         unnamedArgumentList: [
             SlashCommandArgument.fromProps({
                 description: 'serialized closure',

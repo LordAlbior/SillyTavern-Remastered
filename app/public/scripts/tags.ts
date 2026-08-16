@@ -67,7 +67,7 @@ const VIEW_TAG_TEMPLATE = $('#tag_view_template .tag_view_item');
  * @param {FilterHelper} filterHelper - The filter helper instance
  * @returns {{selector: string, searchInput: string}|null} Context info or null if unknown
  */
-function getFilterContext(filterHelper) {
+function getFilterContext(filterHelper: any) {
     if (filterHelper === entitiesFilter) {
         return {
             selector: CHARACTER_FILTER_SELECTOR,
@@ -92,7 +92,7 @@ function getFilterContext(filterHelper) {
  * @param {string|JQuery<HTMLElement>} listSelector - jQuery selector for the list
  * @returns {FilterHelper} The appropriate filter helper instance
  */
-function getFilterHelper(listSelector) {
+function getFilterHelper(listSelector: any) {
     const $element = typeof listSelector === 'string' ? $(listSelector) : listSelector;
 
     // Check if this filter is in the group members section
@@ -114,7 +114,7 @@ function getFilterHelper(listSelector) {
  * @param {tag_filter_type} type - The filter type to check
  * @returns {boolean} True if this is a group context
  */
-function isGroupContext(type) {
+function isGroupContext(type: any) {
     return [tag_filter_type.group_candidates_list, tag_filter_type.group_members_list].includes(type);
 }
 
@@ -124,7 +124,7 @@ function isGroupContext(type) {
  * @param {object} currentGroup - The current group object
  * @returns {string[]} Array of visible character avatars
  */
-function getVisibleAvatarsForGroupContext(type, currentGroup) {
+function getVisibleAvatarsForGroupContext(type: any, currentGroup: any) {
     if (!currentGroup || !Array.isArray(currentGroup.members)) {
         return [];
     }
@@ -148,8 +148,8 @@ function getVisibleAvatarsForGroupContext(type, currentGroup) {
  * @param {object[]} actionTags - Array of actionable tag objects
  * @returns {object[]} Filtered array of actionable tags
  */
-function filterActionableTagsForGroupContext(actionTags) {
-    return actionTags.filter(tag => {
+function filterActionableTagsForGroupContext(actionTags: any) {
+    return actionTags.filter((tag: any) => {
         // Always show Favorites
         if (tag.id === ACTIONABLE_TAGS.FAV.id) {
             return true;
@@ -174,7 +174,7 @@ const ACTIONABLE_FILTER_STORAGE_KEYS = Object.freeze({
  * @param {FilterHelper} filterHelper - The filter helper to check
  * @returns {string|null} Storage key prefix or null if no persistence
  */
-function getFilterStorageKey(filterHelper) {
+function getFilterStorageKey(filterHelper: any) {
     if (filterHelper === entitiesFilter) {
         return 'CharacterList';
     } else if (filterHelper === groupCandidatesFilter) {
@@ -190,7 +190,7 @@ function getFilterStorageKey(filterHelper) {
  * @param {FilterHelper} filterHelper - The filter helper to check
  * @returns {boolean} True if this is the main character list
  */
-function isMainCharacterList(filterHelper) {
+function isMainCharacterList(filterHelper: any) {
     return filterHelper === entitiesFilter;
 }
 
@@ -208,7 +208,7 @@ export const tag_filter_type = {
  * @param {number} type - The tag_filter_type
  * @returns {string} The power_user setting key
  */
-function getTagFilterVisibilitySetting(type) {
+function getTagFilterVisibilitySetting(type: any) {
     switch (type) {
         case tag_filter_type.character:
             return 'show_tag_filters';
@@ -226,7 +226,7 @@ function getTagFilterVisibilitySetting(type) {
  * @param {number} type - The tag_filter_type
  * @returns {boolean} Whether tag filters should be shown
  */
-function getTagFilterVisibility(type) {
+function getTagFilterVisibility(type: any) {
     const settingKey = getTagFilterVisibilitySetting(type);
     return power_user[settingKey] ?? false;
 }
@@ -236,7 +236,7 @@ function getTagFilterVisibility(type) {
  * @param {number} type - The tag_filter_type
  * @param {boolean} visible - Whether tag filters should be shown
  */
-function setTagFilterVisibility(type, visible) {
+function setTagFilterVisibility(type: any, visible: any) {
     const settingKey = getTagFilterVisibilitySetting(type);
     power_user[settingKey] = visible;
     saveSettingsDebounced();
@@ -280,7 +280,7 @@ const ACTIONABLE_TAGS = {
  * Used for actionable tags (Favorites, Groups, Folders).
  * Lazy: built on first access to avoid TDZ on FILTER_TYPES during cyclic module init.
  */
-let _tagIdToFilterType = null;
+let _tagIdToFilterType: any = null;
 function getTagIdToFilterType() {
     if (!_tagIdToFilterType) {
         _tagIdToFilterType = new Map([
@@ -362,7 +362,7 @@ let tag_map = {};
  * It contains the key of the entity.
  * @type {string[]} ids
  */
-let expanded_tags_cache = [];
+let expanded_tags_cache: any[] = [];
 
 /**
  * Applies the basic filter for the current state of the tags and their selection on an entity list.
@@ -373,10 +373,10 @@ let expanded_tags_cache = [];
  * @param {Boolean} [param1.filterHidden] Optional switch with which filtering out hidden items (from closed folders) can be disabled.
  * @returns The filtered list of entities
  */
-function filterByTagState(entities, { globalDisplayFilters = false, subForEntity = undefined, filterHidden = true } = {}) {
+function filterByTagState(entities: any, { globalDisplayFilters = false, subForEntity = undefined, filterHidden = true } = {}) {
     const filterData: any = structuredClone(entitiesFilter.getFilterData(FILTER_TYPES.TAG));
 
-    entities = entities.filter(entity => {
+    entities = entities.filter((entity: any) => {
         if (entity.type === 'tag') {
             // Remove folders that are already filtered on
             if (filterData.selected.includes(entity.id) || filterData.excluded.includes(entity.id)) {
@@ -389,11 +389,11 @@ function filterByTagState(entities, { globalDisplayFilters = false, subForEntity
 
     if (globalDisplayFilters) {
         // Prepare some data for caching and performance
-        const closedFolders = entities.filter(x => x.type === 'tag' && TAG_FOLDER_TYPES[x.item.folder_type] === TAG_FOLDER_TYPES.CLOSED);
+        const closedFolders = entities.filter((x: any) => x.type === 'tag' && (TAG_FOLDER_TYPES as Record<string, any>)[x.item.folder_type] === TAG_FOLDER_TYPES.CLOSED);
 
-        entities = entities.filter(entity => {
+        entities = entities.filter((entity: any) => {
             // Hide entities that are in a closed folder, unless that one is opened
-            if (filterHidden && entity.type !== 'tag' && closedFolders.some(f => entitiesFilter.isElementTagged(entity, f.id) && !filterData.selected.includes(f.id))) {
+            if (filterHidden && entity.type !== 'tag' && closedFolders.some((f: any) => entitiesFilter.isElementTagged(entity, f.id) && !filterData.selected.includes(f.id))) {
                 return false;
             }
 
@@ -407,8 +407,8 @@ function filterByTagState(entities, { globalDisplayFilters = false, subForEntity
         });
     }
 
-    if (subForEntity !== undefined && subForEntity.type === 'tag') {
-        entities = filterTagSubEntities(subForEntity.item, entities, { filterHidden: filterHidden });
+    if (subForEntity !== undefined && (subForEntity as any).type === 'tag') {
+        entities = filterTagSubEntities((subForEntity as any).item, entities, { filterHidden: filterHidden });
     }
 
     return entities;
@@ -423,19 +423,19 @@ function filterByTagState(entities, { globalDisplayFilters = false, subForEntity
  * @param {boolean} [param2.filterHidden] - Whether hidden entities should be filtered out too
  * @returns {object[]} The filtered list of entities that apply to the given tag
  */
-function filterTagSubEntities(tag, entities, { filterHidden = true } = {}) {
+function filterTagSubEntities(tag: any, entities: any, { filterHidden = true } = {}) {
     const filterData: any = structuredClone(entitiesFilter.getFilterData(FILTER_TYPES.TAG));
 
-    const closedFolders = entities.filter(x => x.type === 'tag' && TAG_FOLDER_TYPES[x.item.folder_type] === TAG_FOLDER_TYPES.CLOSED);
+    const closedFolders = entities.filter((x: any) => x.type === 'tag' && (TAG_FOLDER_TYPES as Record<string, any>)[x.item.folder_type] === TAG_FOLDER_TYPES.CLOSED);
 
-    entities = entities.filter(sub => {
+    entities = entities.filter((sub: any) => {
         // Filter out all tags and and all who isn't tagged for this item
         if (sub.type === 'tag' || !entitiesFilter.isElementTagged(sub, tag.id)) {
             return false;
         }
 
         // Hide entities that are in a closed folder, unless the closed folder is opened or we display a closed folder
-        if (filterHidden && sub.type !== 'tag' && TAG_FOLDER_TYPES[tag.folder_type] !== TAG_FOLDER_TYPES.CLOSED && closedFolders.some(f => entitiesFilter.isElementTagged(sub, f.id) && !filterData.selected.includes(f.id))) {
+        if (filterHidden && sub.type !== 'tag' && (TAG_FOLDER_TYPES as Record<string, any>)[tag.folder_type] !== TAG_FOLDER_TYPES.CLOSED && closedFolders.some((f: any) => entitiesFilter.isElementTagged(sub, f.id) && !filterData.selected.includes(f.id))) {
             return false;
         }
 
@@ -451,7 +451,7 @@ function filterTagSubEntities(tag, entities, { filterHidden = true } = {}) {
  * @param {Tag} tag - The tag to check
  * @returns {boolean} Whether it's a tag folder
  */
-function isBogusFolder(tag) {
+function isBogusFolder(tag: any) {
     return tag?.folder_type !== undefined && tag.folder_type !== TAG_FOLDER_DEFAULT_TYPE;
 }
 
@@ -462,7 +462,7 @@ function isBogusFolder(tag) {
  */
 function getOpenBogusFolders() {
     return (entitiesFilter.getFilterData(FILTER_TYPES.TAG) as any)?.selected
-        .map(tagId => tags.find(x => x.id === tagId))
+        .map((tagId: any) => tags.find(x => x.id === tagId))
         .filter(isBogusFolder) ?? [];
 }
 
@@ -482,7 +482,7 @@ function isBogusFolderOpen() {
  * @param {string} tagId The tag id that is behind the chosen folder
  * @param {boolean} remove Whether the given tag should be removed (otherwise it is added/chosen)
  */
-function chooseBogusFolder(source, tagId, remove = false) {
+function chooseBogusFolder(source: any, tagId: any, remove = false) {
     // If we are here via the 'back' action, we implicitly take the last filtered folder as one to remove
     const isBack = tagId === 'back';
     if (isBack) {
@@ -497,7 +497,7 @@ function chooseBogusFolder(source, tagId, remove = false) {
     const FILTER_SELECTOR = ($(source).closest('#rm_characters_block') ?? $(source).closest('#rm_group_chats_block')).find('.rm_tag_filter');
     const tagElement = $(FILTER_SELECTOR).find(`.tag[id=${tagId}]`);
 
-    toggleTagThreeState(tagElement, { stateOverride: !remove ? FILTER_STATES.SELECTED : DEFAULT_FILTER_STATE, simulateClick: true });
+    toggleTagThreeState(tagElement, { stateOverride: !remove ? FILTER_STATES.SELECTED : DEFAULT_FILTER_STATE, simulateClick: true } as any);
 }
 
 /**
@@ -509,10 +509,10 @@ function chooseBogusFolder(source, tagId, remove = false) {
  * @param {boolean} isUseless Whether the tag is useless (should be displayed greyed out)
  * @returns The html for the tag block
  */
-function getTagBlock(tag, entities, hidden = 0, isUseless = false) {
+function getTagBlock(tag: any, entities: any, hidden = 0, isUseless = false) {
     let count = entities.length;
 
-    const tagFolder = TAG_FOLDER_TYPES[tag.folder_type];
+    const tagFolder = (TAG_FOLDER_TYPES as Record<string, any>)[tag.folder_type];
 
     const template = FOLDER_TEMPLATE.clone();
     template.addClass(tagFolder.class);
@@ -538,7 +538,7 @@ function getTagBlock(tag, entities, hidden = 0, isUseless = false) {
  * @param {string} filterType - The filter type constant
  * @param {string} storageKey - The storage key base for persistence
  */
-function applyActionableTagFilter(filterHelper, tag, filterType, storageKey) {
+function applyActionableTagFilter(this: any, filterHelper: any, tag: any, filterType: any, storageKey: any) {
     const state = toggleTagThreeState($(this));
 
     // Persist to storage for all contexts
@@ -566,7 +566,7 @@ function applyActionableTagFilter(filterHelper, tag, filterType, storageKey) {
  * @param {boolean} isFilterActionable - Whether the tag is an actionable filter tag
  * @returns {string} The filter state
  */
-function determineTagFilterState(filterHelper, tag, isFilterActionable) {
+function determineTagFilterState(filterHelper: any, tag: any, isFilterActionable: any) {
     if (isFilterActionable) {
         // For actionable tags: read from filter helper (which is loaded from storage)
         const filterType = getTagIdToFilterType().get(tag.id) || null;
@@ -591,7 +591,7 @@ function determineTagFilterState(filterHelper, tag, isFilterActionable) {
  * Applies the favorite filter to the character list.
  * @param {FilterHelper} filterHelper Instance of FilterHelper class.
  */
-function filterByFav(filterHelper) {
+function filterByFav(this: any, filterHelper: any) {
     applyActionableTagFilter.call(this, filterHelper, ACTIONABLE_TAGS.FAV, FILTER_TYPES.FAV, ACTIONABLE_FILTER_STORAGE_KEYS.FAV);
 }
 
@@ -599,7 +599,7 @@ function filterByFav(filterHelper) {
  * Applies the "is group" filter to the character list.
  * @param {FilterHelper} filterHelper Instance of FilterHelper class.
  */
-function filterByGroups(filterHelper) {
+function filterByGroups(this: any, filterHelper: any) {
     applyActionableTagFilter.call(this, filterHelper, ACTIONABLE_TAGS.GROUP, FILTER_TYPES.GROUP, ACTIONABLE_FILTER_STORAGE_KEYS.GROUP);
 }
 
@@ -607,7 +607,7 @@ function filterByGroups(filterHelper) {
  * Applies the "only folder" filter to the character list.
  * @param {FilterHelper} filterHelper Instance of FilterHelper class.
  */
-function filterByFolder(filterHelper) {
+function filterByFolder(this: any, filterHelper: any) {
     if (!power_user.bogus_folders) {
         $('#bogus_folders').prop('checked', true).trigger('input');
         onViewTagsListClick();
@@ -618,21 +618,21 @@ function filterByFolder(filterHelper) {
     applyActionableTagFilter.call(this, filterHelper, ACTIONABLE_TAGS.FOLDER, FILTER_TYPES.FOLDER, ACTIONABLE_FILTER_STORAGE_KEYS.FOLDER);
 }
 
-function loadTagsSettings(settings) {
+function loadTagsSettings(settings: any) {
     tags = settings.tags !== undefined ? settings.tags : DEFAULT_TAGS;
     tag_map = settings.tag_map !== undefined ? settings.tag_map : Object.create(null);
 }
 
-function renameTagKey(oldKey, newKey) {
-    const value = tag_map[oldKey];
-    tag_map[newKey] = value || [];
-    delete tag_map[oldKey];
+function renameTagKey(oldKey: any, newKey: any) {
+    const value = (tag_map as Record<string, any>)[oldKey];
+    (tag_map as Record<string, any>)[newKey] = value || [];
+    delete (tag_map as Record<string, any>)[oldKey];
     saveSettingsDebounced();
 }
 
-function createTagMapFromList(listElement, key) {
+function createTagMapFromList(listElement: any, key: any) {
     const tagIds = [...($(listElement).find('.tag').map((_, el) => $(el).attr('id')))];
-    tag_map[key] = tagIds;
+    (tag_map as Record<string, any>)[key] = tagIds;
     saveSettingsDebounced();
 }
 
@@ -644,19 +644,19 @@ function createTagMapFromList(listElement, key) {
  * @param {boolean} [sort=true] - Whether the tag list should be sorted
  * @returns {Tag[]} A list of tags
  */
-function getTagsList(key, sort = true) {
+function getTagsList(key: any, sort = true) {
     if (key === null || key === undefined) {
         return [];
     }
 
-    if (!Array.isArray(tag_map[key])) {
-        tag_map[key] = [];
+    if (!Array.isArray((tag_map as Record<string, any>)[key])) {
+        (tag_map as Record<string, any>)[key] = [];
         return [];
     }
 
-    const list = tag_map[key]
-        .map(x => tags.find(y => y.id === x))
-        .filter(x => x);
+    const list = (tag_map as Record<string, any>)[key]
+        .map((x: any) => tags.find(y => y.id === x))
+        .filter((x: any) => x);
     if (sort) list.sort(compareTagsForSort);
     return list;
 }
@@ -682,7 +682,7 @@ function getTagKey() {
     }
 
     if (this_chid !== undefined && menu_type === 'character_edit') {
-        return characters[this_chid].avatar;
+        return (characters as any)[this_chid].avatar;
     }
 
     return null;
@@ -695,7 +695,7 @@ function getTagKey() {
  * @param {object|number|string} entityOrKey An entity with id property (character, group, tag), or directly an id or tag key.
  * @returns {string|undefined} The tag key that can be found.
  */
-export function getTagKeyForEntity(entityOrKey) {
+export function getTagKeyForEntity(entityOrKey: any) {
     let x = entityOrKey;
 
     // If it's an object and has an 'id' property, we take this for further processing
@@ -706,7 +706,7 @@ export function getTagKeyForEntity(entityOrKey) {
     // Next lets check if its a valid character or character id, so we can swith it to its tag
     let character;
     if (!character && characters.indexOf(x) >= 0) character = x; // Check for char object
-    if (!character && !isNaN(parseInt(entityOrKey))) character = characters[x]; // check if its a char id
+    if (!character && !isNaN(parseInt(entityOrKey))) character = (characters as any)[x]; // check if its a char id
     if (!character) character = characters.find(y => y.avatar === x); // check if its a char key
 
     if (character) {
@@ -715,7 +715,7 @@ export function getTagKeyForEntity(entityOrKey) {
 
     // Uninitialized character tag map
     if (character && !(x in tag_map)) {
-        tag_map[x] = [];
+        (tag_map as Record<string, any>)[x] = [];
         return x;
     }
 
@@ -735,7 +735,7 @@ export function getTagKeyForEntity(entityOrKey) {
  * @param {JQuery<HTMLElement>|string} element - The element to search the entity id on
  * @returns {string|undefined} The tag key that can be found.
  */
-export function getTagKeyForEntityElement(element) {
+export function getTagKeyForEntityElement(element: any) {
     if (typeof element === 'string') {
         element = $(element);
     }
@@ -764,10 +764,10 @@ export function getTagKeyForEntityElement(element) {
  * @param {boolean} [options.suppressLogging=false] - Whether to suppress the toastr warning
  * @returns {string?} - The char/group key, or null if none found
  */
-export function searchCharByName(charName, { suppressLogging = false } = {}) {
+export function searchCharByName(charName: any, { suppressLogging = false } = {}) {
     const entity = charName
         ? (findChar({ name: charName }) || groups.find(x => equalsIgnoreCaseAndAccents(x.name, charName)))
-        : (selected_group ? groups.find(x => x.id == selected_group) : characters[this_chid]);
+        : (selected_group ? groups.find(x => x.id == selected_group) : (characters as any)[this_chid as any]);
     const key = getTagKeyForEntity(entity);
     if (!key) {
         if (!suppressLogging) toastr.warning(`Character ${charName} not found.`);
@@ -786,7 +786,7 @@ export function searchCharByName(charName, { suppressLogging = false } = {}) {
  * @param {PrintTagListOptions} [options.tagListOptions] - Optional parameters for printing the tag list. Can be set to be consistent with the expected behavior of tags in the list that was defined before.
  * @returns {boolean} Whether at least one tag was added
  */
-export function addTagsToEntity(tag, entityId, { tagListSelector = null, tagListOptions = {} } = {}) {
+export function addTagsToEntity(tag: any, entityId: any, { tagListSelector = null, tagListOptions = {} } = {}) {
     const tags = Array.isArray(tag) ? tag : [tag];
     const entityIds = Array.isArray(entityId) ? entityId : [entityId];
 
@@ -825,7 +825,7 @@ export function addTagsToEntity(tag, entityId, { tagListSelector = null, tagList
  * @param {JQuery<HTMLElement>?} [options.tagElement=null] - Optionally a direct html element of the tag to be removed, so it can be removed from the UI
  * @returns {boolean} Whether at least one tag was removed
  */
-export function removeTagFromEntity(tag, entityId, { tagListSelector = null, tagElement = null } = {}) {
+export function removeTagFromEntity(tag: any, entityId: any, { tagListSelector = null, tagElement = null } = {}) {
     let result = false;
     // Remove tag from the map
     if (Array.isArray(entityId)) {
@@ -843,7 +843,7 @@ export function removeTagFromEntity(tag, entityId, { tagListSelector = null, tag
         const $selector = (typeof tagListSelector === 'string') ? $(tagListSelector) : tagListSelector;
         $selector.find(`.tag[id="${tag.id}"]`).remove();
     }
-    if (tagElement) tagElement.remove();
+    if (tagElement) (tagElement as any).remove();
     $(`${getInlineListSelector()} .tag[id="${tag.id}"]`).remove();
 
     return result;
@@ -855,22 +855,22 @@ export function removeTagFromEntity(tag, entityId, { tagListSelector = null, tag
  * @param {string} characterId - The id/key of the character or group
  * @returns {boolean} Whether the tag was added or not
  */
-function addTagToMap(tagId, characterId = null) {
+function addTagToMap(tagId: any, characterId = null) {
     const key = characterId !== null && characterId !== undefined ? getTagKeyForEntity(characterId) : getTagKey();
 
     if (!key) {
         return false;
     }
 
-    if (!Array.isArray(tag_map[key])) {
-        tag_map[key] = [tagId];
+    if (!Array.isArray((tag_map as Record<string, any>)[key])) {
+        (tag_map as Record<string, any>)[key] = [tagId];
         return true;
     } else {
-        if (tag_map[key].includes(tagId))
+        if ((tag_map as Record<string, any>)[key].includes(tagId))
             return false;
 
-        tag_map[key].push(tagId);
-        tag_map[key] = tag_map[key].filter(onlyUnique);
+        (tag_map as Record<string, any>)[key].push(tagId);
+        (tag_map as Record<string, any>)[key] = (tag_map as Record<string, any>)[key].filter(onlyUnique);
         return true;
     }
 }
@@ -881,24 +881,24 @@ function addTagToMap(tagId, characterId = null) {
  * @param {string} characterId - The id/key of the character or group
  * @returns {boolean} Whether the tag was removed or not
  */
-function removeTagFromMap(tagId, characterId = null) {
+function removeTagFromMap(tagId: any, characterId = null) {
     const key = characterId !== null && characterId !== undefined ? getTagKeyForEntity(characterId) : getTagKey();
 
     if (!key) {
         return false;
     }
 
-    if (!Array.isArray(tag_map[key])) {
-        tag_map[key] = [];
+    if (!Array.isArray((tag_map as Record<string, any>)[key])) {
+        (tag_map as Record<string, any>)[key] = [];
         return false;
     } else {
-        const indexOf = tag_map[key].indexOf(tagId);
-        tag_map[key].splice(indexOf, 1);
+        const indexOf = (tag_map as Record<string, any>)[key].indexOf(tagId);
+        (tag_map as Record<string, any>)[key].splice(indexOf, 1);
         return indexOf !== -1;
     }
 }
 
-function findTag(request, resolve, listSelector) {
+function findTag(request: any, resolve: any, listSelector: any) {
     const skipIds = [...($(listSelector).find('.tag').map((_, el) => $(el).attr('id')))];
     const haystack = tags.filter(t => !skipIds.includes(t.id)).sort(compareTagsForSort).map(t => t.name);
     const needle = request.term;
@@ -922,7 +922,7 @@ function findTag(request, resolve, listSelector) {
  * @param {PrintTagListOptions} [param1.tagListOptions] - Optional parameters for printing the tag list. Can be set to be consistent with the expected behavior of tags in the list that was defined before.
  * @returns {boolean} <c>false</c>, to keep the input clear
  */
-function selectTag(event, ui, listSelector, { tagListOptions = {} } = {}) {
+function selectTag(event: any, ui: any, listSelector: any, { tagListOptions = {} } = {}) {
     let tagName = ui.item.value;
     let tag = getTag(tagName);
 
@@ -952,7 +952,7 @@ function selectTag(event, ui, listSelector, { tagListOptions = {} } = {}) {
  * @param {string[]} newTags - A list of strings representing tag names
  * @returns {Tag[]} List of existing tags
  */
-function getExistingTags(newTags) {
+function getExistingTags(newTags: any) {
     let existingTags = [];
     for (let tagName of newTags) {
         let foundTag = getTag(tagName);
@@ -974,7 +974,7 @@ const ANTI_TROLL_MAX_TAGS = 50;
  * @param {tag_import_setting} [options.importSetting=null] - Force a tag import setting
  * @returns {Promise<boolean>} Boolean indicating whether any tag was imported
  */
-async function importTags(character, { importSetting = null } = {}) {
+async function importTags(character: any, { importSetting = null } = {}) {
     // Gather the tags to import based on the selected setting
     const tagNamesToImport = await handleTagImport(character, { importSetting });
     if (!tagNamesToImport?.length) {
@@ -1003,18 +1003,18 @@ async function importTags(character, { importSetting = null } = {}) {
  * @param {tag_import_setting} [options.importSetting=null] - Force a tag import setting
  * @returns {Promise<string[]>} Array of strings representing the tags to import
  */
-async function handleTagImport(character, { importSetting = null } = {}) {
+async function handleTagImport(character: any, { importSetting = null } = {}) {
     /** @type {string[]} */
-    const alreadyAssignedTags = tag_map[character.avatar] ?? [];
-    const importTags = character.tags.map(t => t.trim()).filter(t => t)
-        .filter(t => !IMPORT_EXLCUDED_TAGS.includes(t))
-        .filter(t => {
+    const alreadyAssignedTags = (tag_map as Record<string, any>)[character.avatar] ?? [];
+    const importTags = character.tags.map((t: any) => t.trim()).filter((t: any) => t)
+        .filter((t: any) => !IMPORT_EXLCUDED_TAGS.includes(t))
+        .filter((t: any) => {
             const existingTag = getTag(t);
             return !existingTag || !alreadyAssignedTags.includes(existingTag.id);
         })
         .slice(0, ANTI_TROLL_MAX_TAGS);
     const existingTags = getExistingTags(importTags);
-    const newTags = importTags.filter(t => !existingTags.some(existingTag => existingTag.name.toLowerCase() === t.toLowerCase()))
+    const newTags = importTags.filter((t: any) => !existingTags.some(existingTag => existingTag.name.toLowerCase() === t.toLowerCase()))
         .map(newTag);
     const folderTags = getOpenBogusFolders();
 
@@ -1048,7 +1048,7 @@ async function handleTagImport(character, { importSetting = null } = {}) {
  * @param {Tag[]} folderTags - List of tags in the current folder
  * @returns {Promise<string[]>} Array of strings representing the tags to import
  */
-async function showTagImportPopup(character, existingTags, newTags, folderTags) {
+async function showTagImportPopup(character: any, existingTags: any, newTags: any, folderTags: any) {
     /** @type {{[key: string]: import('./popup.js').CustomPopupButton}} */
     const importButtons = {
         NONE: { result: 2, text: 'Import None' },
@@ -1065,24 +1065,24 @@ async function showTagImportPopup(character, existingTags, newTags, folderTags) 
     const popupContent = $(await renderTemplateAsync('charTagImport', { charName: character.name }));
 
     // Print tags after popup is shown, so that events can be added
-    printTagList(popupContent.find('#import_existing_tags_list'), { tags: existingTags, tagOptions: { removable: true, removeAction: tag => removeFromArray(existingTags, tag) } });
-    printTagList(popupContent.find('#import_new_tags_list'), { tags: newTags, tagOptions: { removable: true, removeAction: tag => removeFromArray(newTags, tag) } });
-    printTagList(popupContent.find('#import_folder_tags_list'), { tags: folderTags, tagOptions: { removable: true, removeAction: tag => removeFromArray(folderTags, tag) } });
+    printTagList(popupContent.find('#import_existing_tags_list'), { tags: existingTags, tagOptions: { removable: true, removeAction: (tag: any) => removeFromArray(existingTags, tag) } });
+    printTagList(popupContent.find('#import_new_tags_list'), { tags: newTags, tagOptions: { removable: true, removeAction: (tag: any) => removeFromArray(newTags, tag) } });
+    printTagList(popupContent.find('#import_folder_tags_list'), { tags: folderTags, tagOptions: { removable: true, removeAction: (tag: any) => removeFromArray(folderTags, tag) } });
 
     if (folderTags.length === 0) popupContent.find('#folder_tags_block').hide();
 
-    function onCloseRemember(/** @type {Popup} */ popup) {
+    function onCloseRemember(/** @type {Popup} */ popup: any) {
         if (popup.result && popup.inputResults.get('import_remember_option')) {
             const setting = buttonSettingsMap[popup.result];
             if (!setting) return;
             power_user.tag_import_setting = setting;
             $('#tag_import_setting').val(power_user.tag_import_setting);
             saveSettingsDebounced();
-            console.log('Remembered tag import setting:', Object.entries(tag_import_setting).find(x => x[1] === setting)[0], setting);
+            console.log('Remembered tag import setting:', Object.entries(tag_import_setting).find((x: any) => x[1] === setting)![0], setting);
         }
     }
 
-    const result = await callGenericPopup(popupContent, POPUP_TYPE.TEXT, null, {
+    const result = await callGenericPopup(popupContent, POPUP_TYPE.TEXT, null as any, {
         wider: true, okButton: 'Import', cancelButton: true,
         customButtons: Object.values(importButtons),
         customInputs: [{ id: 'import_remember_option', label: 'Remember my choice', tooltip: 'Remember the chosen import option\nIf anything besides \'Cancel\' is selected, this dialog will not show up anymore.\nTo change this, go to the settings and modify "Tag Import Option".\n\nIf the "Import" option is chosen, the global setting will stay on "Ask".' }],
@@ -1113,7 +1113,7 @@ async function showTagImportPopup(character, existingTags, newTags, folderTags) 
  * @param {boolean} [options.createNew=false] - Whether to create the tag if it doesn't exist
  * @returns {Tag?} The tag object that matches the provided tag name, or undefined if no match is found
  */
-function getTag(tagName, { createNew = false } = {}) {
+function getTag(tagName: any, { createNew = false } = {}) {
     let tag = tags.find(t => equalsIgnoreCaseAndAccents(t.name, tagName));
     if (!tag && createNew) {
         tag = createNewTag(tagName);
@@ -1129,7 +1129,7 @@ function getTag(tagName, { createNew = false } = {}) {
  * @param {string} tagName - name of the tag
  * @returns {Tag} the newly created tag, or the existing tag if it already exists (with a logged warning)
  */
-function createNewTag(tagName) {
+function createNewTag(tagName: any) {
     const existing = getTag(tagName);
     if (existing) {
         toastr.warning(`Cannot create new tag. A tag with the name already exists:<br />${escapeHtml(existing.name)}`, 'Creating Tag', { escapeHtml: false });
@@ -1151,7 +1151,7 @@ function createNewTag(tagName) {
  * @param {string} tagName - The name of the tag
  * @return {Tag} The newly created tag object
  */
-function newTag(tagName) {
+function newTag(tagName: any) {
     return {
         id: uuidv4(),
         name: tagName,
@@ -1196,13 +1196,13 @@ function newTag(tagName) {
  * @param {JQuery<HTMLElement>|string} element - The container element where the tags are to be printed. (Optionally can also be a string selector for the element, which will then be resolved)
  * @param {PrintTagListOptions} [options] - Optional parameters for printing the tag list.
  */
-function printTagList(element, { tags = undefined, addTag = undefined, forEntityOrKey = undefined, empty = true, sort = true, tagActionSelector = undefined, tagOptions = {}, inactiveTags = [] } = {}) {
+function printTagList(element: any, { tags = undefined, addTag = undefined, forEntityOrKey = undefined, empty = true, sort = true, tagActionSelector = undefined, tagOptions = {}, inactiveTags = [] } = {}) {
     const $element = (typeof element === 'string') ? $(element) : element;
     const key = forEntityOrKey !== undefined ? getTagKeyForEntity(forEntityOrKey) : getTagKey();
-    let printableTags = tags ? (typeof tags === 'function' ? tags() : tags) : getTagsList(key, sort);
+    let printableTags: any[] = tags ? (typeof tags === 'function' ? (tags as any)() : tags) : getTagsList(key, sort);
 
     if ((tagOptions as any).isCharacterList) {
-        printableTags = printableTags.filter(tag => !tag.is_hidden_on_character_card);
+        printableTags = printableTags.filter((tag: any) => !tag.is_hidden_on_character_card);
     }
 
     if ((empty as any) === 'always' || (empty && (printableTags?.length > 0 || key))) {
@@ -1211,13 +1211,13 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
 
     if (addTag) {
         const addTags = Array.isArray(addTag) ? addTag : [addTag];
-        printableTags = printableTags.concat(addTags.filter(tag => (tagOptions as any).skipExistsCheck || !printableTags.some(t => t.id === tag.id)));
+        printableTags = printableTags.concat(addTags.filter((tag: any) => (tagOptions as any).skipExistsCheck || !printableTags.some((t: any) => t.id === tag.id)));
     }
 
     // one last sort, because we might have modified the tag list or manually retrieved it from a function
     if (sort) printableTags = printableTags.sort(compareTagsForSort);
 
-    const customAction = typeof tagActionSelector === 'function' ? tagActionSelector : null;
+    const customAction: any = typeof tagActionSelector === 'function' ? tagActionSelector : null;
 
     // Well, lets check if the tag list was expanded. Based on either a css class, or when any expand was clicked yet, then we search whether this element id matches
     const expanded = $element.hasClass('tags-expanded') || (expanded_tags_cache.length && expanded_tags_cache.indexOf(key ?? getTagKeyForEntityElement(element)) >= 0);
@@ -1228,8 +1228,8 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
     const tagsDisplayLimit = expanded ? Number.MAX_SAFE_INTEGER : DEFAULT_TAGS_LIMIT;
 
     // Functions to determine tag properties
-    const isFilterActive = (/** @type {Tag} */ tag) => tag.filter_state && !isFilterState(tag.filter_state, FILTER_STATES.UNDEFINED);
-    const shouldPrintTag = (/** @type {Tag} */ tag) => isBogusFolder(tag) || isFilterActive(tag);
+    const isFilterActive = (/** @type {Tag} */ tag: any) => tag.filter_state && !isFilterState(tag.filter_state, FILTER_STATES.UNDEFINED);
+    const shouldPrintTag = (/** @type {Tag} */ tag: any) => isBogusFolder(tag) || isFilterActive(tag);
 
     // Calculating the number of tags to print
     const mandatoryPrintTagsCount = printableTags.filter(shouldPrintTag).length;
@@ -1253,7 +1253,7 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
         // Check if we should print this tag
         if (shouldPrintTag(tag) || additionalTagsPrinted++ < availableSlotsForAdditionalTags) {
             // Check if this tag is in the inactive list
-            const isInactive = inactiveTags.includes(tag.id);
+            const isInactive = (inactiveTags as any[]).includes(tag.id);
             appendTagToList($element, tag, { ...tagOptions, isInactive });
         } else {
             tagsSkipped++;
@@ -1266,7 +1266,7 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
         const id = 'placeholder_' + uuidv4();
 
         // Add click event
-        const showHiddenTags = (_, event) => {
+        const showHiddenTags = (_: any, event: any) => {
             const elementKey = key ?? getTagKeyForEntityElement($element);
             console.log(`Hidden tags shown for element ${elementKey}`);
 
@@ -1297,7 +1297,7 @@ function printTagList(element, { tags = undefined, addTag = undefined, forEntity
  * @param {TagOptions} [options={}] - Options for tag behavior
  * @returns {void}
  */
-function appendTagToList(listElement, tag, { removable = false, isFilter = false, action = undefined, removeAction = undefined, isGeneralList = false, skipExistsCheck = false, isInactive = false } = {}) {
+function appendTagToList(listElement: any, tag: any, { removable = false, isFilter = false, action = undefined, removeAction = undefined, isGeneralList = false, skipExistsCheck = false, isInactive = false } = {}) {
     if (!listElement) {
         return;
     }
@@ -1318,7 +1318,7 @@ function appendTagToList(listElement, tag, { removable = false, isFilter = false
     if (removable && removeAction) {
         tagElement.attr('custom-remove-action', String(true));
         removeButton.on('click', () => {
-            const result = removeAction(tag);
+            const result = (removeAction as any)(tag);
             if (result !== false) tagElement.remove();
         });
     }
@@ -1365,7 +1365,7 @@ function appendTagToList(listElement, tag, { removable = false, isFilter = false
     $(listElement).append(tagElement);
 }
 
-function onTagFilterClick(listElement) {
+function onTagFilterClick(this: any, listElement: any) {
     const tagId = $(this).attr('id');
     const existingTag = tags.find((tag) => tag.id === tagId);
     const parent = $(this).parents('.tags');
@@ -1401,9 +1401,9 @@ function onTagFilterClick(listElement) {
  * @param {FilterHelper} filterHelper - The filter helper instance
  * @param {string} storagePrefix - The storage key prefix for this context
  */
-function loadFilterStatesForContext(filterHelper, storagePrefix) {
+function loadFilterStatesForContext(filterHelper: any, storagePrefix: any) {
     const validStates = new Set(Object.keys(FILTER_STATES));
-    const readState = (/** @type {string} */ storageKey) => {
+    const readState = (/** @type {string} */ storageKey: any) => {
         const v = accountStorage.getItem(storageKey);
         return v && validStates.has(v) ? v : null;
     };
@@ -1454,16 +1454,16 @@ function loadFilterStatesForContext(filterHelper, storagePrefix) {
  * @param {boolean} [param1.simulateClick] - Optionally specify that the state should not just be set on the html element, but actually achieved via triggering the "click" on it, which follows up with the general click handlers and reprinting
  * @returns {string} The string representing the new state
  */
-function toggleTagThreeState(element, { stateOverride = undefined, simulateClick = false } = {}) {
+function toggleTagThreeState(element: any, { stateOverride = undefined, simulateClick = false } = {}) {
     const states = Object.keys(FILTER_STATES);
 
     // Make it clear we're getting indexes and handling the 'not found' case in one place
-    function getStateIndex(key, fallback) {
+    function getStateIndex(key: any, fallback: any) {
         const index = states.indexOf(key);
         return index !== -1 ? index : states.indexOf(fallback);
     }
 
-    const overrideKey = typeof stateOverride == 'string' && states.includes(stateOverride) ? stateOverride : Object.keys(FILTER_STATES).find(key => FILTER_STATES[key] === stateOverride);
+    const overrideKey = typeof stateOverride == 'string' && states.includes(stateOverride) ? stateOverride : Object.keys(FILTER_STATES).find((key: any) => (FILTER_STATES as Record<string, any>)[key] === stateOverride);
 
     const currentStateIndex = getStateIndex(element.attr('data-toggle-state'), DEFAULT_FILTER_STATE);
     const targetStateIndex = overrideKey !== undefined ? getStateIndex(overrideKey, DEFAULT_FILTER_STATE) : (currentStateIndex + 1) % states.length;
@@ -1487,7 +1487,7 @@ function toggleTagThreeState(element, { stateOverride = undefined, simulateClick
 
         // Update css class and remove all others
         states.forEach(state => {
-            element.toggleClass(FILTER_STATES[state].class, state === states[targetStateIndex]);
+            element.toggleClass((FILTER_STATES as Record<string, any>)[state].class, state === states[targetStateIndex]);
         });
 
         if (states[currentStateIndex] !== states[targetStateIndex]) {
@@ -1499,7 +1499,7 @@ function toggleTagThreeState(element, { stateOverride = undefined, simulateClick
     return states[targetStateIndex];
 }
 
-function runTagFilters(listElement) {
+function runTagFilters(listElement: any) {
     const tagIds = [...($(listElement).find('.tag.selected:not(.actionable)').map((_, el) => $(el).attr('id')))];
     const excludedTagIds = [...($(listElement).find('.tag.excluded:not(.actionable)').map((_, el) => $(el).attr('id')))];
     const filterHelper = getFilterHelper($(listElement));
@@ -1528,18 +1528,18 @@ function printTagFilters(type = tag_filter_type.character) {
     $(FILTER_SELECTOR).empty();
 
     // Print all action tags. (Rework 'Folder' button to some kind of onboarding if no folders are enabled yet)
-    let actionTags = Object.values(ACTIONABLE_TAGS);
-    actionTags.find(x => x == ACTIONABLE_TAGS.FOLDER).name = power_user.bogus_folders ? 'Show only folders' : 'Enable \'Tags as Folder\'\n\nAllows characters to be grouped in folders by their assigned tags.\nTags have to be explicitly chosen as folder to show up.\n\nClick here to start';
+    let actionTags: any[] = Object.values(ACTIONABLE_TAGS);
+    (actionTags.find((x: any) => x == ACTIONABLE_TAGS.FOLDER) as any).name = power_user.bogus_folders ? 'Show only folders' : 'Enable \'Tags as Folder\'\n\nAllows characters to be grouped in folders by their assigned tags.\nTags have to be explicitly chosen as folder to show up.\n\nClick here to start';
 
     // For group contexts, filter actionable tags to only show relevant ones
     if (isGroupContext(type)) {
         actionTags = filterActionableTagsForGroupContext(actionTags);
     }
 
-    printTagList($(FILTER_SELECTOR), { empty: false, sort: false, tags: actionTags, tagActionSelector: tag => tag.action, tagOptions: { isGeneralList: true } });
+    printTagList($(FILTER_SELECTOR), { empty: false, sort: false, tags: actionTags, tagActionSelector: (tag: any) => tag.action, tagOptions: { isGeneralList: true } } as any);
 
-    const inListActionTags = Object.values(InListActionable);
-    printTagList($(FILTER_SELECTOR), { empty: false, sort: false, tags: inListActionTags, tagActionSelector: tag => tag.action, tagOptions: { isGeneralList: true } });
+    const inListActionTags: any[] = Object.values(InListActionable);
+    printTagList($(FILTER_SELECTOR), { empty: false, sort: false, tags: inListActionTags, tagActionSelector: (tag: any) => tag.action, tagOptions: { isGeneralList: true } } as any);
 
     // Determine which character tags to display based on context
     let tagsToDisplay;
@@ -1554,18 +1554,18 @@ function printTagFilters(type = tag_filter_type.character) {
         if (visibleAvatars.length > 0) {
             // Get tags that are assigned to at least one visible character
             const activeCharacterTagIds = visibleAvatars
-                .map(avatar => tag_map[avatar] || [])
+                .map((avatar: any) => (tag_map as Record<string, any>)[avatar] || [])
                 .flat()
                 .filter(onlyUnique);
 
             // Show all tags that exist in the tag_map
             const allCharacterTagIds = Object.values(tag_map).flat().filter(onlyUnique);
-            tagsToDisplay = tags.filter(x => allCharacterTagIds.includes(x.id)).sort(compareTagsForSort);
+            tagsToDisplay = tags.filter((x: any) => allCharacterTagIds.includes(x.id)).sort(compareTagsForSort);
 
             // Mark tags that are not in the active set as inactive
             inactiveTags = tagsToDisplay
-                .filter(x => !activeCharacterTagIds.includes(x.id))
-                .map(x => x.id);
+                .filter((x: any) => !activeCharacterTagIds.includes(x.id))
+                .map((x: any) => x.id);
         } else {
             // No group selected, show no tags
             tagsToDisplay = [];
@@ -1573,10 +1573,10 @@ function printTagFilters(type = tag_filter_type.character) {
     } else {
         // For main character list, show all tags as before
         const characterTagIds = Object.values(tag_map).flat();
-        tagsToDisplay = tags.filter(x => characterTagIds.includes(x.id)).sort(compareTagsForSort);
+        tagsToDisplay = tags.filter((x: any) => characterTagIds.includes(x.id)).sort(compareTagsForSort);
     }
 
-    printTagList($(FILTER_SELECTOR), { empty: false, tags: tagsToDisplay, tagOptions: { isFilter: true, isGeneralList: true }, inactiveTags: inactiveTags });
+    printTagList($(FILTER_SELECTOR), { empty: false, tags: tagsToDisplay, tagOptions: { isFilter: true, isGeneralList: true }, inactiveTags: inactiveTags } as any);
 
 
     // Print bogus folder navigation
@@ -1611,7 +1611,7 @@ function printTagFilters(type = tag_filter_type.character) {
  * Updates the tag filter indicator based on the selected/excluded tags in the given filter selector
  * @param {string|JQuery<HTMLElement>} filterSelector - The selector or jQuery element for the tag filter container
  */
-function updateTagFilterIndicator(filterSelector) {
+function updateTagFilterIndicator(filterSelector: any) {
     const selector = filterSelector || CHARACTER_FILTER_SELECTOR;
     const tagFilter = typeof selector === 'string' ? $(selector) : selector;
     const showTagListButton = tagFilter.closest('.rm_tag_controls').find('.showTagList');
@@ -1619,7 +1619,7 @@ function updateTagFilterIndicator(filterSelector) {
     showTagListButton.toggleClass('indicator', hasActiveTags);
 }
 
-function onTagRemoveClick(event) {
+function onTagRemoveClick(this: any, event: any) {
     event.stopPropagation();
     const tagElement = $(this).closest('.tag');
     const tagId = tagElement.attr('id');
@@ -1643,20 +1643,20 @@ function onTagRemoveClick(event) {
     const characterData = event.target.closest('#bulk_tags_div')?.dataset.characters;
     const characterIds = characterData ? JSON.parse(characterData).characterIds : null;
 
-    removeTagFromEntity(tag, characterIds, { tagElement: tagElement });
+    removeTagFromEntity(tag, characterIds, { tagElement: tagElement as any });
 
     applyCharacterTagsToMessageDivs();
 }
 
 // @ts-ignore
-function onTagInput(event) {
+function onTagInput(this: any, event: any) {
     let val = $(this).val();
     if (getTag(String(val))) return;
     // @ts-ignore
     $(this).autocomplete('search', val);
 }
 
-function onTagInputFocus() {
+function onTagInputFocus(this: any) {
     // @ts-ignore
     $(this).autocomplete('search', $(this).val());
 }
@@ -1669,30 +1669,30 @@ function onGroupCreateClick() {
     $('#groupTagList').empty();
 }
 
-export function applyTagsOnCharacterSelect(chid = null) {
+export function applyTagsOnCharacterSelect(chid: any = null) {
     // If we are in create window, we cannot simply redraw, as there are no real persisted tags. Grab them, and pass them in
     if (menu_type === 'create') {
         const currentTagIds = $('#tagList').find('.tag').map((_, el) => $(el).attr('id')).get();
-        const currentTags = tags.filter(x => currentTagIds.includes(x.id));
-        printTagList($('#tagList'), { forEntityOrKey: undefined, tags: currentTags, tagOptions: { removable: true } });
+        const currentTags = tags.filter((x: any) => currentTagIds.includes(x.id));
+        printTagList($('#tagList'), { forEntityOrKey: undefined, tags: currentTags, tagOptions: { removable: true } } as any);
         return;
     }
 
     chid = chid ?? (this_chid !== undefined ? Number(this_chid) : undefined);
-    printTagList($('#tagList'), { forEntityOrKey: chid, tagOptions: { removable: true } });
+    printTagList($('#tagList'), { forEntityOrKey: chid, tagOptions: { removable: true } } as any);
 }
 
-export function applyTagsOnGroupSelect(groupId = null) {
+export function applyTagsOnGroupSelect(groupId: any = null) {
     // If we are in create window, we explicitly have to tell the system to print for the new group, not the one selected in the background
     if (menu_type === 'group_create') {
         const currentTagIds = $('#groupTagList').find('.tag').map((_, el) => $(el).attr('id')).get();
-        const currentTags = tags.filter(x => currentTagIds.includes(x.id));
-        printTagList($('#groupTagList'), { forEntityOrKey: undefined, tags: currentTags, tagOptions: { removable: true } });
+        const currentTags = tags.filter((x: any) => currentTagIds.includes(x.id));
+        printTagList($('#groupTagList'), { forEntityOrKey: undefined, tags: currentTags, tagOptions: { removable: true } } as any);
         return;
     }
 
     groupId = groupId ?? (selected_group ? Number(selected_group) : undefined);
-    printTagList($('#groupTagList'), { forEntityOrKey: groupId, tagOptions: { removable: true } });
+    printTagList($('#groupTagList'), { forEntityOrKey: groupId, tagOptions: { removable: true } } as any);
     printTagFilters(tag_filter_type.group_candidates_list);
     printTagFilters(tag_filter_type.group_members_list);
 }
@@ -1704,12 +1704,12 @@ export function applyTagsOnGroupSelect(groupId = null) {
  * @param {string} listSelector - the selector for the list of the tags modified by the input control
  * @param {PrintTagListOptions} [tagListOptions] - Optional parameters for printing the tag list. Can be set to be consistent with the expected behavior of tags in the list that was defined before.
  */
-export function createTagInput(inputSelector, listSelector, tagListOptions = {}) {
+export function createTagInput(inputSelector: any, listSelector: any, tagListOptions = {}) {
     $(inputSelector)
         // @ts-ignore
         .autocomplete({
-            source: (i, o) => findTag(i, o, listSelector),
-            select: (e, u) => selectTag(e, u, listSelector, { tagListOptions: tagListOptions }),
+            source: (i: any, o: any) => findTag(i, o, listSelector),
+            select: (e: any, u: any) => selectTag(e, u, listSelector, { tagListOptions: tagListOptions }),
             minLength: 0,
         })
         .on('focus', onTagInputFocus); // <== show tag list on click
@@ -1726,7 +1726,7 @@ async function onViewTagsListClick() {
     const $sortModeSelect = html.find('#tag_sort_mode_select');
     $sortModeSelect.val(power_user.tag_sort_mode);
     $sortModeSelect.on('change', function () {
-        const newMode = $(this).val().toString();
+        const newMode = ($(this).val() as any).toString();
         power_user.tag_sort_mode = newMode;
         saveSettingsDebounced();
         printViewTagList(tagContainer);
@@ -1735,12 +1735,12 @@ async function onViewTagsListClick() {
     printViewTagList(tagContainer);
     makeTagListDraggable(tagContainer);
 
-    await callGenericPopup(html, POPUP_TYPE.TEXT, null, { allowVerticalScrolling: true, wide: true, large: true });
+    await callGenericPopup(html, POPUP_TYPE.TEXT, null as any, { allowVerticalScrolling: true, wide: true, large: true });
 }
 
-function makeTagListDraggable(tagContainer) {
+function makeTagListDraggable(tagContainer: any) {
     const onTagsSort = () => {
-        tagContainer.find('.tag_view_item').each(function (i, tagElement) {
+        tagContainer.find('.tag_view_item').each(function (i: any, tagElement: any) {
             const id = $(tagElement).attr('id');
             const tag = tags.find(x => x.id === id);
 
@@ -1775,8 +1775,8 @@ function makeTagListDraggable(tagContainer) {
  * @param {Map<string, number>} [counts=null] - Optional map of tag ID to usage count
  * @returns {Tag[]} The sorted tags
  */
-function sortTags(tags, counts = null) {
-    return tags.slice().sort((a, b) => compareTagsForSort(a, b, counts));
+function sortTags(tags: any, counts = null) {
+    return tags.slice().sort((a: any, b: any) => compareTagsForSort(a, b, counts));
 }
 
 /**
@@ -1787,14 +1787,14 @@ function sortTags(tags, counts = null) {
  * @param {Map<string, number>} [counts=null] - Optional map of tag ID to usage count
  * @returns {number} The compare result
  */
-function compareTagsForSort(a, b, counts = null) {
+function compareTagsForSort(a: any, b: any, counts: any = null) {
     // default sort: alphabetical, case insensitive
     const defaultSort = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
 
     // sort on number of entries
     if (power_user.tag_sort_mode === tag_sort_mode.BY_ENTRIES) {
-        const aCount = counts instanceof Map ? (counts.get(a.id) || 0) : 0;
-        const bCount = counts instanceof Map ? (counts.get(b.id) || 0) : 0;
+        const aCount = counts instanceof Map ? ((counts as any).get(a.id) || 0) : 0;
+        const bCount = counts instanceof Map ? ((counts as any).get(b.id) || 0) : 0;
         return (bCount - aCount) || defaultSort;
     }
 
@@ -1815,7 +1815,7 @@ function compareTagsForSort(a, b, counts = null) {
     }
 }
 
-async function onTagRestoreFileSelect(e) {
+async function onTagRestoreFileSelect(e: any) {
     const file = e.target.files[0];
 
     if (!file) {
@@ -1845,7 +1845,7 @@ async function onTagRestoreFileSelect(e) {
         overwrite = result === POPUP_RESULT.AFFIRMATIVE;
     }
 
-    const warnings = [];
+    const warnings: any[] = [];
     /** @type {Map<string, string>} Map import tag ids with existing ids on overwrite */
     const idToActualTagIdMap = new Map();
 
@@ -1901,20 +1901,20 @@ async function onTagRestoreFileSelect(e) {
         }
 
         // Get existing tag ids for this key or empty array.
-        const existingTagIds = tag_map[key] || [];
+        const existingTagIds = (tag_map as Record<string, any>)[key] || [];
 
         // Merge existing and new tag ids. Replace the ones mapped to a new id. Remove duplicates.
         const combinedTags = existingTagIds.concat(tagIds)
-            .map(tagId => (idToActualTagIdMap.has(tagId)) ? idToActualTagIdMap.get(tagId) : tagId)
+            .map((tagId: any) => (idToActualTagIdMap.has(tagId)) ? idToActualTagIdMap.get(tagId) : tagId)
             .filter(onlyUnique);
 
         // Verify that all tags exist. Remove tags that don't exist.
-        tag_map[key] = combinedTags.filter(tagId => tags.some(y => String(y.id) === String(tagId)));
+        (tag_map as Record<string, any>)[key] = combinedTags.filter((tagId: any) => tags.some(y => String(y.id) === String(tagId)));
     }
 
     if (warnings.length) {
         toastr.warning('Tags restored with warnings. Check console or click on this message for details.', 'Tag Restore', {
-            timeOut: toastr.options.timeOut * 2, // Display double the time
+            timeOut: (toastr.options.timeOut ?? 0) * 2, // Display double the time
             onclick: () => Popup.show.text('Tag Restore Warnings', `<samp class="justifyLeft">${DOMPurify.sanitize(warnings.join('\n'))}<samp>`, { allowVerticalScrolling: true }),
         });
         console.warn(`TAG RESTORE REPORT\n====================\n${warnings.join('\n')}`);
@@ -1974,7 +1974,7 @@ async function onTagsPruneClick() {
     }
 
     for (const key of tagMapsToPrune) {
-        delete tag_map[key];
+        delete (tag_map as Record<string, any>)[key];
     }
 
     printCharactersDebounced();
@@ -2008,7 +2008,7 @@ function onTagCreateClick() {
  * @param {Tag} tag Tag object
  * @param {number} count Count of characters/groups using this tag
  */
-function appendViewTagToList(list, tag, count) {
+function appendViewTagToList(list: any, tag: any, count: any) {
     const template = VIEW_TAG_TEMPLATE.clone();
     template.attr('id', tag.id);
     template.find('.tag_view_counter_value').text(count);
@@ -2041,8 +2041,8 @@ function appendViewTagToList(list, tag, count) {
 
     template.find('.tag_as_folder').attr('id', tagAsFolderId);
 
-    primaryColorPicker.on('change', (evt) => onTagColorize(evt, (tag, color) => tag.color = color, 'background-color'));
-    secondaryColorPicker.on('change', (evt) => onTagColorize(evt, (tag, color) => tag.color2 = color, 'color'));
+    primaryColorPicker.on('change', (evt: any) => onTagColorize(evt, (tag: any, color: any) => tag.color = color, 'background-color'));
+    secondaryColorPicker.on('change', (evt: any) => onTagColorize(evt, (tag: any, color: any) => tag.color2 = color, 'color'));
     template.find('.tag_view_color_picker .link_icon').on('click', (evt) => {
         const colorPicker = $(evt.target).closest('.tag_view_color_picker').find('toolcool-color-picker');
         const defaultColor = colorPicker.attr('data-default-color');
@@ -2086,7 +2086,7 @@ function appendViewTagToList(list, tag, count) {
     updateDrawTagFolder(template, tag);
 }
 
-function onTagAsFolderClick() {
+function onTagAsFolderClick(this: any) {
     const element = $(this).closest('.tag_view_item');
     const id = element.attr('id');
     const tag = tags.find(x => x.id === id);
@@ -2103,13 +2103,13 @@ function onTagAsFolderClick() {
     saveSettingsDebounced();
 }
 
-function updateDrawTagFolder(element, tag) {
-    const tagFolder = TAG_FOLDER_TYPES[tag.folder_type] || TAG_FOLDER_TYPES[TAG_FOLDER_DEFAULT_TYPE];
+function updateDrawTagFolder(element: any, tag: any) {
+    const tagFolder = (TAG_FOLDER_TYPES as Record<string, any>)[tag.folder_type] || (TAG_FOLDER_TYPES as Record<string, any>)[TAG_FOLDER_DEFAULT_TYPE];
     const folderElement = element.find('.tag_as_folder');
 
     // Update css class and remove all others
     Object.keys(TAG_FOLDER_TYPES).forEach(x => {
-        folderElement.toggleClass(TAG_FOLDER_TYPES[x].class, TAG_FOLDER_TYPES[x] === tagFolder);
+        folderElement.toggleClass((TAG_FOLDER_TYPES as Record<string, any>)[x].class, (TAG_FOLDER_TYPES as Record<string, any>)[x] === tagFolder);
     });
 
     // Draw/update css attributes for this class
@@ -2121,10 +2121,10 @@ function updateDrawTagFolder(element, tag) {
     indicator.css('font-size', `calc(var(--mainFontSize) * ${tagFolder.size})`);
 }
 
-async function onTagDeleteClick() {
+async function onTagDeleteClick(this: any) {
     const id = $(this).closest('.tag_view_item').attr('id');
     const tag = tags.find(x => x.id === id);
-    const otherTags = sortTags(tags.filter(x => x.id !== id).map(x => ({ id: x.id, name: x.name })));
+    const otherTags = sortTags(tags.filter((x: any) => x.id !== id).map((x: any) => ({ id: x.id, name: x.name })));
 
     const popupContent = $(await renderTemplateAsync('deleteTag', { otherTags }));
 
@@ -2138,7 +2138,7 @@ async function onTagDeleteClick() {
             width: '50%',
             placeholder: 'Select tag to merge into',
             allowClear: true,
-        }).val(null).trigger('change');
+        }).val(null as any).trigger('change');
     }
 
     const result = await callGenericPopup(popupContent, POPUP_TYPE.CONFIRM);
@@ -2151,9 +2151,9 @@ async function onTagDeleteClick() {
     // Remove the tag from all entities that use it
     // If we have a replacement tag, add that one instead
     for (const key of Object.keys(tag_map)) {
-        if (tag_map[key].includes(id)) {
-            tag_map[key] = tag_map[key].filter(x => x !== id);
-            if (mergeTagId) tag_map[key].push(mergeTagId);
+        if ((tag_map as Record<string, any>)[key].includes(id)) {
+            (tag_map as Record<string, any>)[key] = (tag_map as Record<string, any>)[key].filter((x: any) => x !== id);
+            if (mergeTagId) (tag_map as Record<string, any>)[key].push(mergeTagId);
         }
     }
 
@@ -2170,7 +2170,7 @@ async function onTagDeleteClick() {
     applyCharacterTagsToMessageDivs();
 }
 
-function onTagRenameInput() {
+function onTagRenameInput(this: any) {
     const id = $(this).closest('.tag_view_item').attr('id');
     const newName = $(this).text();
     const tag = tags.find(x => x.id === id);
@@ -2189,7 +2189,7 @@ function onTagRenameInput() {
  * @param {(tag: Tag, val: string) => void} setColor - A function that sets the color of the tag
  * @param {string} cssProperty - The CSS property to apply the color to
  */
-function onTagColorize(evt, setColor, cssProperty) {
+function onTagColorize(evt: any, setColor: any, cssProperty: any) {
     const isDefaultColor = $(evt.target).data('default-color') === evt.detail.rgba;
     $(evt.target).closest('.tag_view_color_picker').find('.link_icon').toggle(!isDefaultColor);
 
@@ -2206,12 +2206,12 @@ function onTagColorize(evt, setColor, cssProperty) {
     debouncedTagColoring(tag.id, cssProperty, newColor);
 }
 
-const debouncedTagColoring = debounce((tagId, cssProperty, newColor) => {
+const debouncedTagColoring = debounce((tagId: any, cssProperty: any, newColor: any) => {
     $(`.tag[id="${tagId}"]`).css(cssProperty, newColor);
     $(`.bogus_folder_select[tagid="${tagId}"] .avatar`).css(cssProperty, newColor);
 }, debounce_timeout.quick);
 
-function onTagListHintClick() {
+function onTagListHintClick(this: any) {
     $(this).toggleClass('selected');
 
     const $tagSiblings = $(this).siblings('.tag:not(.actionable)');
@@ -2244,7 +2244,7 @@ function onTagListHintClick() {
  * Clears all filters for the current list context.
  * @param {FilterHelper} filterHelper - The filter helper for the current context
  */
-function onClearAllFiltersClick(filterHelper) {
+function onClearAllFiltersClick(this: any, filterHelper: any) {
     console.debug('clear all filters clicked');
 
     const context = getFilterContext(filterHelper);
@@ -2259,7 +2259,7 @@ function onClearAllFiltersClick(filterHelper) {
     for (const tag of filterTags) {
         const toggleState = $(tag).attr('data-toggle-state');
         if (toggleState !== undefined && !isFilterState(toggleState ?? FILTER_STATES.UNDEFINED, FILTER_STATES.UNDEFINED)) {
-            toggleTagThreeState($(tag), { stateOverride: FILTER_STATES.UNDEFINED, simulateClick: true });
+            toggleTagThreeState($(tag), { stateOverride: FILTER_STATES.UNDEFINED, simulateClick: true } as any);
         }
     }
 
@@ -2271,10 +2271,10 @@ function onClearAllFiltersClick(filterHelper) {
  * Copy tags from one character to another.
  * @param {{oldAvatar: string, newAvatar: string}} data Event data
  */
-function copyTags(data) {
-    const prevTagMap = tag_map[data.oldAvatar] || [];
-    const newTagMap = tag_map[data.newAvatar] || [];
-    tag_map[data.newAvatar] = Array.from(new Set([...prevTagMap, ...newTagMap]));
+function copyTags(data: any) {
+    const prevTagMap = (tag_map as Record<string, any>)[data.oldAvatar] || [];
+    const newTagMap = (tag_map as Record<string, any>)[data.newAvatar] || [];
+    (tag_map as Record<string, any>)[data.newAvatar] = Array.from(new Set([...prevTagMap, ...newTagMap]));
 }
 
 /**
@@ -2282,11 +2282,11 @@ function copyTags(data) {
  * @param {JQuery<HTMLElement>} tagContainer Container element
  * @param {boolean} empty Whether to empty the container before printing
  */
-function printViewTagList(tagContainer, empty = true) {
+function printViewTagList(tagContainer: any, empty = true) {
     if (empty) tagContainer.empty();
     const everything = Object.values(tag_map).flat();
-    const counts = new Map(tags.map(tag => [tag.id, everything.filter(x => x === tag.id).length]));
-    const sortedTags = sortTags(tags, counts);
+    const counts = new Map(tags.map((tag: any) => [tag.id, everything.filter((x: any) => x === tag.id).length]));
+    const sortedTags = sortTags(tags, counts as any);
     for (const tag of sortedTags) {
         const count = counts.get(tag.id) || 0;
         appendViewTagToList(tagContainer, tag, count);
@@ -2294,10 +2294,10 @@ function printViewTagList(tagContainer, empty = true) {
 }
 
 function removeMissingTagFilters() {
-    const tagIds = new Set(tags.map(tag => tag.id));
+    const tagIds = new Set(tags.map((tag: any) => tag.id));
     const assignedTagIds = new Set(Object.values(tag_map).flat());
-    const openBogusFolderIds = new Set(getOpenBogusFolders().map(tag => tag.id));
-    const isEmptyOpenBogusFolder = (tagId) => openBogusFolderIds.has(tagId) && !assignedTagIds.has(tagId);
+    const openBogusFolderIds = new Set(getOpenBogusFolders().map((tag: any) => tag.id));
+    const isEmptyOpenBogusFolder = (tagId: any) => openBogusFolderIds.has(tagId) && !assignedTagIds.has(tagId);
 
     for (const helper of [groupCandidatesFilter, groupMembersFilter, entitiesFilter]) {
         const { selected, excluded } = helper.getFilterData(FILTER_TYPES.TAG) as any;
@@ -2335,7 +2335,7 @@ function registerTagsSlashCommands() {
      * @param {boolean} [options.allowCreate=false] - Whether a new tag should be created if no tag with the name exists
      * @returns {Tag?} The tag, or null if not found
      */
-    function paraGetTag(tagName, { allowCreate = false } = {}) {
+    function paraGetTag(tagName: any, { allowCreate = false } = {}) {
         if (!tagName) {
             toastr.warning('Tag name must be provided.');
             return null;
@@ -2355,7 +2355,7 @@ function registerTagsSlashCommands() {
         name: 'tag-add',
         returns: 'true/false - Whether the tag was added or was assigned already',
         /** @param {{name: string}} namedArgs @param {string} tagName @returns {string} */
-        callback: ({ name }, tagName) => {
+        callback: ({ name }: any, tagName: any) => {
             const key = searchCharByName(name);
             if (!key) return 'false';
             const tag = paraGetTag(tagName, { allowCreate: true });
@@ -2402,7 +2402,7 @@ function registerTagsSlashCommands() {
         name: 'tag-remove',
         returns: 'true/false - Whether the tag was removed or wasn\'t assigned already',
         /** @param {{name: string}} namedArgs @param {string} tagName @returns {string} */
-        callback: ({ name }, tagName) => {
+        callback: ({ name }: any, tagName: any) => {
             const key = searchCharByName(name);
             if (!key) return 'false';
             const tag = paraGetTag(tagName);
@@ -2448,12 +2448,12 @@ function registerTagsSlashCommands() {
         name: 'tag-exists',
         returns: 'true/false - Whether the given tag name is assigned to the character',
         /** @param {{name: string}} namedArgs @param {string} tagName @returns {string} */
-        callback: ({ name }, tagName) => {
+        callback: ({ name }: any, tagName: any) => {
             const key = searchCharByName(name);
             if (!key) return 'false';
             const tag = paraGetTag(tagName);
             if (!tag) return 'false';
-            return String(tag_map[key].includes(tag.id));
+            return String((tag_map as Record<string, any>)[key].includes(tag.id));
         },
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -2492,11 +2492,11 @@ function registerTagsSlashCommands() {
         name: 'tag-list',
         returns: 'Comma-separated list of all assigned tags',
         /** @param {{name: string}} namedArgs @returns {string} */
-        callback: ({ name }) => {
+        callback: ({ name }: any) => {
             const key = searchCharByName(name);
             if (!key) return '';
             const tags = getTagsList(key);
-            return tags.map(x => x.name).join(', ');
+            return tags.map((x: any) => x.name).join(', ');
         },
         namedArgumentList: [
             SlashCommandNamedArgument.fromProps({
@@ -2528,7 +2528,7 @@ function registerTagsSlashCommands() {
     SlashCommandParser.addCommandObject(SlashCommand.fromProps({
         name: 'tag-import',
         /** @param {{name: string, mode: 'all'|'existing'|'none'|'ask'}} namedArgs @returns {Promise<string>} */
-        callback: async ({ name, mode }) => {
+        callback: async ({ name, mode }: any) => {
             if (selected_group !== null) {
                 toastr.warning(t`Tag import does not support group chats.`);
                 return 'false';
@@ -2537,7 +2537,7 @@ function registerTagsSlashCommands() {
             if (!key) return 'false';
 
             // Map mode argument to tag_import_setting
-            const modeMap = {
+            const modeMap: any = {
                 'all': tag_import_setting.ALL,
                 'existing': tag_import_setting.ONLY_EXISTING,
                 'none': tag_import_setting.NONE,
@@ -2632,7 +2632,7 @@ export function applyCharacterTagsToMessageDivs({ mesIds = [] as number[] } = {}
             return;
         }
 
-        const tagNamesById = tagsList.reduce((acc, tag) => {
+        const tagNamesById = tagsList.reduce((acc: any, tag: any) => {
             acc[tag.id] = tag.name;
             return acc;
         }, {});
@@ -2652,17 +2652,17 @@ export function applyCharacterTagsToMessageDivs({ mesIds = [] as number[] } = {}
 
             // If tags are NOT in the cache, compute and store them
             if (!tagsForCharacter) {
-                const tagIds = characterTagData[avatarFileName];
+                const tagIds = (characterTagData as Record<string, any>)[avatarFileName];
                 if (tagIds?.length) {
                     const tagNames = tagIds
-                        .map(id => tagNamesById[id])
+                        .map((id: any) => tagNamesById[id])
                         .filter(Boolean);
 
                     if (tagNames.length) {
                         tagsForCharacter = {
                             tagNames,
                             joinedTagNames: tagNames
-                                .map(name => name?.replace(/,/g, ' ')) // replace commas with spaces to avoid issues with tag names containing commas
+                                .map((name: any) => name?.replace(/,/g, ' ')) // replace commas with spaces to avoid issues with tag names containing commas
                                 .join(','),
                         };
                         // Add the newly computed tags to the cache
@@ -2690,7 +2690,7 @@ export function applyCharacterTagsToMessageDivs({ mesIds = [] as number[] } = {}
  * buildMessagesFilter([1, 5]); // Returns '.mes[mesid="1"],.mes[mesid="5"]'
  * buildMessagesFilter([]); // Returns '.mes'
  */
-function buildMessagesFilter(mesIds) {
+function buildMessagesFilter(mesIds: any) {
     const allMessages = '.mes';
 
     if (!mesIds) {
@@ -2702,7 +2702,7 @@ function buildMessagesFilter(mesIds) {
     if (mesIdsArray?.length) {
         // Create a valid jQuery selector for multiple attribute values.
         // Example output: '.mes[mesid="1"],.mes[mesid="5"]'
-        return mesIdsArray.map(id => `.mes[mesid="${id}"]`).join(',');
+        return mesIdsArray.map((id: any) => `.mes[mesid="${id}"]`).join(',');
     }
 
     // If mesIds is empty, select all messages.
@@ -2716,9 +2716,9 @@ function buildMessagesFilter(mesIds) {
  * @param {string[]} tagData.tagNames - An array of tag names.
  * @param {string} tagData.joinedTagNames - A comma-separated string of tag names.
  */
-function applyTags($element, tagData) {
+function applyTags($element: any, tagData: any) {
     $element.attr('data-char-tags', tagData.joinedTagNames);
-    tagData.tagNames.forEach(tagName => {
+    tagData.tagNames.forEach((tagName: any) => {
         const normalizedTagName = normalizeTagName(tagName);
 
         if (!normalizedTagName) {
@@ -2735,7 +2735,7 @@ function applyTags($element, tagData) {
  * @param {string} name The tag name to normalize.
  * @returns {string} The normalized tag name.
  */
-function normalizeTagName(name) {
+function normalizeTagName(name: any) {
     if (!name?.trim()) {
         return '';
     }
@@ -2754,7 +2754,7 @@ function normalizeTagName(name) {
  * @param {string} avatarSrc The source URL of the character avatar.
  * @returns {string|null} The normalized avatar file name, or null if the input is falsy or doesn't contain a valid file name.
  */
-function extractCharacterAvatar(avatarSrc) {
+function extractCharacterAvatar(avatarSrc: any) {
     if (!avatarSrc) {
         return null;
     }

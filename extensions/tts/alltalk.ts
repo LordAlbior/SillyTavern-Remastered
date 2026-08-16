@@ -39,8 +39,8 @@ class AllTalkTtsProvider {
     this.rvcVoices = []; // Initialize rvcVoices as an empty array
   }
   ready = false;
-  voices = [];
-  rvcVoices = [];
+  voices: any[] = [];
+  rvcVoices: any[] = [];
   dynamicSettings = {} as any;
   separator = ". ";
   audioElement = document.createElement("audio");
@@ -116,7 +116,7 @@ class AllTalkTtsProvider {
             <label for='language_options'>Language</label>
             <select id='language_options'>`;
     for (const language in this.languageLabels) {
-      html += `<option value='${this.languageLabels[language]}' ${this.languageLabels[language] === this.settings?.language ? 'selected="selected"' : ""}>${language}</option>`;
+      html += `<option value='${(this.languageLabels as Record<string, any>)[language]}' ${(this.languageLabels as Record<string, any>)[language] === this.settings?.language ? 'selected="selected"' : ""}>${language}</option>`;
     }
     html += `</select>
         </div>
@@ -232,7 +232,7 @@ class AllTalkTtsProvider {
   // Startup ST & AT //
   //#################//
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     updateStatus("Offline");
 
     if (Object.keys(settings).length === 0) {
@@ -375,7 +375,7 @@ class AllTalkTtsProvider {
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
     const data = await response.json();
-    const voices = data.voices.map((filename) => {
+    const voices = data.voices.map((filename: any) => {
       return {
         name: filename,
         voice_id: filename,
@@ -408,7 +408,7 @@ class AllTalkTtsProvider {
         throw new Error("Invalid data format received from /api/rvcvoices");
       }
 
-      const voices = data.rvcvoices.map((filename) => {
+      const voices = data.rvcvoices.map((filename: any) => {
         return {
           name: filename,
           voice_id: filename,
@@ -440,7 +440,7 @@ class AllTalkTtsProvider {
         throw new Error(`Failed to fetch current settings: ${response.statusText}`);
       }
       const currentSettings = await response.json();
-      currentSettings.models_available.sort((a, b) => a.name.localeCompare(b.name));
+      currentSettings.models_available.sort((a: any, b: any) => a.name.localeCompare(b.name));
 
       this.settings.enginesAvailable = currentSettings.engines_available;
       this.settings.currentEngineLoaded = currentSettings.current_engine_loaded;
@@ -527,7 +527,7 @@ class AllTalkTtsProvider {
     const modelSelect = document.getElementById("switch_model");
     if (modelSelect) {
       modelSelect.innerHTML = ""; // Clear existing options
-      this.settings.modelsAvailable.forEach((model) => {
+      this.settings.modelsAvailable.forEach((model: any) => {
         const option = document.createElement("option");
         option.value = model.name;
         option.textContent = model.name; // Use model name directly
@@ -605,9 +605,9 @@ class AllTalkTtsProvider {
       languageSelect.innerHTML = "";
       for (const language in this.languageLabels) {
         const option = document.createElement("option");
-        option.value = this.languageLabels[language];
+        option.value = (this.languageLabels as Record<string, any>)[language];
         option.textContent = language;
-        if (this.languageLabels[language] === this.settings.language) {
+        if ((this.languageLabels as Record<string, any>)[language] === this.settings.language) {
           option.selected = true;
         }
         languageSelect.appendChild(option);
@@ -621,7 +621,7 @@ class AllTalkTtsProvider {
 
   setupEventListeners() {
     // Define the event handler function
-    const onModelSelectChange = async (event) => {
+    const onModelSelectChange = async (event: any) => {
       console.log("Model select change event triggered");
       const selectedModel = (event.target as HTMLInputElement).value;
       console.log(`Selected model: ${selectedModel}`);
@@ -701,7 +701,7 @@ class AllTalkTtsProvider {
     // DeepSpeed Listener
     const deepspeedCheckbox = document.getElementById("deepspeed");
     if (deepspeedCheckbox) {
-      const handleDeepSpeedChange = async (event) => {
+      const handleDeepSpeedChange = async (event: any) => {
         const deepSpeedValue = (event.target as HTMLInputElement).checked ? "True" : "False";
         updateStatus("Processing");
         try {
@@ -730,7 +730,7 @@ class AllTalkTtsProvider {
     // Low VRAM Listener
     const lowVramCheckbox = document.getElementById("low_vram");
     if (lowVramCheckbox) {
-      const handleLowVramChange = async (event) => {
+      const handleLowVramChange = async (event: any) => {
         const lowVramValue = (event.target as HTMLInputElement).checked ? "True" : "False";
         updateStatus("Processing");
         try {
@@ -894,7 +894,7 @@ class AllTalkTtsProvider {
   // Preview AT Voice //
   //##################//
 
-  async previewTtsVoice(voiceName) {
+  async previewTtsVoice(voiceName: any) {
     try {
       // Prepare data for POST request
       const postData = new URLSearchParams();
@@ -945,7 +945,7 @@ class AllTalkTtsProvider {
   //  Populate ST voices //
   //#####################//
 
-  async getVoice(voiceName, generatePreview = false) {
+  async getVoice(voiceName: any, generatePreview = false) {
     // Ensure this.voices is populated
     if (this.voices.length === 0) {
       // Fetch voice objects logic
@@ -956,7 +956,7 @@ class AllTalkTtsProvider {
       // Error handling
     }
     // Generate preview URL only if requested
-    if (!match.preview_url && generatePreview) {
+    if (!match!.preview_url && generatePreview) {
       // Generate preview logic
     }
     return match; // Return the found voice object
@@ -966,7 +966,7 @@ class AllTalkTtsProvider {
   //  Generate TTS Streaming or call Standard //
   //##########################################//
 
-  async generateTts(inputText, voiceId) {
+  async generateTts(inputText: any, voiceId: any) {
     try {
       if (this.settings.at_generation_method === "streaming_enabled") {
         // Construct the streaming URL
@@ -994,7 +994,7 @@ class AllTalkTtsProvider {
   //  Generate Standard //
   //####################//
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     const requestBody = new URLSearchParams({
       text_input: inputText,
       text_filtering: "standard",
@@ -1058,7 +1058,7 @@ class AllTalkTtsProvider {
 //  Update Status Messages //
 //#########################//
 
-function updateStatus(message) {
+function updateStatus(message: any) {
   const statusElement = document.getElementById("status_info");
   if (statusElement) {
     statusElement.textContent = message;

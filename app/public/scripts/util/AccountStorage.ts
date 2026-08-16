@@ -49,23 +49,23 @@ class AccountStorage {
   /**
    * @type {Record<string, string>} Storage state
    */
-  #state = {};
+  #state: Record<string, any> = {};
 
   /**
    * @type {boolean} If the storage was initialized
    */
   #ready = false;
 
-  #migrateLocalStorage() {
-    const localStorageKeys = [];
+  #migrateLocalStorage(this: any) {
+    const localStorageKeys: any[] = [];
     for (let i = 0; i < globalThis.localStorage.length; i++) {
       localStorageKeys.push(globalThis.localStorage.key(i));
     }
     for (const key of localStorageKeys) {
-      if (MIGRATABLE_KEYS.some((k) => k.test(key))) {
-        const value = globalThis.localStorage.getItem(key);
-        this.#state[key] = value;
-        globalThis.localStorage.removeItem(key);
+      if (MIGRATABLE_KEYS.some((k: any) => k.test(key))) {
+        const value = globalThis.localStorage.getItem(key ?? '');
+        (this.#state as Record<string, any>)[key] = value;
+        globalThis.localStorage.removeItem(key ?? '');
       }
     }
   }
@@ -74,14 +74,14 @@ class AccountStorage {
    * Initialize the account storage.
    * @param {Object} state Initial state
    */
-  init(state) {
+  init(this: any, state: any) {
     if (state && typeof state === "object") {
       this.#state = Object.assign(this.#state, state);
     }
 
     if (!Object.hasOwn(this.#state, MIGRATED_MARKER)) {
       this.#migrateLocalStorage();
-      this.#state[MIGRATED_MARKER] = "1";
+      (this.#state as Record<string, any>)[MIGRATED_MARKER] = "1";
       saveSettingsCallback?.();
     }
 
@@ -93,12 +93,12 @@ class AccountStorage {
    * @param {string} key Key to get
    * @returns {string|null} Value of the key
    */
-  getItem(key) {
+  getItem(this: any, key: any) {
     if (!this.#ready) {
       console.warn(`AccountStorage not ready (trying to read from ${key})`);
     }
 
-    return Object.hasOwn(this.#state, key) ? String(this.#state[key]) : null;
+    return Object.hasOwn(this.#state, key) ? String((this.#state as Record<string, any>)[key]) : null;
   }
 
   /**
@@ -106,18 +106,18 @@ class AccountStorage {
    * @param {string} key Key to set
    * @param {string} value Value to set
    */
-  setItem(key, value) {
+  setItem(this: any, key: any, value: any) {
     if (!this.#ready) {
       console.warn(`AccountStorage not ready (trying to write to ${key})`);
     }
 
-    const hasPropertySet = Object.hasOwn(this.#state, key) && this.#state[key] === String(value);
+    const hasPropertySet = Object.hasOwn(this.#state, key) && (this.#state as Record<string, any>)[key] === String(value);
 
     if (hasPropertySet) {
       return;
     }
 
-    this.#state[key] = String(value);
+    (this.#state as Record<string, any>)[key] = String(value);
     saveSettingsCallback?.();
   }
 
@@ -125,7 +125,7 @@ class AccountStorage {
    * Remove a key from account storage.
    * @param {string} key Key to remove
    */
-  removeItem(key) {
+  removeItem(this: any, key: any) {
     if (!this.#ready) {
       console.warn(`AccountStorage not ready (trying to remove ${key})`);
     }
@@ -134,7 +134,7 @@ class AccountStorage {
       return;
     }
 
-    delete this.#state[key];
+    delete (this.#state as Record<string, any>)[key];
     saveSettingsCallback?.();
   }
 

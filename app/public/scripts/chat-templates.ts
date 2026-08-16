@@ -85,7 +85,7 @@ const substr_derivations = [
   ["ChatML", ["<|im_start|>user", "<|im_start|>assistant", "<|im_end|>"]],
 ];
 
-const parse_derivation = (derivation) =>
+const parse_derivation = (derivation: any) =>
   typeof derivation === "string"
     ? {
         context: derivation,
@@ -95,14 +95,14 @@ const parse_derivation = (derivation) =>
 
 const not_found = { context: null, instruct: null };
 
-export async function deriveTemplatesFromChatTemplate(chat_template, hash) {
+export async function deriveTemplatesFromChatTemplate(chat_template: any, hash: any) {
   if (chat_template.trim() === "") {
     console.log("Missing chat template.");
     return not_found;
   }
 
   if (hash in hash_derivations) {
-    return parse_derivation(hash_derivations[hash]);
+    return parse_derivation((hash_derivations as Record<string, any>)[hash]);
   }
 
   // heuristics
@@ -116,7 +116,7 @@ export async function deriveTemplatesFromChatTemplate(chat_template, hash) {
   return not_found;
 }
 
-export async function bindModelTemplates(power_user, online_status) {
+export async function bindModelTemplates(power_user: any, online_status: any) {
   if (online_status === "no_connection") {
     return false;
   }

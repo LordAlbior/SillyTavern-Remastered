@@ -25,13 +25,13 @@ export class WebLlmVectorProvider {
    * @param {string} modelId Model ID to initialize the engine with
    * @returns {Promise<void>} Promise that resolves when the engine is initialized
    */
-  #initEngine(modelId) {
+  #initEngine(modelId: any) {
     this.#checkWebLlm();
     if (!this.#engine) {
-      this.#engine = SillyTavern.llm.getEngine();
+      this.#engine = (SillyTavern as any).llm.getEngine();
     }
 
-    return this.#engine.loadModel(modelId);
+    return (this.#engine as any).loadModel(modelId);
   }
 
   /**
@@ -49,16 +49,16 @@ export class WebLlmVectorProvider {
    * @param {string} modelId Model to use for generating embeddings
    * @returns {Promise<number[][]>} Array of embeddings for each text
    */
-  async embedTexts(texts, modelId) {
+  async embedTexts(texts: any, modelId: any) {
     await this.#initEngine(modelId);
-    return this.#engine.generateEmbedding(texts);
+    return (this.#engine as any).generateEmbedding(texts);
   }
 
   /**
    * Loads a model into the engine.
    * @param {string} modelId Model ID to load
    */
-  async loadModel(modelId) {
+  async loadModel(modelId: any) {
     await this.#initEngine(modelId);
   }
 }

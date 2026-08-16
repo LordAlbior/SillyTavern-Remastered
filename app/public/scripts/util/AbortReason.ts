@@ -1,7 +1,7 @@
 export class AbortReason {
   reason: any;
 
-  constructor(reason) {
+  constructor(reason: any) {
     this.reason = reason;
   }
 

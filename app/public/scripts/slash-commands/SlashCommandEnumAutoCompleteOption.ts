@@ -8,14 +8,14 @@ export class SlashCommandEnumAutoCompleteOption extends AutoCompleteOption {
    * @param {SlashCommandEnumValue} enumValue
    * @returns {SlashCommandEnumAutoCompleteOption}
    */
-  static from(cmd, enumValue) {
+  static from(cmd: any, enumValue: any) {
     const mapped =
       SlashCommandEnumAutoCompleteOption.valueToOptionMap.find((it) => enumValue instanceof it.value)?.option ??
       SlashCommandEnumAutoCompleteOption;
     return new mapped(cmd, enumValue);
   }
   /**@type {{value:(typeof SlashCommandEnumValue), option:(typeof SlashCommandEnumAutoCompleteOption)}[]} */
-  static valueToOptionMap = [];
+  static valueToOptionMap: any[] = [];
   /**@type {SlashCommand}*/ cmd;
   /**@type {SlashCommandEnumValue}*/ enumValue;
 
@@ -23,7 +23,7 @@ export class SlashCommandEnumAutoCompleteOption extends AutoCompleteOption {
    * @param {SlashCommand} cmd
    * @param {SlashCommandEnumValue} enumValue
    */
-  constructor(cmd, enumValue) {
+  constructor(cmd: any, enumValue: any) {
     super(
       enumValue.value,
       enumValue.typeIcon,

@@ -42,10 +42,10 @@ export const inject_ids = {
   STORY_STRING: "__STORY_STRING__",
   QUIET_PROMPT: "QUIET_PROMPT",
   DEPTH_PROMPT: "DEPTH_PROMPT",
-  DEPTH_PROMPT_INDEX: (index) => `DEPTH_PROMPT_${index}`,
+  DEPTH_PROMPT_INDEX: (index:any) => `DEPTH_PROMPT_${index}`,
   CUSTOM_WI_DEPTH: "customDepthWI",
-  CUSTOM_WI_DEPTH_ROLE: (depth, role) => `customDepthWI_${depth}_${role}`,
-  CUSTOM_WI_OUTLET: (key) => `customWIOutlet_${key}`,
+  CUSTOM_WI_DEPTH_ROLE: (depth:any, role:any) => `customDepthWI_${depth}_${role}`,
+  CUSTOM_WI_OUTLET: (key:any) => `customWIOutlet_${key}`,
 };
 
 export const COMETAPI_IGNORE_PATTERNS = [
@@ -117,7 +117,7 @@ export const IMAGE_OVERSWIPE = {
  * @readonly
  */
 export const MEDIA_TYPE = {
-  getFromMime: (/** @type {string} */ mimeType) => {
+  getFromMime: (/** @type {string} */ mimeType:any) => {
     if (mimeType.startsWith("image/")) {
       return MEDIA_TYPE.IMAGE;
     }
@@ -224,8 +224,8 @@ export const SWIPE_STATE = {
  * @param {*[]} array - The array to check against
  * @returns {boolean} Whether the value is unique
  */
-export function onlyUniqueJson(value, index, array) {
-  return array.map((v) => JSON.stringify(v)).indexOf(JSON.stringify(value)) === index;
+export function onlyUniqueJson(value:any, index:any, array:any) {
+  return array.map((v:any) => JSON.stringify(v)).indexOf(JSON.stringify(value)) === index;
 }
 
 /**
@@ -236,7 +236,7 @@ export function onlyUniqueJson(value, index, array) {
  * @param {(a:string, b:string) => number} comparisonFunction - The comparison function
  * @returns {number} The comparison result
  */
-export function compareIgnoreCaseAndAccents(a, b, comparisonFunction) {
+export function compareIgnoreCaseAndAccents(a:any, b:any, comparisonFunction:any) {
   if (!a || !b) return comparisonFunction(a, b);
 
   // Normalize and remove diacritics, then convert to lower case
@@ -254,8 +254,8 @@ export function compareIgnoreCaseAndAccents(a, b, comparisonFunction) {
  * @param {string} b - The second string
  * @returns {number} The comparison result
  */
-export function sortIgnoreCaseAndAccents(a, b) {
-  return compareIgnoreCaseAndAccents(a, b, (a, b) => a?.localeCompare(b));
+export function sortIgnoreCaseAndAccents(a:any, b:any) {
+  return compareIgnoreCaseAndAccents(a, b, (a:any, b:any) => a?.localeCompare(b));
 }
 
 /** @readonly */

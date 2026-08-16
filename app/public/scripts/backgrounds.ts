@@ -37,11 +37,11 @@ const BG_METADATA_KEY = "custom_background";
 const LIST_METADATA_KEY = "chat_backgrounds";
 
 /** @type {Array<{id: string, name: string, thumbnailFile: string}>} */
-let folderList = [];
+let folderList: any[] = [];
 /** @type {Object.<string, string[]>} filename → folderIds */
-let imageFolderMap = {};
+let imageFolderMap: Record<string, any> = {};
 /** @type {string|null} Currently active folder drill-in, or null for root */
-let activeFolderId = null;
+let activeFolderId: any = null;
 /** @type {Set<string>} Selected system backgrounds for group folder actions */
 const selectedSystemBackgroundFiles = new Set();
 /** @type {boolean} Whether click-to-select mode is active for system backgrounds */
@@ -118,14 +118,14 @@ const BG_TABS = Object.freeze({
  * Global IntersectionObserver instance for lazy loading backgrounds
  * @type {IntersectionObserver|null}
  */
-let lazyLoadObserver = null;
+let lazyLoadObserver: any = null;
 
 /**
  * Cache for the current list of system background filenames.
  * Used to re-sort backgrounds without refetching from the server.
  * @type {Array<{filename: string, isAnimated: boolean}>}
  */
-let cachedSystemBackgrounds = [];
+let cachedSystemBackgrounds: any[] = [];
 
 export const background_settings: Record<string, any> = {
   name: "__transparent.png",
@@ -141,7 +141,7 @@ export const background_settings: Record<string, any> = {
  * @param {boolean} isCustom - Whether these are custom (chat) backgrounds
  * @returns {string[]} Sorted array of background filenames
  */
-function sortBackgrounds(backgrounds, isCustom = false) {
+function sortBackgrounds(backgrounds: any, isCustom = false) {
   const sortOrder = background_settings.sortOrder || BG_SORT_OPTIONS.AZ;
 
   return [...backgrounds].sort((a, b) => {
@@ -172,7 +172,7 @@ function sortBackgrounds(backgrounds, isCustom = false) {
  * @param {object} imageData - Data for the image (filename, isCustom, isAnimated).
  * @returns {HTMLElement} The created thumbnail element.
  */
-function createThumbnailElement(imageData) {
+function createThumbnailElement(imageData: any) {
   const bg = imageData.filename;
   const isCustom = imageData.isCustom;
   const isAnimated = imageData.isAnimated ?? false;
@@ -196,7 +196,7 @@ function createThumbnailElement(imageData) {
   }
 
   const titleElement = thumbnail.find(".BGSampleTitle");
-  clipper.appendChild(titleElement.get(0));
+  clipper.appendChild(titleElement.get(0)!);
   thumbnail.append(clipper);
 
   const url = generateUrlParameter(bg, isCustom);
@@ -217,7 +217,7 @@ function createThumbnailElement(imageData) {
  * Applies the thumbnail column count to the CSS and updates button states.
  * @param {number} count - The number of columns to display.
  */
-function applyThumbnailColumns(count) {
+function applyThumbnailColumns(count: any) {
   const newCount = Math.max(THUMBNAIL_COLUMNS_MIN, Math.min(count, THUMBNAIL_COLUMNS_MAX));
   background_settings.thumbnailColumns = newCount;
   document.documentElement.style.setProperty("--bg-thumb-columns", newCount.toString());
@@ -228,7 +228,7 @@ function applyThumbnailColumns(count) {
   saveSettingsDebounced();
 }
 
-export function loadBackgroundSettings(settings) {
+export function loadBackgroundSettings(settings: any) {
   let backgroundSettings = settings.background;
   if (!backgroundSettings || !backgroundSettings.name || !backgroundSettings.url) {
     backgroundSettings = background_settings;
@@ -266,7 +266,7 @@ export function loadBackgroundSettings(settings) {
  * Sets the background for the current chat and adds it to the list of custom backgrounds.
  * @param {{url: string, path:string}} backgroundInfo
  */
-async function forceSetBackground(backgroundInfo) {
+async function forceSetBackground(backgroundInfo: any) {
   saveBackgroundMetadata(backgroundInfo.url);
   $("#bg1").css("background-image", backgroundInfo.url);
 
@@ -295,9 +295,9 @@ async function onChatChanged() {
  * @param {string} fileUrl - The URL to check against the chat's custom backgrounds.
  * @returns {boolean} True if the URL corresponds to a custom background, false otherwise.
  */
-export function isCustomBackgroundUrl(fileUrl) {
+export function isCustomBackgroundUrl(fileUrl: any) {
   const customBackgrounds = chat_metadata[LIST_METADATA_KEY] || [];
-  return customBackgrounds.some((bg) => bg === fileUrl || generateUrlParameter(bg, true) === fileUrl);
+  return customBackgrounds.some((bg: any) => bg === fileUrl || generateUrlParameter(bg, true) === fileUrl);
 }
 
 /**
@@ -305,7 +305,7 @@ export function isCustomBackgroundUrl(fileUrl) {
  * @param {string} fileUrl File name or URL of the background image
  * @returns {string} Client path for the system backgroun
  */
-export function getBackgroundPath(fileUrl) {
+export function getBackgroundPath(fileUrl: any) {
   return `backgrounds/${encodeURIComponent(fileUrl)}`;
 }
 
@@ -315,7 +315,7 @@ export function getBackgroundPath(fileUrl) {
  * @param {string} file File name of the background image
  * @returns {string} Raw relative path, e.g. "backgrounds/my file.jpg"
  */
-function getBackgroundRelativePath(file) {
+function getBackgroundRelativePath(file: any) {
   return `backgrounds/${file}`;
 }
 
@@ -337,7 +337,7 @@ function highlightLockedBackground() {
  * Locks the background for the current chat
  * @param {Event|null} event
  */
-function onLockBackgroundClick(event = null) {
+function onLockBackgroundClick(event: any = null) {
   if (!getCurrentChatId()) {
     toastr.warning(t`Select a chat to lock the background for it`);
     return;
@@ -373,7 +373,7 @@ function isChatBackgroundLocked() {
   return chat_metadata[BG_METADATA_KEY];
 }
 
-function saveBackgroundMetadata(file) {
+function saveBackgroundMetadata(file: any) {
   chat_metadata[BG_METADATA_KEY] = file;
   saveMetadataDebounced();
 }
@@ -387,7 +387,7 @@ function removeBackgroundMetadata() {
  * Handles the click event for selecting a background.
  * @param {JQuery.Event} e Event
  */
-function onSelectBackgroundClick(e) {
+function onSelectBackgroundClick(this: any, e: any) {
   const bgFile = $(this).attr("bgfile");
   const isCustom = $(this).attr("custom") === "true";
   if (isBackgroundSelectionMode && !isCustom) {
@@ -412,7 +412,7 @@ function onSelectBackgroundClick(e) {
   highlightSelectedBackground();
 }
 
-async function onCopyToSystemBackgroundClick(e) {
+async function onCopyToSystemBackgroundClick(this: any, e: any) {
   e.stopPropagation();
   const bgNames = await getNewBackgroundName(this);
 
@@ -449,7 +449,7 @@ async function onCopyToSystemBackgroundClick(e) {
  * @param {boolean} isCustom Is the background custom?
  * @returns {Promise<string>} Blob URL of the thumbnail
  */
-async function getThumbnailFromStorage(bg, isCustom) {
+async function getThumbnailFromStorage(bg: any, isCustom: any) {
   const cachedBlobUrl = THUMBNAIL_BLOBS.get(bg);
   if (cachedBlobUrl) {
     return cachedBlobUrl;
@@ -472,8 +472,8 @@ async function getThumbnailFromStorage(bg, isCustom) {
     const imageBase64 = await getBase64Async(imageBlob);
     const thumbnailBase64 = (await createThumbnail(
       imageBase64,
-      THUMBNAIL_CONFIG.width,
-      THUMBNAIL_CONFIG.height,
+      THUMBNAIL_CONFIG.width as any,
+      THUMBNAIL_CONFIG.height as any,
     )) as string;
     const thumbnailBlob = await fetch(thumbnailBase64).then((res) => res.blob());
     await THUMBNAIL_STORAGE.setItem(bg, thumbnailBlob);
@@ -494,7 +494,7 @@ async function getThumbnailFromStorage(bg, isCustom) {
  * @param {Element} referenceElement
  * @returns {Promise<{oldBg: string, newBg: string}>}
  * */
-async function getNewBackgroundName(referenceElement) {
+async function getNewBackgroundName(referenceElement: any) {
   const exampleBlock = $(referenceElement).closest(".bg_example");
   const isCustom = exampleBlock.attr("custom") === "true";
   const oldBg = exampleBlock.attr("bgfile");
@@ -506,7 +506,7 @@ async function getNewBackgroundName(referenceElement) {
 
   const fileExtension = oldBg.split(".").pop();
   const fileNameBase = isCustom ? oldBg.split("/").pop() : oldBg;
-  const oldBgExtensionless = fileNameBase.replace(`.${fileExtension}`, "");
+  const oldBgExtensionless = (fileNameBase as string).replace(`.${fileExtension}`, "");
   const newBgExtensionless = await Popup.show.input(t`Enter new background name:`, null, oldBgExtensionless);
 
   if (!newBgExtensionless) {
@@ -524,7 +524,7 @@ async function getNewBackgroundName(referenceElement) {
   return { oldBg, newBg };
 }
 
-async function onRenameBackgroundClick(e) {
+async function onRenameBackgroundClick(this: any, e: any) {
   e.stopPropagation();
 
   const bgNames = await getNewBackgroundName(this);
@@ -549,7 +549,7 @@ async function onRenameBackgroundClick(e) {
   }
 }
 
-async function onDeleteBackgroundClick(e) {
+async function onDeleteBackgroundClick(this: any, e: any) {
   e.stopPropagation();
   const bgToDelete = $(this).closest(".bg_example");
   const url = bgToDelete.data("url");
@@ -567,7 +567,7 @@ async function onDeleteBackgroundClick(e) {
   let deleteFromServer = false;
   const confirm = await Popup.show.confirm(t`Delete the background?`, null, {
     customInputs: isCustom ? customInputs : [],
-    onClose: (popup) => {
+    onClose: (popup: any) => {
       if (isCustom) {
         deleteFromServer = Boolean(popup?.inputResults?.get(deleteFromServerId) ?? false);
       }
@@ -686,7 +686,7 @@ async function autoBackgroundCommand() {
  * Renders the system backgrounds gallery.
  * @param {Array<{filename: string, isAnimated: boolean}>} [backgrounds] - Optional filtered list of backgrounds with metadata.
  */
-function renderSystemBackgrounds(backgrounds) {
+function renderSystemBackgrounds(backgrounds: any) {
   const sourceList = backgrounds || [];
   const container = $("#bg_menu_content");
   container.empty();
@@ -697,15 +697,15 @@ function renderSystemBackgrounds(backgrounds) {
   }
 
   const sortedList = sortBackgrounds(
-    sourceList.map((bg) => bg.filename),
+    sourceList.map((bg: any) => bg.filename),
     false,
   );
-  const metadataByFilename = new Map(sourceList.map((bg) => [bg.filename, bg]));
+  const metadataByFilename = new Map(sourceList.map((bg: any) => [bg.filename, bg]));
   sortedList.forEach((filename) => {
     const bg = metadataByFilename.get(filename);
     const imageData = { filename, isCustom: false, isAnimated: (bg as any)?.isAnimated ?? false };
     const thumbnail = createThumbnailElement(imageData);
-    container.append(thumbnail);
+    container.append(thumbnail as any);
   });
 
   syncGroupSelectionUi();
@@ -725,12 +725,12 @@ function renderChatBackgrounds(backgrounds = undefined) {
   if (sourceList.length === 0) return;
 
   const sortedList = sortBackgrounds(sourceList, true);
-  sortedList.forEach((bg) => {
+  sortedList.forEach((bg: any) => {
     // For custom backgrounds, infer isAnimated from extension since we don't have server metadata
     const isAnimated = isAnimatedBackgroundExtension(bg);
     const imageData = { filename: bg, isCustom: true, isAnimated };
     const thumbnail = createThumbnailElement(imageData);
-    container.append(thumbnail);
+    container.append(thumbnail as any);
   });
 
   activateLazyLoader();
@@ -746,7 +746,7 @@ export async function getBackgrounds() {
     const { images, config } = await response.json();
     Object.assign(THUMBNAIL_CONFIG, config);
     cachedSystemBackgrounds = images;
-    const existingFiles = new Set(images.map((x) => x.filename));
+    const existingFiles = new Set(images.map((x: any) => x.filename));
     for (const selectedFile of selectedSystemBackgroundFiles) {
       if (!existingFiles.has(selectedFile)) {
         selectedSystemBackgroundFiles.delete(selectedFile);
@@ -848,7 +848,7 @@ function renderFolderGrid() {
 
   for (const folder of folderList) {
     const tile = createFolderTileElement(folder);
-    container.append(tile);
+    container.append(tile as any);
   }
 }
 
@@ -857,7 +857,7 @@ function renderFolderGrid() {
  * @param {{id: string, name: string, thumbnailFile: string}} folder
  * @returns {HTMLElement}
  */
-function createFolderTileElement(folder) {
+function createFolderTileElement(folder: any) {
   const tile = $("#bg_folder_tile_template .bg_folder_tile").clone();
   tile.attr("data-folder-id", folder.id);
   tile.find(".bg_folder_tile_name").text(folder.name);
@@ -878,7 +878,7 @@ function createFolderTileElement(folder) {
  * @param {{id: string, name: string, thumbnailFile: string}} folder
  * @returns {Promise<string|null>}
  */
-async function getFolderCoverUrl(folder) {
+async function getFolderCoverUrl(folder: any) {
   const file =
     folder.thumbnailFile ||
     cachedSystemBackgrounds.find((img) => {
@@ -909,7 +909,7 @@ function getFilteredImages() {
  * Drills into a folder — hides folder grid, shows breadcrumb, filters images.
  * @param {string} folderId
  */
-function onFolderDrillIn(folderId) {
+function onFolderDrillIn(folderId: any) {
   const folder = folderList.find((f) => f.id === folderId);
   if (!folder) return;
 
@@ -974,7 +974,7 @@ function syncGroupSelectionUi() {
  * Enables/disables click-to-select mode for system backgrounds.
  * @param {boolean} enabled
  */
-function setBackgroundSelectionMode(enabled) {
+function setBackgroundSelectionMode(enabled: any) {
   isBackgroundSelectionMode = enabled;
   if (!enabled) {
     selectedSystemBackgroundFiles.clear();
@@ -988,7 +988,7 @@ function setBackgroundSelectionMode(enabled) {
  * Toggles selected state of a system background for group folder actions.
  * @param {string} bgFile
  */
-function toggleBackgroundGroupSelection(bgFile) {
+function toggleBackgroundGroupSelection(bgFile: any) {
   if (!bgFile) return;
   if (selectedSystemBackgroundFiles.has(bgFile)) {
     selectedSystemBackgroundFiles.delete(bgFile);
@@ -1025,7 +1025,7 @@ function updateGroupFolderControlsVisibility() {
  * @param {string} headingText
  * @returns {Promise<string[]|null>} Array of selected folder IDs, or null if cancelled
  */
-async function selectFoldersForGroupAction(headingText) {
+async function selectFoldersForGroupAction(headingText: any) {
   if (folderList.length === 0) {
     toastr.info(t`Create a folder first`);
     return null;
@@ -1062,7 +1062,7 @@ async function selectFoldersForGroupAction(headingText) {
   });
   if (!result) return null;
 
-  const selectedIds = [];
+  const selectedIds: any[] = [];
   content.find('input[type="checkbox"]:checked').each(function () {
     selectedIds.push($(this).data("folderId"));
   });
@@ -1075,7 +1075,7 @@ async function selectFoldersForGroupAction(headingText) {
  * @param {string} folderId - Target folder ID
  * @param {boolean} isRemove - Whether to remove (unassign) or add (assign)
  */
-async function updateFolderAssignments(bgFiles, folderId, isRemove) {
+async function updateFolderAssignments(bgFiles: any, folderId: any, isRemove: any) {
   const paths = bgFiles.map(getBackgroundRelativePath);
   const endpoint = isRemove ? "/api/image-metadata/folders/unassign" : "/api/image-metadata/folders/assign";
 
@@ -1092,7 +1092,7 @@ async function updateFolderAssignments(bgFiles, folderId, isRemove) {
   for (const bgFile of bgFiles) {
     const currentFolderIds = imageFolderMap[bgFile] || [];
     if (isRemove) {
-      const nextFolderIds = currentFolderIds.filter((id) => id !== folderId);
+      const nextFolderIds = currentFolderIds.filter((id: any) => id !== folderId);
       if (nextFolderIds.length > 0) {
         imageFolderMap[bgFile] = nextFolderIds;
       } else {
@@ -1222,7 +1222,7 @@ async function onCreateFolder() {
  * Renames a folder via API.
  * @param {string} folderId
  */
-async function onRenameFolder(folderId) {
+async function onRenameFolder(folderId: any) {
   const folder = folderList.find((f) => f.id === folderId);
   if (!folder) return;
 
@@ -1250,7 +1250,7 @@ async function onRenameFolder(folderId) {
  * Deletes a folder via API.
  * @param {string} folderId
  */
-async function onDeleteFolder(folderId) {
+async function onDeleteFolder(folderId: any) {
   const folder = folderList.find((f) => f.id === folderId);
   if (!folder) return;
 
@@ -1290,7 +1290,7 @@ async function onDeleteFolder(folderId) {
  * Shows a folder assignment popup for an image.
  * @param {string} bgFile - The background filename
  */
-async function onAssignToFolder(bgFile) {
+async function onAssignToFolder(bgFile: any) {
   if (folderList.length === 0) {
     toastr.info(t`Create a folder first`);
     return;
@@ -1331,8 +1331,8 @@ async function onAssignToFolder(bgFile) {
   if (!result) return;
 
   // Determine which folders were toggled on/off
-  const toAssign = [];
-  const toUnassign = [];
+  const toAssign: any[] = [];
+  const toUnassign: any[] = [];
   content.find('input[type="checkbox"]').each(function () {
     const fid = $(this).data("folder-id");
     const isChecked = $(this).prop("checked");
@@ -1368,7 +1368,7 @@ async function onAssignToFolder(bgFile) {
  * Sets an image as the folder cover.
  * @param {string} bgFile - The background filename
  */
-async function onSetFolderCover(bgFile) {
+async function onSetFolderCover(bgFile: any) {
   if (!activeFolderId) return;
 
   try {
@@ -1423,7 +1423,7 @@ function activateLazyLoader() {
           const bg = parentThumbnail.getAttribute("bgfile");
           const isCustom = parentThumbnail.getAttribute("custom") === "true";
           const isAnimated = parentThumbnail.getAttribute("animated") === "true";
-          resolveImageUrl(bg, isCustom, isAnimated)
+          resolveImageUrl(bg, isCustom, isAnimated as any)
             .then((url) => {
               clipper.style.backgroundImage = url;
             })
@@ -1448,15 +1448,15 @@ function activateLazyLoader() {
  * @param {Element} block
  * @returns {string} URL of the background
  */
-function getUrlParameter(block) {
+function getUrlParameter(block: any) {
   return $(block).closest(".bg_example").data("url");
 }
 
-function generateUrlParameter(bg, isCustom) {
+function generateUrlParameter(bg: any, isCustom: any) {
   return isCustom ? `url("${encodeURI(bg)}")` : `url("${getBackgroundPath(bg)}")`;
 }
 
-function isAnimatedBackgroundExtension(fileName) {
+function isAnimatedBackgroundExtension(fileName: any) {
   const fileExtension = fileName.split(".").pop().toLowerCase();
   return ANIMATED_BACKGROUND_EXTENSIONS.includes(fileExtension);
 }
@@ -1468,7 +1468,7 @@ function isAnimatedBackgroundExtension(fileName) {
  * @param {boolean|null} [isAnimated=null] Is the background animated (from metadata). If null, infers from extension.
  * @returns {Promise<string>} CSS URL of the background
  */
-async function resolveImageUrl(bg, isCustom, isAnimated = null) {
+async function resolveImageUrl(bg: any, isCustom: any, isAnimated: any = null) {
   // If isAnimated is not provided (null), fall back to extension-based heuristic
   let animated = isAnimated;
   if (animated === null) {
@@ -1485,7 +1485,7 @@ async function resolveImageUrl(bg, isCustom, isAnimated = null) {
   return `url("${thumbnailUrl}")`;
 }
 
-async function setBackground(bg, url) {
+async function setBackground(bg: any, url: any) {
   // Only change the visual background if one is not locked for the current chat.
   if (!isChatBackgroundLocked()) {
     $("#bg1").css("background-image", url);
@@ -1495,7 +1495,7 @@ async function setBackground(bg, url) {
   saveSettingsDebounced();
 }
 
-async function delBackground(bg) {
+async function delBackground(bg: any) {
   await fetch("/api/backgrounds/delete", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -1516,7 +1516,7 @@ async function delBackground(bg) {
  * @param {Event} e Event
  * @returns {Promise<void>}
  */
-async function onBackgroundUploadSelected(e) {
+async function onBackgroundUploadSelected(e: any) {
   const input = e.currentTarget;
 
   if (!(input instanceof HTMLInputElement)) {
@@ -1524,7 +1524,7 @@ async function onBackgroundUploadSelected(e) {
     return;
   }
 
-  for (const file of input.files) {
+  for (const file of input.files!) {
     if (file.size === 0) {
       continue;
     }
@@ -1555,7 +1555,7 @@ async function onBackgroundUploadSelected(e) {
  * @param {FormData} formData
  * @returns {Promise<void>}
  */
-async function convertFileIfVideo(formData) {
+async function convertFileIfVideo(formData: any) {
   const file = formData.get("avatar");
   if (!(file instanceof File)) {
     return;
@@ -1603,7 +1603,7 @@ async function convertFileIfVideo(formData) {
  * Uploads a background to the server
  * @param {FormData} formData
  */
-async function uploadBackground(formData) {
+async function uploadBackground(formData: any) {
   try {
     if (!formData.has("avatar")) {
       console.log("No file provided. Background upload cancelled.");
@@ -1635,7 +1635,7 @@ async function uploadBackground(formData) {
  * @param {FormData} formData FormData containing the background file
  * @returns {Promise<void>}
  */
-async function uploadChatBackground(formData) {
+async function uploadChatBackground(formData: any) {
   try {
     if (!getCurrentChatId()) {
       toastr.warning(t`Select a chat to upload a background for it`);
@@ -1657,7 +1657,7 @@ async function uploadChatBackground(formData) {
     const extension = getFileExtension(file);
     const characterName = selected_group
       ? groups.find((g) => g.id === selected_group)?.id?.toString()
-      : characters[this_chid]?.name;
+      : characters[this_chid as any]?.name;
     const filename = `${characterName}_${humanizedDateTime()}`;
     const imagePath = await saveBase64AsFile(base64Data, characterName, filename, extension);
 
@@ -1677,9 +1677,9 @@ async function uploadChatBackground(formData) {
 /**
  * @param {string} bg
  */
-function highlightNewBackground(bg) {
+function highlightNewBackground(bg: any) {
   const newBg = $(`.bg_example[bgfile="${bg}"]`);
-  const scrollOffset = newBg.offset().top - newBg.parent().offset().top;
+  const scrollOffset = newBg.offset()!.top - newBg.parent()!.offset()!.top;
   $("#Backgrounds").scrollTop(scrollOffset);
   flashHighlight(newBg);
 }
@@ -1688,7 +1688,7 @@ function highlightNewBackground(bg) {
  * Sets the fitting class for the background element
  * @param {string} fitting Fitting type
  */
-function setFittingClass(fitting) {
+function setFittingClass(fitting: any) {
   const backgrounds = $("#bg1");
   for (const option of ["cover", "contain", "stretch", "center"]) {
     backgrounds.toggleClass(option, option === fitting);
@@ -1824,7 +1824,7 @@ export function initBackgrounds() {
           onLockBackgroundClick.call(this, e.originalEvent);
           break;
         case "unlock":
-          onUnlockBackgroundClick.call(this, e.originalEvent);
+          onUnlockBackgroundClick.call(this, e.originalEvent as any);
           break;
         case "edit":
           onRenameBackgroundClick.call(this, e.originalEvent);

@@ -52,11 +52,11 @@ export const DEFAULT_FILTER_STATE = FILTER_STATES.UNDEFINED.key;
  * @param {FilterState|string} b Second state
  * @returns {boolean}
  */
-export function isFilterState(a, b) {
+export function isFilterState(a: any, b: any) {
   const states = Object.keys(FILTER_STATES);
 
-  const aKey = typeof a == "string" && states.includes(a) ? a : states.find((key) => FILTER_STATES[key] === a);
-  const bKey = typeof b == "string" && states.includes(b) ? b : states.find((key) => FILTER_STATES[key] === b);
+  const aKey = typeof a == "string" && states.includes(a) ? a : states.find((key: any) => (FILTER_STATES as Record<string, any>)[key] === a);
+  const bKey = typeof b == "string" && states.includes(b) ? b : states.find((key: any) => (FILTER_STATES as Record<string, any>)[key] === b);
 
   return aKey === bKey;
 }
@@ -102,7 +102,7 @@ export class FilterHelper {
    * Creates a new FilterHelper
    * @param {Function} onDataChanged Callback to trigger when the filter data changes
    */
-  constructor(onDataChanged) {
+  constructor(onDataChanged: any) {
     this.onDataChanged = onDataChanged;
     this.scoreCache = new Map();
     this.fuzzySearchCaches = {
@@ -124,7 +124,7 @@ export class FilterHelper {
      * @param {object} obj The object to check for values
      * @returns {boolean} Whether the object has any values
      */
-    function checkRecursive(obj) {
+    function checkRecursive(obj: any) {
       if (typeof obj === "string" && obj.length > 0 && obj !== "UNDEFINED") {
         return true;
       } else if (typeof obj === "boolean" && obj) {
@@ -177,7 +177,7 @@ export class FilterHelper {
    * @param {any[]} data The data to filter. Must have a uid property.
    * @returns {any[]} The filtered data.
    */
-  wiSearchFilter(data) {
+  wiSearchFilter(data: any[]) {
     const term = this.filterData[FILTER_TYPES.WORLD_INFO_SEARCH];
 
     if (!term) {
@@ -185,9 +185,9 @@ export class FilterHelper {
     }
 
     const fuzzySearchResults = fuzzySearchWorldInfo(data, term, this.fuzzySearchCaches);
-    this.cacheScores(FILTER_TYPES.WORLD_INFO_SEARCH, new Map(fuzzySearchResults.map((i) => [i.item?.uid, i.score])));
+    this.cacheScores(FILTER_TYPES.WORLD_INFO_SEARCH, new Map(fuzzySearchResults.map((i: any) => [i.item?.uid, i.score])));
 
-    const filteredData = data.filter((entity) => fuzzySearchResults.find((x) => x.item === entity));
+    const filteredData = data.filter((entity: any) => fuzzySearchResults.find((x: any) => x.item === entity));
     return filteredData;
   }
 
@@ -196,7 +196,7 @@ export class FilterHelper {
    * @param {string[]} data The data to filter.
    * @returns {string[]} The filtered data.
    */
-  personaSearchFilter(data) {
+  personaSearchFilter(data: any[]) {
     const term = this.filterData[FILTER_TYPES.PERSONA_SEARCH];
 
     if (!term) {
@@ -204,9 +204,9 @@ export class FilterHelper {
     }
 
     const fuzzySearchResults = fuzzySearchPersonas(data, term, this.fuzzySearchCaches);
-    this.cacheScores(FILTER_TYPES.PERSONA_SEARCH, new Map(fuzzySearchResults.map((i) => [i.item.key, i.score])));
+    this.cacheScores(FILTER_TYPES.PERSONA_SEARCH, new Map(fuzzySearchResults.map((i: any) => [i.item.key, i.score])));
 
-    const filteredData = data.filter((name) => fuzzySearchResults.find((x) => x.item.key === name));
+    const filteredData = data.filter((name: any) => fuzzySearchResults.find((x: any) => x.item.key === name));
     return filteredData;
   }
 
@@ -216,10 +216,10 @@ export class FilterHelper {
    * @param {string} tagId Tag ID to check
    * @returns {boolean} Whether the entity is tagged with the given tag ID
    */
-  isElementTagged(entity, tagId) {
+  isElementTagged(entity: any, tagId: any) {
     const isCharacter = entity.type === "character";
     const lookupValue = isCharacter ? entity.item.avatar : String(entity.id);
-    const isTagged = Array.isArray(tag_map[lookupValue]) && tag_map[lookupValue].includes(tagId);
+    const isTagged = Array.isArray((tag_map as Record<string, any>)[lookupValue]) && (tag_map as Record<string, any>)[lookupValue].includes(tagId);
 
     return isTagged;
   }
@@ -229,7 +229,7 @@ export class FilterHelper {
    * @param {any[]} data The data to filter.
    * @returns {any[]} The filtered data.
    */
-  tagFilter(data) {
+  tagFilter(data: any[]) {
     const TAG_LOGIC_AND = true; // switch to false to use OR logic for combining tags
     const { selected, excluded } = this.filterData[FILTER_TYPES.TAG] as any;
 
@@ -237,13 +237,13 @@ export class FilterHelper {
       return data;
     }
 
-    const getIsTagged = (entity) => {
+    const getIsTagged = (entity: any) => {
       const isTag = entity.type === "tag";
-      const tagFlags = selected.map((tagId) => this.isElementTagged(entity, tagId));
-      const trueFlags = tagFlags.filter((x) => x);
+      const tagFlags = selected.map((tagId: any) => this.isElementTagged(entity, tagId));
+      const trueFlags = tagFlags.filter((x: any) => x);
       const isTagged = TAG_LOGIC_AND ? tagFlags.length === trueFlags.length : trueFlags.length > 0;
 
-      const excludedTagFlags = excluded.map((tagId) => this.isElementTagged(entity, tagId));
+      const excludedTagFlags = excluded.map((tagId: any) => this.isElementTagged(entity, tagId));
       const isExcluded = excludedTagFlags.includes(true);
 
       if (isTag) {
@@ -257,7 +257,7 @@ export class FilterHelper {
       }
     };
 
-    return data.filter((entity) => getIsTagged(entity));
+    return data.filter((entity: any) => getIsTagged(entity));
   }
 
   /**
@@ -265,9 +265,9 @@ export class FilterHelper {
    * @param {any[]} data The data to filter.
    * @returns {any[]} The filtered data.
    */
-  favFilter(data) {
+  favFilter(data: any[]) {
     const state = this.filterData[FILTER_TYPES.FAV];
-    const isFav = (entity) => entity.item.fav || entity.item.fav == "true";
+    const isFav = (entity: any) => entity.item.fav || entity.item.fav == "true";
 
     return this.filterDataByState(data, state, isFav, { includeFolders: true });
   }
@@ -277,9 +277,9 @@ export class FilterHelper {
    * @param {any[]} data The data to filter.
    * @returns {any[]} The filtered data.
    */
-  groupFilter(data) {
+  groupFilter(data: any[]) {
     const state = this.filterData[FILTER_TYPES.GROUP];
-    const isGroup = (entity) => entity.type === "group";
+    const isGroup = (entity: any) => entity.type === "group";
 
     return this.filterDataByState(data, state, isGroup, { includeFolders: true });
   }
@@ -289,10 +289,10 @@ export class FilterHelper {
    * @param {any[]} data The data to filter.
    * @returns {any[]} The filtered data.
    */
-  folderFilter(data) {
+  folderFilter(data: any[]) {
     const state = this.filterData[FILTER_TYPES.FOLDER];
     // Filter directly on folder. Special rules on still displaying characters with active folder filter are implemented in 'getEntitiesList' directly.
-    const isFolder = (entity) => entity.type === "tag";
+    const isFolder = (entity: any) => entity.type === "tag";
 
     return this.filterDataByState(data, state, isFolder);
   }
@@ -307,12 +307,12 @@ export class FilterHelper {
    * @param {boolean} [options.includeFolders=false] If true, entities with type 'tag' always pass through
    * @returns {any[]} The filtered data
    */
-  filterDataByState(data, state, filterFunc, { includeFolders = false } = {}) {
+  filterDataByState(data: any[], state: any, filterFunc: any, { includeFolders = false } = {}) {
     if (isFilterState(state, FILTER_STATES.SELECTED)) {
-      return data.filter((entity) => filterFunc(entity) || (includeFolders && entity.type == "tag"));
+      return data.filter((entity: any) => filterFunc(entity) || (includeFolders && entity.type == "tag"));
     }
     if (isFilterState(state, FILTER_STATES.EXCLUDED)) {
-      return data.filter((entity) => !filterFunc(entity) || (includeFolders && entity.type == "tag"));
+      return data.filter((entity: any) => !filterFunc(entity) || (includeFolders && entity.type == "tag"));
     }
 
     return data;
@@ -323,7 +323,7 @@ export class FilterHelper {
    * @param {any[]} data The data to filter.
    * @returns {any[]} The filtered data.
    */
-  searchFilter(data) {
+  searchFilter(data: any[]) {
     if (!this.filterData[FILTER_TYPES.SEARCH]) {
       return data;
     }
@@ -337,17 +337,17 @@ export class FilterHelper {
       const fuzzySearchTagsResult = fuzzySearchTags(searchValue, this.fuzzySearchCaches);
       this.cacheScores(
         FILTER_TYPES.SEARCH,
-        new Map(fuzzySearchCharactersResults.map((i) => [`character.${i.refIndex}`, i.score])),
+        new Map(fuzzySearchCharactersResults.map((i: any) => [`character.${i.refIndex}`, i.score])),
       );
       this.cacheScores(
         FILTER_TYPES.SEARCH,
-        new Map(fuzzySearchGroupsResults.map((i) => [`group.${i.item.id}`, i.score])),
+        new Map(fuzzySearchGroupsResults.map((i: any) => [`group.${i.item.id}`, i.score])),
       );
-      this.cacheScores(FILTER_TYPES.SEARCH, new Map(fuzzySearchTagsResult.map((i) => [`tag.${i.item.id}`, i.score])));
+      this.cacheScores(FILTER_TYPES.SEARCH, new Map(fuzzySearchTagsResult.map((i: any) => [`tag.${i.item.id}`, i.score])));
     }
 
     const _this = this;
-    function getIsValidSearch(entity) {
+    function getIsValidSearch(entity: any) {
       if (power_user.fuzzy_search) {
         // We can filter easily by checking if we have saved a score
         const score = _this.getScore(FILTER_TYPES.SEARCH, `${entity.type}.${entity.id}`);
@@ -358,7 +358,7 @@ export class FilterHelper {
       }
     }
 
-    return data.filter((entity) => getIsValidSearch(entity));
+    return data.filter((entity: any) => getIsValidSearch(entity));
   }
 
   /**
@@ -367,7 +367,7 @@ export class FilterHelper {
    * @param {any} data The data to set.
    * @param {boolean} suppressDataChanged Whether to suppress the data changed callback.
    */
-  setFilterData(filterType, data, suppressDataChanged = false) {
+  setFilterData(filterType: any, data: any, suppressDataChanged = false) {
     const oldData = this.filterData[filterType];
     this.filterData[filterType] = data;
 
@@ -381,7 +381,7 @@ export class FilterHelper {
    * Gets the filter data for the given filter type.
    * @param {FilterType} filterType The filter type to get data for.
    */
-  getFilterData(filterType) {
+  getFilterData(filterType: any) {
     return this.filterData[filterType];
   }
 
@@ -394,31 +394,31 @@ export class FilterHelper {
    * @param {boolean} [options.clearFuzzySearchCaches=true] - Whether the fuzzy search caches should be cleared.
    * @returns {any[]} The filtered data.
    */
-  applyFilters(data, { clearScoreCache = true, tempOverrides = {}, clearFuzzySearchCaches = true } = {}) {
+  applyFilters(data: any[], { clearScoreCache = true, tempOverrides = {}, clearFuzzySearchCaches = true } = {}) {
     if (clearScoreCache) this.clearScoreCache();
 
     if (clearFuzzySearchCaches) this.clearFuzzySearchCaches();
 
     // Save original filter states
-    const originalStates = {};
+    const originalStates: any = {};
     for (const key in tempOverrides) {
-      originalStates[key] = this.filterData[key];
-      this.filterData[key] = tempOverrides[key];
+      (originalStates as Record<string, any>)[key] = (this.filterData as Record<string, any>)[key];
+      (this.filterData as Record<string, any>)[key] = (tempOverrides as Record<string, any>)[key];
     }
 
     try {
-      const result = Object.values(this.filterFunctions).reduce((data, fn) => fn(data), data);
+      const result = Object.values(this.filterFunctions).reduce((data: any, fn: any) => fn(data), data);
 
       // Restore original filter states
       for (const key in originalStates) {
-        this.filterData[key] = originalStates[key];
+        (this.filterData as Record<string, any>)[key] = (originalStates as Record<string, any>)[key];
       }
 
       return result;
     } catch (error) {
       // Restore original filter states in case of an error
       for (const key in originalStates) {
-        this.filterData[key] = originalStates[key];
+        (this.filterData as Record<string, any>)[key] = (originalStates as Record<string, any>)[key];
       }
       throw error;
     }
@@ -429,7 +429,7 @@ export class FilterHelper {
    * @param {FilterType} type - The type of data being cached
    * @param {Map<string|number, number>} results - The search results containing mapped item identifiers and their scores
    */
-  cacheScores(type, results) {
+  cacheScores(type: any, results: any) {
     /** @type {Map<string|number, number>} */
     const typeScores = this.scoreCache.get(type) || new Map();
     for (const [uid, score] of results) {
@@ -445,7 +445,7 @@ export class FilterHelper {
    * @param {string|number} uid The unique identifier for an item
    * @returns {number|undefined} The cached score, or `undefined` if no score is present
    */
-  getScore(type, uid) {
+  getScore(type: any, uid: any) {
     return this.scoreCache.get(type)?.get(uid) ?? undefined;
   }
 

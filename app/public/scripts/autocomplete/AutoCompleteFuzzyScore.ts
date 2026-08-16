@@ -6,7 +6,7 @@ export class AutoCompleteFuzzyScore {
    * @param {number} start
    * @param {number} longestConsecutive
    */
-  constructor(start, longestConsecutive) {
+  constructor(start: any, longestConsecutive: any) {
     this.start = start;
     this.longestConsecutive = longestConsecutive;
   }

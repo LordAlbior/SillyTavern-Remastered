@@ -29,7 +29,7 @@ export class StructuredCloneMap extends Map {
    * @param {V} value - The value to set
    * @returns {this} The updated map
    */
-  set(key, value) {
+  set(key: any, value: any) {
     if (!this.cloneOnSet) {
       return super.set(key, value);
     }
@@ -48,7 +48,7 @@ export class StructuredCloneMap extends Map {
    * @param {K} key - The key to get the value for
    * @returns {V | undefined} Returns the element associated with the specified key. If no element is associated with the specified key, undefined is returned.
    */
-  get(key) {
+  get(key: any) {
     if (!this.cloneOnGet) {
       return super.get(key);
     }

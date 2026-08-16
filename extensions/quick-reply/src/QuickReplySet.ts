@@ -7,13 +7,13 @@ import { debounceAsync, warn } from "../index.ts";
 import { QuickReply } from "./QuickReply.ts";
 
 export class QuickReplySet {
-  /**@type {QuickReplySet[]}*/ static list = [];
+  /**@type {QuickReplySet[]}*/ static list: any[] = [];
 
   /**
    * @param {Partial<QuickReplySet>} props
    * @returns {QuickReplySet}
    */
-  static from(props) {
+  static from(props: any) {
     props.qrList = []; //props.qrList?.map(it=>QuickReply.from(it));
     const instance = Object.assign(new this(), props);
     // instance.init();
@@ -23,23 +23,23 @@ export class QuickReplySet {
   /**
    * @param {string} name - name of the QuickReplySet
    */
-  static get(name) {
-    return QuickReplySet.list.find((it) => it.name == name);
+  static get(name: any) {
+    return QuickReplySet.list.find((it: any) => it.name == name);
   }
 
-  /**@type {string}*/ name;
+  /**@type {string}*/ name: any;
   /**@type {'global'|'chat'|'character'}*/ scope = "global";
   /**@type {boolean}*/ disableSend = false;
   /**@type {boolean}*/ placeBeforeInput = false;
   /**@type {boolean}*/ injectInput = false;
   /**@type {string}*/ color = "transparent";
   /**@type {boolean}*/ onlyBorderColor = false;
-  /**@type {QuickReply[]}*/ qrList = [];
+  /**@type {QuickReply[]}*/ qrList: any[] = [];
   /**@type {number}*/ idIndex = 0;
   /**@type {boolean}*/ isDeleted = false;
-  /**@type {function}*/ save;
-  /**@type {HTMLElement}*/ dom;
-  /**@type {HTMLElement}*/ settingsDom;
+  /**@type {function}*/ save: any;
+  /**@type {HTMLElement}*/ dom: any;
+  /**@type {HTMLElement}*/ settingsDom: any;
 
   constructor() {
     this.save = debounceAsync(() => this.performSave(), 200);
@@ -109,7 +109,7 @@ export class QuickReplySet {
    * @param {QuickReply} qr
    * @param {number} idx
    */
-  renderSettingsItem(qr, idx) {
+  renderSettingsItem(qr: any, idx: any) {
     this.settingsDom.append(qr.renderSettings(idx));
   }
 
@@ -117,11 +117,11 @@ export class QuickReplySet {
    *
    * @param {QuickReply} qr
    */
-  async debug(qr) {
+  async debug(qr: any) {
     const parser = new SlashCommandParser();
     const closure = parser.parse(qr.message, true, [], qr.abortController, qr.debugController);
     closure.source = `${this.name}.${qr.label}`;
-    closure.onProgress = (done, total) => qr.updateEditorProgress(done, total);
+    closure.onProgress = (done: any, total: any) => qr.updateEditorProgress(done, total);
     closure.scope.setMacro("arg::*", "");
     return (await closure.execute())?.pipe;
   }
@@ -138,7 +138,7 @@ export class QuickReplySet {
    * @param {import("/scripts/slash-commands.js").ExecuteSlashCommandsOptions} [options.executionOptions] ({}) further execution options
    * @returns
    */
-  async executeWithOptions(qr, options = {} as any) {
+  async executeWithOptions(qr: any, options = {} as any) {
     options = Object.assign(
       {
         message: null,
@@ -183,7 +183,7 @@ export class QuickReplySet {
             scope: options.scope,
             abortController: qr.abortController,
             source: `${this.name}.${qr.label}`,
-            onProgress: (done, total) => qr.updateEditorProgress(done, total),
+            onProgress: (done: any, total: any) => qr.updateEditorProgress(done, total),
           }),
         );
       } else {
@@ -212,7 +212,7 @@ export class QuickReplySet {
    * @param {string} [message] - optional altered message to be used
    * @param {SlashCommandScope} [scope] - optional scope to be used when running the command
    */
-  async execute(qr, message = null, isAutoExecute = false, scope = null) {
+  async execute(qr: any, message = null, isAutoExecute = false, scope = null) {
     return this.executeWithOptions(qr, {
       message,
       isAutoExecute,
@@ -240,7 +240,7 @@ export class QuickReplySet {
     return qr;
   }
 
-  addQuickReplyFromText(qrJson) {
+  addQuickReplyFromText(qrJson: any) {
     let data;
     if (qrJson) {
       try {
@@ -271,12 +271,12 @@ export class QuickReplySet {
    *
    * @param {QuickReply} qr
    */
-  hookQuickReply(qr) {
+  hookQuickReply(qr: any) {
     qr.onDebug = () => this.debug(qr);
-    qr.onExecute = (_, options) => this.executeWithOptions(qr, options);
+    qr.onExecute = (_: any, options: any) => this.executeWithOptions(qr, options);
     qr.onDelete = () => this.removeQuickReply(qr);
     qr.onUpdate = () => this.save();
-    qr.onInsertBefore = (qrJson) => {
+    qr.onInsertBefore = (qrJson: any) => {
       this.addQuickReplyFromText(qrJson);
       const newQr = this.qrList.pop();
       this.qrList.splice(this.qrList.indexOf(qr), 0, newQr);
@@ -345,7 +345,7 @@ export class QuickReplySet {
           dom.append(hintP);
         }
       }
-      const dlg = new Popup(dom, POPUP_TYPE.CONFIRM, null, { okButton: "Transfer", cancelButton: "Cancel" });
+      const dlg = new Popup(dom, POPUP_TYPE.CONFIRM, null as any, { okButton: "Transfer", cancelButton: "Cancel" } as any);
       const copyBtn = document.createElement("div");
       copyBtn.classList.add("qr--copy");
       copyBtn.classList.add("menu_button");
@@ -369,7 +369,7 @@ export class QuickReplySet {
     };
   }
 
-  removeQuickReply(qr) {
+  removeQuickReply(qr: any) {
     this.qrList.splice(this.qrList.indexOf(qr), 1);
     this.save();
   }

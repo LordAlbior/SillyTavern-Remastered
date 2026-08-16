@@ -22,15 +22,15 @@ export const markdownExclusionExt = () => {
   return [
     {
       type: "lang",
-      filter: (text) => {
+      filter: (text: any) => {
         const escapedExclusions = substituteParams(power_user.markdown_escape_strings)
           .split(",")
-          .filter((element) => element.length > 0)
+          .filter((element: any) => element.length > 0)
           .map(
-            (element) =>
+            (element: any) =>
               `(${element
                 .split("")
-                .map((char) => `\\${char}`)
+                .map((char: any) => `\\${char}`)
                 .join("")})`,
           );
 
@@ -40,7 +40,7 @@ export const markdownExclusionExt = () => {
         }
 
         const replaceRegex = new RegExp(`^(${escapedExclusions.join("|")})\n`, "gm");
-        return text.replace(replaceRegex, (match) => match.replace(replaceRegex, `\u0000${match} \n`));
+        return text.replace(replaceRegex, (match: any) => match.replace(replaceRegex, `\u0000${match} \n`));
       },
     },
   ];

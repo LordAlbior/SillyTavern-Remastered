@@ -17,14 +17,14 @@ class EventSourceStream {
     let streamBuffer = "";
     let lastEventId = "";
 
-    function processChunk(controller) {
+    function processChunk(controller: any) {
       // Events are separated by two newlines
       const events = streamBuffer.split(/\r\n\r\n|\r\r|\n\n/g);
       if (events.length === 0) return;
 
       // The leftover text to remain in the buffer is whatever doesn't have two newlines after it. If the buffer ended
       // with two newlines, this will be an empty string.
-      streamBuffer = events.pop();
+      streamBuffer = events.pop() ?? "";
 
       for (const eventChunk of events) {
         let eventType = "";
@@ -87,7 +87,7 @@ class EventSourceStream {
  * @param {string} s The character.
  * @returns {number} The delay in milliseconds.
  */
-function getDelay(s) {
+function getDelay(s: any) {
   if (!s) {
     return 0;
   }
@@ -112,7 +112,7 @@ function getDelay(s) {
  * @param {object} json The JSON data.
  * @returns {AsyncGenerator<{data: object, chunk: string, reasoning?: boolean}>} The parsed data and the chunk to be sent.
  */
-async function* parseStreamData(json) {
+async function* parseStreamData(json: any) {
   if (
     typeof json.delta === "object" &&
     typeof json.delta.message === "object" &&
@@ -157,8 +157,8 @@ async function* parseStreamData(json) {
     // Google VertexAI / AI Studio
     for (let i = 0; i < json.candidates.length; i++) {
       const isNotPrimary = json.candidates?.[0]?.index > 0;
-      const hasToolCalls = json?.candidates?.[0]?.content?.parts?.some((p) => p?.functionCall);
-      const hasInlineData = json?.candidates?.[0]?.content?.parts?.some((p) => p?.inlineData);
+      const hasToolCalls = json?.candidates?.[0]?.content?.parts?.some((p: any) => p?.functionCall);
+      const hasInlineData = json?.candidates?.[0]?.content?.parts?.some((p: any) => p?.inlineData);
       if (isNotPrimary || json.candidates.length === 0) {
         return null;
       }

@@ -106,7 +106,7 @@ export async function initSystemMessages() {
     send_date: getMessageTimeStamp(),
     mes: t`You deleted a character/chat and arrived back here for safety reasons! Pick another character!`,
   };
-  SAFETY_CHAT.splice(0, SAFETY_CHAT.length, safetyMessage);
+  (SAFETY_CHAT as any[]).splice(0, SAFETY_CHAT.length, safetyMessage);
 }
 
 /**
@@ -119,7 +119,7 @@ export async function initSystemMessages() {
  * @returns {ChatMessage} System message object
  */
 export function getSystemMessageByType(type: any, text = "", extra = {}) {
-  const systemMessage = system_messages[type];
+  const systemMessage = (system_messages as Record<string, any>)[type];
 
   if (!systemMessage) {
     return;
@@ -161,7 +161,7 @@ export function sendSystemMessage(type: any, text = "", extra = {}) {
   setSendButtonState(false);
   if (type === system_message_types.SLASH_COMMANDS) {
     const browser = new SlashCommandBrowser();
-    const spinner = document.querySelector("#chat .last_mes .custom-slashHelp");
+    const spinner = document.querySelector("#chat .last_mes .custom-slashHelp")!;
     const parent = spinner.parentElement;
     spinner.remove();
     browser.renderInto(parent);

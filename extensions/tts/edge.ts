@@ -16,8 +16,8 @@ class EdgeTtsProvider {
   // Config //
   //########//
 
-  settings;
-  voices = [];
+  settings: any;
+  voices: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -47,7 +47,7 @@ class EdgeTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Pupulate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -99,11 +99,11 @@ class EdgeTtsProvider {
    * @param {string} voiceName Voice name to get
    * @returns {Promise<Object>} Voice object
    */
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((voice) => voice.name == voiceName)[0];
+    const match = this.voices.filter((voice: any) => voice.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found`;
     }
@@ -116,7 +116,7 @@ class EdgeTtsProvider {
    * @param {string} voiceId Voice ID to use
    * @returns {Promise<Response>} Fetch response
    */
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -134,8 +134,8 @@ class EdgeTtsProvider {
     }
     let responseJson = await response.json();
     responseJson = responseJson
-      .sort((a, b) => a.Locale.localeCompare(b.Locale) || a.ShortName.localeCompare(b.ShortName))
-      .map((x) => ({ name: x.ShortName, voice_id: x.ShortName, preview_url: false, lang: x.Locale }));
+      .sort((a: any, b: any) => a.Locale.localeCompare(b.Locale) || a.ShortName.localeCompare(b.ShortName))
+      .map((x: any) => ({ name: x.ShortName, voice_id: x.ShortName, preview_url: false, lang: x.Locale }));
     return responseJson;
   }
 
@@ -143,7 +143,7 @@ class EdgeTtsProvider {
    * Preview TTS for a given voice ID.
    * @param {string} id Voice ID
    */
-  async previewTtsVoice(id) {
+  async previewTtsVoice(id: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
     const voice = await this.getVoice(id);
@@ -166,7 +166,7 @@ class EdgeTtsProvider {
    * @param {string} voiceId Voice ID to use
    * @returns {Promise<Response>} Fetch response
    */
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     await this.throwIfModuleMissing();
 
     console.info(`Generating new TTS for voice_id ${voiceId}`);
@@ -193,7 +193,7 @@ class EdgeTtsProvider {
    * @param {any} options Request options
    * @returns {Promise<Response>} Fetch response
    */
-  doFetch(url, options) {
+  doFetch(url: any, options: any) {
     if (this.settings.provider === EDGE_TTS_PROVIDER.extras) {
       return doExtrasFetch(url, options);
     }
@@ -242,7 +242,7 @@ class EdgeTtsProvider {
   }
 
   async throwIfModuleMissing() {
-    if (this.settings.provider === EDGE_TTS_PROVIDER.extras && !modules.includes("edge-tts")) {
+    if (this.settings.provider === EDGE_TTS_PROVIDER.extras && !(modules as any[]).includes("edge-tts")) {
       const message = "Edge TTS module not loaded. Add edge-tts to enable-modules and restart the Extras API.";
       // toastr.error(message)
       throw new Error(message);

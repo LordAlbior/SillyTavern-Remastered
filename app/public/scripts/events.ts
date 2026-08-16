@@ -110,4 +110,4 @@ export const event_types = {
   ITEMIZED_PROMPTS_DELETED: "itemized_prompts_deleted",
 };
 
-export const eventSource = new EventEmitter([event_types.APP_READY, event_types.APP_INITIALIZED]);
+export const eventSource = new (EventEmitter as any)([event_types.APP_READY, event_types.APP_INITIALIZED]);

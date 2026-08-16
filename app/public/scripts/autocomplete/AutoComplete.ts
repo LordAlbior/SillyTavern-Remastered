@@ -22,24 +22,24 @@ export class AutoComplete {
   /**@type {boolean}*/ isForceHidden = false;
   /**@type {boolean}*/ canBeAutoHidden = false;
 
-  /**@type {string}*/ text;
-  /**@type {AutoCompleteNameResult}*/ parserResult;
-  /**@type {AutoCompleteSecondaryNameResult}*/ secondaryParserResult;
+  /**@type {string}*/ text: any;
+  /**@type {AutoCompleteNameResult}*/ parserResult: any;
+  /**@type {AutoCompleteSecondaryNameResult}*/ secondaryParserResult: any;
   get effectiveParserResult() {
     return this.secondaryParserResult ?? this.parserResult;
   }
-  /**@type {string}*/ name;
+  /**@type {string}*/ name: any;
 
-  /**@type {boolean}*/ startQuote;
-  /**@type {boolean}*/ endQuote;
-  /**@type {number}*/ selectionStart;
+  /**@type {boolean}*/ startQuote: any;
+  /**@type {boolean}*/ endQuote: any;
+  /**@type {number}*/ selectionStart: any;
 
-  /**@type {RegExp}*/ fuzzyRegex;
+  /**@type {RegExp}*/ fuzzyRegex: any;
 
-  /**@type {AutoCompleteOption[]}*/ result = [];
-  /**@type {AutoCompleteOption}*/ selectedItem = null;
+  /**@type {AutoCompleteOption[]}*/ result: any[] = [];
+  /**@type {AutoCompleteOption}*/ selectedItem: any = null;
 
-  /**@type {HTMLElement}*/ clone;
+  /**@type {HTMLElement}*/ clone: any;
   /**@type {HTMLElement}*/ domWrap;
   /**@type {HTMLElement}*/ dom;
   /**@type {HTMLElement}*/ detailsWrap;
@@ -51,7 +51,7 @@ export class AutoComplete {
   /**@type {function}*/ updateDetailsPositionDebounced;
   /**@type {function}*/ updateFloatingPositionDebounced;
 
-  /**@type {(item:AutoCompleteOption)=>any}*/ onSelect;
+  /**@type {(item:AutoCompleteOption)=>any}*/ onSelect: any;
 
   get matchType() {
     return power_user.stscript.matching ?? "fuzzy";
@@ -67,7 +67,7 @@ export class AutoComplete {
    * @param {(text: string, index: number) => Promise<AutoCompleteNameResult>} getNameAt Function should return (unfiltered, matching against input is done in AutoComplete) information about name options at index in text.
    * @param {boolean} isFloating Whether autocomplete should float at the keyboard cursor.
    */
-  constructor(textarea, checkIfActivate, getNameAt, isFloating = false) {
+  constructor(textarea: any, checkIfActivate: any, getNameAt: any, isFloating = false) {
     this.textarea = textarea;
     this.checkIfActivate = checkIfActivate;
     this.getNameAt = getNameAt;
@@ -96,7 +96,7 @@ export class AutoComplete {
       this.selectionStart = this.textarea.selectionStart;
       if (this.text != this.textarea.value) this.show(true, this.wasForced);
     });
-    textarea.addEventListener("keydown", (evt) => this.handleKeyDown(evt));
+    textarea.addEventListener("keydown", (evt: any) => this.handleKeyDown(evt));
     textarea.addEventListener("click", () => {
       this.selectionStart = this.textarea.selectionStart;
       if (this.isActive) this.show();
@@ -112,12 +112,12 @@ export class AutoComplete {
    *
    * @param {AutoCompleteOption} option
    */
-  makeItem(option) {
+  makeItem(option: any) {
     const li = option.renderItem();
     // gotta listen to pointerdown (happens before textarea-blur)
-    li.addEventListener("pointerdown", (evt) => {
+    li.addEventListener("pointerdown", (evt: any) => {
       evt.preventDefault();
-      this.selectedItem = this.result.find((it) => it.name == li.getAttribute("data-name"));
+      this.selectedItem = this.result.find((it: any) => it.name == li.getAttribute("data-name")) ?? null;
       this.select();
     });
     return li;
@@ -127,15 +127,15 @@ export class AutoComplete {
    *
    * @param {AutoCompleteOption} item
    */
-  updateName(item) {
+  updateName(item: any) {
     const chars: any[] = Array.from(item.dom.querySelector(".name").children);
     if (item.forceFullNameMatch) {
-      chars.forEach((c) => c.classList.toggle("matched", true));
+      chars.forEach((c: any) => c.classList.toggle("matched", true));
       return;
     }
     switch (this.matchType) {
       case "strict": {
-        chars.forEach((it, idx) => {
+        chars.forEach((it: any, idx: any) => {
           if (idx + item.nameOffset < item.name.length) {
             it.classList.add("matched");
           } else {
@@ -146,7 +146,7 @@ export class AutoComplete {
       }
       case "includes": {
         const start = item.name.toLowerCase().search(this.name);
-        chars.forEach((it, idx) => {
+        chars.forEach((it: any, idx: any) => {
           if (idx + item.nameOffset < start) {
             it.classList.remove("matched");
           } else if (idx + item.nameOffset < start + item.name.length) {
@@ -158,18 +158,18 @@ export class AutoComplete {
         break;
       }
       case "fuzzy": {
-        item.name.replace(this.fuzzyRegex, (_, ...parts) => {
+        item.name.replace(this.fuzzyRegex, (_: any, ...parts: any[]) => {
           parts.splice(-2, 2);
           if (parts.length == 2) {
-            chars.forEach((c) => c.classList.remove("matched"));
+            chars.forEach((c: any) => c.classList.remove("matched"));
           } else {
             let cIdx = item.nameOffset;
-            parts.forEach((it, idx) => {
+            parts.forEach((it: any, idx: any) => {
               if (it === null || it.length == 0) return "";
               if (idx % 2 == 1) {
-                chars.slice(cIdx, cIdx + it.length).forEach((c) => c.classList.add("matched"));
+                chars.slice(cIdx, cIdx + it.length).forEach((c: any) => c.classList.add("matched"));
               } else {
-                chars.slice(cIdx, cIdx + it.length).forEach((c) => c.classList.remove("matched"));
+                chars.slice(cIdx, cIdx + it.length).forEach((c: any) => c.classList.remove("matched"));
               }
               cIdx += it.length;
             });
@@ -186,18 +186,18 @@ export class AutoComplete {
    * @param {AutoCompleteOption} option
    * @returns The option.
    */
-  fuzzyScore(option) {
+  fuzzyScore(option: any) {
     // might have been matched by the options matchProvider function instead
     if (!this.fuzzyRegex.test(option.name)) {
       option.score = new AutoCompleteFuzzyScore(Number.MAX_SAFE_INTEGER, -1);
       return option;
     }
     const parts = this.fuzzyRegex.exec(option.name).slice(1, -1);
-    let start = null;
-    const consecutive = [];
+    let start: any = null;
+    const consecutive: any[] = [];
     let current = "";
     let offset = 0;
-    parts.forEach((part, idx) => {
+    parts.forEach((part: any, idx: any) => {
       if (idx % 2 == 0) {
         if (part.length > 0) {
           if (current.length > 0) {
@@ -216,7 +216,7 @@ export class AutoComplete {
     if (current.length > 0) {
       consecutive.push(current);
     }
-    consecutive.sort((a, b) => b.length - a.length);
+    consecutive.sort((a: any, b: any) => b.length - a.length);
     option.score = new AutoCompleteFuzzyScore(start, consecutive[0]?.length ?? 0);
     return option;
   }
@@ -226,7 +226,7 @@ export class AutoComplete {
    * @param {AutoCompleteOption} a
    * @param {AutoCompleteOption} b
    */
-  fuzzyScoreCompare(a, b) {
+  fuzzyScoreCompare(a: any, b: any) {
     if (a.score.start < b.score.start) return -1;
     if (a.score.start > b.score.start) return 1;
     if (a.score.longestConsecutive > b.score.longestConsecutive) return -1;
@@ -338,22 +338,22 @@ export class AutoComplete {
       this.fuzzyRegex = new RegExp(
         `^(.*?)${this.name
           .split("")
-          .map((char) => `(${escapeRegex(char)})`)
+          .map((char: any) => `(${escapeRegex(char)})`)
           .join("(.*?)")}(.*?)$`,
         "i",
       );
     }
 
     //TODO maybe move the matchers somewhere else; a single match function? matchType is available as property
-    const matchers = {
-      strict: (name) => name.toLowerCase().startsWith(this.name),
-      includes: (name) => name.toLowerCase().includes(this.name),
-      fuzzy: (name) => this.fuzzyRegex.test(name),
+    const matchers: any = {
+      strict: (name: any) => name.toLowerCase().startsWith(this.name),
+      includes: (name: any) => name.toLowerCase().includes(this.name),
+      fuzzy: (name: any) => this.fuzzyRegex.test(name),
     };
 
-    this.result = this.effectiveParserResult.optionList
+    this.result = (this.effectiveParserResult.optionList as any[])
       // filter the list of options by the partial name according to the matching type
-      .filter((it) =>
+      .filter((it: any) =>
         this.isReplaceable || it.name == ""
           ? it.matchProvider
             ? it.matchProvider(this.name)
@@ -361,19 +361,19 @@ export class AutoComplete {
           : it.name.toLowerCase() == this.name,
       )
       // remove aliases
-      .filter((it, idx, list) => list.findIndex((opt) => opt.value == it.value) == idx);
+      .filter((it: any, idx: any, list: any) => list.findIndex((opt: any) => opt.value == it.value) == idx);
 
     if (this.result.length == 0 && this.effectiveParserResult != this.parserResult && isForced) {
       // no matching secondary results and forced trigger -> show current command details
       this.secondaryParserResult = null;
-      this.result = [this.effectiveParserResult.optionList.find((it) => it.name == this.effectiveParserResult.name)];
+      this.result = [this.effectiveParserResult.optionList.find((it: any) => it.name == this.effectiveParserResult.name)];
       this.name = this.effectiveParserResult.name;
       this.fuzzyRegex = /(.*)(.*)(.*)/;
     }
 
-    this.result = this.result
+    this.result = (this.result as any[])
       // update remaining options
-      .map((option) => {
+      .map((option: any) => {
         // build element
         option.dom = this.makeItem(option);
         // update replacer and add quotes if necessary
@@ -393,7 +393,7 @@ export class AutoComplete {
         return option;
       })
       // sort by priority first, then by fuzzy score or alphabetical
-      .toSorted((a, b) => {
+      .toSorted((a: any, b: any) => {
         // First compare by sortPriority (lower = higher priority)
         const priorityA = a.sortPriority ?? 100;
         const priorityB = b.sortPriority ?? 100;
@@ -523,9 +523,9 @@ export class AutoComplete {
     if (this.isFloating) {
       this.updateFloatingPosition();
     } else {
-      const rect = {};
+      const rect: any = {};
       rect[AUTOCOMPLETE_WIDTH.INPUT] = this.textarea.getBoundingClientRect();
-      rect[AUTOCOMPLETE_WIDTH.CHAT] = document.querySelector("#sheld").getBoundingClientRect();
+      rect[AUTOCOMPLETE_WIDTH.CHAT] = document.querySelector("#sheld")!.getBoundingClientRect();
       rect[AUTOCOMPLETE_WIDTH.FULL] = this.getLayer().getBoundingClientRect();
       this.domWrap.style.setProperty("--bottom", `${window.innerHeight - rect[AUTOCOMPLETE_WIDTH.INPUT].top}px`);
       this.dom.style.setProperty("--bottom", `${window.innerHeight - rect[AUTOCOMPLETE_WIDTH.INPUT].top}px`);
@@ -562,9 +562,9 @@ export class AutoComplete {
       if (this.isFloating) {
         this.updateFloatingDetailsPosition();
       } else {
-        const rect = {};
+        const rect: any = {};
         rect[AUTOCOMPLETE_WIDTH.INPUT] = this.textarea.getBoundingClientRect();
-        rect[AUTOCOMPLETE_WIDTH.CHAT] = document.querySelector("#sheld").getBoundingClientRect();
+        rect[AUTOCOMPLETE_WIDTH.CHAT] = document.querySelector("#sheld")!.getBoundingClientRect();
         rect[AUTOCOMPLETE_WIDTH.FULL] = this.getLayer().getBoundingClientRect();
         if (this.isReplaceable) {
           this.detailsWrap.classList.remove("full");
@@ -624,7 +624,7 @@ export class AutoComplete {
     }
   }
 
-  updateFloatingDetailsPosition(location = null) {
+  updateFloatingDetailsPosition(location: any = null) {
     if (!location) location = this.getCursorPosition();
     const rect = this.textarea.getBoundingClientRect();
     const layerRect = this.getLayer().getBoundingClientRect();
@@ -692,7 +692,7 @@ export class AutoComplete {
     if (!this.clone) {
       this.clone = document.createElement("div");
       for (const key of style) {
-        this.clone.style[key] = style[key];
+        (this.clone.style as any)[key] = (style as any)[key];
       }
       this.clone.style.position = "fixed";
       this.clone.style.visibility = "hidden";
@@ -765,11 +765,11 @@ export class AutoComplete {
    * @param {AutoCompleteOption[]} result The list of autocomplete options.
    * @returns {AutoCompleteOption} The item to select.
    */
-  selectDefaultItem(result) {
+  selectDefaultItem(result: any) {
     if (result.length === 0) return null;
 
     // Find first selectable item
-    const firstSelectable = result.find((it) => it.isSelectable);
+    const firstSelectable = result.find((it: any) => it.isSelectable);
     if (firstSelectable) return firstSelectable;
 
     // Fall back to last item
@@ -780,7 +780,7 @@ export class AutoComplete {
    * Mark the item at newIdx in the autocomplete list as selected.
    * @param {number} newIdx
    */
-  selectItemAtIndex(newIdx) {
+  selectItemAtIndex(newIdx: any) {
     this.selectedItem.dom.classList.remove("selected");
     this.selectedItem = this.result[newIdx];
     this.selectedItem.dom.classList.add("selected");
@@ -796,7 +796,7 @@ export class AutoComplete {
    * Handle keyboard events.
    * @param {KeyboardEvent} evt The event.
    */
-  async handleKeyDown(evt) {
+  async handleKeyDown(evt: any) {
     // autocomplete is shown and cursor at end of current command name (or inside name and typed or forced)
     if (this.isActive && this.isReplaceable) {
       // actions in the list

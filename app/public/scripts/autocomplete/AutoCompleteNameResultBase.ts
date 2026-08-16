@@ -16,10 +16,10 @@ export class AutoCompleteNameResultBase {
    * @param {()=>string} makeNoMatchText Function that returns text to show when no matches where found.
    * @param {()=>string} makeNoOptionsText Function that returns text to show when no options are available to match against.
    */
-  constructor(name, start, optionList = [], canBeQuoted = false, makeNoMatchText = null, makeNoOptionsText = null) {
+  constructor(name: any, start: any, optionList: any[] = [], canBeQuoted: any = false, makeNoMatchText: any = null, makeNoOptionsText: any = null) {
     this.name = name;
     this.start = start;
-    this.optionList = optionList;
+    this.optionList = optionList as any;
     this.canBeQuoted = canBeQuoted;
     if (makeNoMatchText) this.makeNoMatchText = makeNoMatchText;
     if (makeNoOptionsText) this.makeNoOptionsText = makeNoOptionsText;

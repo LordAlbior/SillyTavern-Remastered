@@ -3,42 +3,42 @@ import { QuickReplySetLink } from "./QuickReplySetLink.ts";
 import { QuickReplySet } from "./QuickReplySet.ts";
 
 export class QuickReplyConfig {
-  /**@type {QuickReplySetLink[]}*/ setList = [];
-  /**@type {'global'|'chat'|'character'}*/ scope;
+  setList: any[] = [];
+  scope: any;
 
-  /**@type {Function}*/ onUpdate;
-  /**@type {Function}*/ onRequestEditSet;
+  onUpdate: any;
+  onRequestEditSet: any;
 
-  /**@type {HTMLElement}*/ dom;
-  /**@type {HTMLElement}*/ setListDom;
+  dom: any;
+  setListDom: any;
 
-  static from(props) {
-    props.setList = props.setList?.map((it) => QuickReplySetLink.from(it))?.filter((it) => it.set) ?? [];
+  static from(props: any) {
+    props.setList = props.setList?.map((it: any) => QuickReplySetLink.from(it))?.filter((it: any) => it.set) ?? [];
     const instance = Object.assign(new this(), props);
     instance.init();
     return instance;
   }
 
   init() {
-    this.setList.forEach((it) => this.hookQuickReplyLink(it));
+    this.setList.forEach((it: any) => this.hookQuickReplyLink(it));
   }
 
-  hasSet(qrs) {
-    return this.setList.find((it) => it.set == qrs) != null;
+  hasSet(qrs: any) {
+    return this.setList.find((it: any) => it.set == qrs) != null;
   }
-  addSet(qrs, isVisible = true) {
+  addSet(qrs: any, isVisible = true) {
     if (!this.hasSet(qrs)) {
       const qrl = new QuickReplySetLink();
       qrl.set = qrs;
       qrl.isVisible = isVisible;
       this.hookQuickReplyLink(qrl);
-      this.setList.push(qrl);
+      (this.setList as any[]).push(qrl);
       this.setListDom.append(qrl.renderSettings(this.setList.length - 1));
       this.update();
     }
   }
-  removeSet(qrs) {
-    const idx = this.setList.findIndex((it) => it.set == qrs);
+  removeSet(qrs: any) {
+    const idx = this.setList.findIndex((it: any) => it.set == qrs);
     if (idx > -1) {
       this.setList.splice(idx, 1);
       this.update();
@@ -46,11 +46,10 @@ export class QuickReplyConfig {
     }
   }
 
-  renderSettingsInto(/**@type {HTMLElement}*/ root) {
-    /**@type {HTMLElement}*/
+  renderSettingsInto(root: any) {
     this.setListDom = root.querySelector(".qr--setList");
     root.querySelector(".qr--setListAdd").addEventListener("click", () => {
-      const newSet = QuickReplySet.list.find((qr) => !this.setList.find((qrl) => qrl.set == qr));
+      const newSet = QuickReplySet.list.find((qr: any) => !this.setList.find((qrl: any) => qrl.set == qr));
       if (newSet) {
         this.addSet(newSet);
       } else {
@@ -66,12 +65,12 @@ export class QuickReplyConfig {
       stop: () => this.onSetListSort(),
     });
     this.setList
-      .filter((it) => !it.set.isDeleted)
-      .forEach((qrl, idx) => this.setListDom.append(qrl.renderSettings(idx)));
+      .filter((it: any) => !it.set.isDeleted)
+      .forEach((qrl: any, idx: any) => this.setListDom.append(qrl.renderSettings(idx)));
   }
 
   onSetListSort() {
-    this.setList = Array.from(this.setListDom.children).map((it, idx) => {
+    this.setList = Array.from(this.setListDom.children).map((it: any, idx: any) => {
       const qrl = this.setList[Number((it as Element).getAttribute("data-order"))];
       qrl.index = idx;
       (it as Element).setAttribute("data-order", String(idx));
@@ -80,16 +79,13 @@ export class QuickReplyConfig {
     this.update();
   }
 
-  /**
-   * @param {QuickReplySetLink} qrl
-   */
-  hookQuickReplyLink(qrl) {
+  hookQuickReplyLink(qrl: any) {
     qrl.onDelete = () => this.deleteQuickReplyLink(qrl);
     qrl.onUpdate = () => this.update();
     qrl.onRequestEditSet = () => this.requestEditSet(qrl.set);
   }
 
-  deleteQuickReplyLink(qrl) {
+  deleteQuickReplyLink(qrl: any) {
     this.setList.splice(this.setList.indexOf(qrl), 1);
     this.update();
   }
@@ -100,7 +96,7 @@ export class QuickReplyConfig {
     }
   }
 
-  requestEditSet(qrs) {
+  requestEditSet(qrs: any) {
     if (this.onRequestEditSet) {
       this.onRequestEditSet(qrs);
     }

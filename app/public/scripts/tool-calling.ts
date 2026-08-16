@@ -80,7 +80,7 @@ import { isTrueBoolean } from "./utils.ts";
  * @param {object} arg Object to assign variables from.
  * @param {string} prefix Prefix for the variable names.
  */
-function assignNestedVariables(scope, arg, prefix) {
+function assignNestedVariables(scope: any, arg: any, prefix: any) {
   Object.entries(arg).forEach(([key, value]) => {
     const newPrefix = `${prefix}.${key}`;
     if (typeof value === "object" && value !== null) {
@@ -99,7 +99,7 @@ function assignNestedVariables(scope, arg, prefix) {
  * @param {string} str The string to check
  * @returns {boolean} If the string is a valid JSON string
  */
-function isJson(str) {
+function isJson(str: any) {
   try {
     JSON.parse(str);
     return true;
@@ -113,7 +113,7 @@ function isJson(str) {
  * @param {string} str The string to try to parse
  * @returns {object|string} Parsed JSON or the original string
  */
-function tryParse(str) {
+function tryParse(str: any) {
   try {
     return JSON.parse(str);
   } catch {
@@ -126,7 +126,7 @@ function tryParse(str) {
  * @param {any} obj The object to stringify
  * @returns {string} A JSON string representation of the object.
  */
-function stringify(obj) {
+function stringify(obj: any) {
   return typeof obj === "string" ? obj : JSON.stringify(obj);
 }
 
@@ -193,7 +193,7 @@ class ToolDefinition {
    * @param {function} shouldRegister A function that will be called to determine if the tool should be registered.
    * @param {boolean} stealth A tool call result will not be shown in the chat. No follow-up generation will be performed.
    */
-  constructor(name, displayName, description, parameters, action, formatMessage, shouldRegister, stealth) {
+  constructor(name: any, displayName: any, description: any, parameters: any, action: any, formatMessage: any, shouldRegister: any, stealth: any) {
     this.#name = name;
     this.#displayName = displayName;
     this.#description = description;
@@ -227,7 +227,7 @@ class ToolDefinition {
    * @param {object} parameters The parameters to pass to the tool.
    * @returns {Promise<any>} The result of the tool's action function.
    */
-  async invoke(parameters) {
+  async invoke(parameters: any) {
     return await this.#action(parameters);
   }
 
@@ -236,7 +236,7 @@ class ToolDefinition {
    * @param {object} parameters The parameters to pass to the tool.
    * @returns {Promise<string>} The formatted message.
    */
-  async formatMessage(parameters) {
+  async formatMessage(parameters: any) {
     return typeof this.#formatMessage === "function"
       ? await this.#formatMessage(parameters)
       : `Invoking tool: ${this.#displayName || this.#name}`;
@@ -294,7 +294,7 @@ export class ToolManager {
     formatMessage,
     shouldRegister,
     stealth,
-  }) {
+  }: any) {
     // Convert WIP arguments
     if (typeof arguments[0] !== "object") {
       [name, description, parameters, action] = arguments;
@@ -324,7 +324,7 @@ export class ToolManager {
    * Removes a tool from the tool registry.
    * @param {string} name The name of the tool to unregister.
    */
-  static unregisterFunctionTool(name) {
+  static unregisterFunctionTool(name: any) {
     if (!ToolManager.#tools.has(name)) {
       return;
     }
@@ -338,7 +338,7 @@ export class ToolManager {
    * @param {object} parameters The parameters for a tool call, usually a string with JSON inside
    * @returns {object} The parsed parameters
    */
-  static #parseParameters(parameters) {
+  static #parseParameters(parameters: any) {
     return parameters === "" ? {} : typeof parameters === "string" ? JSON.parse(parameters) : parameters;
   }
 
@@ -348,7 +348,7 @@ export class ToolManager {
    * @param {object} parameters Function parameters. For example, if the tool requires a "name" parameter, you would pass {name: "value"}.
    * @returns {Promise<string|Error>} The result of the tool's action function. If an error occurs, null is returned. Non-string results are JSON-stringified.
    */
-  static async invokeFunctionTool(name, parameters) {
+  static async invokeFunctionTool(name: any, parameters: any) {
     try {
       if (!ToolManager.#tools.has(name)) {
         throw new Error(`No tool with the name "${name}" has been registered.`);
@@ -375,7 +375,7 @@ export class ToolManager {
    * @param {string} name The name of the tool to check.
    * @returns {boolean} Whether the tool is a stealth tool.
    */
-  static isStealthTool(name) {
+  static isStealthTool(name: any) {
     if (!ToolManager.#tools.has(name)) {
       return false;
     }
@@ -390,7 +390,7 @@ export class ToolManager {
    * @param {object} parameters Function tool call parameters.
    * @returns {Promise<string>} The formatted message for the tool call.
    */
-  static async formatToolCallMessage(name, parameters) {
+  static async formatToolCallMessage(name: any, parameters: any) {
     if (!ToolManager.#tools.has(name)) {
       return `Invoked unknown tool: ${name}`;
     }
@@ -410,7 +410,7 @@ export class ToolManager {
    * @param {string} name
    * @returns {string} The display name of the tool.
    */
-  static getDisplayName(name) {
+  static getDisplayName(name: any) {
     if (!ToolManager.#tools.has(name)) {
       return name;
     }
@@ -423,7 +423,7 @@ export class ToolManager {
    * Register function tools for the next chat completion request.
    * @param {object} data Generation data
    */
-  static async registerFunctionToolsOpenAI(data) {
+  static async registerFunctionToolsOpenAI(data: any) {
     const tools = [];
 
     for (const tool of ToolManager.tools) {
@@ -450,7 +450,7 @@ export class ToolManager {
    * @param {object} toolSignatures Optional mapping of tool call IDs to thought signatures.
    * @returns {void}
    */
-  static parseToolCalls(toolCalls, parsed, toolSignatures = {}) {
+  static parseToolCalls(toolCalls: any, parsed: any, toolSignatures: any = {}) {
     if (!ToolManager.isToolCallingSupported()) {
       return;
     }
@@ -588,7 +588,7 @@ export class ToolManager {
    * @param {object} target The target object to apply the delta to
    * @param {object} delta The delta object to apply
    */
-  static #applyToolCallDelta(target, delta) {
+  static #applyToolCallDelta(target: any, delta: any) {
     for (const key in delta) {
       if (!Object.hasOwn(delta, key)) continue;
       if (key === "__proto__" || key === "constructor") continue;
@@ -635,20 +635,20 @@ export class ToolManager {
     settings = settings ?? oai_settings;
     model = model ?? getChatCompletionModel(settings);
 
-    if (main_api !== "openai" || !settings.function_calling) {
+    if (main_api !== "openai" || !(settings as any).function_calling) {
       return false;
     }
 
     // Post-processing will forcefully remove past tool calls from the prompt, making them useless
     const { NONE, MERGE_TOOLS, SEMI_TOOLS, STRICT_TOOLS } = custom_prompt_post_processing_types;
     const allowedPromptPostProcessing = [NONE, MERGE_TOOLS, SEMI_TOOLS, STRICT_TOOLS];
-    if (!allowedPromptPostProcessing.includes(settings.custom_prompt_post_processing)) {
+    if (!allowedPromptPostProcessing.includes((settings as any).custom_prompt_post_processing)) {
       return false;
     }
 
-    const currentModel = Array.isArray(model_list) ? model_list.find((m) => m.id === model) : null;
+    const currentModel = Array.isArray(model_list) ? model_list.find((m: any) => m.id === model) : null;
     if (currentModel) {
-      switch (settings.chat_completion_source) {
+      switch ((settings as any).chat_completion_source) {
         case chat_completion_sources.POLLINATIONS:
           return currentModel.tools;
         case chat_completion_sources.FIREWORKS:
@@ -666,7 +666,7 @@ export class ToolManager {
         case chat_completion_sources.WORKERS_AI:
           return (
             Array.isArray(currentModel.properties) &&
-            currentModel.properties.some((p) => p.property_id === "function_calling" && p.value === "true")
+            currentModel.properties.some((p: any) => p.property_id === "function_calling" && p.value === "true")
           );
       }
     }
@@ -698,7 +698,7 @@ export class ToolManager {
       chat_completion_sources.WORKERS_AI,
       chat_completion_sources.MINIMAX,
     ];
-    return supportedSources.includes(settings.chat_completion_source);
+    return supportedSources.includes((settings as any).chat_completion_source);
   }
 
   /**
@@ -708,7 +708,7 @@ export class ToolManager {
    * @param {string} model Optional model name
    * @returns {boolean} Whether tool calls can be performed for the given type
    */
-  static canPerformToolCalls(type, settings = null, model = null) {
+  static canPerformToolCalls(type: any, settings: any = null, model: any = null) {
     settings = settings ?? oai_settings;
     model = model ?? getChatCompletionModel(settings);
     const noToolCallTypes = ["impersonate", "quiet", "continue"];
@@ -721,14 +721,14 @@ export class ToolManager {
    * @param {any} data Response data
    * @returns {any[]} Tool calls from the response data
    */
-  static #getToolCallsFromData(data) {
+  static #getToolCallsFromData(data: any) {
     const getRandomId = () => Math.random().toString(36).substring(2);
-    const isClaudeToolCall = (c) =>
-      Array.isArray(c) ? c.filter((x) => x).every(isClaudeToolCall) : c?.input && c?.name && c?.id;
-    const isGoogleToolCall = (c) =>
-      Array.isArray(c) ? c.filter((x) => x).every(isGoogleToolCall) : c?.name && c?.args;
-    const convertClaudeToolCall = (c) => ({ id: c.id, function: { name: c.name, arguments: c.input } });
-    const convertGoogleToolCall = (c, signature = null) => ({
+    const isClaudeToolCall = (c: any) =>
+      Array.isArray(c) ? c.filter((x: any) => x).every(isClaudeToolCall) : c?.input && c?.name && c?.id;
+    const isGoogleToolCall = (c: any) =>
+      Array.isArray(c) ? c.filter((x: any) => x).every(isGoogleToolCall) : c?.name && c?.args;
+    const convertClaudeToolCall = (c: any) => ({ id: c.id, function: { name: c.name, arguments: c.input } });
+    const convertGoogleToolCall = (c: any, signature: any = null) => ({
       id: getRandomId(),
       function: { name: c.name, arguments: c.args },
       signature,
@@ -737,11 +737,11 @@ export class ToolManager {
     // Parsed tool calls from streaming data
     if (Array.isArray(data) && data.length > 0 && Array.isArray(data[0])) {
       if (isClaudeToolCall(data[0])) {
-        return data[0].filter((x) => x).map(convertClaudeToolCall);
+        return data[0].filter((x: any) => x).map(convertClaudeToolCall);
       }
 
       if (isGoogleToolCall(data[0])) {
-        return data[0].filter((x) => x).map((c) => convertGoogleToolCall(c, c.thoughtSignature));
+        return data[0].filter((x: any) => x).map((c: any) => convertGoogleToolCall(c, c.thoughtSignature));
       }
 
       if (typeof data[0]?.[0]?.tool_calls === "object") {
@@ -754,20 +754,20 @@ export class ToolManager {
     // Google AI Studio tool calls
     if (Array.isArray(data?.responseContent?.parts)) {
       return data.responseContent.parts
-        .filter((p) => p.functionCall)
-        .map((p) => convertGoogleToolCall(p.functionCall, p.thoughtSignature));
+        .filter((p: any) => p.functionCall)
+        .map((p: any) => convertGoogleToolCall(p.functionCall, p.thoughtSignature));
     }
 
     // Parsed tool calls from non-streaming data
     if (Array.isArray(data?.choices)) {
       // Find a choice with 0-index
-      const choice = data.choices.find((choice) => choice.index === 0);
+      const choice = data.choices.find((choice: any) => choice.index === 0);
 
       if (choice && typeof choice.message === "object" && Array.isArray(choice.message.tool_calls)) {
         // Add OpenRouter signatures
         if (Array.isArray(choice.message.reasoning_details)) {
           for (const toolCall of choice.message.tool_calls) {
-            const reasoningDetail = choice.message.reasoning_details.find((rd) => rd.id === toolCall.id);
+            const reasoningDetail = choice.message.reasoning_details.find((rd: any) => rd.id === toolCall.id);
             if (reasoningDetail && reasoningDetail.type === "reasoning.encrypted" && reasoningDetail.data) {
               toolCall.signature = reasoningDetail.data;
             }
@@ -780,7 +780,7 @@ export class ToolManager {
 
     // Claude tool calls to OpenAI tool calls
     if (Array.isArray(data?.content)) {
-      const content = data.content.filter((c) => c.type === "tool_use").map(convertClaudeToolCall);
+      const content = data.content.filter((c: any) => c.type === "tool_use").map(convertClaudeToolCall);
 
       if (content) {
         return content;
@@ -798,7 +798,7 @@ export class ToolManager {
    * @param {object} data Response data
    * @returns {boolean} Whether the response data contains tool calls
    */
-  static hasToolCalls(data) {
+  static hasToolCalls(data: any) {
     const toolCalls = ToolManager.#getToolCallsFromData(data);
     return Array.isArray(toolCalls) && toolCalls.length > 0;
   }
@@ -808,7 +808,7 @@ export class ToolManager {
    * @param {any} data Reply data
    * @returns {Promise<ToolInvocationResult>} Successful tool invocations
    */
-  static async invokeFunctionTools(data, { reasoningText = null } = {}) {
+  static async invokeFunctionTools(data: any, { reasoningText = null }: any = {}) {
     /** @type {ToolInvocationResult} */
     const result = {
       invocations: [],
@@ -840,11 +840,11 @@ export class ToolManager {
 
       // Handle tool errors — still create an invocation so the LLM sees the failure
       if (toolResult instanceof Error) {
-        result.errors.push(toolResult);
+        (result.errors as any[]).push(toolResult);
         if (isStealth) {
-          result.stealthCalls.push(name);
+          (result.stealthCalls as any[]).push(name);
         } else {
-          result.invocations.push({
+          (result.invocations as any[]).push({
             id,
             displayName,
             name,
@@ -860,7 +860,7 @@ export class ToolManager {
 
       // Don't save stealth tool invocations
       if (isStealth) {
-        result.stealthCalls.push(name);
+        (result.stealthCalls as any[]).push(name);
         continue;
       }
 
@@ -874,7 +874,7 @@ export class ToolManager {
         signature: toolCall.signature || null,
         reasoning: reasoningText || null,
       };
-      result.invocations.push(invocation);
+      (result.invocations as any[]).push(invocation);
     }
 
     return result;
@@ -885,8 +885,8 @@ export class ToolManager {
    * @param {string[]} toolNames Tool names
    * @returns {string} Grouped tool names
    */
-  static #groupToolNames(toolNames) {
-    const toolCounts = toolNames.reduce((acc, name) => {
+  static #groupToolNames(toolNames: any) {
+    const toolCounts = toolNames.reduce((acc: any, name: any) => {
       acc[name] = (acc[name] || 0) + 1;
       return acc;
     }, {});
@@ -900,19 +900,19 @@ export class ToolManager {
    * @param {ToolInvocation[]} invocations Tool invocations.
    * @returns {string} Formatted message with tool invocations.
    */
-  static #formatToolInvocationMessage(invocations) {
+  static #formatToolInvocationMessage(invocations: any) {
     const data = structuredClone(invocations);
     const detailsElement = document.createElement("details");
     const summaryElement = document.createElement("summary");
     const preElement = document.createElement("pre");
     const codeElement = document.createElement("code");
     codeElement.classList.add("language-json");
-    data.forEach((i) => {
+    data.forEach((i: any) => {
       i.parameters = tryParse(i.parameters);
       i.result = tryParse(i.result);
     });
     codeElement.textContent = JSON.stringify(data, null, 2);
-    const toolNames = data.map((i) => i.displayName || i.name);
+    const toolNames = data.map((i: any) => i.displayName || i.name);
     summaryElement.textContent = `Tool calls: ${ToolManager.#groupToolNames(toolNames)}`;
     preElement.append(codeElement);
     detailsElement.append(summaryElement, preElement);
@@ -923,7 +923,7 @@ export class ToolManager {
    * Saves function tool invocations to the last user chat message extra metadata.
    * @param {ToolInvocation[]} invocations Successful tool invocations
    */
-  static async saveFunctionToolInvocations(invocations) {
+  static async saveFunctionToolInvocations(invocations: any) {
     if (!Array.isArray(invocations) || invocations.length === 0) {
       return;
     }
@@ -952,12 +952,12 @@ export class ToolManager {
    * @param {Error[]} errors Errors that occurred during tool invocation
    * @returns {void}
    */
-  static showToolCallError(errors) {
+  static showToolCallError(errors: any) {
     toastr.error("An error occurred while invoking function tools. Click here for more details.", "Tool Calling", {
       onclick: () =>
         Popup.show.text(
           "Tool Calling Errors",
-          DOMPurify.sanitize(errors.map((e) => `${e.cause}: ${e.message}`).join("<br>")),
+          DOMPurify.sanitize(errors.map((e: any) => `${e.cause}: ${e.message}`).join("<br>")),
         ),
       timeOut: 5000,
     });
@@ -992,13 +992,13 @@ export class ToolManager {
             forceEnum: true,
           }),
         ],
-        callback: async (args) => {
+        callback: async (args: any) => {
           /** @type {any} */
           const returnType = String(args?.return ?? "popup-html")
             .trim()
             .toLowerCase();
-          const objectToStringFunc = (tools) =>
-            Array.isArray(tools) ? tools.map((x) => x.toString()).join("\n\n") : tools.toString();
+          const objectToStringFunc = (tools: any) =>
+            Array.isArray(tools) ? tools.map((x: any) => x.toString()).join("\n\n") : tools.toString();
           const tools = ToolManager.tools.map((tool) => tool.toFunctionOpenAI());
           return await slashCommandReturnHelper.doReturn(returnType ?? "popup-html", tools ?? [], {
             objectToStringFunc,
@@ -1032,7 +1032,7 @@ export class ToolManager {
             enumProvider: toolsEnumProvider,
           }),
         ],
-        callback: async (args, name) => {
+        callback: async (args: any, name: any) => {
           const { parameters } = args;
 
           const result = await ToolManager.invokeFunctionTool(String(name), parameters);
@@ -1134,15 +1134,15 @@ export class ToolManager {
             acceptsMultiple: false,
           }),
         ],
-        callback: async (args, action) => {
+        callback: async (args: any, action: any) => {
           /**
            * Converts a slash command closure to a function.
            * @param {SlashCommandClosure} action Closure to convert to a function
            * @param {function(any): any} convertResult Function to convert the result
            * @returns {function} Function that executes the closure
            */
-          function closureToFunction(action, convertResult) {
-            return async (args) => {
+          function closureToFunction(action: any, convertResult: any) {
+            return async (args: any) => {
               const localClosure = action.getCopy();
               localClosure.onProgress = () => {};
               const scope = localClosure.scope;
@@ -1180,12 +1180,12 @@ export class ToolManager {
             throw new Error('The "shouldRegister" argument must be a closure.');
           }
 
-          const actionFunc = closureToFunction(action, (x) => x);
+          const actionFunc = closureToFunction(action, (x: any) => x);
           const formatMessageFunc =
-            formatMessage instanceof SlashCommandClosure ? closureToFunction(formatMessage, (x) => String(x)) : null;
+            formatMessage instanceof SlashCommandClosure ? closureToFunction(formatMessage, (x: any) => String(x)) : null;
           const shouldRegisterFunc =
             shouldRegister instanceof SlashCommandClosure
-              ? closureToFunction(shouldRegister, (x) => isTrueBoolean(x))
+              ? closureToFunction(shouldRegister, (x: any) => isTrueBoolean(x))
               : null;
 
           ToolManager.registerFunctionTool({
@@ -1219,7 +1219,7 @@ export class ToolManager {
             enumProvider: toolsEnumProvider,
           }),
         ],
-        callback: async (_, name) => {
+        callback: async (_: any, name: any) => {
           if (typeof name !== "string" || !name) {
             throw new Error("The unnamed argument must be a non-empty string.");
           }

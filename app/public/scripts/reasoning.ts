@@ -53,7 +53,7 @@ import {
 /**
  * @type {ReasoningTemplate[]} List of reasoning templates
  */
-export const reasoning_templates = [];
+export const reasoning_templates: any[] = [];
 
 export const DEFAULT_REASONING_TEMPLATE = "Think XML";
 
@@ -90,7 +90,7 @@ export const ReasoningType = {
  * @param {Element} element
  * @returns {{messageId: number, message: object, messageBlock: JQuery<HTMLElement>}}
  */
-function getMessageFromJquery(element) {
+function getMessageFromJquery(element: any) {
   const messageBlock = $(element).closest(".mes");
   const messageId = Number(messageBlock.attr("mesid"));
   const message = chat[messageId];
@@ -115,7 +115,7 @@ function toggleReasoningAutoExpand() {
  * @returns {string} Extracted reasoning
  */
 export function extractReasoningFromData(
-  data,
+  data: any,
   { mainApi = null, ignoreShowThoughts = false, textGenType = null, chatCompletionSource = null } = {},
 ) {
   switch (mainApi ?? main_api) {
@@ -142,22 +142,22 @@ export function extractReasoningFromData(
         case chat_completion_sources.VERTEXAI:
           return (
             data?.responseContent?.parts
-              ?.filter((part) => part.thought)
-              ?.map((part) => part.text)
+              ?.filter((part: any) => part.thought)
+              ?.map((part: any) => part.text)
               ?.join("\n\n") ?? ""
           );
         case chat_completion_sources.CLAUDE:
           return (
             data?.content
-              ?.filter((part) => part.type === "thinking")
-              ?.map((part) => part.thinking)
+              ?.filter((part: any) => part.type === "thinking")
+              ?.map((part: any) => part.thinking)
               ?.join("\n\n") ?? ""
           );
         case chat_completion_sources.MISTRALAI:
           return (
             data?.choices?.[0]?.message?.content?.[0]?.thinking
-              ?.map((part) => part.text)
-              ?.filter((x) => x)
+              ?.map((part: any) => part.text)
+              ?.filter((x: any) => x)
               ?.join("\n\n") ?? ""
           );
         case chat_completion_sources.AIMLAPI:
@@ -189,7 +189,7 @@ export function extractReasoningFromData(
  * @param {string|null} [options.chatCompletionSource] Override for chat completion source
  * @returns {string?} Encrypted signature of the reasoning text
  */
-export function extractReasoningSignatureFromData(data, { mainApi = null, chatCompletionSource = null } = {}) {
+export function extractReasoningSignatureFromData(data: any, { mainApi = null, chatCompletionSource = null } = {}) {
   // Only Gemini models use thought signatures (via MakerSuite/VertexAI or OpenRouter)
   if ((mainApi ?? main_api) !== "openai") {
     return null;
@@ -214,7 +214,7 @@ export function extractReasoningSignatureFromData(data, { mainApi = null, chatCo
 
   // Direct Gemini format: Extract from responseContent.parts if available (only text parts)
   if (isGemini && Array.isArray(data?.responseContent?.parts)) {
-    data.responseContent.parts.forEach((part) => {
+    data.responseContent.parts.forEach((part: any) => {
       if (part.thoughtSignature && typeof part.text === "string") {
         return part.thoughtSignature;
       }
@@ -236,8 +236,8 @@ export function isHiddenReasoningModel() {
   /** @typedef {{ (currentModel: string, supportedModel: string): boolean }} MatchingFunc */
   /** @type {Record.<string, MatchingFunc>} */
   const FUNCS = {
-    equals: (currentModel, supportedModel) => currentModel === supportedModel,
-    startsWith: (currentModel, supportedModel) => currentModel.startsWith(supportedModel),
+    equals: (currentModel: any, supportedModel: any) => currentModel === supportedModel,
+    startsWith: (currentModel: any, supportedModel: any) => currentModel.startsWith(supportedModel),
   };
 
   /** @type {{ name: string; func: MatchingFunc; }[]} */
@@ -261,7 +261,7 @@ export function isHiddenReasoningModel() {
  * @param {Object} [options={}] - Optional arguments
  * @param {boolean} [options.reset=false] - Whether to reset state, and not take the current mess properties (for example when swiping)
  */
-export function updateReasoningUI(messageIdOrElement, { reset = false } = {}) {
+export function updateReasoningUI(messageIdOrElement: any, { reset = false } = {}) {
   const handler = new ReasoningHandler();
   handler.initHandleMessage(messageIdOrElement, { reset });
 }
@@ -301,12 +301,12 @@ export class ReasoningHandler {
   messageReasoningDetailsDom: HTMLDetailsElement | null;
   messageReasoningContentDom: HTMLElement | null;
   messageReasoningHeaderDom: HTMLElement | null;
-  prefixDuration: number | null;
-  prefixLength: number | null;
-  prefixIncomplete: boolean;
-  prefixReasoning: string | null;
-  prefixReasoningFormatted: string | null;
-  counter: number;
+  prefixDuration!: number | null;
+  prefixLength!: number | null;
+  prefixIncomplete!: boolean;
+  prefixReasoning!: string | null;
+  prefixReasoningFormatted!: string | null;
+  counter!: number;
 
   /**
    * @param {Date?} [timeStarted=null] - When the generation started
@@ -345,12 +345,12 @@ export class ReasoningHandler {
    * Sets the reasoning state when continuing a prompt.
    * @param {PromptReasoning} promptReasoning Prompt reasoning object
    */
-  initContinue(promptReasoning) {
+  initContinue(promptReasoning: any) {
     this.reasoning = promptReasoning.prefixReasoning;
     this.state = promptReasoning.prefixIncomplete ? ReasoningState.None : ReasoningState.Done;
     this.startTime = this.initialTime;
     this.endTime = promptReasoning.prefixDuration
-      ? new Date(this.initialTime.getTime() + promptReasoning.prefixDuration)
+      ? new Date(this.initialTime!.getTime() + promptReasoning.prefixDuration)
       : null;
   }
 
@@ -365,7 +365,7 @@ export class ReasoningHandler {
    * @param {Object} [options={}] - Optional arguments
    * @param {boolean} [options.reset=false] - Whether to reset state of the handler, and not take the current mess properties (for example when swiping)
    */
-  initHandleMessage(messageIdOrElement, { reset = false } = {}) {
+  initHandleMessage(messageIdOrElement: any, { reset = false } = {}) {
     /** @type {HTMLElement} */
     const messageElement =
       typeof messageIdOrElement === "number"
@@ -415,7 +415,7 @@ export class ReasoningHandler {
     this.updateDom(messageId);
 
     if (power_user.reasoning.auto_expand && this.state !== ReasoningState.Hidden) {
-      this.messageReasoningDetailsDom.open = true;
+      this.messageReasoningDetailsDom!.open = true;
     }
   }
 
@@ -441,7 +441,7 @@ export class ReasoningHandler {
    * @param {boolean} [options.allowReset=false] - Whether to allow empty reasoning provided to reset the reasoning, instead of just taking the existing one
    * @returns {boolean} - Returns true if the reasoning was changed, otherwise false
    */
-  updateReasoning(messageId, reasoning = null, { persist = false, allowReset = false } = {}) {
+  updateReasoning(messageId: any, reasoning: any = null, { persist = false, allowReset = false } = {}) {
     if (messageId == -1 || !chat[messageId]) {
       return false;
     }
@@ -482,7 +482,7 @@ export class ReasoningHandler {
    * @param {PromptReasoning} promptReasoning - Prompt reasoning object
    * @returns {Promise<void>}
    */
-  async process(messageId, mesChanged, promptReasoning) {
+  async process(messageId: any, mesChanged: any, promptReasoning: any) {
     mesChanged = this.#autoParseReasoningFromMessage(messageId, mesChanged, promptReasoning);
 
     if (!this.reasoning && !this.#isHiddenReasoningModel) return;
@@ -507,7 +507,7 @@ export class ReasoningHandler {
    * @param {PromptReasoning} promptReasoning Prompt reasoning object
    * @returns {boolean} Whether the message has changed after reasoning parsing
    */
-  #autoParseReasoningFromMessage(messageId, mesChanged, promptReasoning) {
+  #autoParseReasoningFromMessage(messageId: any, mesChanged: any, promptReasoning: any) {
     if (!power_user.reasoning.auto_parse) return;
     if (!power_user.reasoning.prefix || !power_user.reasoning.suffix) return mesChanged;
 
@@ -568,7 +568,7 @@ export class ReasoningHandler {
    * @param {number} messageId - The ID of the message to complete reasoning for
    * @returns {Promise<void>}
    */
-  async finish(messageId) {
+  async finish(messageId: any) {
     if (this.state === ReasoningState.None) return;
 
     // Make sure the finish time is recorded if a reasoning was in process and it wasn't ended correctly during streaming
@@ -598,11 +598,11 @@ export class ReasoningHandler {
    *
    * @param {number} messageId - The ID of the message to update
    */
-  updateDom(messageId) {
+  updateDom(messageId: any) {
     this.#checkDomElements(messageId);
 
     // Main CSS class to show this message includes reasoning
-    this.messageDom.classList.toggle("reasoning", this.state !== ReasoningState.None);
+    this.messageDom!.classList.toggle("reasoning", this.state !== ReasoningState.None);
 
     // Update states to the relevant DOM elements
     setDatasetProperty(this.messageDom, "reasoningState", this.state !== ReasoningState.None ? this.state : null);
@@ -616,17 +616,17 @@ export class ReasoningHandler {
     if (power_user.stream_fade_in) {
       applyStreamFadeIn(this.messageReasoningContentDom, displayReasoning);
     } else {
-      this.messageReasoningContentDom.innerHTML = displayReasoning;
+      this.messageReasoningContentDom!.innerHTML = displayReasoning;
     }
 
     // Update tooltip for hidden reasoning edit
-    const button = this.messageDom.querySelector(".mes_edit_add_reasoning") as HTMLElement;
+    const button = this.messageDom!.querySelector(".mes_edit_add_reasoning") as HTMLElement;
     button.title =
       this.state === ReasoningState.Hidden ? t`Hidden reasoning - Add reasoning block` : t`Add reasoning block`;
 
     // Make sure that hidden reasoning headers are collapsed by default, to not show a useless edit button
     if (this.state === ReasoningState.Hidden) {
-      this.messageReasoningDetailsDom.open = false;
+      this.messageReasoningDetailsDom!.open = false;
     }
 
     // Update the reasoning duration in the UI
@@ -638,7 +638,7 @@ export class ReasoningHandler {
    *
    * @param {number} messageId - The ID of the message to cache the DOM elements for
    */
-  #checkDomElements(messageId) {
+  #checkDomElements(messageId: any) {
     // Make sure we reset dom elements if we are checking for a different message (shouldn't happen, but be sure)
     if (this.messageDom !== null && this.messageDom.getAttribute("mesid") !== messageId.toString()) {
       this.messageDom = null;
@@ -675,14 +675,14 @@ export class ReasoningHandler {
       const seconds = moment.duration(duration).asSeconds();
 
       const durationStr = moment.duration(duration).locale(getCurrentLocale()).humanize({ s: 50, ss: 3 });
-      element.textContent = t`Thought for ${durationStr}`;
+      element!.textContent = t`Thought for ${durationStr}`;
       data = String(seconds);
       title = `${seconds} seconds`;
     } else if ([ReasoningState.Done, ReasoningState.Hidden].includes(this.state)) {
-      element.textContent = t`Thought for some time`;
+      element!.textContent = t`Thought for some time`;
       data = "unknown";
     } else {
-      element.textContent = t`Thinking...`;
+      element!.textContent = t`Thinking...`;
       data = null;
     }
 
@@ -690,7 +690,7 @@ export class ReasoningHandler {
       title += ` [${translate(this.type)}]`;
       title = title.trim();
     }
-    element.title = title;
+    element!.title = title;
 
     setDatasetProperty(this.messageReasoningDetailsDom, "duration", data);
     setDatasetProperty(element, "duration", data);
@@ -773,7 +773,7 @@ export class PromptReasoning {
    * @param {number?} duration Duration of the reasoning
    * @returns {string} Message content with reasoning
    */
-  addToMessage(content, reasoning, isPrefix, duration) {
+  addToMessage(content: any, reasoning: any, isPrefix: any, duration: any) {
     // Disabled or reached limit of additions
     if (!isPrefix && (!power_user.reasoning.add_to_prompts || this.counter >= power_user.reasoning.max_additions)) {
       return content;
@@ -822,7 +822,7 @@ export class PromptReasoning {
    * @param {string} content Content with the reasoning prefix
    * @returns {string} Content without the reasoning prefix
    */
-  removePrefix(content) {
+  removePrefix(content: any) {
     if (this.prefixLength > 0) {
       return content.slice(this.prefixLength);
     }
@@ -903,7 +903,7 @@ function loadReasoningSettings() {
   });
 }
 
-function selectReasoningTemplateCallback(args, name) {
+function selectReasoningTemplateCallback(args: any, name: any) {
   if (!name) {
     return power_user.reasoning.name ?? "";
   }
@@ -942,7 +942,7 @@ function registerReasoningSlashCommands() {
           enumProvider: commonEnumProviders.messages(),
         }),
       ],
-      callback: (_args, value) => {
+      callback: (_args: any, value: any) => {
         const messageId = !isNaN(parseInt(value.toString())) ? parseInt(value.toString()) : chat.length - 1;
         const message = chat[messageId];
         const reasoning = String(message?.extra?.reasoning ?? "");
@@ -977,7 +977,7 @@ function registerReasoningSlashCommands() {
           typeList: ARGUMENT_TYPE.STRING,
         }),
       ],
-      callback: async (args, value) => {
+      callback: async (args: any, value: any) => {
         const messageId = !isNaN(Number(args.at)) ? Number(args.at) : chat.length - 1;
         const message = chat[messageId];
         if (!message) {
@@ -1046,7 +1046,7 @@ function registerReasoningSlashCommands() {
           typeList: [ARGUMENT_TYPE.STRING],
         }),
       ],
-      callback: (args, value) => {
+      callback: (args: any, value: any) => {
         if (!value || typeof value !== "string") {
           return "";
         }
@@ -1101,7 +1101,7 @@ function registerReasoningSlashCommands() {
           isRequired: false,
         }),
       ],
-      callback: (args, value) => {
+      callback: (args: any, value: any) => {
         const reasoning = String(args?.reasoning ?? "");
         const content = String(value ?? "");
 
@@ -1168,7 +1168,7 @@ function registerReasoningSlashCommands() {
    * @param {string} value Unnamed argument value (message ID or range)
    * @returns {JQuery<HTMLElement>|null} The reasoning details elements, or null if not found
    */
-  function getReasoningDetailsElements(value) {
+  function getReasoningDetailsElements(value: any) {
     const range = value
       ? stringToRange(String(value), 0, chat.length - 1)
       : { start: chat.length - 1, end: chat.length - 1 };
@@ -1202,7 +1202,7 @@ function registerReasoningSlashCommands() {
       aliases: ["collapse-reasoning"],
       helpString: t`Collapse the reasoning block of a message or range of messages.`,
       unnamedArgumentList: reasoningVisibilityArgs,
-      callback: (_args, value) => {
+      callback: (_args: any, value: any) => {
         const details = getReasoningDetailsElements(value.toString());
         if (details) details.removeAttr("open");
         return "";
@@ -1216,7 +1216,7 @@ function registerReasoningSlashCommands() {
       aliases: ["expand-reasoning"],
       helpString: t`Expand the reasoning block of a message or range of messages.`,
       unnamedArgumentList: reasoningVisibilityArgs,
-      callback: (_args, value) => {
+      callback: (_args: any, value: any) => {
         const details = getReasoningDetailsElements(value.toString());
         if (details) details.attr("open", "");
         return "";
@@ -1230,7 +1230,7 @@ function registerReasoningSlashCommands() {
       aliases: ["toggle-reasoning"],
       helpString: t`Toggle the reasoning block of a message or range of messages. Expanded blocks will be collapsed, and collapsed blocks will be expanded.`,
       unnamedArgumentList: reasoningVisibilityArgs,
-      callback: (_args, value) => {
+      callback: (_args: any, value: any) => {
         const details = getReasoningDetailsElements(value.toString());
         if (!details) return "";
         details.each(function () {
@@ -1271,7 +1271,7 @@ function setReasoningEventHandlers() {
    * @param {object} message Message object
    * @param {string} value Reasoning value
    */
-  function updateReasoningFromValue(message, value) {
+  function updateReasoningFromValue(message: any, value: any) {
     const reasoning = getRegexedString(value, regex_placement.REASONING, { isEdit: true });
     message.extra.reasoning = reasoning;
     message.extra.reasoning_type = message.extra.reasoning_type ? ReasoningType.Edited : ReasoningType.Manual;
@@ -1325,10 +1325,10 @@ function setReasoningEventHandlers() {
 
     if (!CSS.supports("field-sizing", "content")) {
       const resetHeight = () => {
-        const scrollTop = chatElement.scrollTop;
+        const scrollTop = chatElement!.scrollTop;
         textarea.style.height = "0px";
         textarea.style.height = `${textarea.scrollHeight}px`;
-        chatElement.scrollTop = scrollTop;
+        chatElement!.scrollTop = scrollTop;
       };
 
       textarea.addEventListener("input", resetHeight);
@@ -1339,12 +1339,12 @@ function setReasoningEventHandlers() {
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
 
     const textareaRect = textarea.getBoundingClientRect();
-    const chatRect = chatElement.getBoundingClientRect();
+    const chatRect = chatElement!.getBoundingClientRect();
 
     // Scroll if textarea bottom is below visible area
     if (textareaRect.bottom > chatRect.bottom) {
       const scrollOffset = textareaRect.bottom - chatRect.bottom;
-      chatElement.scrollTop += scrollOffset;
+      chatElement!.scrollTop += scrollOffset;
     }
   });
 
@@ -1476,7 +1476,7 @@ function setReasoningEventHandlers() {
  * @param {string} str Input string
  * @returns {string} Output string
  */
-export function removeReasoningFromString(str) {
+export function removeReasoningFromString(str: any) {
   if (!power_user.reasoning.auto_parse) {
     return str;
   }
@@ -1491,7 +1491,7 @@ export function removeReasoningFromString(str) {
  * @returns {ReasoningTemplate} the reasoning template object
  * @throws {Error}
  */
-export function getReasoningTemplateByName(name) {
+export function getReasoningTemplateByName(name: any) {
   const template = reasoning_templates.find((p) => p.name === name);
   if (!template) throw new Error(`Unknown reasoning template name: "${name}"`);
   return template;
@@ -1508,17 +1508,17 @@ export function getReasoningTemplateByName(name) {
  * @param {ReasoningTemplate} template Optional reasoning template to use instead of power_user.reasoning
  * @returns {ParsedReasoning|null} Parsed reasoning block and message content
  */
-export function parseReasoningFromString(str, { strict = true } = {}, template = null) {
+export function parseReasoningFromString(str: any, { strict = true } = {}, template: any = null) {
   template = template ?? power_user.reasoning; // if no template given, use the currently selected template
 
   // Both prefix and suffix must be defined
-  if (!template.prefix || !template.suffix) {
+  if (!template!.prefix || !template!.suffix) {
     return null;
   }
 
   try {
     const regex = new RegExp(
-      `${strict ? "^\\s*?" : ""}${escapeRegex(template.prefix)}(.*?)${escapeRegex(template.suffix)}`,
+      `${strict ? "^\\s*?" : ""}${escapeRegex(template!.prefix)}(.*?)${escapeRegex(template!.suffix)}`,
       "s",
     );
 
@@ -1553,18 +1553,18 @@ export function parseReasoningFromString(str, { strict = true } = {}, template =
  * @param {ReasoningTemplate} [template=null] Optional template to use. Defaults to power_user.reasoning
  * @returns {FormattedReasoning} Object containing both formatted (reasoning + content) and contentOnly
  */
-export function formatReasoning(reasoning, content, template = null) {
+export function formatReasoning(reasoning: any, content: any, template: any = null) {
   template = template ?? power_user.reasoning;
 
   // If no reasoning provided, return content only
-  if (!reasoning || !template.prefix || !template.suffix) {
+  if (!reasoning || !template!.prefix || !template!.suffix) {
     return { formatted: content, contentOnly: content };
   }
 
   // Substitute macros in template parts
-  const prefix = substituteParams(template.prefix || "");
-  const suffix = substituteParams(template.suffix || "");
-  const separator = substituteParams(template.separator || "");
+  const prefix = substituteParams(template!.prefix || "");
+  const suffix = substituteParams(template!.suffix || "");
+  const separator = substituteParams(template!.separator || "");
 
   // Build the formatted string: prefix + reasoning + suffix + separator + content
   const formatted = `${prefix}${reasoning}${suffix}${separator}${content}`;
@@ -1583,7 +1583,7 @@ export function formatReasoning(reasoning, content, template = null) {
  * @property {string} reasoning_type Type of reasoning block
  * @property {string?} reasoning_signature Encrypted signature of the reasoning text
  */
-export function parseReasoningInSwipes(swipes, swipeInfoArray, duration) {
+export function parseReasoningInSwipes(swipes: any, swipeInfoArray: any, duration: any) {
   if (!power_user.reasoning.auto_parse) {
     return;
   }
@@ -1605,7 +1605,7 @@ export function parseReasoningInSwipes(swipes, swipeInfoArray, duration) {
 }
 
 function registerReasoningAppEvents() {
-  const eventHandler = (/** @type {string} */ type, /** @type {number} */ idx) => {
+  const eventHandler = (/** @type {string} */ type: any, /** @type {number} */ idx: any) => {
     if (!power_user.reasoning.auto_parse) {
       return;
     }
@@ -1668,7 +1668,7 @@ function registerReasoningAppEvents() {
   };
 
   for (const event of [event_types.MESSAGE_RECEIVED, event_types.MESSAGE_UPDATED]) {
-    eventSource.on(event, (/** @type {number} */ idx) => eventHandler(event, idx));
+    eventSource.on(event, (/** @type {number} */ idx: any) => eventHandler(event, idx));
   }
 
   for (const event of [event_types.GENERATION_STOPPED, event_types.GENERATION_ENDED, event_types.CHAT_CHANGED]) {
@@ -1705,7 +1705,7 @@ function registerReasoningAppEvents() {
  * @param {ReasoningTemplate[]} data.reasoning Reasoning templates
  * @returns {Promise<void>}
  */
-export async function loadReasoningTemplates(data) {
+export async function loadReasoningTemplates(data: any) {
   if (data.reasoning !== undefined) {
     reasoning_templates.splice(0, reasoning_templates.length, ...data.reasoning);
   }

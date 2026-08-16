@@ -42,18 +42,18 @@ import { accountStorage } from "./util/AccountStorage.ts";
 import { getCurrentUserHandle } from "./user.ts";
 import { kai_settings } from "./kai-settings.ts";
 
-var RPanelPin = document.getElementById("rm_button_panel_pin");
-var LPanelPin = document.getElementById("lm_button_panel_pin");
-var WIPanelPin = document.getElementById("WI_panel_pin");
+var RPanelPin: any = document.getElementById("rm_button_panel_pin");
+var LPanelPin: any = document.getElementById("lm_button_panel_pin");
+var WIPanelPin: any = document.getElementById("WI_panel_pin");
 
-var RightNavPanel = document.getElementById("right-nav-panel");
-var RightNavDrawerIcon = document.getElementById("rightNavDrawerIcon");
-var LeftNavPanel = document.getElementById("left-nav-panel");
-var LeftNavDrawerIcon = document.getElementById("leftNavDrawerIcon");
-var WorldInfo = document.getElementById("WorldInfo");
-var WIDrawerIcon = document.getElementById("WIDrawerIcon");
+var RightNavPanel: any = document.getElementById("right-nav-panel");
+var RightNavDrawerIcon: any = document.getElementById("rightNavDrawerIcon");
+var LeftNavPanel: any = document.getElementById("left-nav-panel");
+var LeftNavDrawerIcon: any = document.getElementById("leftNavDrawerIcon");
+var WorldInfo: any = document.getElementById("WorldInfo");
+var WIDrawerIcon: any = document.getElementById("WIDrawerIcon");
 
-var SelectedCharacterTab = document.getElementById("rm_button_selected_ch");
+var SelectedCharacterTab: any = document.getElementById("rm_button_selected_ch");
 
 var connection_made = false;
 var retry_delay = 500;
@@ -97,7 +97,7 @@ observer.observe(document.documentElement, observerConfig);
  * @param {number} total_gen_time - The total generation time in milliseconds.
  * @returns {string} - A human-readable string that represents the time spent generating characters.
  */
-export function humanizeGenTime(total_gen_time) {
+export function humanizeGenTime(total_gen_time: any) {
   //convert time_spent to humanized format of "_ Hours, _ Minutes, _ Seconds" from milliseconds
   let time_spent = total_gen_time || 0;
   time_spent = Math.floor(time_spent / 1000);
@@ -125,7 +125,7 @@ export function humanizeGenTime(total_gen_time) {
 /**
  * DON'T OPTIMIZE, don't change this to a const or let, it needs to be a var.
  */
-var parsedUA = null;
+var parsedUA: any = null;
 
 export function getParsedUA() {
   if (!parsedUA) {
@@ -182,7 +182,7 @@ export function humanizedDateTime(timestamp = Date.now()) {
   };
   for (const key in dt) {
     const padLength = key === "millisecond" ? 3 : 2;
-    dt[key] = dt[key].toString().padStart(padLength, "0");
+    (dt as any)[key] = (dt as any)[key].toString().padStart(padLength, "0");
   }
   return `${dt.year}-${dt.month}-${dt.day}@${dt.hour}h${dt.minute}m${dt.second}s${dt.millisecond}ms`;
 }
@@ -200,7 +200,7 @@ export function getMessageTimeStamp(timestamp = Date.now()) {
 // triggers:
 $("#rm_button_create").on("click", () => {
   //when "+New Character" is clicked
-  $(SelectedCharacterTab).children("h2").html(""); // empty nav's 3rd panel tab
+  $(SelectedCharacterTab as any).children("h2").html(""); // empty nav's 3rd panel tab
 });
 //when any input is made to the create/edit character form textareas
 $("#rm_ch_create_block").on("input", () => {
@@ -224,7 +224,7 @@ export async function RA_CountCharTokens() {
     }
 
     const counter = $(tokenCounter);
-    const input = $(document.getElementById(counter.data("token-counter")));
+    const input = $(document.getElementById(counter.data("token-counter")) as any);
     const isPermanent = counter.data("token-permanent") === true;
     const value = String(input.val());
 
@@ -325,7 +325,7 @@ export async function favsToHotswap() {
   //helpful instruction message if no characters are favorited
   if (favs.length == 0) {
     container.html(
-      `<small><span><i class="fa-solid fa-star"></i>&nbsp;${DOMPurify.sanitize(container.attr("no_favs"))}</span></small>`,
+      `<small><span><i class="fa-solid fa-star"></i>&nbsp;${DOMPurify.sanitize(container.attr("no_favs") as any)}</span></small>`,
     );
     return;
   }
@@ -337,7 +337,7 @@ export async function favsToHotswap() {
 function RA_checkOnlineStatus() {
   if (online_status == "no_connection") {
     const send_textarea = $("#send_textarea");
-    send_textarea.attr("placeholder", send_textarea.attr("no_connection_text")); //Input bar placeholder tells users they are not connected
+    send_textarea.attr("placeholder", send_textarea.attr("no_connection_text") as any); //Input bar placeholder tells users they are not connected
     $("#send_form").addClass("no-connection");
     $("#send_but").addClass("displayNone"); //send button is hidden when not connected;
     $("#mes_continue").addClass("displayNone"); //continue button is hidden when not connected;
@@ -348,7 +348,7 @@ function RA_checkOnlineStatus() {
   } else {
     if (online_status !== undefined && online_status !== "no_connection") {
       const send_textarea = $("#send_textarea");
-      send_textarea.attr("placeholder", send_textarea.attr("connected_text")); //on connect, placeholder tells user to type message
+      send_textarea.attr("placeholder", send_textarea.attr("connected_text") as any); //on connect, placeholder tells user to type message
       $("#send_form").removeClass("no-connection");
       $("#API-status-top").removeClass("fa-plug-circle-exclamation redOverlayGlow");
       $("#API-status-top").addClass("fa-plug");
@@ -365,7 +365,7 @@ function RA_checkOnlineStatus() {
 }
 //Auto-connect to API (when set to kobold, API URL exists, and auto_connect is true)
 
-function RA_autoconnect(PrevApi) {
+function RA_autoconnect(PrevApi: any) {
   // secrets.js or script.js not loaded
   if (SECRET_KEYS === undefined || online_status === undefined) {
     setTimeout(RA_autoconnect, 100);
@@ -379,18 +379,18 @@ function RA_autoconnect(PrevApi) {
         }
         break;
       case "novel":
-        if (secret_state[SECRET_KEYS.NOVEL]) {
+        if ((secret_state as any)[SECRET_KEYS.NOVEL]) {
           $("#api_button_novel").trigger("click");
         }
         break;
       case "textgenerationwebui":
         if (
-          (textgen_settings.type === textgen_types.MANCER && secret_state[SECRET_KEYS.MANCER]) ||
-          (textgen_settings.type === textgen_types.TOGETHERAI && secret_state[SECRET_KEYS.TOGETHERAI]) ||
-          (textgen_settings.type === textgen_types.INFERMATICAI && secret_state[SECRET_KEYS.INFERMATICAI]) ||
-          (textgen_settings.type === textgen_types.DREAMGEN && secret_state[SECRET_KEYS.DREAMGEN]) ||
-          (textgen_settings.type === textgen_types.OPENROUTER && secret_state[SECRET_KEYS.OPENROUTER]) ||
-          (textgen_settings.type === textgen_types.FEATHERLESS && secret_state[SECRET_KEYS.FEATHERLESS])
+          (textgen_settings.type === textgen_types.MANCER && (secret_state as any)[SECRET_KEYS.MANCER]) ||
+          (textgen_settings.type === textgen_types.TOGETHERAI && (secret_state as any)[SECRET_KEYS.TOGETHERAI]) ||
+          (textgen_settings.type === textgen_types.INFERMATICAI && (secret_state as any)[SECRET_KEYS.INFERMATICAI]) ||
+          (textgen_settings.type === textgen_types.DREAMGEN && (secret_state as any)[SECRET_KEYS.DREAMGEN]) ||
+          (textgen_settings.type === textgen_types.OPENROUTER && (secret_state as any)[SECRET_KEYS.OPENROUTER]) ||
+          (textgen_settings.type === textgen_types.FEATHERLESS && (secret_state as any)[SECRET_KEYS.FEATHERLESS])
         ) {
           $("#api_button_textgenerationwebui").trigger("click");
         } else if (isValidUrl(getTextGenServer())) {
@@ -399,55 +399,55 @@ function RA_autoconnect(PrevApi) {
         break;
       case "openai":
         if (
-          ((secret_state[SECRET_KEYS.OPENAI] || oai_settings.reverse_proxy) &&
+          (((secret_state as any)[SECRET_KEYS.OPENAI] || oai_settings.reverse_proxy) &&
             oai_settings.chat_completion_source == chat_completion_sources.OPENAI) ||
-          ((secret_state[SECRET_KEYS.CLAUDE] || oai_settings.reverse_proxy) &&
+          (((secret_state as any)[SECRET_KEYS.CLAUDE] || oai_settings.reverse_proxy) &&
             oai_settings.chat_completion_source == chat_completion_sources.CLAUDE) ||
-          (secret_state[SECRET_KEYS.OPENROUTER] &&
+          ((secret_state as any)[SECRET_KEYS.OPENROUTER] &&
             oai_settings.chat_completion_source == chat_completion_sources.OPENROUTER) ||
-          (secret_state[SECRET_KEYS.AI21] && oai_settings.chat_completion_source == chat_completion_sources.AI21) ||
-          (secret_state[SECRET_KEYS.MAKERSUITE] &&
+          ((secret_state as any)[SECRET_KEYS.AI21] && oai_settings.chat_completion_source == chat_completion_sources.AI21) ||
+          ((secret_state as any)[SECRET_KEYS.MAKERSUITE] &&
             oai_settings.chat_completion_source == chat_completion_sources.MAKERSUITE) ||
-          (secret_state[SECRET_KEYS.VERTEXAI] &&
+          ((secret_state as any)[SECRET_KEYS.VERTEXAI] &&
             oai_settings.chat_completion_source == chat_completion_sources.VERTEXAI &&
             oai_settings.vertexai_auth_mode === "express") ||
-          (secret_state[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT] &&
+          ((secret_state as any)[SECRET_KEYS.VERTEXAI_SERVICE_ACCOUNT] &&
             oai_settings.chat_completion_source == chat_completion_sources.VERTEXAI &&
             oai_settings.vertexai_auth_mode === "full") ||
-          (secret_state[SECRET_KEYS.MISTRALAI] &&
+          ((secret_state as any)[SECRET_KEYS.MISTRALAI] &&
             oai_settings.chat_completion_source == chat_completion_sources.MISTRALAI) ||
-          (secret_state[SECRET_KEYS.COHERE] && oai_settings.chat_completion_source == chat_completion_sources.COHERE) ||
-          (secret_state[SECRET_KEYS.PERPLEXITY] &&
+          ((secret_state as any)[SECRET_KEYS.COHERE] && oai_settings.chat_completion_source == chat_completion_sources.COHERE) ||
+          ((secret_state as any)[SECRET_KEYS.PERPLEXITY] &&
             oai_settings.chat_completion_source == chat_completion_sources.PERPLEXITY) ||
-          (secret_state[SECRET_KEYS.GROQ] && oai_settings.chat_completion_source == chat_completion_sources.GROQ) ||
-          (secret_state[SECRET_KEYS.CHUTES] && oai_settings.chat_completion_source == chat_completion_sources.CHUTES) ||
-          (secret_state[SECRET_KEYS.SILICONFLOW] &&
+          ((secret_state as any)[SECRET_KEYS.GROQ] && oai_settings.chat_completion_source == chat_completion_sources.GROQ) ||
+          ((secret_state as any)[SECRET_KEYS.CHUTES] && oai_settings.chat_completion_source == chat_completion_sources.CHUTES) ||
+          ((secret_state as any)[SECRET_KEYS.SILICONFLOW] &&
             oai_settings.chat_completion_source == chat_completion_sources.SILICONFLOW) ||
-          (secret_state[SECRET_KEYS.ELECTRONHUB] &&
+          ((secret_state as any)[SECRET_KEYS.ELECTRONHUB] &&
             oai_settings.chat_completion_source == chat_completion_sources.ELECTRONHUB) ||
-          (secret_state[SECRET_KEYS.NANOGPT] &&
+          ((secret_state as any)[SECRET_KEYS.NANOGPT] &&
             oai_settings.chat_completion_source == chat_completion_sources.NANOGPT) ||
-          (secret_state[SECRET_KEYS.DEEPSEEK] &&
+          ((secret_state as any)[SECRET_KEYS.DEEPSEEK] &&
             oai_settings.chat_completion_source == chat_completion_sources.DEEPSEEK) ||
-          (secret_state[SECRET_KEYS.XAI] && oai_settings.chat_completion_source == chat_completion_sources.XAI) ||
-          (secret_state[SECRET_KEYS.AIMLAPI] &&
+          ((secret_state as any)[SECRET_KEYS.XAI] && oai_settings.chat_completion_source == chat_completion_sources.XAI) ||
+          ((secret_state as any)[SECRET_KEYS.AIMLAPI] &&
             oai_settings.chat_completion_source == chat_completion_sources.AIMLAPI) ||
-          (secret_state[SECRET_KEYS.MOONSHOT] &&
+          ((secret_state as any)[SECRET_KEYS.MOONSHOT] &&
             oai_settings.chat_completion_source == chat_completion_sources.MOONSHOT) ||
-          (secret_state[SECRET_KEYS.FIREWORKS] &&
+          ((secret_state as any)[SECRET_KEYS.FIREWORKS] &&
             oai_settings.chat_completion_source == chat_completion_sources.FIREWORKS) ||
-          (secret_state[SECRET_KEYS.COMETAPI] &&
+          ((secret_state as any)[SECRET_KEYS.COMETAPI] &&
             oai_settings.chat_completion_source == chat_completion_sources.COMETAPI) ||
-          (secret_state[SECRET_KEYS.ZAI] && oai_settings.chat_completion_source == chat_completion_sources.ZAI) ||
-          (secret_state[SECRET_KEYS.POLLINATIONS] &&
+          ((secret_state as any)[SECRET_KEYS.ZAI] && oai_settings.chat_completion_source == chat_completion_sources.ZAI) ||
+          ((secret_state as any)[SECRET_KEYS.POLLINATIONS] &&
             oai_settings.chat_completion_source === chat_completion_sources.POLLINATIONS) ||
-          (secret_state[SECRET_KEYS.WORKERS_AI] &&
+          ((secret_state as any)[SECRET_KEYS.WORKERS_AI] &&
             oai_settings.chat_completion_source == chat_completion_sources.WORKERS_AI) ||
-          (secret_state[SECRET_KEYS.MINIMAX] &&
+          ((secret_state as any)[SECRET_KEYS.MINIMAX] &&
             oai_settings.chat_completion_source == chat_completion_sources.MINIMAX) ||
           (isValidUrl(oai_settings.custom_url) &&
             oai_settings.chat_completion_source == chat_completion_sources.CUSTOM) ||
-          (secret_state[SECRET_KEYS.AZURE_OPENAI] &&
+          ((secret_state as any)[SECRET_KEYS.AZURE_OPENAI] &&
             oai_settings.chat_completion_source == chat_completion_sources.AZURE_OPENAI)
         ) {
           $("#api_button_openai").trigger("click");
@@ -514,15 +514,15 @@ const saveUserInputDebounced = debounce(saveUserInput);
  * Make the given element draggable. This is used for Moving UI.
  * @param {JQuery} $elmnt - The element to make draggable.
  */
-export function dragElement($elmnt) {
-  let actionType = null; // "drag" or "resize"
+export function dragElement($elmnt: any) {
+  let actionType: any = null; // "drag" or "resize"
   let isMouseDown = false;
 
   let pos1 = 0,
     pos2 = 0,
     pos3 = 0,
     pos4 = 0;
-  let height, width, top, left, right, bottom, maxX, maxY, winHeight, winWidth;
+  let height: any, width: any, top: any, left: any, right: any, bottom: any, maxX: any, maxY: any, winHeight: any, winWidth: any;
 
   const elmntName = $elmnt.attr("id");
   const elmntNameEscaped = $.escapeSelector(elmntName);
@@ -531,14 +531,14 @@ export function dragElement($elmnt) {
   // Helper: Save position/size to state and emit events
   function savePositionAndSize() {
     if (!power_user.movingUIState[elmntName]) power_user.movingUIState[elmntName] = {};
-    power_user.movingUIState[elmntName].top = top;
-    power_user.movingUIState[elmntName].left = left;
-    power_user.movingUIState[elmntName].right = right;
-    power_user.movingUIState[elmntName].bottom = bottom;
-    power_user.movingUIState[elmntName].margin = "unset";
+    (power_user.movingUIState[elmntName] as any).top = top;
+    (power_user.movingUIState[elmntName] as any).left = left;
+    (power_user.movingUIState[elmntName] as any).right = right;
+    (power_user.movingUIState[elmntName] as any).bottom = bottom;
+    (power_user.movingUIState[elmntName] as any).margin = "unset";
     if (actionType === "resize") {
-      power_user.movingUIState[elmntName].width = width;
-      power_user.movingUIState[elmntName].height = height;
+      (power_user.movingUIState[elmntName] as any).width = width;
+      (power_user.movingUIState[elmntName] as any).height = height;
       eventSource.emit("resizeUI", elmntName);
     }
     saveSettingsDebounced();
@@ -558,8 +558,8 @@ export function dragElement($elmnt) {
     if (
       !$target.is(":visible") ||
       $target.hasClass("resizing") ||
-      $target.height() < 50 ||
-      $target.width() < 50 ||
+      ($target.height() as number) < 50 ||
+      ($target.width() as number) < 50 ||
       power_user.movingUI === false ||
       isMobile() ||
       !isMouseDown
@@ -613,8 +613,8 @@ export function dragElement($elmnt) {
       $elmnt.css({ left, top });
       $elmnt.off("mouseup").on("mouseup", () => {
         if (
-          power_user.movingUIState[elmntName].width === $elmnt.width() &&
-          power_user.movingUIState[elmntName].height === $elmnt.height()
+          (power_user.movingUIState[elmntName] as any).width === $elmnt.width() &&
+          (power_user.movingUIState[elmntName] as any).height === $elmnt.height()
         )
           return;
         savePositionAndSize();
@@ -629,7 +629,7 @@ export function dragElement($elmnt) {
   });
 
   // Mouse event handlers
-  function dragMouseDown(e) {
+  function dragMouseDown(e: any) {
     if (e) {
       actionType = "drag";
       isMouseDown = true;
@@ -641,7 +641,7 @@ export function dragElement($elmnt) {
     $(document).on("mousemove", elementDrag);
   }
 
-  function elementDrag(e) {
+  function elementDrag(e: any) {
     if (!power_user.movingUIState[elmntName]) power_user.movingUIState[elmntName] = {};
     e.preventDefault();
     pos1 = pos3 - e.clientX;
@@ -678,7 +678,7 @@ export function dragElement($elmnt) {
     });
   }
 
-  $elmnt.off("mousedown").on("mousedown", (e) => {
+  $elmnt.off("mousedown").on("mousedown", (e: any) => {
     const rect = $elmnt[0].getBoundingClientRect();
     const resizeMargin = 16;
     const isNearRight = e.clientX > rect.right - resizeMargin;
@@ -712,7 +712,7 @@ export async function initMovingUI() {
 
 /**@type {HTMLTextAreaElement} */
 const sendTextArea = document.querySelector("#send_textarea") as HTMLTextAreaElement;
-const chatBlock = document.getElementById("chat");
+const chatBlock = document.getElementById("chat") as HTMLElement;
 const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
 
 /**
@@ -959,7 +959,7 @@ export function initRossMods() {
   restoreUserInput();
 
   // Swipe gestures (see: https://www.npmjs.com/package/swiped-events)
-  document.addEventListener("swiped-left", (e) => {
+  document.addEventListener("swiped-left", (e: any) => {
     if (power_user.gestures === false) {
       return;
     }
@@ -983,7 +983,7 @@ export function initRossMods() {
       }
     }
   });
-  document.addEventListener("swiped-right", (e) => {
+  document.addEventListener("swiped-right", (e: any) => {
     if (power_user.gestures === false) {
       return;
     }
@@ -1020,15 +1020,15 @@ export function initRossMods() {
     return false;
   }
 
-  function isModifiedKeyboardEvent(event) {
+  function isModifiedKeyboardEvent(event: any) {
     return event instanceof KeyboardEvent && (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey);
   }
 
-  $(document).on("keydown", async (event) => {
+  $(document).on("keydown", async (event: any) => {
     await processHotkeys(event.originalEvent);
   });
 
-  const hotkeyTargets = {
+  const hotkeyTargets: any = {
     send_textarea: sendTextArea,
     dialogue_popup_input: document.querySelector("#dialogue_popup_input"),
   };
@@ -1037,7 +1037,7 @@ export function initRossMods() {
   /**
    * @param {KeyboardEvent} event
    */
-  async function processHotkeys(event) {
+  async function processHotkeys(event: any) {
     // Default hotkeys and shortcuts shouldn't work if any popup is currently open
     if (Popup.util.isPopupOpen()) {
       return;
@@ -1073,7 +1073,7 @@ export function initRossMods() {
       if (contextLine.length !== 0) {
         $("#chat").animate(
           {
-            scrollTop: contextLine.offset().top - $("#chat").offset().top + $("#chat").scrollTop(),
+            scrollTop: (contextLine.offset() as any).top - ($("#chat").offset() as any).top + ($("#chat").scrollTop() as number),
           },
           300,
         );
@@ -1147,7 +1147,7 @@ export function initRossMods() {
             "Are you sure you want to regenerate the latest message?",
             {
               customInputs: [{ id: "regenerateWithCtrlEnter", label: "Don't ask again" }],
-              onClose: (popup) => {
+              onClose: (popup: any) => {
                 regenerateWithCtrlEnter = Boolean(popup.inputResults.get("regenerateWithCtrlEnter") ?? false);
               },
             },

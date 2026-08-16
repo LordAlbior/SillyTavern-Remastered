@@ -20,8 +20,8 @@ import { power_user } from "./power-user.ts";
 import { getEventSourceStream } from "./sse-stream.ts";
 import { getSortableDelay, versionCompare } from "./utils.ts";
 
-export let koboldai_settings;
-export let koboldai_setting_names;
+export let koboldai_settings: any;
+export let koboldai_setting_names: any;
 
 export const kai_settings = {
   temp: 1,
@@ -73,7 +73,7 @@ const MIN_GRAMMAR_KCPPVERSION = "1.44";
 const MIN_MIN_P_KCPPVERSION = "1.48";
 const KOBOLDCPP_ORDER = [6, 0, 1, 3, 4, 2, 5];
 
-export function formatKoboldUrl(value) {
+export function formatKoboldUrl(value: any) {
   try {
     const url = new URL(value);
     if (!power_user.relaxed_api_urls) {
@@ -90,17 +90,17 @@ function selectKoboldGuiPreset() {
   $("#settings_preset option[value=gui]").attr("selected", "true").trigger("change");
 }
 
-export function loadKoboldSettings(data, preset, settings) {
+export function loadKoboldSettings(data: any, preset: any, settings: any) {
   koboldai_setting_names = data.koboldai_setting_names;
   koboldai_settings = data.koboldai_settings;
-  koboldai_settings.forEach((item, i, arr) => {
+  koboldai_settings.forEach((item: any, i: any, arr: any) => {
     koboldai_settings[i] = JSON.parse(item);
   });
 
   $("#settings_preset").empty();
   $("#settings_preset").append('<option value="gui">GUI KoboldAI Settings</option>');
-  const names = {};
-  koboldai_setting_names.forEach((item, i, arr) => {
+  const names: Record<string, any> = {};
+  koboldai_setting_names.forEach((item: any, i: any, arr: any) => {
     names[item] = i;
     $("#settings_preset").append(`<option value=${i}>${item}</option>`);
   });
@@ -129,14 +129,14 @@ export function loadKoboldSettings(data, preset, settings) {
   $("#api_url_text").val(kai_settings.api_server);
 }
 
-function loadKoboldSettingsFromPreset(preset) {
+function loadKoboldSettingsFromPreset(preset: any) {
   for (const name of Object.keys(kai_settings)) {
     if (name === "extensions") {
       kai_settings.extensions = preset.extensions || {};
       continue;
     }
 
-    const value = preset[name] ?? defaultValues[name];
+    const value = preset[name] ?? (defaultValues as Record<string, any>)[name];
     const slider = sliders.find((x) => x.name === name);
 
     if (!slider) {
@@ -169,7 +169,7 @@ function loadKoboldSettingsFromPreset(preset) {
  * @param {string} type Generation type.
  * @returns {object} Kobold generation data.
  */
-export function getKoboldGenerationData(finalPrompt, settings, maxLength, maxContextLength, isHorde, type) {
+export function getKoboldGenerationData(finalPrompt: any, settings: any, maxLength: any, maxContextLength: any, isHorde: any, type: any) {
   const isImpersonate = type === "impersonate";
   const isContinue = type === "continue";
   const sampler_order = kai_settings.sampler_order || settings.sampler_order;
@@ -209,7 +209,7 @@ export function getKoboldGenerationData(finalPrompt, settings, maxLength, maxCon
   return generate_data;
 }
 
-function tryParseStreamingError(response, decoded) {
+function tryParseStreamingError(response: any, decoded: any) {
   try {
     const data = JSON.parse(decoded);
 
@@ -226,7 +226,7 @@ function tryParseStreamingError(response, decoded) {
   }
 }
 
-export async function generateKoboldWithStreaming(generate_data, signal) {
+export async function generateKoboldWithStreaming(generate_data: any, signal: any) {
   const response = await fetch("/api/backends/kobold/generate", {
     headers: getRequestHeaders(),
     body: JSON.stringify(generate_data),
@@ -238,7 +238,7 @@ export async function generateKoboldWithStreaming(generate_data, signal) {
     throw new Error(`Got response status ${response.status}`);
   }
   const eventStream = getEventSourceStream();
-  response.body.pipeThrough(eventStream);
+  response.body!.pipeThrough(eventStream);
   const reader = eventStream.readable.getReader();
 
   return async function* streamData() {
@@ -261,8 +261,8 @@ const sliders = [
     name: "temp",
     sliderId: "#temp",
     counterId: "#temp_counter",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       kai_settings.temp = Number(val);
     },
   },
@@ -270,8 +270,8 @@ const sliders = [
     name: "rep_pen",
     sliderId: "#rep_pen",
     counterId: "#rep_pen_counter",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       kai_settings.rep_pen = Number(val);
     },
   },
@@ -279,8 +279,8 @@ const sliders = [
     name: "rep_pen_range",
     sliderId: "#rep_pen_range",
     counterId: "#rep_pen_range_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.rep_pen_range = Number(val);
     },
   },
@@ -288,8 +288,8 @@ const sliders = [
     name: "top_p",
     sliderId: "#top_p",
     counterId: "#top_p_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.top_p = Number(val);
     },
   },
@@ -297,8 +297,8 @@ const sliders = [
     name: "min_p",
     sliderId: "#min_p",
     counterId: "#min_p_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.min_p = Number(val);
     },
   },
@@ -306,8 +306,8 @@ const sliders = [
     name: "top_a",
     sliderId: "#top_a",
     counterId: "#top_a_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.top_a = Number(val);
     },
   },
@@ -315,8 +315,8 @@ const sliders = [
     name: "top_k",
     sliderId: "#top_k",
     counterId: "#top_k_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.top_k = Number(val);
     },
   },
@@ -324,8 +324,8 @@ const sliders = [
     name: "typical",
     sliderId: "#typical_p",
     counterId: "#typical_p_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.typical = Number(val);
     },
   },
@@ -333,8 +333,8 @@ const sliders = [
     name: "tfs",
     sliderId: "#tfs",
     counterId: "#tfs_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.tfs = Number(val);
     },
   },
@@ -342,8 +342,8 @@ const sliders = [
     name: "rep_pen_slope",
     sliderId: "#rep_pen_slope",
     counterId: "#rep_pen_slope_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.rep_pen_slope = Number(val);
     },
   },
@@ -351,8 +351,8 @@ const sliders = [
     name: "sampler_order",
     sliderId: "#no_op_selector",
     counterId: "#no_op_selector",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       sortItemsByOrder(val);
       kai_settings.sampler_order = val;
     },
@@ -361,8 +361,8 @@ const sliders = [
     name: "mirostat",
     sliderId: "#mirostat_mode_kobold",
     counterId: "#mirostat_mode_counter_kobold",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.mirostat = Number(val);
     },
   },
@@ -370,8 +370,8 @@ const sliders = [
     name: "mirostat_tau",
     sliderId: "#mirostat_tau_kobold",
     counterId: "#mirostat_tau_counter_kobold",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.mirostat_tau = Number(val);
     },
   },
@@ -379,8 +379,8 @@ const sliders = [
     name: "mirostat_eta",
     sliderId: "#mirostat_eta_kobold",
     counterId: "#mirostat_eta_counter_kobold",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.mirostat_eta = Number(val);
     },
   },
@@ -388,8 +388,8 @@ const sliders = [
     name: "grammar",
     sliderId: "#grammar",
     counterId: "#grammar_counter_kobold",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.grammar = val;
     },
   },
@@ -397,8 +397,8 @@ const sliders = [
     name: "seed",
     sliderId: "#seed_kobold",
     counterId: "#seed_counter_kobold",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       kai_settings.seed = Number(val);
     },
   },
@@ -409,7 +409,7 @@ const sliders = [
  * @param {string} koboldUnitedVersion Kobold United version
  * @param {string} koboldCppVersion KoboldCPP version
  */
-export function setKoboldFlags(koboldUnitedVersion, koboldCppVersion) {
+export function setKoboldFlags(koboldUnitedVersion: any, koboldCppVersion: any) {
   kai_flags.can_use_stop_sequence = versionCompare(koboldUnitedVersion, MIN_STOP_SEQUENCE_VERSION);
   kai_flags.can_use_streaming = versionCompare(koboldCppVersion, MIN_STREAMING_KCPPVERSION);
   kai_flags.can_use_tokenization = versionCompare(koboldCppVersion, MIN_TOKENIZATION_KCPPVERSION);
@@ -425,7 +425,7 @@ export function setKoboldFlags(koboldUnitedVersion, koboldCppVersion) {
  * Sorts the sampler items by the given order.
  * @param {any[]} orderArray Sampler order array.
  */
-function sortItemsByOrder(orderArray) {
+function sortItemsByOrder(orderArray: any) {
   console.debug("Preset samplers order: " + orderArray);
   const $draggableItems = $("#kobold_order");
 
@@ -525,7 +525,7 @@ export function initKoboldSettings() {
   $("#kobold_order").sortable({
     delay: getSortableDelay(),
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       $("#kobold_order")
         .children()
         .each(function () {

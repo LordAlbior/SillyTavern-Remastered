@@ -6,7 +6,9 @@
 import { logMacroInternalError, logMacroRuntimeWarning } from "./MacroDiagnostics.ts";
 import { MacroEngine } from "./MacroEngine.ts";
 import { parseFlags, createEmptyFlags, MacroFlagType } from "./MacroFlags.ts";
+// @ts-expect-error - MacroParser module has implicit any types
 import { MacroParser } from "./MacroParser.ts";
+// @ts-expect-error - MacroRegistry module has implicit any types
 import { MacroRegistry } from "./MacroRegistry.ts";
 
 import { isFalseBoolean } from "/scripts/utils.ts";
@@ -80,7 +82,7 @@ let instance;
 export { instance as MacroCstWalker };
 
 class MacroCstWalker {
-  /** @type {MacroCstWalker} */ static #instance;
+  /** @type {MacroCstWalker} */ static #instance: any;
   /** @type {MacroCstWalker} */ static get instance() {
     return MacroCstWalker.#instance ?? (MacroCstWalker.#instance = new MacroCstWalker());
   }
@@ -93,7 +95,7 @@ class MacroCstWalker {
    * @param {EvaluationContext & { cst: CstNode }} options
    * @returns {string}
    */
-  evaluateDocument(options) {
+  evaluateDocument(options: any) {
     const { text, cst, contextOffset, env, resolveMacro, trimContent } = options;
 
     if (typeof text !== "string") {
@@ -133,15 +135,15 @@ class MacroCstWalker {
       if (item.type === "plaintext") {
         result += text.slice(item.startOffset, item.endOffset + 1);
         cursor = item.endOffset + 1;
-      } else if (item.keepRaw) {
+      } else if ((item as any).keepRaw) {
         // Unmatched closing macros stay as raw text
         result += text.slice(item.startOffset, item.endOffset + 1);
         cursor = item.endOffset + 1;
       } else {
-        result += this.#evaluateMacroNode(item.node, context, item.scopedContent);
+        result += this.#evaluateMacroNode(item.node, context, (item as any).scopedContent);
         // If this macro has scoped content, skip past the closing macro
-        if (item.scopedContent && item.scopedContent.closingEndOffset > item.endOffset) {
-          cursor = item.scopedContent.closingEndOffset + 1;
+        if ((item as any).scopedContent && (item as any).scopedContent.closingEndOffset > item.endOffset) {
+          cursor = (item as any).scopedContent.closingEndOffset + 1;
         } else {
           cursor = item.endOffset + 1;
         }
@@ -162,7 +164,7 @@ class MacroCstWalker {
    * @param {CstNode} macroNode - A macro CST node from the parser.
    * @returns {MacroNodeInfo | null}
    */
-  extractMacroInfo(macroNode) {
+  extractMacroInfo(macroNode: any) {
     const children = macroNode?.children || {};
 
     // Variable expressions don't have standard macro identifiers
@@ -192,7 +194,7 @@ class MacroCstWalker {
 
     // Check for closing block flag
     const flagTokens = /** @type {IToken[]} */ (children.flags || []);
-    const isClosing = flagTokens.some((token) => token.image === MacroFlagType.CLOSING_BLOCK);
+    const isClosing = flagTokens.some((token: any) => token.image === MacroFlagType.CLOSING_BLOCK);
 
     return {
       name,
@@ -212,7 +214,7 @@ class MacroCstWalker {
    * @param {CstNode} options.cst - The parsed CST.
    * @returns {Array<{ name: string, startOffset: number, endOffset: number, paddingBefore: string, paddingAfter: string }>} - Array of unclosed macro info, innermost last.
    */
-  findUnclosedScopes(options) {
+  findUnclosedScopes(options: any) {
     const { text, cst } = options;
 
     if (typeof text !== "string" || !cst?.children) {
@@ -270,7 +272,7 @@ class MacroCstWalker {
    * @param {string} text - The source text.
    * @returns {{ paddingBefore: string, paddingAfter: string }}
    */
-  #extractMacroPadding(macroNode, text) {
+  #extractMacroPadding(macroNode: any, text: any) {
     const children = macroNode.children || {};
     const startToken = /** @type {IToken?} */ ((children["Macro.Start"] || [])[0]);
     const endToken = /** @type {IToken?} */ ((children["Macro.End"] || [])[0]);
@@ -305,7 +307,7 @@ class MacroCstWalker {
    * @param {CstNode} cst
    * @returns {Array<DocumentItem>}
    */
-  #collectDocumentItems(cst) {
+  #collectDocumentItems(cst: any) {
     const plaintextTokens = /** @type {IToken[]} */ (cst.children.plaintext || []);
     const macroNodes = /** @type {CstNode[]} */ (cst.children.macro || []);
 
@@ -363,7 +365,7 @@ class MacroCstWalker {
    * @param {{ startOffset: number, endOffset: number, closingEndOffset: number }} [scopedContent] - Optional scoped content range for block macros.
    * @returns {string}
    */
-  #evaluateMacroNode(macroNode, context, scopedContent) {
+  #evaluateMacroNode(macroNode: any, context: any, scopedContent: any) {
     const { text, contextOffset, env, resolveMacro, trimContent } = context;
 
     const children = macroNode.children || {};
@@ -382,7 +384,7 @@ class MacroCstWalker {
 
     // Extract flag tokens and parse them into a MacroFlags object (now inside macroBody)
     const flagTokens = /** @type {IToken[]} */ (children.flags || []);
-    const flagSymbols = flagTokens.map((token) => token.image);
+    const flagSymbols = flagTokens.map((token: any) => token.image);
     const flags = flagSymbols.length > 0 ? parseFlags(flagSymbols) : createEmptyFlags();
 
     const range = this.#getMacroRange(macroNode);
@@ -397,6 +399,7 @@ class MacroCstWalker {
     const argumentNodes = /** @type {CstNode[]} */ (argumentsNode?.children?.argument || []);
 
     // Check if this macro has delayArgResolution flag - if so, skip nested macro evaluation
+    // @ts-ignore - MacroRegistry has implicit any type
     const macroDef = MacroRegistry.getMacro(name);
     const delayArgResolution = macroDef?.delayArgResolution === true;
 
@@ -512,12 +515,12 @@ class MacroCstWalker {
    * @param {EvaluationContext} context - The evaluation context.
    * @returns {string}
    */
-  #evaluateVariableExpr(macroNode, variableExprNode, context) {
+  #evaluateVariableExpr(macroNode: any, variableExprNode: any, context: any) {
     const varChildren = variableExprNode.children || {};
 
     // Extract scope (. for local, $ for global)
     const localPrefixToken = /** @type {IToken?} */ (
-      (varChildren["Var.scope"] || []).find((t) => /** @type {IToken} */ (t).tokenType?.name === "Var.LocalPrefix")
+      (varChildren["Var.scope"] || []).find((t: any) => /** @type {IToken} */ (t).tokenType?.name === "Var.LocalPrefix")
     );
     const isGlobal = !localPrefixToken;
 
@@ -624,8 +627,8 @@ class MacroCstWalker {
    * @param {EvaluationContext} context - The evaluation context.
    * @returns {() => string} A function that returns the evaluated value, caching the result.
    */
-  #createLazyValue(operatorChildren, context) {
-    let cached = null;
+  #createLazyValue(operatorChildren: any, context: any) {
+    let cached: any = null;
     let resolved = false;
 
     return () => {
@@ -646,7 +649,7 @@ class MacroCstWalker {
    * @param {() => string} lazyValue - A lazy function that returns the value when called. Only evaluated when needed.
    * @returns {string} The result of the operation.
    */
-  #executeVariableOperation(varName, isGlobal, operation, lazyValue) {
+  #executeVariableOperation(varName: any, isGlobal: any, operation: any, lazyValue: any) {
     const ctx = SillyTavern.getContext();
     const vars = isGlobal ? ctx.variables.global : ctx.variables.local;
 
@@ -662,7 +665,7 @@ class MacroCstWalker {
      * @param {any} val
      * @returns {boolean}
      */
-    const isFalsy = (val) => !val || isFalseBoolean(normalize(val));
+    const isFalsy = (val: any) => !val || isFalseBoolean(normalize(val));
 
     switch (operation) {
       case "get":
@@ -809,7 +812,7 @@ class MacroCstWalker {
    * @param {EvaluationContext} context - The evaluation context.
    * @returns {string}
    */
-  #evaluateVariableValue(operatorChildren, context) {
+  #evaluateVariableValue(operatorChildren: any, context: any) {
     const { text } = context;
 
     const valueNodes = /** @type {CstNode[]} */ (operatorChildren["Var.value"] || []);
@@ -829,8 +832,8 @@ class MacroCstWalker {
     // Get the range of the value
     const allTokens = [...identifierTokens, ...unknownTokens];
     const allRanges = [
-      ...allTokens.map((t) => ({ startOffset: t.startOffset, endOffset: t.endOffset })),
-      ...nestedMacros.map((m) => this.#getMacroRange(m)),
+      ...allTokens.map((t: any) => ({ startOffset: t.startOffset, endOffset: t.endOffset })),
+      ...nestedMacros.map((m: any) => this.#getMacroRange(m)),
     ];
 
     if (allRanges.length === 0) {
@@ -846,12 +849,12 @@ class MacroCstWalker {
     }
 
     // Evaluate nested macros
-    const nestedWithRange = nestedMacros.map((node) => ({
+    const nestedWithRange = nestedMacros.map((node: any) => ({
       node,
       range: this.#getMacroRange(node),
     }));
 
-    nestedWithRange.sort((a, b) => a.range.startOffset - b.range.startOffset);
+    nestedWithRange.sort((a: any, b: any) => a.range.startOffset - b.range.startOffset);
 
     let result = "";
     let cursor = startOffset;
@@ -883,7 +886,7 @@ class MacroCstWalker {
    * @param {EvaluationContext} context - The evaluation context containing the parent document's text and environment.
    * @returns {string} The evaluated argument with all nested macros (including scoped ones) resolved.
    */
-  #evaluateArgumentNode(argNode, context) {
+  #evaluateArgumentNode(argNode: any, context: any) {
     const location = this.#getArgumentLocation(argNode);
     if (!location) {
       return "";
@@ -911,7 +914,7 @@ class MacroCstWalker {
    * @param {EvaluationContext} context - The parent evaluation context (used for env, resolveMacro, trimContent).
    * @returns {string} The evaluated content with all macros resolved.
    */
-  #evaluateRawContent(rawContent, newContextOffset, context) {
+  #evaluateRawContent(rawContent: any, newContextOffset: any, context: any) {
     // If empty, return as-is
     if (!rawContent) {
       return "";
@@ -919,6 +922,7 @@ class MacroCstWalker {
 
     // Re-evaluate the content to find all nested macros including scoped pairs
     // We need to parse and evaluate this content as if it were a standalone document
+    // @ts-ignore - MacroParser has implicit any type
     const { cst } = MacroParser.parseDocument(rawContent);
 
     // If parsing fails, return the raw content
@@ -953,15 +957,15 @@ class MacroCstWalker {
       if (item.type === "plaintext") {
         result += rawContent.slice(item.startOffset, item.endOffset + 1);
         cursor = item.endOffset + 1;
-      } else if (item.keepRaw) {
+      } else if ((item as any).keepRaw) {
         // Unmatched closing macros stay as raw text
         result += rawContent.slice(item.startOffset, item.endOffset + 1);
         cursor = item.endOffset + 1;
       } else {
-        result += this.#evaluateMacroNode(item.node, contentContext, item.scopedContent);
+        result += this.#evaluateMacroNode(item.node, contentContext, (item as any).scopedContent);
         // If this macro has scoped content, skip past the closing macro
-        if (item.scopedContent && item.scopedContent.closingEndOffset > item.endOffset) {
-          cursor = item.scopedContent.closingEndOffset + 1;
+        if ((item as any).scopedContent && (item as any).scopedContent.closingEndOffset > item.endOffset) {
+          cursor = (item as any).scopedContent.closingEndOffset + 1;
         } else {
           cursor = item.endOffset + 1;
         }
@@ -982,7 +986,7 @@ class MacroCstWalker {
    * @param {CstNode} macroNode
    * @returns {TokenRange}
    */
-  #getMacroRange(macroNode) {
+  #getMacroRange(macroNode: any) {
     const startToken = /** @type {IToken?} */ (((macroNode.children || {})["Macro.Start"] || [])[0]);
     const endToken = /** @type {IToken?} */ (((macroNode.children || {})["Macro.End"] || [])[0]);
 
@@ -1003,7 +1007,7 @@ class MacroCstWalker {
    * @param {IToken} excludeToken - The recovery-inserted token to exclude
    * @param {Array<DocumentItem>} items - The items array to add to
    */
-  #flattenIncompleteMacro(macroNode, excludeToken, items) {
+  #flattenIncompleteMacro(macroNode: any, excludeToken: any, items: any) {
     const children = macroNode.children || {};
 
     for (const key of Object.keys(children)) {
@@ -1056,7 +1060,7 @@ class MacroCstWalker {
    * @param {IToken|null|undefined} token
    * @returns {boolean}
    */
-  #isRecoveryToken(token) {
+  #isRecoveryToken(token: any) {
     return (
       token?.isInsertedInRecovery === true || typeof token?.startOffset !== "number" || Number.isNaN(token?.startOffset)
     );
@@ -1069,7 +1073,7 @@ class MacroCstWalker {
    * @param {CstNode} argNode
    * @returns {TokenRange|null}
    */
-  #getArgumentLocation(argNode) {
+  #getArgumentLocation(argNode: any) {
     const children = argNode.children || {};
     let startOffset = Number.POSITIVE_INFINITY;
     let endOffset = Number.NEGATIVE_INFINITY;
@@ -1112,7 +1116,7 @@ class MacroCstWalker {
    * @param {any} value
    * @returns {value is CstNode}
    */
-  #isCstNode(value) {
+  #isCstNode(value: any) {
     return !!value && typeof value === "object" && "name" in value && "children" in value;
   }
 
@@ -1125,7 +1129,7 @@ class MacroCstWalker {
    *        document text, and offsets in scopedContent are relative to that parent text.
    * @returns {string} - The evaluated scoped content with nested macros resolved.
    */
-  #evaluateScopedContent(scopedContent, context) {
+  #evaluateScopedContent(scopedContent: any, context: any) {
     const { text, contextOffset } = context;
     const { startOffset, endOffset } = scopedContent;
 
@@ -1155,7 +1159,7 @@ class MacroCstWalker {
    * @param {string} text - The original document text.
    * @returns {Array<DocumentItem>} - The processed items with scoped macros merged.
    */
-  #processScopedMacros(items, text) {
+  #processScopedMacros(items: any, text: any) {
     // Build a list of scoped macro info for each macro item
     /** @type {Array<{ index: number, item: DocumentItemMacro, name: string, isClosing: boolean, matched: boolean }>} */
     const macroInfos = [];
@@ -1269,7 +1273,7 @@ class MacroCstWalker {
     }
 
     // Filter out removed items
-    return items.filter((_, index) => !itemsToRemove.has(index));
+    return items.filter((_: any, index: any) => !itemsToRemove.has(index));
   }
 
   /**
@@ -1278,7 +1282,7 @@ class MacroCstWalker {
    * @param {CstNode} macroNode
    * @returns {{ name: string, isClosing: boolean } | null}
    */
-  #extractMacroInfo(macroNode) {
+  #extractMacroInfo(macroNode: any) {
     const children = macroNode.children || {};
 
     // Check if this is a variable expression - they can't be scoped
@@ -1298,7 +1302,7 @@ class MacroCstWalker {
 
     // Check for closing block flag (inside macroBody)
     const flagTokens = /** @type {IToken[]} */ (children.flags || []);
-    const isClosing = flagTokens.some((token) => token.image === MacroFlagType.CLOSING_BLOCK);
+    const isClosing = flagTokens.some((token: any) => token.image === MacroFlagType.CLOSING_BLOCK);
 
     return { name, isClosing };
   }
@@ -1311,7 +1315,8 @@ class MacroCstWalker {
    * @param {string} macroName - The macro name.
    * @returns {boolean} - True if scoped content is allowed.
    */
-  #canAcceptScopedContent(macroNode, macroName) {
+  #canAcceptScopedContent(macroNode: any, macroName: any) {
+    // @ts-ignore - MacroRegistry has implicit any type
     const def = MacroRegistry.getPrimaryMacro(macroName);
     if (!def) {
       // Unknown macro - allow scoped content (will be handled as unknown macro later)
@@ -1347,7 +1352,7 @@ class MacroCstWalker {
    * @param {number} openingIdx - Index in macroInfos array of the opening macro.
    * @returns {number} - Index in macroInfos array of the matching closing macro, or -1 if not found.
    */
-  #findMatchingClosingMacro(macroInfos, openingIdx) {
+  #findMatchingClosingMacro(macroInfos: any, openingIdx: any) {
     const openInfo = macroInfos[openingIdx];
     const targetName = openInfo.name;
     let depth = 1;

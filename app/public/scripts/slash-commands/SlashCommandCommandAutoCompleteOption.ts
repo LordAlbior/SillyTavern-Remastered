@@ -12,7 +12,7 @@ export class SlashCommandCommandAutoCompleteOption extends AutoCompleteOption {
    * @param {SlashCommand} command
    * @param {string} name
    */
-  constructor(command, name) {
+  constructor(command: any, name: any) {
     super(name);
     this.command = command;
   }

@@ -1,4 +1,5 @@
-import { MacroRegistry, MacroCategory } from "../engine/MacroRegistry.ts";
+import { MacroCategory } from "../engine/MacroRegistry.ts";
+const MacroRegistry: any = (await import("../engine/MacroRegistry.ts" as string)).MacroRegistry;
 import { power_user } from "../../power-user.ts";
 
 /**
@@ -15,9 +16,9 @@ export function registerInstructMacros() {
    * @param {string} description
    * @param {string} [category=MacroCategory.PROMPTS]
    */
-  function registerSimple(names, getValue, isEnabled, description, category = MacroCategory.PROMPTS) {
+  function registerSimple(names: any, getValue: any, isEnabled: any, description: any, category = MacroCategory.PROMPTS) {
     const [primary, ...aliasNames] = names;
-    const aliases = aliasNames.map((alias) => ({ alias }));
+    const aliases = aliasNames.map((alias: any) => ({ alias }));
 
     MacroRegistry.registerMacro(primary, {
       category,
@@ -134,7 +135,7 @@ export function registerInstructMacros() {
   MacroRegistry.registerMacro("systemPrompt", {
     category: MacroCategory.PROMPTS,
     description: "Active system prompt text (optionally overridden by character prompt)",
-    handler: ({ env }) => {
+    handler: ({ env }: any) => {
       const isEnabled = !!power_user.sysprompt.enabled;
       if (!isEnabled) return "";
 

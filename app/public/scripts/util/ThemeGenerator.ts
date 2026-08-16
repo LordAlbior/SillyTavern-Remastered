@@ -11,7 +11,7 @@
  * @param {number} c sRGB component (0–255)
  * @returns {number} Linear RGB value (0–1)
  */
-function srgbToLinear(c) {
+function srgbToLinear(c: any) {
   c /= 255;
   return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 }
@@ -21,7 +21,7 @@ function srgbToLinear(c) {
  * @param {number} c Linear RGB value (0–1)
  * @returns {number} sRGB component (0–255), clamped
  */
-function linearToSrgb(c) {
+function linearToSrgb(c: any) {
   const v = c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
   return Math.round(Math.min(255, Math.max(0, v * 255)));
 }
@@ -33,7 +33,7 @@ function linearToSrgb(c) {
  * @param {number} b Blue (0–255)
  * @returns {{L: number, C: number, h: number}} Oklch color (h in radians)
  */
-function srgbToOklch(r, g, b) {
+function srgbToOklch(r: any, g: any, b: any) {
   const lr = srgbToLinear(r);
   const lg = srgbToLinear(g);
   const lb = srgbToLinear(b);
@@ -59,7 +59,7 @@ function srgbToOklch(r, g, b) {
  * @param {number} h Hue (radians)
  * @returns {{r: number, g: number, b: number}} sRGB color
  */
-function oklchToSrgb(L, C, h) {
+function oklchToSrgb(L: any, C: any, h: any) {
   const a = C * Math.cos(h);
   const b = C * Math.sin(h);
 
@@ -87,7 +87,7 @@ function oklchToSrgb(L, C, h) {
  * @param {number} b Blue (0–255)
  * @returns {number} Relative luminance (0–1)
  */
-function relativeLuminance(r, g, b) {
+function relativeLuminance(r: any, g: any, b: any) {
   return 0.2126 * srgbToLinear(r) + 0.7152 * srgbToLinear(g) + 0.0722 * srgbToLinear(b);
 }
 
@@ -97,7 +97,7 @@ function relativeLuminance(r, g, b) {
  * @param {{r: number, g: number, b: number}} c2 Second color
  * @returns {number} Contrast ratio (1–21)
  */
-function contrastRatio(c1, c2) {
+function contrastRatio(c1: any, c2: any) {
   const l1 = relativeLuminance(c1.r, c1.g, c1.b);
   const l2 = relativeLuminance(c2.r, c2.g, c2.b);
   const lighter = Math.max(l1, l2);
@@ -114,7 +114,7 @@ function contrastRatio(c1, c2) {
  * @param {HTMLImageElement} imgEl Image element to sample
  * @returns {{r: number, g: number, b: number}} Dominant vivid RGB color
  */
-export function extractDominantColor(imgEl) {
+export function extractDominantColor(imgEl: any) {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
@@ -196,7 +196,7 @@ export function extractDominantColor(imgEl) {
  * @param {boolean} preferLight Whether to push lighter or darker
  * @returns {{L: number, C: number, h: number}} Adjusted Oklch color
  */
-function ensureContrast(L, C, h, refRgb, minContrast, preferLight) {
+function ensureContrast(L: any, C: any, h: any, refRgb: any, minContrast: any, preferLight: any) {
   const direction = preferLight ? 0.02 : -0.02;
 
   for (let i = 0; i < 50; i++) {
@@ -216,7 +216,7 @@ function ensureContrast(L, C, h, refRgb, minContrast, preferLight) {
  * @param {number} [alpha=1] Alpha value
  * @returns {string} RGBA color string
  */
-function rgbaString(rgb, alpha = 1) {
+function rgbaString(rgb: any, alpha: any = 1) {
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
 }
 
@@ -228,7 +228,7 @@ function rgbaString(rgb, alpha = 1) {
  * @param {{r: number, g: number, b: number}} dominantRgb The dominant image color
  * @returns {Partial<Theme>} Theme color properties ready to merge into a theme object
  */
-export function generateThemePalette(dominantRgb) {
+export function generateThemePalette(dominantRgb: any) {
   const base = srgbToOklch(dominantRgb.r, dominantRgb.g, dominantRgb.b);
 
   // Determine if the background is dark or light
@@ -331,7 +331,7 @@ export function generateThemePalette(dominantRgb) {
  * @param {string} bgUrl The background image URL
  * @returns {string} A cleaned-up name suitable for a theme name
  */
-export function deriveBackgroundName(bgUrl) {
+export function deriveBackgroundName(bgUrl: any) {
   // Extract filename from URL path
   let name = bgUrl.split("/").pop() || "background";
   // Remove query strings

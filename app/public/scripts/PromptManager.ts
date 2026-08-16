@@ -11,10 +11,10 @@ import { Popup } from "./popup.ts";
 import { t } from "./i18n.ts";
 import { isMobile } from "./RossAscends-mods.ts";
 
-function debouncePromise(func, delay) {
-  let timeoutId;
+function debouncePromise(func: any, delay: any) {
+  let timeoutId: any;
 
-  return (...args) => {
+  return (...args: any[]) => {
     clearTimeout(timeoutId);
 
     return new Promise((resolve) => {
@@ -41,7 +41,7 @@ export const INJECTION_POSITION = {
  * Register migrations for the prompt manager when settings are loaded or an Open AI preset is loaded.
  */
 const registerPromptManagerMigration = () => {
-  const migrate = (settings, savePreset = null, presetName = null) => {
+  const migrate = (settings: any, savePreset: any = null, presetName: any = null) => {
     if ("Default" === presetName) return;
 
     if (settings.main_prompt || settings.nsfw_prompt || settings.jailbreak_prompt) {
@@ -49,7 +49,7 @@ const registerPromptManagerMigration = () => {
       if (settings.prompts === undefined || settings.prompts.length === 0)
         settings.prompts = structuredClone(chatCompletionDefaultPrompts.prompts);
 
-      const findPrompt = (identifier) => settings.prompts.find((prompt) => identifier === prompt.identifier);
+      const findPrompt = (identifier: any) => settings.prompts.find((prompt: any) => identifier === prompt.identifier);
       if (settings.main_prompt) {
         findPrompt("main").content = settings.main_prompt;
         delete settings.main_prompt;
@@ -65,12 +65,12 @@ const registerPromptManagerMigration = () => {
         delete settings.jailbreak_prompt;
       }
 
-      if (savePreset && presetName) savePreset(presetName, settings, false);
+      if (savePreset && presetName) (savePreset as any)(presetName, settings, false);
     }
   };
 
-  eventSource.on(event_types.SETTINGS_LOADED_BEFORE, (settings) => migrate(settings));
-  eventSource.on(event_types.OAI_PRESET_CHANGED_BEFORE, (event) =>
+  eventSource.on(event_types.SETTINGS_LOADED_BEFORE, (settings: any) => migrate(settings));
+  eventSource.on(event_types.OAI_PRESET_CHANGED_BEFORE, (event: any) =>
     migrate(event.preset, event.savePreset, event.presetName),
   );
 };
@@ -83,7 +83,7 @@ class Prompt {
    * Indicates if the prompt is enabled.
    * @type {boolean}
    */
-  enabled;
+  enabled: any;
 
   /**
    * Unique identifier for the prompt.
@@ -161,7 +161,7 @@ class Prompt {
    * Indicates if the prompt is a marker prompt.
    * @type {boolean}
    */
-  marker;
+  marker: any;
 
   /**
    * Create a new Prompt instance.
@@ -230,7 +230,7 @@ export class PromptCollection {
    *
    * @param {...Prompt} prompts - An array of Prompt instances.
    */
-  constructor(...prompts) {
+  constructor(...prompts: any[]) {
     this.add(...prompts);
   }
 
@@ -240,7 +240,7 @@ export class PromptCollection {
    * @param {...Prompt} prompts - Instances to check.
    * @throws Will throw an error if one or more instances are not of the Prompt class.
    */
-  checkPromptInstance(...prompts) {
+  checkPromptInstance(...prompts: any[]) {
     for (const prompt of prompts) {
       if (!(prompt instanceof Prompt)) {
         throw new Error("Only Prompt instances can be added to PromptCollection");
@@ -253,9 +253,9 @@ export class PromptCollection {
    *
    * @param {...Prompt} prompts - An array of Prompt instances.
    */
-  add(...prompts) {
+  add(...prompts: any[]) {
     this.checkPromptInstance(...prompts);
-    this.collection.push(...prompts);
+    (this.collection as any[]).push(...prompts);
   }
 
   /**
@@ -264,9 +264,9 @@ export class PromptCollection {
    * @param {Prompt} prompt - The Prompt instance to set.
    * @param {number} position - The position in the collection to set the Prompt instance.
    */
-  set(prompt, position) {
+  set(prompt: any, position: any) {
     this.checkPromptInstance(prompt);
-    this.collection[position] = prompt;
+    (this.collection as any[])[position] = prompt;
   }
 
   /**
@@ -275,8 +275,8 @@ export class PromptCollection {
    * @param {string} identifier - The identifier of the Prompt instance to retrieve.
    * @returns {Prompt} The Prompt instance with the provided identifier, or undefined if not found.
    */
-  get(identifier) {
-    return this.collection.find((prompt) => prompt.identifier === identifier);
+  get(identifier: any) {
+    return this.collection.find((prompt: any) => prompt.identifier === identifier);
   }
 
   /**
@@ -285,8 +285,8 @@ export class PromptCollection {
    * @param {string} identifier - The identifier of the Prompt instance to find.
    * @returns {number} The index of the Prompt instance in the collection, or -1 if not found.
    */
-  index(identifier) {
-    return this.collection.findIndex((prompt) => prompt.identifier === identifier);
+  index(identifier: any) {
+    return this.collection.findIndex((prompt: any) => prompt.identifier === identifier);
   }
 
   /**
@@ -295,7 +295,7 @@ export class PromptCollection {
    * @param {string} identifier - The identifier of the Prompt instance to check.
    * @returns {boolean} true if the Prompt instance exists in the collection, false otherwise.
    */
-  has(identifier) {
+  has(identifier: any) {
     return this.index(identifier) !== -1;
   }
 
@@ -305,9 +305,9 @@ export class PromptCollection {
    * @param {Prompt} prompt - The Prompt instance to override.
    * @param {number} position - The position in the collection to override the Prompt instance.
    */
-  override(prompt, position) {
+  override(prompt: any, position: any) {
     this.set(prompt, position);
-    this.overriddenPrompts.push(prompt.identifier);
+    (this.overriddenPrompts as any[]).push(prompt.identifier);
   }
 }
 
@@ -467,7 +467,7 @@ class PromptManager {
    * @param {Object} moduleConfiguration - Configuration object for the PromptManager.
    * @param {Object} serviceSettings - Service settings object for the PromptManager.
    */
-  init(moduleConfiguration, serviceSettings) {
+  init(moduleConfiguration: any, serviceSettings: any) {
     this.configuration = Object.assign(this.configuration, moduleConfiguration);
     this.tokenHandler =
       this.tokenHandler ||
@@ -651,7 +651,7 @@ class PromptManager {
       entrySourceBlock.style.display = isPulledPrompt ? "" : "none";
 
       if (isPulledPrompt) {
-        const sourceName = this.promptSources[promptId];
+        const sourceName = (this.promptSources as Record<string, any>)[promptId];
         entrySource.textContent = sourceName;
       }
     };
@@ -710,7 +710,7 @@ class PromptManager {
 
     // Export all user prompts
     this.handleFullExport = () => {
-      const prompts = this.serviceSettings.prompts.reduce((userPrompts, prompt) => {
+      const prompts = this.serviceSettings.prompts.reduce((userPrompts: any[], prompt: any) => {
         if (false === prompt.system_prompt && false === prompt.marker) userPrompts.push(prompt);
         return userPrompts;
       }, []);
@@ -734,7 +734,7 @@ class PromptManager {
 
     // Export user prompts and order for this character
     this.handleCharacterExport = () => {
-      const characterPrompts = this.getPromptsForCharacter(this.activeCharacter).reduce((userPrompts, prompt) => {
+      const characterPrompts = this.getPromptsForCharacter(this.activeCharacter).reduce((userPrompts: any[], prompt: any) => {
         if (false === prompt.system_prompt && !prompt.marker) userPrompts.push(prompt);
         return userPrompts;
       }, []);
@@ -763,16 +763,16 @@ class PromptManager {
 
           fileOpener.addEventListener("change", (event) => {
             if (!(event.target instanceof HTMLInputElement)) return;
-            const file = event.target.files[0];
+            const file = event.target.files![0];
             if (!file) return;
 
             const reader = new FileReader();
 
             reader.onload = (event) => {
-              const fileContent = event.target.result;
+              const fileContent = event.target!.result;
 
               try {
-                const data = JSON.parse(fileContent.toString());
+                const data = JSON.parse(fileContent!.toString());
                 this.import(data);
               } catch (err) {
                 toastr.error(t`An error occurred while importing prompts. More info available in console.`);
@@ -805,7 +805,7 @@ class PromptManager {
 
     // Fill quick edit fields for the first time
     if ("global" === this.configuration.promptOrder.strategy) {
-      const handleQuickEditSave = (event) => {
+      const handleQuickEditSave = (event: any) => {
         const promptId = event.target.dataset.pmPrompt;
         const prompt = this.getPromptById(promptId);
 
@@ -826,68 +826,68 @@ class PromptManager {
 
       const mainPrompt = this.getPromptById("main");
       const mainElementId = this.updateQuickEdit("main", mainPrompt);
-      document.getElementById(mainElementId).addEventListener("blur", handleQuickEditSave);
+      document.getElementById(mainElementId)!.addEventListener("blur", handleQuickEditSave);
 
       const nsfwPrompt = this.getPromptById("nsfw");
       const nsfwElementId = this.updateQuickEdit("nsfw", nsfwPrompt);
-      document.getElementById(nsfwElementId).addEventListener("blur", handleQuickEditSave);
+      document.getElementById(nsfwElementId)!.addEventListener("blur", handleQuickEditSave);
 
       const jailbreakPrompt = this.getPromptById("jailbreak");
       const jailbreakElementId = this.updateQuickEdit("jailbreak", jailbreakPrompt);
-      document.getElementById(jailbreakElementId).addEventListener("blur", handleQuickEditSave);
+      document.getElementById(jailbreakElementId)!.addEventListener("blur", handleQuickEditSave);
     }
 
     // Re-render when chat history changes.
-    eventSource.on(event_types.MESSAGE_DELETED, () => this.renderDebounced());
-    eventSource.on(event_types.MESSAGE_EDITED, () => this.renderDebounced());
-    eventSource.on(event_types.MESSAGE_RECEIVED, () => this.renderDebounced());
+    eventSource.on(event_types.MESSAGE_DELETED, () => this.renderDebounced!());
+    eventSource.on(event_types.MESSAGE_EDITED, () => this.renderDebounced!());
+    eventSource.on(event_types.MESSAGE_RECEIVED, () => this.renderDebounced!());
 
     // Re-render when chatcompletion settings change
-    eventSource.on(event_types.CHATCOMPLETION_SOURCE_CHANGED, () => this.renderDebounced());
+    eventSource.on(event_types.CHATCOMPLETION_SOURCE_CHANGED, () => this.renderDebounced!());
 
-    eventSource.on(event_types.CHATCOMPLETION_MODEL_CHANGED, () => this.renderDebounced());
+    eventSource.on(event_types.CHATCOMPLETION_MODEL_CHANGED, () => this.renderDebounced!());
 
     // Re-render when the character changes.
-    eventSource.on(event_types.CHAT_LOADED, (event) => {
+    eventSource.on(event_types.CHAT_LOADED, (event: any) => {
       this.handleCharacterSelected(event);
-      this.saveServiceSettings().then(() => this.renderDebounced());
+      this.saveServiceSettings().then(() => this.renderDebounced!());
     });
 
     // Re-render when the character gets edited.
-    eventSource.on(event_types.CHARACTER_EDITED, (event) => {
+    eventSource.on(event_types.CHARACTER_EDITED, (event: any) => {
       this.handleCharacterUpdated(event);
-      this.saveServiceSettings().then(() => this.renderDebounced());
+      this.saveServiceSettings().then(() => this.renderDebounced!());
     });
 
     // Re-render when the group changes.
-    eventSource.on("groupSelected", (event) => {
+    eventSource.on("groupSelected", (event: any) => {
       this.handleGroupSelected(event);
-      this.saveServiceSettings().then(() => this.renderDebounced());
+      this.saveServiceSettings().then(() => this.renderDebounced!());
     });
 
     // Sanitize settings after character has been deleted.
-    eventSource.on(event_types.CHARACTER_DELETED, (event) => {
+    eventSource.on(event_types.CHARACTER_DELETED, (event: any) => {
       this.handleCharacterDeleted(event);
-      this.saveServiceSettings().then(() => this.renderDebounced());
+      this.saveServiceSettings().then(() => this.renderDebounced!());
     });
 
     // Trigger re-render when token settings are changed
-    document.getElementById("openai_max_context").addEventListener("change", (event) => {
+    document.getElementById("openai_max_context")!.addEventListener("change", (event: any) => {
       if (!(event.target instanceof HTMLInputElement)) return;
       this.serviceSettings.openai_max_context = event.target.value;
-      if (this.activeCharacter) this.renderDebounced();
+      if (this.activeCharacter) this.renderDebounced!();
     });
 
-    document.getElementById("openai_max_tokens").addEventListener("change", (event) => {
-      if (this.activeCharacter) this.renderDebounced();
+    document.getElementById("openai_max_tokens")!.addEventListener("change", (event: any) => {
+      if (this.activeCharacter) this.renderDebounced!();
     });
 
     // Prepare prompt edit form buttons
     document
-      .getElementById(this.configuration.prefix + "prompt_manager_popup_entry_form_save")
+      .getElementById(this.configuration.prefix + "prompt_manager_popup_entry_form_save")!
       .addEventListener("click", this.handleSavePrompt);
     document
-      .getElementById(this.configuration.prefix + "prompt_manager_popup_entry_form_reset")
+      .getElementById(this.configuration.prefix + "prompt_manager_popup_entry_form_reset")!
       .addEventListener("click", this.handleResetPrompt);
 
     const closeAndClearPopup = () => {
@@ -898,10 +898,10 @@ class PromptManager {
 
     // Clear forms on closing the popup
     document
-      .getElementById(this.configuration.prefix + "prompt_manager_popup_entry_form_close")
+      .getElementById(this.configuration.prefix + "prompt_manager_popup_entry_form_close")!
       .addEventListener("click", closeAndClearPopup);
     document
-      .getElementById(this.configuration.prefix + "prompt_manager_popup_close_button")
+      .getElementById(this.configuration.prefix + "prompt_manager_popup_close_button")!
       .addEventListener("click", closeAndClearPopup);
     closeAndClearPopup();
 
@@ -919,11 +919,11 @@ class PromptManager {
 
       this.hidePopup();
       this.clearEditForm();
-      this.renderDebounced();
+      this.renderDebounced!();
     });
 
     // Re-render prompt manager on world settings update
-    eventSource.on(event_types.WORLDINFO_SETTINGS_UPDATED, () => this.renderDebounced());
+    eventSource.on(event_types.WORLDINFO_SETTINGS_UPDATED, () => this.renderDebounced!());
 
     this.log("Initialized");
   }
@@ -941,7 +941,7 @@ class PromptManager {
    * Set the scroll position of the prompt manager
    * @param {number} scrollPosition - The scroll position to set
    */
-  #setScrollPosition(scrollPosition) {
+  #setScrollPosition(scrollPosition: any) {
     if (scrollPosition === undefined || scrollPosition === null) return;
     document
       .getElementById(this.configuration.prefix + "prompt_manager")
@@ -996,7 +996,7 @@ class PromptManager {
    * @param {Partial<Prompt>} prompt - The prompt to be updated.
    * @returns {void}
    */
-  updatePromptWithPromptEditForm(prompt) {
+  updatePromptWithPromptEditForm(prompt: any) {
     const nameField = document.getElementById(
       this.configuration.prefix + "prompt_manager_popup_entry_form_name",
     ) as HTMLInputElement;
@@ -1038,8 +1038,8 @@ class PromptManager {
    * @param {Prompt} updatePrompt - An object with properties to be updated in the prompt.
    * @returns {void}
    */
-  updatePromptByIdentifier(identifier, updatePrompt) {
-    let prompt = this.serviceSettings.prompts.find((item) => identifier === item.identifier);
+  updatePromptByIdentifier(identifier: any, updatePrompt: any) {
+    let prompt = this.serviceSettings.prompts.find((item: any) => identifier === item.identifier);
     if (prompt) prompt = Object.assign(prompt, updatePrompt);
   }
 
@@ -1048,8 +1048,8 @@ class PromptManager {
    * @param {Prompt[]} prompts - An array of prompt updates.
    * @returns {void}
    */
-  updatePrompts(prompts) {
-    prompts.forEach((update) => {
+  updatePrompts(prompts: any) {
+    prompts.forEach((update: any) => {
       const prompt = this.getPromptById(update.identifier);
       if (prompt) Object.assign(prompt, update);
     });
@@ -1059,7 +1059,7 @@ class PromptManager {
     return this.tokenHandler;
   }
 
-  isPromptDisabledForActiveCharacter(identifier) {
+  isPromptDisabledForActiveCharacter(identifier: any) {
     const promptOrderEntry = this.getPromptOrderEntry(this.activeCharacter, identifier);
     if (promptOrderEntry) return !promptOrderEntry.enabled;
     return false;
@@ -1071,9 +1071,9 @@ class PromptManager {
    * @param {object} character - The character whose prompt list will be updated.
    * @returns {void}
    */
-  appendPrompt(prompt, character) {
+  appendPrompt(prompt: any, character: any) {
     const promptOrder = this.getPromptOrderForCharacter(character);
-    const index = promptOrder.findIndex((entry) => entry.identifier === prompt.identifier);
+    const index = promptOrder.findIndex((entry: any) => entry.identifier === prompt.identifier);
 
     if (-1 === index) promptOrder.unshift({ identifier: prompt.identifier, enabled: false });
   }
@@ -1085,9 +1085,9 @@ class PromptManager {
    * @returns {void}
    */
   // Remove a prompt from the current characters prompt list
-  detachPrompt(prompt, character) {
+  detachPrompt(prompt: any, character: any) {
     const promptOrder = this.getPromptOrderForCharacter(character);
-    const index = promptOrder.findIndex((entry) => entry.identifier === prompt.identifier);
+    const index = promptOrder.findIndex((entry: any) => entry.identifier === prompt.identifier);
     if (-1 === index) return;
     promptOrder.splice(index, 1);
   }
@@ -1098,7 +1098,7 @@ class PromptManager {
    * @param {string} identifier - The identifier for the new prompt.
    * @returns {void}
    */
-  addPrompt(prompt, identifier) {
+  addPrompt(prompt: any, identifier: any) {
     if (typeof prompt !== "object" || prompt === null) throw new Error("Object is not a prompt");
 
     const newPrompt = {
@@ -1134,7 +1134,7 @@ class PromptManager {
 
     // Add identifiers if there are none assigned to a prompt
     this.serviceSettings.prompts.forEach(
-      (prompt) => prompt && (prompt.identifier = prompt.identifier ?? this.getUuidv4()),
+      (prompt: any) => prompt && (prompt.identifier = prompt.identifier ?? this.getUuidv4()),
     );
 
     if (this.activeCharacter) {
@@ -1143,7 +1143,7 @@ class PromptManager {
         const reference = promptReferences[i];
         if (
           reference &&
-          -1 === this.serviceSettings.prompts.findIndex((prompt) => prompt.identifier === reference.identifier)
+          -1 === this.serviceSettings.prompts.findIndex((prompt: any) => prompt.identifier === reference.identifier)
         ) {
           promptReferences.splice(i, 1);
           this.log("Removed unused reference: " + reference.identifier);
@@ -1158,18 +1158,18 @@ class PromptManager {
    *
    * @param prompts
    */
-  checkForMissingPrompts(prompts) {
-    const defaultPromptIdentifiers = chatCompletionDefaultPrompts.prompts.reduce((list, prompt) => {
+  checkForMissingPrompts(prompts: any) {
+    const defaultPromptIdentifiers = chatCompletionDefaultPrompts.prompts.reduce((list: any[], prompt: any) => {
       list.push(prompt.identifier);
       return list;
     }, []);
 
     const missingIdentifiers = defaultPromptIdentifiers.filter(
-      (identifier) => !prompts.some((prompt) => prompt.identifier === identifier),
+      (identifier: any) => !prompts.some((prompt: any) => prompt.identifier === identifier),
     );
 
-    missingIdentifiers.forEach((identifier) => {
-      const defaultPrompt = chatCompletionDefaultPrompts.prompts.find((prompt) => prompt?.identifier === identifier);
+    missingIdentifiers.forEach((identifier: any) => {
+      const defaultPrompt = chatCompletionDefaultPrompts.prompts.find((prompt: any) => prompt?.identifier === identifier);
       if (defaultPrompt) {
         prompts.push(defaultPrompt);
         this.log(`Missing system prompt: ${defaultPrompt.identifier}. Added default.`);
@@ -1182,7 +1182,7 @@ class PromptManager {
    * @param {Prompt} prompt - The prompt to check.
    * @returns {boolean} True if the prompt is a marker, false otherwise.
    */
-  isPromptInspectionAllowed(prompt) {
+  isPromptInspectionAllowed(prompt: any) {
     return true;
   }
 
@@ -1191,7 +1191,7 @@ class PromptManager {
    * @param {Prompt} prompt - The prompt to check.
    * @returns {boolean} True if the prompt can be deleted, false otherwise.
    */
-  isPromptDeletionAllowed(prompt) {
+  isPromptDeletionAllowed(prompt: any) {
     return false === prompt.system_prompt;
   }
 
@@ -1200,7 +1200,7 @@ class PromptManager {
    * @param {Prompt} prompt - The prompt to check.
    * @returns {boolean} True if the prompt can be edited, false otherwise.
    */
-  isPromptEditAllowed(prompt) {
+  isPromptEditAllowed(prompt: any) {
     const forceEditPrompts = [
       "charDescription",
       "charPersonality",
@@ -1217,7 +1217,7 @@ class PromptManager {
    * @param {Prompt} prompt - The prompt to check.
    * @returns {boolean} True if the prompt can be deleted, false otherwise.
    */
-  isPromptToggleAllowed(prompt) {
+  isPromptToggleAllowed(prompt: any) {
     const forceTogglePrompts = [
       "charDescription",
       "charPersonality",
@@ -1239,7 +1239,7 @@ class PromptManager {
    * @param {object} event - The event object containing the character's ID.
    * @returns void
    */
-  handleCharacterDeleted(event) {
+  handleCharacterDeleted(event: any) {
     if ("global" === this.configuration.promptOrder.strategy) return;
     this.removePromptOrderForCharacter(this.activeCharacter);
     if (this.activeCharacter.id === event.detail.id) this.activeCharacter = null;
@@ -1250,7 +1250,7 @@ class PromptManager {
    * @param {object} event - The event object containing the character's ID and character data.
    * @returns {void}
    */
-  handleCharacterSelected(event) {
+  handleCharacterSelected(event: any) {
     if ("global" === this.configuration.promptOrder.strategy) {
       this.activeCharacter = { id: this.configuration.promptOrder.dummyId };
     } else if ("character" === this.configuration.promptOrder.strategy) {
@@ -1272,7 +1272,7 @@ class PromptManager {
    *
    * @param event
    */
-  handleCharacterUpdated(event) {
+  handleCharacterUpdated(event: any) {
     if ("global" === this.configuration.promptOrder.strategy) {
       this.activeCharacter = { id: this.configuration.promptOrder.dummyId };
     } else if ("character" === this.configuration.promptOrder.strategy) {
@@ -1287,7 +1287,7 @@ class PromptManager {
    *
    * @param event
    */
-  handleGroupSelected(event) {
+  handleGroupSelected(event: any) {
     if ("global" === this.configuration.promptOrder.strategy) {
       this.activeCharacter = { id: this.configuration.promptOrder.dummyId };
     } else if ("character" === this.configuration.promptOrder.strategy) {
@@ -1309,7 +1309,7 @@ class PromptManager {
   getActiveGroupCharacters() {
     // ToDo: Ideally, this should return the actual characters.
     return (this.activeCharacter?.group?.members || []).map(
-      (member) => member && member.substring(0, member.lastIndexOf(".")),
+      (member: any) => member && member.substring(0, member.lastIndexOf(".")),
     );
   }
 
@@ -1319,16 +1319,16 @@ class PromptManager {
    * @param character
    * @param onlyEnabled
    */
-  getPromptsForCharacter(character, onlyEnabled = false) {
+  getPromptsForCharacter(character: any, onlyEnabled = false) {
     return this.getPromptOrderForCharacter(character)
-      .map((item) =>
+      .map((item: any) =>
         true === onlyEnabled
           ? true === item.enabled
             ? this.getPromptById(item.identifier)
             : null
           : this.getPromptById(item.identifier),
       )
-      .filter((prompt) => null !== prompt);
+      .filter((prompt: any) => null !== prompt);
   }
 
   /**
@@ -1336,10 +1336,10 @@ class PromptManager {
    * @param {object|null} character - The character to get the prompt list for.
    * @returns {Partial<Prompt>[]} The prompt list for the character, or an empty array.
    */
-  getPromptOrderForCharacter(character) {
+  getPromptOrderForCharacter(character: any) {
     return !character
       ? []
-      : (this.serviceSettings.prompt_order.find((list) => String(list.character_id) === String(character.id))?.order ??
+      : (this.serviceSettings.prompt_order.find((list: any) => String(list.character_id) === String(character.id))?.order ??
           []);
   }
 
@@ -1348,7 +1348,7 @@ class PromptManager {
    * @param {Partial<Prompt>[]} prompts - The prompts to be set.
    * @returns {void}
    */
-  setPrompts(prompts) {
+  setPrompts(prompts: any) {
     this.serviceSettings.prompts = prompts;
   }
 
@@ -1357,9 +1357,9 @@ class PromptManager {
    * @param {object} character - The character whose prompt list will be removed.
    * @returns {void}
    */
-  removePromptOrderForCharacter(character) {
+  removePromptOrderForCharacter(character: any) {
     const index = this.serviceSettings.prompt_order.findIndex(
-      (list) => String(list.character_id) === String(character.id),
+      (list: any) => String(list.character_id) === String(character.id),
     );
     if (-1 !== index) this.serviceSettings.prompt_order.splice(index, 1);
   }
@@ -1369,7 +1369,7 @@ class PromptManager {
    * @param {Object} character - Object with at least an `id` property
    * @param {Array<Object>} promptOrder - Array of prompt objects
    */
-  addPromptOrderForCharacter(character, promptOrder) {
+  addPromptOrderForCharacter(character: any, promptOrder: any) {
     this.serviceSettings.prompt_order.push({
       character_id: character.id,
       order: JSON.parse(JSON.stringify(promptOrder)),
@@ -1382,8 +1382,8 @@ class PromptManager {
    * @param {string} identifier - Identifier of the prompt list entry
    * @returns {Object|null} The prompt list entry object, or null if not found
    */
-  getPromptOrderEntry(character, identifier) {
-    return this.getPromptOrderForCharacter(character).find((entry) => entry.identifier === identifier) ?? null;
+  getPromptOrderEntry(character: any, identifier: any) {
+    return this.getPromptOrderForCharacter(character).find((entry: any) => entry.identifier === identifier) ?? null;
   }
 
   /**
@@ -1391,8 +1391,8 @@ class PromptManager {
    * @param {string} identifier - Identifier of the prompt
    * @returns {Prompt|null} The prompt object, or null if not found
    */
-  getPromptById(identifier) {
-    return this.serviceSettings.prompts.find((item) => item && item.identifier === identifier) ?? null;
+  getPromptById(identifier: any) {
+    return this.serviceSettings.prompts.find((item: any) => item && item.identifier === identifier) ?? null;
   }
 
   /**
@@ -1400,8 +1400,8 @@ class PromptManager {
    * @param {string} identifier - Identifier of the prompt
    * @returns {number|null} Index of the prompt, or null if not found
    */
-  getPromptIndexById(identifier) {
-    return this.serviceSettings.prompts.findIndex((item) => item.identifier === identifier) ?? null;
+  getPromptIndexById(identifier: any) {
+    return this.serviceSettings.prompts.findIndex((item: any) => item.identifier === identifier) ?? null;
   }
 
   /**
@@ -1411,7 +1411,7 @@ class PromptManager {
    * @param original
    * @returns {Prompt} An object with "role" and "content" properties
    */
-  preparePrompt(prompt, original = null) {
+  preparePrompt(prompt: any, original = null) {
     const groupMembers = this.getActiveGroupCharacters();
     const preparedPrompt = new Prompt(prompt);
 
@@ -1438,7 +1438,7 @@ class PromptManager {
    * and handle input events to update the prompt content.
    *
    */
-  createQuickEdit(identifier, title) {
+  createQuickEdit(identifier: any, title: any) {
     const prompt = this.getPromptById(identifier);
     const textareaIdentifier = `${identifier}_prompt_quick_edit_textarea`;
     const html = `<div class="range-block m-t-1">
@@ -1449,7 +1449,7 @@ class PromptManager {
                     </div>`;
 
     const quickEditContainer = document.getElementById("quick-edit-container");
-    quickEditContainer.insertAdjacentHTML("afterbegin", html);
+    quickEditContainer!.insertAdjacentHTML("afterbegin", html);
 
     const debouncedSaveServiceSettings = debouncePromise(() => this.saveServiceSettings(), 300);
 
@@ -1467,7 +1467,7 @@ class PromptManager {
    * @param {Prompt} prompt - The updated prompt object.
    * @returns {string} The ID of the updated textarea element.
    */
-  updateQuickEdit(identifier, prompt) {
+  updateQuickEdit(identifier: any, prompt: any) {
     const elementId = `${identifier}_prompt_quick_edit_textarea`;
     const textarea = document.getElementById(elementId) as HTMLTextAreaElement;
     textarea.value = prompt.content;
@@ -1482,13 +1482,13 @@ class PromptManager {
    * @param name
    * @returns {boolean}
    */
-  isValidName(name) {
+  isValidName(name: any) {
     const regex = /^[a-zA-Z0-9_]{1,64}$/;
 
     return regex.test(name);
   }
 
-  sanitizeName(name) {
+  sanitizeName(name: any) {
     return name.replace(/[^a-zA-Z0-9_]/g, "_").substring(0, 64);
   }
 
@@ -1496,7 +1496,7 @@ class PromptManager {
    * Loads a given prompt into the edit form fields.
    * @param {Partial<Prompt>} prompt - Prompt object with properties 'name', 'role', 'content', and 'system_prompt'
    */
-  loadPromptIntoEditForm(prompt) {
+  loadPromptIntoEditForm(prompt: any) {
     const nameField = document.getElementById(
       this.configuration.prefix + "prompt_manager_popup_entry_form_name",
     ) as HTMLInputElement;
@@ -1559,7 +1559,7 @@ class PromptManager {
     entrySourceBlock.style.display = isPulledPrompt ? "" : "none";
 
     if (isPulledPrompt) {
-      const sourceName = this.promptSources[prompt.identifier];
+      const sourceName = (this.promptSources as Record<string, any>)[prompt.identifier];
       entrySource.textContent = sourceName;
     }
 
@@ -1567,10 +1567,10 @@ class PromptManager {
       this.configuration.prefix + "prompt_manager_popup_entry_form_reset",
     );
     if (true === prompt.system_prompt) {
-      resetPromptButton.style.display = "block";
-      resetPromptButton.dataset.pmPrompt = prompt.identifier;
+      resetPromptButton!.style.display = "block";
+      resetPromptButton!.dataset.pmPrompt = prompt.identifier;
     } else {
-      resetPromptButton.style.display = "none";
+      resetPromptButton!.style.display = "none";
     }
 
     injectionPositionField.removeEventListener("change", (e) => this.handleInjectionPositionChange(e));
@@ -1579,19 +1579,19 @@ class PromptManager {
     const savePromptButton = document.getElementById(
       this.configuration.prefix + "prompt_manager_popup_entry_form_save",
     );
-    savePromptButton.dataset.pmPrompt = prompt.identifier;
+    savePromptButton!.dataset.pmPrompt = prompt.identifier;
   }
 
-  handleInjectionPositionChange(event) {
+  handleInjectionPositionChange(event: any) {
     const injectionDepthBlock = document.getElementById(this.configuration.prefix + "prompt_manager_depth_block");
     const injectionOrderBlock = document.getElementById(this.configuration.prefix + "prompt_manager_order_block");
     const injectionPosition = Number(event.target.value);
     if (injectionPosition === INJECTION_POSITION.ABSOLUTE) {
-      injectionDepthBlock.style.visibility = "visible";
-      injectionOrderBlock.style.visibility = "visible";
+      injectionDepthBlock!.style.visibility = "visible";
+      injectionOrderBlock!.style.visibility = "visible";
     } else {
-      injectionDepthBlock.style.visibility = "hidden";
-      injectionOrderBlock.style.visibility = "hidden";
+      injectionDepthBlock!.style.visibility = "hidden";
+      injectionOrderBlock!.style.visibility = "hidden";
     }
   }
 
@@ -1599,10 +1599,10 @@ class PromptManager {
    * Loads a given prompt into the inspect form
    * @param {MessageCollection} messages - Prompt object with properties 'name', 'role', 'content', and 'system_prompt'
    */
-  loadMessagesIntoInspectForm(messages) {
+  loadMessagesIntoInspectForm(messages: any) {
     if (!messages) return;
 
-    const createInlineDrawer = (message) => {
+    const createInlineDrawer = (message: any) => {
       const truncatedTitle = message.content.length > 32 ? message.content.slice(0, 32) + "..." : message.content;
       const title = message.identifier || truncatedTitle;
       const role = message.role;
@@ -1631,10 +1631,10 @@ class PromptManager {
     const messagesCollection = messages instanceof Message ? [messages] : messages.getCollection();
 
     if (0 === messagesCollection.length)
-      messageList.innerHTML = "<span>This marker does not contain any prompts.</span>";
+      messageList!.innerHTML = "<span>This marker does not contain any prompts.</span>";
 
-    messagesCollection.forEach((message) => {
-      messageList.append(createInlineDrawer(message));
+    messagesCollection.forEach((message: any) => {
+      messageList!.append(createInlineDrawer(message)!);
     });
   }
 
@@ -1643,7 +1643,7 @@ class PromptManager {
    */
   clearEditForm() {
     const editArea = document.getElementById(this.configuration.prefix + "prompt_manager_popup_edit");
-    editArea.style.display = "none";
+    editArea!.style.display = "none";
 
     const nameField = document.getElementById(
       this.configuration.prefix + "prompt_manager_popup_entry_form_name",
@@ -1706,11 +1706,11 @@ class PromptManager {
 
   clearInspectForm() {
     const inspectArea = document.getElementById(this.configuration.prefix + "prompt_manager_popup_inspect");
-    inspectArea.style.display = "none";
+    inspectArea!.style.display = "none";
     const messageList = document.getElementById(
       this.configuration.prefix + "prompt_manager_popup_entry_form_inspect_list",
     );
-    messageList.innerHTML = "";
+    messageList!.innerHTML = "";
   }
 
   /**
@@ -1718,14 +1718,14 @@ class PromptManager {
    * @param {string} generationType - The type of generation, e.g., 'continue' or 'quiet'.
    * @returns {PromptCollection} A PromptCollection object
    */
-  getPromptCollection(generationType) {
+  getPromptCollection(generationType: any) {
     generationType = String(generationType || "normal")
       .toLowerCase()
       .trim();
     const promptCollection = new PromptCollection();
     const promptOrder = this.getPromptOrderForCharacter(this.activeCharacter);
 
-    promptOrder.forEach((entry) => {
+    promptOrder.forEach((entry: any) => {
       const prompt = this.getPromptById(entry.identifier);
       const allowedTrigger = entry.enabled && this.shouldTrigger(prompt, generationType);
 
@@ -1753,7 +1753,7 @@ class PromptManager {
    * @param {string} generationType - The type of generation to check against.
    * @returns {boolean} True if the prompt should be triggered, false otherwise.
    */
-  shouldTrigger(prompt, generationType) {
+  shouldTrigger(prompt: any, generationType: any) {
     if (!Array.isArray(prompt?.injection_trigger)) return true;
     if (!prompt.injection_trigger.length) return true;
     return prompt.injection_trigger.includes(generationType);
@@ -1764,7 +1764,7 @@ class PromptManager {
    *
    * @param {import('./openai.js').MessageCollection} messages
    */
-  setMessages(messages) {
+  setMessages(messages: any) {
     this.messages = messages;
   }
 
@@ -1773,7 +1773,7 @@ class PromptManager {
    *
    * @param {import('./openai.js').ChatCompletion} chatCompletion
    */
-  setChatCompletion(chatCompletion) {
+  setChatCompletion(chatCompletion: any) {
     const messages = chatCompletion.getMessages();
 
     this.setMessages(messages);
@@ -1786,10 +1786,10 @@ class PromptManager {
    *
    * @param {import('./openai.js').MessageCollection} messages
    */
-  populateTokenCounts(messages) {
+  populateTokenCounts(messages: any) {
     this.tokenHandler.resetCounts();
     const counts = this.tokenHandler.getCounts();
-    messages.getCollection().forEach((message) => {
+    messages.getCollection().forEach((message: any) => {
       counts[message.identifier] = message.getTokens();
     });
 
@@ -1885,7 +1885,7 @@ class PromptManager {
 
     let listItemHtml = await renderTemplateAsync("promptManagerListHeader", { prefix });
 
-    this.getPromptsForCharacter(this.activeCharacter).forEach((prompt) => {
+    this.getPromptsForCharacter(this.activeCharacter).forEach((prompt: any) => {
       if (!prompt) return;
 
       const listEntry = this.getPromptOrderEntry(this.activeCharacter, prompt.identifier);
@@ -1966,8 +1966,8 @@ class PromptManager {
         assistant: { roleIcon: "fa-robot", roleTitle: "Prompt will be sent as Assistant" },
         user: { roleIcon: "fa-user", roleTitle: "Prompt will be sent as User" },
       };
-      const roleIcon = promptRoles[iconLookup]?.roleIcon || "";
-      const roleTitle = promptRoles[iconLookup]?.roleTitle || "";
+      const roleIcon = (promptRoles as Record<string, any>)[iconLookup]?.roleIcon || "";
+      const roleTitle = (promptRoles as Record<string, any>)[iconLookup]?.roleTitle || "";
 
       listItemHtml += `
                 <li class="${prefix}prompt_manager_prompt ${draggableClass} ${enabledClass} ${markerClass} ${importantClass}" data-pm-identifier="${escapeHtml(prompt.identifier)}">
@@ -2031,7 +2031,7 @@ class PromptManager {
    * @param type
    * @param name
    */
-  export(data, type, name = "export") {
+  export(data: any, type: any, name = "export") {
     const promptExport = {
       version: this.configuration.version,
       type: type,
@@ -2057,8 +2057,8 @@ class PromptManager {
    *
    * @param importData
    */
-  import(importData) {
-    const mergeKeepNewer = (prompts, newPrompts) => {
+  import(importData: any) {
+    const mergeKeepNewer = (prompts: any, newPrompts: any) => {
       let merged = [...prompts, ...newPrompts];
 
       const map = new Map();
@@ -2115,7 +2115,7 @@ class PromptManager {
    * @param object
    * @returns {boolean}
    */
-  validateObject(controlObj, object) {
+  validateObject(controlObj: any, object: any) {
     for (const key in controlObj) {
       if (!Object.hasOwn(object, key)) {
         if (controlObj[key] === null) continue;
@@ -2161,13 +2161,13 @@ class PromptManager {
       delay: this.configuration.sortableDelay,
       handle: isMobile() ? ".drag-handle" : null,
       items: `.${this.configuration.prefix}prompt_manager_prompt_draggable`,
-      update: (event, ui) => {
+      update: (event: any, ui: any) => {
         const promptOrder = this.getPromptOrderForCharacter(this.activeCharacter);
         const promptListElement = $(`#${this.configuration.prefix}prompt_manager_list`).sortable("toArray", {
           attribute: "data-pm-identifier",
         });
-        const idToObjectMap = new Map(promptOrder.map((prompt) => [prompt.identifier, prompt]));
-        const updatedPromptOrder = promptListElement.map((identifier) => idToObjectMap.get(identifier));
+        const idToObjectMap = new Map(promptOrder.map((prompt: any) => [prompt.identifier, prompt]));
+        const updatedPromptOrder = promptListElement.map((identifier: any) => idToObjectMap.get(identifier));
 
         this.removePromptOrderForCharacter(this.activeCharacter);
         this.addPromptOrderForCharacter(this.activeCharacter, updatedPromptOrder);
@@ -2185,7 +2185,7 @@ class PromptManager {
    */
   showPopup(area = "edit") {
     const areaElement = document.getElementById(this.configuration.prefix + "prompt_manager_popup_" + area);
-    areaElement.style.display = "flex";
+    areaElement!.style.display = "flex";
 
     $("#" + this.configuration.prefix + "prompt_manager_popup")
       .first()
@@ -2217,7 +2217,7 @@ class PromptManager {
    *
    * @param output
    */
-  log(output) {
+  log(output: any) {
     if (power_user.console_log_prompts) console.log("[PromptManager] " + output);
   }
 
@@ -2226,7 +2226,7 @@ class PromptManager {
    *
    * @param identifier
    */
-  profileStart(identifier) {
+  profileStart(identifier: any) {
     if (power_user.console_log_prompts) console.time(identifier);
   }
 
@@ -2235,7 +2235,7 @@ class PromptManager {
    *
    * @param identifier
    */
-  profileEnd(identifier) {
+  profileEnd(identifier: any) {
     if (power_user.console_log_prompts) {
       this.log('Profiling of "' + identifier + '" finished. Result below.');
       console.timeEnd(identifier);

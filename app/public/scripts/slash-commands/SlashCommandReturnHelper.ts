@@ -100,7 +100,7 @@ export const slashCommandReturnHelper = {
    * @param {(o: object) => string} [options.objectToHtmlFunc=null] Analog to 'objectToStringFunc', which will be used here if not provided - but can do a different string layout if HTML is requested
    * @returns {Promise<*>} The processed return value
    */
-  async doReturn(type, value, { objectToStringFunc = (o) => o?.toString(), objectToHtmlFunc = null } = {}) {
+  async doReturn(type: any, value: any, { objectToStringFunc = (o: any) => o?.toString(), objectToHtmlFunc = null }: any = {}) {
     const shouldHtml = type.endsWith("html");
     const actualConverterFunc = shouldHtml && objectToHtmlFunc ? objectToHtmlFunc : objectToStringFunc;
     const stringValue = typeof value !== "string" ? actualConverterFunc(value) : value;
@@ -119,7 +119,7 @@ export const slashCommandReturnHelper = {
         if (type.startsWith("popup"))
           await callGenericPopup(htmlOrNotHtml, POPUP_TYPE.TEXT, "", { allowVerticalScrolling: true, wide: true });
         if (type.startsWith("chat")) sendSystemMessage(system_message_types.GENERIC, htmlOrNotHtml);
-        if (type.startsWith("toast")) toastr.info(htmlOrNotHtml, null, { escapeHtml: !shouldHtml });
+        if (type.startsWith("toast")) toastr.info(htmlOrNotHtml, null as any, { escapeHtml: !shouldHtml });
 
         return "";
       }

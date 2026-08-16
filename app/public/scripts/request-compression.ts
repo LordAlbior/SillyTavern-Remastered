@@ -18,7 +18,7 @@ const requestCompressionConfig = {
  * Sets the configuration for request compression from the server.
  * @param {RequestCompressionConfig} config Configuration object for request compression
  */
-export function setRequestCompressionConfig(config) {
+export function setRequestCompressionConfig(config: any) {
     Object.assign(requestCompressionConfig, (config ?? {}));
 }
 
@@ -27,7 +27,7 @@ export function setRequestCompressionConfig(config) {
  * @param {Uint8Array<ArrayBuffer>} input Uint8Array to compress
  * @returns {{ promise: Promise<Uint8Array<ArrayBuffer>>, terminate: () => void }} Gzip-compressed Uint8Array promise and a terminate function.
  */
-function gzipBuffer(input) {
+function gzipBuffer(input: any) {
     let terminate = /** @type {() => void} */ (() => {});
     // @ts-ignore - runtime path, no type declarations
     const promise = import('/lib.js').then(({ gzip }) => {
@@ -59,7 +59,7 @@ function gzipBuffer(input) {
  * @returns {Promise<T>} Resolves with the original promise's value if it settles in time, otherwise rejects with a timeout error
  * @template T Type of the promise's resolved value
  */
-async function withTimeout(promise, timeoutMs, label) {
+async function withTimeout(promise: any, timeoutMs: any, label: any) {
     let timeoutId = null;
     const timeoutPromise = new Promise((_, reject) => {
         timeoutId = setTimeout(() => reject(new Error(`${label}_timeout`)), timeoutMs);
@@ -82,7 +82,7 @@ async function withTimeout(promise, timeoutMs, label) {
  * @param {RequestInit} request fetch request parameters
  * @returns {Promise<RequestInit>} A request init object that may include gzip-compressed body
  */
-export async function compressRequest(request) {
+export async function compressRequest(request: any) {
     const plainRequest = { ...request };
     const requestBody = plainRequest?.body;
 

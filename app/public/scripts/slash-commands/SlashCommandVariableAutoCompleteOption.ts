@@ -4,7 +4,7 @@ export class SlashCommandVariableAutoCompleteOption extends AutoCompleteOption {
   /**
    * @param {string} name
    */
-  constructor(name) {
+  constructor(name: any) {
     super(name);
   }
 

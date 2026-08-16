@@ -118,7 +118,7 @@ async function setSpinnerIcon() {
  * @param {string} caption Raw caption
  * @returns {Promise<string>} Wrapped caption
  */
-async function wrapCaptionTemplate(caption) {
+async function wrapCaptionTemplate(caption: any) {
   let template = extension_settings.caption.template || TEMPLATE_DEFAULT;
 
   if (!/{{caption}}/i.test(template)) {
@@ -150,7 +150,7 @@ async function wrapCaptionTemplate(caption) {
  * @param {number} mediaIndex Index of the image to caption
  * @returns {Promise<void>}
  */
-async function captionExistingMessage(message, mediaIndex) {
+async function captionExistingMessage(message: any, mediaIndex: any) {
   if (!Array.isArray(message?.extra?.media) || message.extra.media.length === 0) {
     return;
   }
@@ -204,7 +204,7 @@ async function captionExistingMessage(message, mediaIndex) {
  * @param {string} mimeType Image MIME type
  * @returns {Promise<void>}
  */
-async function sendCaptionedMessage(caption, image, mimeType) {
+async function sendCaptionedMessage(caption: any, image: any, mimeType: any) {
   const messageText = await wrapCaptionTemplate(caption);
 
   const context = getContext();
@@ -247,7 +247,7 @@ async function sendCaptionedMessage(caption, image, mimeType) {
  * @param {string} externalPrompt Caption prompt
  * @returns {Promise<{caption: string}>} Generated caption
  */
-async function doCaptionRequest(base64Img, fileData, externalPrompt) {
+async function doCaptionRequest(base64Img: any, fileData: any, externalPrompt: any) {
   switch (extension_settings.caption.source) {
     case "local":
       return await captionLocal(base64Img);
@@ -267,8 +267,8 @@ async function doCaptionRequest(base64Img, fileData, externalPrompt) {
  * @param {string} base64Img Base64 encoded image without the data:image/...;base64, prefix
  * @returns {Promise<{caption: string}>} Generated caption
  */
-async function captionExtras(base64Img) {
-  if (!modules.includes("caption")) {
+async function captionExtras(base64Img: any) {
+  if (!(modules as any[]).includes("caption")) {
     throw new Error("No captioning module is available.");
   }
 
@@ -297,7 +297,7 @@ async function captionExtras(base64Img) {
  * @param {string} base64Img Base64 encoded image without the data:image/...;base64, prefix
  * @returns {Promise<{caption: string}>} Generated caption
  */
-async function captionLocal(base64Img) {
+async function captionLocal(base64Img: any) {
   const apiResult = await fetch("/api/extra/caption", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -317,7 +317,7 @@ async function captionLocal(base64Img) {
  * @param {string} base64Img Base64 encoded image without the data:image/...;base64, prefix
  * @returns {Promise<{caption: string}>} Generated caption
  */
-async function captionHorde(base64Img) {
+async function captionHorde(base64Img: any) {
   const apiResult = await fetch("/api/horde/caption-image", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -338,7 +338,7 @@ async function captionHorde(base64Img) {
  * @param {string} externalPrompt Caption prompt
  * @returns {Promise<{caption: string}>} Generated caption
  */
-async function captionMultimodal(base64Img, externalPrompt) {
+async function captionMultimodal(base64Img: any, externalPrompt: any) {
   let prompt = externalPrompt || extension_settings.caption.prompt || PROMPT_DEFAULT;
 
   if (!externalPrompt && extension_settings.caption.prompt_ask) {
@@ -362,7 +362,7 @@ async function captionMultimodal(base64Img, externalPrompt) {
  * @param {boolean} quiet Suppresses sending a message
  * @returns {Promise<string>} Generated caption
  */
-async function onSelectImage(e, prompt, quiet) {
+async function onSelectImage(e: any, prompt: any, quiet: any) {
   if (!(e.target instanceof HTMLInputElement)) {
     return "";
   }
@@ -387,7 +387,7 @@ async function onSelectImage(e, prompt, quiet) {
  * @param {boolean} quiet Suppresses sending a message
  * @returns {Promise<string>} Generated caption
  */
-async function getCaptionForFile(file, prompt, quiet) {
+async function getCaptionForFile(file: any, prompt: any, quiet: any) {
   try {
     if (file.type.startsWith("video/") && !isVideoCaptioningAvailable()) {
       throw new Error("Video captioning is not available for the current source.");
@@ -424,7 +424,7 @@ function onRefineModeInput() {
  * @param {object} args Named parameters
  * @param {string} prompt Caption prompt
  */
-async function captionCommandCallback(args, prompt) {
+async function captionCommandCallback(args: any, prompt: any) {
   const quiet = isTrueBoolean(args?.quiet);
   const messageId = args?.mesId ?? args?.id;
   const index = Number(args?.index ?? 0);
@@ -498,7 +498,7 @@ export async function init() {
         const settings = extension_settings.caption;
 
         // Handle non-multimodal sources
-        if (settings.source === "extras" && modules.includes("caption")) return true;
+        if (settings.source === "extras" && (modules as any[]).includes("caption")) return true;
         if (settings.source === "local" || settings.source === "horde") return true;
 
         // Handle multimodal sources
@@ -519,8 +519,8 @@ export async function init() {
             moonshot: SECRET_KEYS.MOONSHOT,
           };
 
-          if (reverseProxyApis[api]) {
-            if (secret_state[reverseProxyApis[api]] || settings.allow_reverse_proxy) {
+          if ((reverseProxyApis as Record<string, any>)[api]) {
+            if ((secret_state as Record<string, any>)[(reverseProxyApis as Record<string, any>)[api]] || settings.allow_reverse_proxy) {
               return true;
             }
           }
@@ -537,7 +537,7 @@ export async function init() {
             workers_ai: SECRET_KEYS.WORKERS_AI,
           };
 
-          if (chatCompletionApis[api] && secret_state[chatCompletionApis[api]]) {
+          if ((chatCompletionApis as Record<string, any>)[api] && (secret_state as Record<string, any>)[(chatCompletionApis as Record<string, any>)[api]]) {
             return true;
           }
 
@@ -549,14 +549,14 @@ export async function init() {
             vllm: textgen_types.VLLM,
           };
 
-          if (textCompletionApis[api] && altEndpointEnabled && altEndpointUrl) {
+          if ((textCompletionApis as Record<string, any>)[api] && altEndpointEnabled && altEndpointUrl) {
             return true;
           }
 
           if (
-            textCompletionApis[api] &&
+            (textCompletionApis as Record<string, any>)[api] &&
             !altEndpointEnabled &&
-            textgenerationwebui_settings.server_urls[textCompletionApis[api]]
+            (textgenerationwebui_settings.server_urls as Record<string, any>)[(textCompletionApis as Record<string, any>)[api]]
           ) {
             return true;
           }
@@ -615,7 +615,7 @@ export async function init() {
   }
 
   async function addRemoteEndpointModels() {
-    async function processEndpoint(api, url, additionalParams = {}) {
+    async function processEndpoint(api: any, url: any, additionalParams = {}) {
       const dropdown = document.getElementById("caption_multimodal_model");
       if (!(dropdown instanceof HTMLSelectElement)) {
         return;
@@ -711,7 +711,7 @@ export async function init() {
       ollama_current: textgenerationwebui_settings.ollama_model,
       ollama_custom: extension_settings.caption.ollama_custom_model,
     };
-    const presetModel = staticModels[selectedModel] || selectedModel;
+    const presetModel = (staticModels as Record<string, any>)[selectedModel] || selectedModel;
     e.preventDefault();
     $("#ollama_download_model").trigger("click");
     $(".popup .popup-input").val(presetModel);
@@ -763,7 +763,7 @@ export async function init() {
     saveSettingsDebounced();
   });
 
-  const onMessageEvent = async (/** @type {number} */ messageId) => {
+  const onMessageEvent = async (/** @type {number} */ messageId: any) => {
     if (!extension_settings.caption.auto_mode) {
       return;
     }
@@ -828,7 +828,7 @@ export async function init() {
           [ARGUMENT_TYPE.BOOLEAN],
           false,
           false,
-          "false",
+          "false" as any,
         ),
         SlashCommandNamedArgument.fromProps({
           name: "mesId",

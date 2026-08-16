@@ -1,25 +1,25 @@
 import { QuickReplySet } from "./QuickReplySet.ts";
 
 export class QuickReplySetLink {
-  static from(props) {
+  static from(props: any) {
     props.set = QuickReplySet.get(props.set);
     /**@type {QuickReplySetLink}*/
     const instance = Object.assign(new this(), props);
     return instance;
   }
 
-  /**@type {QuickReplySet}*/ set;
+  /**@type {QuickReplySet}*/ set: any;
   /**@type {Boolean}*/ isVisible = true;
 
-  /**@type {Number}*/ index;
+  /**@type {Number}*/ index: any;
 
-  /**@type {Function}*/ onUpdate;
-  /**@type {Function}*/ onRequestEditSet;
-  /**@type {Function}*/ onDelete;
+  /**@type {Function}*/ onUpdate: any;
+  /**@type {Function}*/ onRequestEditSet: any;
+  /**@type {Function}*/ onDelete: any;
 
-  /**@type {HTMLElement}*/ settingsDom;
+  /**@type {HTMLElement}*/ settingsDom: any;
 
-  renderSettings(idx) {
+  renderSettings(idx: any) {
     this.index = idx;
     const item = document.createElement("div");
     {

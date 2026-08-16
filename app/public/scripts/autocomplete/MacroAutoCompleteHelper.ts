@@ -23,8 +23,15 @@ import {
 } from "./EnhancedMacroAutoCompleteOption.ts";
 import { macros as macroSystem } from "../macros/macro-system.ts";
 import { MacroFlagDefinitions, MacroFlagType } from "../macros/engine/MacroFlags.ts";
+// @ts-ignore - MacroParser has implicit any type from JS source
 import { MacroParser } from "../macros/engine/MacroParser.ts";
+// @ts-ignore - MacroCstWalker has implicit any type from JS source
 import { MacroCstWalker } from "../macros/engine/MacroCstWalker.ts";
+
+// @ts-ignore - Type assertions to suppress TS7005 errors on usage
+const MacroParserTyped = MacroParser;
+// @ts-ignore - Type assertions to suppress TS7005 errors on usage
+const MacroCstWalkerTyped = MacroCstWalker;
 import { onboardingExperimentalMacroEngine } from "../macros/engine/MacroDiagnostics.ts";
 
 import { chat_metadata } from "/script.ts";
@@ -68,16 +75,16 @@ import { extension_settings } from "../extensions.ts";
  * @param {string} textUpToCursor - The document text up to the cursor position.
  * @returns {Array<{ name: string, startOffset: number, endOffset: number, paddingBefore: string, paddingAfter: string }>}
  */
-export function findUnclosedScopes(textUpToCursor) {
+export function findUnclosedScopes(textUpToCursor: any) {
   if (!textUpToCursor) return [];
 
   try {
     // Parse the document to get the CST
-    const { cst } = MacroParser.parseDocument(textUpToCursor);
+    const { cst } = MacroParserTyped.parseDocument(textUpToCursor);
     if (!cst) return [];
 
     // Use the CST walker to find unclosed scopes
-    return MacroCstWalker.findUnclosedScopes({ text: textUpToCursor, cst });
+    return MacroCstWalkerTyped.findUnclosedScopes({ text: textUpToCursor, cst });
   } catch {
     // If parsing fails (incomplete input), fall back to simple regex approach
     return findUnclosedScopesRegex(textUpToCursor);
@@ -91,7 +98,7 @@ export function findUnclosedScopes(textUpToCursor) {
  * @param {string} text - The text to analyze.
  * @returns {Array<{ name: string, startOffset: number, endOffset: number, paddingBefore: string, paddingAfter: string }>}
  */
-export function findUnclosedScopesRegex(text) {
+export function findUnclosedScopesRegex(text: any) {
   // Regex to find macro openings and closings, capturing whitespace padding
   // Group 1: padding after {{, Group 2: optional /, Group 3: macro name
   const macroPattern = /\{\{(\s*)(\/?)([\w-]+)/g;
@@ -146,7 +153,7 @@ export function findUnclosedScopesRegex(text) {
  * @param {string} textUpToCursor - The text up to cursor to parse the macro content.
  * @returns {boolean} - True if the scope content is optional.
  */
-function isScopeOptional(scope, textUpToCursor) {
+function isScopeOptional(scope: any, textUpToCursor: any) {
   const def = macroSystem.registry.getPrimaryMacro(scope.name);
   if (!def) {
     // Unknown macro - treat scope as required (show hint)
@@ -192,14 +199,14 @@ function isScopeOptional(scope, textUpToCursor) {
  * @param {boolean} isForced - Whether autocomplete was force-triggered.
  * @returns {UnclosedScope[]} - Filtered scopes (excludes optional scopes unless forced).
  */
-function filterOptionalScopes(unclosedScopes, textUpToCursor, isForced) {
+function filterOptionalScopes(unclosedScopes: any, textUpToCursor: any, isForced: any) {
   if (isForced) {
     // When forced, show all scopes including optional ones
     return unclosedScopes;
   }
 
   // Filter out scopes where the scope content is optional
-  return unclosedScopes.filter((scope) => !isScopeOptional(scope, textUpToCursor));
+  return unclosedScopes.filter((scope: any) => !isScopeOptional(scope, textUpToCursor));
 }
 
 /**
@@ -208,7 +215,7 @@ function filterOptionalScopes(unclosedScopes, textUpToCursor, isForced) {
  * @param {any} [opts] - Optional configuration.
  * @returns {AnyMacroAutoCompleteOption[]}
  */
-export function buildVariableShorthandOptions(context, opts: any = {}) {
+export function buildVariableShorthandOptions(context: any, opts: any = {}) {
   const { forIfCondition = false, paddingAfter = "" } = opts;
   /** @type {AnyMacroAutoCompleteOption[]} */
   const options = [];
@@ -461,7 +468,7 @@ export function buildVariableShorthandOptions(context, opts: any = {}) {
  * @param {boolean} [opts.isForced=false] - Whether autocomplete was force-triggered (Ctrl+Space).
  * @returns {AnyMacroAutoCompleteOption[]}
  */
-export function buildEnhancedMacroOptions(context, textUpToCursor, { isForced = false } = {}) {
+export function buildEnhancedMacroOptions(context: any, textUpToCursor: any, { isForced = false }: any = {}) {
   /** @type {AnyMacroAutoCompleteOption[]} */
   const options = [];
 
@@ -579,7 +586,7 @@ export function buildEnhancedMacroOptions(context, textUpToCursor, { isForced = 
   const shouldShowMatchingMacroDetails = isTypingArgs || isTypingClosingBrace;
 
   // Check if we're inside a scoped {{if}} for {{else}} selectability
-  const isInsideScopedIf = unclosedScopes.some((scope) => scope.name === "if");
+  const isInsideScopedIf = unclosedScopes.some((scope: any) => scope.name === "if");
 
   // Track if any macro matches the identifier (for "no match" message)
   let hasMatchingMacro = false;
@@ -658,7 +665,7 @@ export function buildEnhancedMacroOptions(context, textUpToCursor, { isForced = 
         name: context.identifier,
         symbol: "❌",
         description: `No macro found: "${context.identifier}"`,
-        detailedDescription: `The macro name <code>${context.identifier}</code> does not exist.<br><br>Check spelling or use a different macro name.`,
+        detailedDescription: `The macro name <code>${context.identifier}</code> does not exist.<br><br>Check spelling or use a different macro name.` as any,
         type: "error",
       });
       noMatchOption.valueProvider = () => "";
@@ -679,7 +686,7 @@ export function buildEnhancedMacroOptions(context, textUpToCursor, { isForced = 
  * @param {string} macroInnerText - The text inside the macro braces (e.g., "  if  pers" from "{{  if  pers").
  * @returns {AutoCompleteOption[]}
  */
-export function buildIfConditionOptions(context, allMacros, macroInnerText) {
+export function buildIfConditionOptions(context: any, allMacros: any, macroInnerText: any) {
   /** @type {AutoCompleteOption[]} */
   const options = [];
 
@@ -700,7 +707,7 @@ export function buildIfConditionOptions(context, allMacros, macroInnerText) {
     symbol: "🔁",
     description: "Invert condition (NOT)",
     detailedDescription:
-      "Inverts the condition result. If the condition is truthy, it becomes falsy, and vice versa.<br><br>Example: <code>{{if !myVar}}</code> executes when <code>myVar</code> is empty or zero.",
+      "Inverts the condition result. If the condition is truthy, it becomes falsy, and vice versa.<br><br>Example: <code>{{if !myVar}}</code> executes when <code>myVar</code> is empty or zero." as any,
     type: "inverse",
   });
 
@@ -778,11 +785,11 @@ export function buildIfConditionOptions(context, allMacros, macroInnerText) {
     // Skip internal/utility macros that don't make sense as conditions
     if (["else", "noop", "trim", "//"].includes(macro.name)) continue;
 
-    const option = new EnhancedMacroAutoCompleteOption(macro, {
+    const option = new EnhancedMacroAutoCompleteOption(macro, ({
       noBraces: true,
       paddingAfter,
       closeWithBraces: true,
-    });
+    } as any));
     options.push(option);
   }
 
@@ -797,7 +804,7 @@ export function buildIfConditionOptions(context, allMacros, macroInnerText) {
  * @param {number} cursorPos - The cursor position in the text.
  * @returns {{ start: number, end: number, content: string } | null}
  */
-export function findMacroAtCursor(text, cursorPos) {
+export function findMacroAtCursor(text: any, cursorPos: any) {
   // Search backwards for opening {{ while tracking nesting depth for nested macros
   let openPos = -1;
   let depth = 0;
@@ -882,7 +889,7 @@ export function findMacroAtCursor(text, cursorPos) {
  * @param {'local'|'global'} scope - The variable scope.
  * @returns {string[]} Array of variable names.
  */
-export function getVariableNames(scope) {
+export function getVariableNames(scope: any) {
   try {
     // Import chat_metadata and extension_settings dynamically to avoid circular deps
     // These are the same sources used by commonEnumProviders.variables
@@ -915,9 +922,9 @@ export function getVariableNames(scope) {
  * @returns {Promise<AutoCompleteNameResult|null>}
  */
 export async function buildMacroAutoCompleteResult(
-  text,
-  cursorPos,
-  { macro = null, textUpToCursor = null, unclosedScopes = null, isForced = false } = {},
+  text: any,
+  cursorPos: any,
+  { macro = null, textUpToCursor = null, unclosedScopes = null, isForced = false }: any = {},
 ) {
   // Compute textUpToCursor if not provided
   if (textUpToCursor === null) {
@@ -960,11 +967,11 @@ export async function buildMacroAutoCompleteResult(
 
         const macroDef = macroSystem.registry.getPrimaryMacro(scopedMacro.name);
         if (macroDef) {
-          const scopedOption = new EnhancedMacroAutoCompleteOption(macroDef, scopedContext);
+          const scopedOption = new EnhancedMacroAutoCompleteOption(macroDef, scopedContext as any);
           scopedOption.valueProvider = () => "";
           scopedOption.makeSelectable = false;
 
-          return new AutoCompleteNameResult(scopedMacro.name, scopedMacro.startOffset + 2, [scopedOption], false);
+          return new AutoCompleteNameResult(scopedMacro.name, scopedMacro.startOffset + 2, [scopedOption] as any, false);
         }
       }
     }
@@ -999,11 +1006,11 @@ export async function buildMacroAutoCompleteResult(
 
         const macroDef = macroSystem.registry.getPrimaryMacro(scopedMacro.name);
         if (macroDef) {
-          const scopedOption = new EnhancedMacroAutoCompleteOption(macroDef, scopedContext);
+          const scopedOption = new EnhancedMacroAutoCompleteOption(macroDef, scopedContext as any);
           scopedOption.valueProvider = () => "";
           scopedOption.makeSelectable = false;
 
-          return new AutoCompleteNameResult(scopedMacro.name, macro.start + 2, [scopedOption], false);
+          return new AutoCompleteNameResult(scopedMacro.name, macro.start + 2, [scopedOption] as any, false);
         }
       }
     }
@@ -1021,11 +1028,11 @@ export async function buildMacroAutoCompleteResult(
           currentArgIndex: -1, // No argument highlight
           isClosingTag: true,
         });
-        const closingOption = new EnhancedMacroAutoCompleteOption(macroDef, closingContext);
+        const closingOption = new EnhancedMacroAutoCompleteOption(macroDef, closingContext as any);
         closingOption.valueProvider = () => "";
         closingOption.makeSelectable = false;
 
-        return new AutoCompleteNameResult(macroDef.name, macro.start + 2, [closingOption], false);
+        return new AutoCompleteNameResult(macroDef.name, macro.start + 2, [closingOption] as any, false);
       }
     }
 
@@ -1098,7 +1105,7 @@ export async function buildMacroAutoCompleteResult(
     return new AutoCompleteNameResult(
       resultIdentifier,
       resultStart,
-      options,
+      options as any,
       false,
       () =>
         isTypingVarShorthand
@@ -1183,7 +1190,7 @@ export async function buildMacroAutoCompleteResult(
     }
   }
 
-  return new AutoCompleteNameResult(resultIdentifier, resultStart, options, false, makeNoMatchText, makeNoOptionsText);
+  return new AutoCompleteNameResult(resultIdentifier, resultStart, options as any, false, makeNoMatchText, makeNoOptionsText);
 }
 
 /**
@@ -1196,7 +1203,7 @@ export async function buildMacroAutoCompleteResult(
  * @param {boolean} [options.isForced=false] - Whether autocomplete was force-triggered (Ctrl+Space).
  * @returns {Promise<AutoCompleteNameResult|null>}
  */
-export async function getMacroAutoCompleteAt(text, cursorPos, { isForced = false } = {}) {
+export async function getMacroAutoCompleteAt(text: any, cursorPos: any, { isForced = false }: any = {}) {
   const macro = findMacroAtCursor(text, cursorPos);
   return buildMacroAutoCompleteResult(text, cursorPos, { macro, isForced });
 }

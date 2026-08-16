@@ -8,7 +8,7 @@ import { debounce_timeout } from "./constants.ts";
 export class DragAndDropHandler {
   /** @private @type {JQuery.Selector} */ selector;
   /** @private @type {(files: File[], event:JQuery.DropEvent<HTMLElement, undefined, any, any>) => void} */ onDropCallback;
-  /** @private @type {NodeJS.Timeout} Remark: Not actually NodeJS timeout, but it's close */ dragLeaveTimeout;
+  /** @private @type {NodeJS.Timeout} Remark: Not actually NodeJS timeout, but it's close */ dragLeaveTimeout: any;
 
   /** @private @type {boolean} */ noAnimation;
 
@@ -17,7 +17,7 @@ export class DragAndDropHandler {
    * @param {JQuery.Selector} selector - The CSS selector for the elements to enable drag and drop
    * @param {(files: File[], event:JQuery.DropEvent<HTMLElement, undefined, any, any>) => void} onDropCallback - The callback function to handle the drop event
    */
-  constructor(selector, onDropCallback, { noAnimation = false } = {}) {
+  constructor(selector: any, onDropCallback: any, { noAnimation = false } = {}) {
     this.selector = selector;
     this.onDropCallback = onDropCallback;
     this.dragLeaveTimeout = null;
@@ -68,7 +68,7 @@ export class DragAndDropHandler {
    * @param {JQuery.DragOverEvent<HTMLElement, undefined, any, any>} event - The dragover event
    * @private
    */
-  handleDragOver(event) {
+  handleDragOver(event: any) {
     event.preventDefault();
     event.stopPropagation();
     clearTimeout(this.dragLeaveTimeout);
@@ -80,7 +80,7 @@ export class DragAndDropHandler {
    * @param {JQuery.DragLeaveEvent<HTMLElement, undefined, any, any>} event - The dragleave event
    * @private
    */
-  handleDragLeave(event) {
+  handleDragLeave(event: any) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -95,7 +95,7 @@ export class DragAndDropHandler {
    * @param {JQuery.DropEvent<HTMLElement, undefined, any, any>} event - The drop event
    * @private
    */
-  handleDrop(event) {
+  handleDrop(event: any) {
     event.preventDefault();
     event.stopPropagation();
     clearTimeout(this.dragLeaveTimeout);

@@ -71,7 +71,7 @@ export const onboardingExperimentalMacroEngineMutex = new SimpleMutex(onboarding
  * @param {string|null} feature - The feature that requires the experimental macro engine, or null if not applicable or unknown.
  * @returns {Promise<void>} - A promise that resolves when the user has been onboarded.
  */
-export const onboardingExperimentalMacroEngine = (...args) => onboardingExperimentalMacroEngineMutex.update(...args);
+export const onboardingExperimentalMacroEngine = (...args: any[]) => onboardingExperimentalMacroEngineMutex.update(...args);
 
 /**
  * Creates an error representing a runtime macro invocation problem (such as
@@ -82,7 +82,7 @@ export const onboardingExperimentalMacroEngine = (...args) => onboardingExperime
  * @param {MacroRuntimeErrorOptions} options
  * @returns {Error}
  */
-export function createMacroRuntimeError({ message, call, def, macroName }) {
+export function createMacroRuntimeError({ message, call, def, macroName }: any) {
   const inferredName = inferMacroName(call, def, macroName);
 
   const error = new Error(message);
@@ -108,7 +108,7 @@ export function createMacroRuntimeError({ message, call, def, macroName }) {
  *
  * @param {MacroLogOptions} options
  */
-export function logMacroRuntimeWarning({ message, call, def, macroName, error }) {
+export function logMacroRuntimeWarning({ message, call, def, macroName, error }: any) {
   const payload = buildMacroPayload({ call, def, macroName, error });
   console.warn("[Macro] Warning:", message, payload);
 }
@@ -119,7 +119,7 @@ export function logMacroRuntimeWarning({ message, call, def, macroName, error })
  *
  * @param {MacroLogOptions} options
  */
-export function logMacroInternalError({ message, call, macroName, error }) {
+export function logMacroInternalError({ message, call, macroName, error }: any) {
   const payload = buildMacroPayload({ call, def: undefined, macroName, error });
   console.error("[Macro] Error:", message, payload);
 }
@@ -129,7 +129,7 @@ export function logMacroInternalError({ message, call, macroName, error }) {
  *
  * @param {{ message: string, macroName?: string, error?: any }} options
  */
-export function logMacroRegisterWarning({ message, macroName, error = undefined }) {
+export function logMacroRegisterWarning({ message, macroName, error = undefined }: any) {
   const payload = buildMacroPayload({ macroName, error });
   console.warn("[Macro] Warning:", message, payload);
 }
@@ -140,7 +140,7 @@ export function logMacroRegisterWarning({ message, macroName, error = undefined 
  *
  * @param {{ message: string, macroName?: string, error?: any }} options
  */
-export function logMacroRegisterError({ message, macroName, error = undefined }) {
+export function logMacroRegisterError({ message, macroName, error = undefined }: any) {
   const payload = buildMacroPayload({ macroName, error });
   console.error("[Macro] Registration Error:", message, payload);
 }
@@ -150,7 +150,7 @@ export function logMacroRegisterError({ message, macroName, error = undefined })
  *
  * @param {{ message: string, error?: any }} options
  */
-export function logMacroGeneralError({ message, error }) {
+export function logMacroGeneralError({ message, error }: any) {
   console.error("[Macro] Error:", message, error);
 }
 
@@ -160,13 +160,13 @@ export function logMacroGeneralError({ message, error }) {
  *
  * @param {{ phase: 'lexing', input: string, errors: ILexingError[] }|{ phase: 'parsing', input: string, errors: IRecognitionException[] }} options
  */
-export function logMacroSyntaxWarning({ phase, input, errors }) {
+export function logMacroSyntaxWarning({ phase, input, errors }: any) {
   if (!errors || errors.length === 0) {
     return;
   }
 
   /** @type {{ message: string, line: number|null, column: number|null, length: number|null }[]} */
-  const issues = errors.map((err) => {
+  const issues = errors.map((err: any) => {
     const hasOwnLine = typeof err.line === "number";
     const hasOwnColumn = typeof err.column === "number";
 
@@ -243,7 +243,7 @@ function buildMacroPayload(ctx: any) {
  * @param {string} [explicit]
  * @returns {string}
  */
-function inferMacroName(call, def, explicit) {
+function inferMacroName(call: any, def: any, explicit: any) {
   if (typeof explicit === "string" && explicit.trim()) {
     return explicit.trim();
   }

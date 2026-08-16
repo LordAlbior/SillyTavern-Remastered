@@ -69,7 +69,7 @@ export const ENCODE_TOKENIZERS = [
  * Populated in initTokenziers due to circular dependencies.
  * @type {string[]}
  */
-export const TEXTGEN_TOKENIZERS = [];
+export const TEXTGEN_TOKENIZERS: any[] = [];
 
 const TOKENIZER_URLS = {
   [tokenizers.GPT2]: {
@@ -172,7 +172,7 @@ let tokenCache = {};
  * @param {string} str String to tokenize.
  * @returns {number} Token count.
  */
-export function guesstimate(str) {
+export function guesstimate(str: any) {
   const byteLength = textEncoder.encode(str).length;
   return Math.ceil(byteLength / BYTES_PER_TOKEN);
 }
@@ -199,7 +199,7 @@ export async function saveTokenCache() {
 async function resetTokenCache() {
   try {
     console.debug("Chat Completions: resetting token cache");
-    Object.keys(tokenCache).forEach((key) => delete tokenCache[key]);
+    Object.keys(tokenCache).forEach((key: any) => delete (tokenCache as Record<string, any>)[key]);
     await objectStore.removeItem("tokenCache");
     toastr.success("Token cache cleared. Please reload the chat to re-tokenize it.");
   } catch (e) {
@@ -222,8 +222,8 @@ export function getAvailableTokenizers() {
   const tokenizerOptions = $("#tokenizer").find("option").toArray();
   return tokenizerOptions.map((tokenizerOption) => ({
     tokenizerId: Number(tokenizerOption.value),
-    tokenizerKey: Object.entries(tokenizers)
-      .find(([_, value]) => value === Number(tokenizerOption.value))[0]
+    tokenizerKey: (Object.entries(tokenizers) as [string, any][])
+      .find(([_, value]) => value === Number(tokenizerOption.value))![0]
       .toLocaleLowerCase(),
     tokenizerName: tokenizerOption.text,
   }));
@@ -233,7 +233,7 @@ export function getAvailableTokenizers() {
  * Selects tokenizer if not already selected.
  * @param {number} tokenizerId Tokenizer ID.
  */
-export function selectTokenizer(tokenizerId) {
+export function selectTokenizer(tokenizerId: any) {
   if (tokenizerId !== power_user.tokenizer) {
     const tokenizer = getAvailableTokenizers().find((tokenizer) => tokenizer.tokenizerId === tokenizerId);
     if (!tokenizer) {
@@ -250,7 +250,7 @@ export function selectTokenizer(tokenizerId) {
  * @param {string} forApi API to get the tokenizer for. Defaults to the main API.
  * @returns {Tokenizer} Tokenizer info
  */
-export function getFriendlyTokenizerName(forApi) {
+export function getFriendlyTokenizerName(forApi: any) {
   if (!forApi) {
     forApi = main_api;
   }
@@ -279,8 +279,8 @@ export function getFriendlyTokenizerName(forApi) {
 
   tokenizerId = forApi == "openai" ? tokenizers.OPENAI : tokenizerId;
 
-  const tokenizerKey = Object.entries(tokenizers)
-    .find(([_, value]) => value === tokenizerId)[0]
+  const tokenizerKey = (Object.entries(tokenizers) as [string, any][])
+    .find(([_, value]) => value === tokenizerId)![0]
     .toLocaleLowerCase();
 
   return { tokenizerName, tokenizerKey, tokenizerId };
@@ -291,7 +291,7 @@ export function getFriendlyTokenizerName(forApi) {
  * @param {string} forApi API to get the tokenizer for. Defaults to the main API.
  * @returns {number} Tokenizer type.
  */
-export function getTokenizerBestMatch(forApi) {
+export function getTokenizerBestMatch(forApi: any) {
   if (!forApi) {
     forApi = main_api;
   }
@@ -393,7 +393,7 @@ function currentRemoteTokenizerAPI() {
  * @param {string} str String to tokenize.
  * @returns {number} Token count.
  */
-function callTokenizer(type, str) {
+function callTokenizer(type: any, str: any): any {
   if (type === tokenizers.NONE) return guesstimate(str);
 
   switch (type) {
@@ -420,7 +420,7 @@ function callTokenizer(type, str) {
  * @param {string} str String to tokenize.
  * @returns {Promise<number>} Token count.
  */
-function callTokenizerAsync(type, str) {
+function callTokenizerAsync(type: any, str: any): any {
   return new Promise((resolve) => {
     if (type === tokenizers.NONE) {
       return resolve(guesstimate(str));
@@ -451,7 +451,7 @@ function callTokenizerAsync(type, str) {
  * @param {number | undefined} padding Optional padding tokens. Defaults to 0.
  * @returns {Promise<number>} Token count.
  */
-export async function getTokenCountAsync(str, padding = undefined) {
+export async function getTokenCountAsync(str: any, padding: any = undefined) {
   if (typeof str !== "string" || !str?.length) {
     return 0;
   }
@@ -507,7 +507,7 @@ export async function getTokenCountAsync(str, padding = undefined) {
  * @returns {number} Token count.
  * @deprecated Use getTokenCountAsync instead.
  */
-export function getTokenCount(str, padding = undefined) {
+export function getTokenCount(str: any, padding: any = undefined): any {
   if (typeof str !== "string" || !str?.length) {
     return 0;
   }
@@ -562,7 +562,7 @@ export function getTokenCount(str, padding = undefined) {
  * @returns {number} Token count.
  * @deprecated Use counterWrapperOpenAIAsync instead.
  */
-function counterWrapperOpenAI(text) {
+function counterWrapperOpenAI(text: any) {
   const message = { role: "system", content: text };
   return countTokensOpenAI(message, true);
 }
@@ -572,7 +572,7 @@ function counterWrapperOpenAI(text) {
  * @param {string} text Text to tokenize.
  * @returns {Promise<number>} Token count.
  */
-function counterWrapperOpenAIAsync(text) {
+function counterWrapperOpenAIAsync(text: any) {
   const message = { role: "system", content: text };
   return countTokensOpenAIAsync(message, true);
 }
@@ -825,7 +825,7 @@ export function getTokenizerModel() {
  * @param {any[] | Object} messages
  * @deprecated Use countTokensOpenAIAsync instead.
  */
-export function countTokensOpenAI(messages, full = false) {
+export function countTokensOpenAI(messages: any, full: any = false) {
   const tokenizerEndpoint = `/api/tokenizers/openai/count?model=${getTokenizerModel()}`;
   const cacheObject = getTokenCacheObject();
 
@@ -875,7 +875,7 @@ export function countTokensOpenAI(messages, full = false) {
  * @param {boolean} full
  * @returns {Promise<number>} Token count.
  */
-export async function countTokensOpenAIAsync(messages, full = false) {
+export async function countTokensOpenAIAsync(messages: any, full: any = false) {
   const tokenizerEndpoint = `/api/tokenizers/openai/count?model=${getTokenizerModel()}`;
   const cacheObject = getTokenCacheObject();
 
@@ -929,17 +929,17 @@ function getTokenCacheObject() {
     if (selected_group) {
       chatId = groups.find((x) => x.id == selected_group)?.chat_id;
     } else if (this_chid !== undefined) {
-      chatId = characters[this_chid].chat;
+      chatId = (characters as any)[this_chid].chat;
     }
   } catch {
     console.log("No character / group selected. Using default cache item");
   }
 
-  if (typeof tokenCache[chatId] !== "object") {
-    tokenCache[chatId] = {};
+  if (typeof (tokenCache as Record<string, any>)[chatId] !== "object") {
+    (tokenCache as Record<string, any>)[chatId] = {};
   }
 
-  return tokenCache[String(chatId)];
+  return (tokenCache as Record<string, any>)[String(chatId)];
 }
 
 /**
@@ -949,7 +949,7 @@ function getTokenCacheObject() {
  * @param {function} [resolve] Promise resolve function.s
  * @returns {number} Token count.
  */
-function countTokensFromServer(endpoint, str, resolve) {
+function countTokensFromServer(endpoint: any, str: any, resolve: any) {
   const isAsync = typeof resolve === "function";
   let tokenCount = 0;
 
@@ -980,7 +980,7 @@ function countTokensFromServer(endpoint, str, resolve) {
  * @param {function} [resolve] Promise resolve function.
  * @returns {number} Token count.
  */
-function countTokensFromKoboldAPI(str, resolve) {
+function countTokensFromKoboldAPI(str: any, resolve: any) {
   const isAsync = typeof resolve === "function";
   let tokenCount = 0;
 
@@ -1008,7 +1008,7 @@ function countTokensFromKoboldAPI(str, resolve) {
   return tokenCount;
 }
 
-function getTextgenAPITokenizationParams(str) {
+function getTextgenAPITokenizationParams(str: any) {
   return {
     text: str,
     api_type: textgen_settings.type,
@@ -1023,7 +1023,7 @@ function getTextgenAPITokenizationParams(str) {
  * @param {function} [resolve] Promise resolve function.
  * @returns {number} Token count.
  */
-function countTokensFromTextgenAPI(str, resolve) {
+function countTokensFromTextgenAPI(str: any, resolve: any) {
   const isAsync = typeof resolve === "function";
   let tokenCount = 0;
 
@@ -1048,7 +1048,7 @@ function countTokensFromTextgenAPI(str, resolve) {
   return tokenCount;
 }
 
-function apiFailureTokenCount(str) {
+function apiFailureTokenCount(str: any) {
   console.error("Error counting tokens");
   let shouldTryAgain = false;
 
@@ -1079,9 +1079,9 @@ function apiFailureTokenCount(str) {
  * @param {function} [resolve] Promise resolve function.
  * @returns {number[]} Array of token ids.
  */
-function getTextTokensFromServer(endpoint, str, resolve) {
+function getTextTokensFromServer(endpoint: any, str: any, resolve: any) {
   const isAsync = typeof resolve === "function";
-  let ids = [];
+  let ids: any[] = [];
   jQuery.ajax({
     async: isAsync,
     type: "POST",
@@ -1109,9 +1109,9 @@ function getTextTokensFromServer(endpoint, str, resolve) {
  * @param {function} [resolve] Promise resolve function.
  * @returns {number[]} Array of token ids.
  */
-function getTextTokensFromTextgenAPI(str, resolve) {
+function getTextTokensFromTextgenAPI(str: any, resolve: any) {
   const isAsync = typeof resolve === "function";
-  let ids = [];
+  let ids: any[] = [];
   jQuery.ajax({
     async: isAsync,
     type: "POST",
@@ -1133,9 +1133,9 @@ function getTextTokensFromTextgenAPI(str, resolve) {
  * @param {function} [resolve] Promise resolve function.
  * @returns {number[]} Array of token ids.
  */
-function getTextTokensFromKoboldAPI(str, resolve) {
+function getTextTokensFromKoboldAPI(str: any, resolve: any) {
   const isAsync = typeof resolve === "function";
-  let ids = [];
+  let ids: any[] = [];
 
   jQuery.ajax({
     async: isAsync,
@@ -1163,10 +1163,10 @@ function getTextTokensFromKoboldAPI(str, resolve) {
  * @param {function} [resolve] Promise resolve function.
  * @returns {({ text: string, chunks?: string[] })} Decoded token text as a single string and individual chunks (if available).
  */
-function decodeTextTokensFromServer(endpoint, ids, resolve) {
+function decodeTextTokensFromServer(endpoint: any, ids: any, resolve: any) {
   const isAsync = typeof resolve === "function";
   let text = "";
-  let chunks = [];
+  let chunks: any[] = [];
   jQuery.ajax({
     async: isAsync,
     type: "POST",
@@ -1189,7 +1189,7 @@ function decodeTextTokensFromServer(endpoint, ids, resolve) {
  * @param {string} str String to tokenize.
  * @returns {number[]} Array of token ids.
  */
-export function getTextTokens(tokenizerType, str) {
+export function getTextTokens(tokenizerType: any, str: any) {
   switch (tokenizerType) {
     case tokenizers.API_CURRENT:
       return getTextTokens(currentRemoteTokenizerAPI(), str);
@@ -1224,7 +1224,7 @@ export function getTextTokens(tokenizerType, str) {
  * @param {number[]} ids Array of token ids
  * @returns {({ text: string, chunks?: string[] })} Decoded token text as a single string and individual chunks (if available).
  */
-export function decodeTextTokens(tokenizerType, ids) {
+export function decodeTextTokens(tokenizerType: any, ids: any) {
   // Currently, neither remote API can decode, but this may change in the future. Put this guard here to be safe
   if (tokenizerType === tokenizers.API_CURRENT) {
     return decodeTextTokens(tokenizers.NONE, ids);

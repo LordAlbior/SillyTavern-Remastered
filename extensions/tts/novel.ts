@@ -11,8 +11,8 @@ class NovelTtsProvider {
   // Config //
   //########//
 
-  settings;
-  voices = [];
+  settings: any;
+  voices: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -26,7 +26,7 @@ class NovelTtsProvider {
    * @param {string} text Input text
    * @returns {string} Processed text
    */
-  processText(text) {
+  processText(text: any) {
     // Novel reads tilde as a word. Replace with full stop
     text = text.replace(/~/g, ".");
     // Novel reads asterisk as a word. Remove it
@@ -80,12 +80,12 @@ class NovelTtsProvider {
   populateCustomVoices() {
     const voiceSelect = $("#tts-novel-custom-voices-select");
     voiceSelect.empty();
-    this.settings.customVoices.forEach((voice) => {
+    this.settings.customVoices.forEach((voice: any) => {
       voiceSelect.append(`<option>${voice}</option>`);
     });
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -123,7 +123,7 @@ class NovelTtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (!voiceName) {
       throw "TTS Voice name not provided";
     }
@@ -137,7 +137,7 @@ class NovelTtsProvider {
    * @param {string} voiceId Voice ID
    * @returns {AsyncGenerator<Response>} Audio response generator
    */
-  generateTts(text, voiceId) {
+  generateTts(text: any, voiceId: any) {
     return this.fetchTtsGeneration(text, voiceId);
   }
 
@@ -162,7 +162,7 @@ class NovelTtsProvider {
     ];
 
     // Add in custom voices to the map
-    const addVoices = this.settings.customVoices.map((voice) => ({
+    const addVoices = this.settings.customVoices.map((voice: any) => ({
       name: voice,
       voice_id: voice,
       lang: "en-US",
@@ -173,7 +173,7 @@ class NovelTtsProvider {
     return voices;
   }
 
-  async previewTtsVoice(id) {
+  async previewTtsVoice(id: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
 
@@ -191,7 +191,7 @@ class NovelTtsProvider {
     }
   }
 
-  async *fetchTtsGeneration(inputText, voiceId) {
+  async *fetchTtsGeneration(inputText: any, voiceId: any) {
     const MAX_LENGTH = 1000;
     console.info(`Generating new TTS for voice_id ${voiceId}`);
     const chunks = splitRecursive(inputText, MAX_LENGTH);

@@ -5,50 +5,50 @@ import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgument
 import { SlashCommandUnnamedArgumentAssignment } from "./SlashCommandUnnamedArgumentAssignment.ts";
 
 export class SlashCommandExecutor {
-  /**@type {Boolean}*/ injectPipe = true;
-  /**@type {Number}*/ start;
-  /**@type {Number}*/ end;
-  /**@type {Number}*/ startNamedArgs;
-  /**@type {Number}*/ endNamedArgs;
-  /**@type {Number}*/ startUnnamedArgs;
-  /**@type {Number}*/ endUnnamedArgs;
-  /**@type {String}*/ name = "";
-  /**@type {String}*/ #source = uuidv4();
+  /**@type {Boolean}*/ injectPipe: boolean = true;
+  /**@type {Number}*/ start!: number;
+  /**@type {Number}*/ end!: number;
+  /**@type {Number}*/ startNamedArgs!: number;
+  /**@type {Number}*/ endNamedArgs!: number;
+  /**@type {Number}*/ startUnnamedArgs!: number;
+  /**@type {Number}*/ endUnnamedArgs!: number;
+  /**@type {String}*/ name: string = "";
+  /**@type {String}*/ #source: string = uuidv4();
   get source() {
     return this.#source;
   }
-  set source(value) {
+  set source(value: string) {
     this.#source = value;
-    for (const arg of this.namedArgumentList.filter((it) => it.value instanceof SlashCommandClosure)) {
+    for (const arg of this.namedArgumentList.filter((it: any) => it.value instanceof SlashCommandClosure)) {
       arg.value.source = value;
     }
-    for (const arg of this.unnamedArgumentList.filter((it) => it.value instanceof SlashCommandClosure)) {
+    for (const arg of this.unnamedArgumentList.filter((it: any) => it.value instanceof SlashCommandClosure)) {
       arg.value.source = value;
     }
   }
-  /** @type {SlashCommand} */ command;
-  /** @type {SlashCommandNamedArgumentAssignment[]} */ namedArgumentList = [];
-  /** @type {SlashCommandUnnamedArgumentAssignment[]} */ unnamedArgumentList = [];
-  /** @type {import('./SlashCommandParser.js').ParserFlags} */ parserFlags;
+  /** @type {SlashCommand} */ command!: SlashCommand;
+  /** @type {SlashCommandNamedArgumentAssignment[]} */ namedArgumentList: SlashCommandNamedArgumentAssignment[] = [];
+  /** @type {SlashCommandUnnamedArgumentAssignment[]} */ unnamedArgumentList: SlashCommandUnnamedArgumentAssignment[] = [];
+  /** @type {import('./SlashCommandParser.js').ParserFlags} */ parserFlags: any;
 
   get commandCount() {
     return (
       1 +
       this.namedArgumentList
-        .filter((it) => it.value instanceof SlashCommandClosure)
-        .map((it) => /**@type {SlashCommandClosure}*/ (it.value).commandCount)
-        .reduce((cur, sum) => cur + sum, 0) +
+        .filter((it: any) => it.value instanceof SlashCommandClosure)
+        .map((it: any) => /**@type {SlashCommandClosure}*/ (it.value).commandCount)
+        .reduce((cur: any, sum: any) => cur + sum, 0) +
       this.unnamedArgumentList
-        .filter((it) => it.value instanceof SlashCommandClosure)
-        .map((it) => /**@type {SlashCommandClosure}*/ (it.value).commandCount)
-        .reduce((cur, sum) => cur + sum, 0)
+        .filter((it: any) => it.value instanceof SlashCommandClosure)
+        .map((it: any) => /**@type {SlashCommandClosure}*/ (it.value).commandCount)
+        .reduce((cur: any, sum: any) => cur + sum, 0)
     );
   }
 
-  set onProgress(value) {
+  set onProgress(value: any) {
     const closures = /**@type {SlashCommandClosure[]}*/ ([
-      ...this.namedArgumentList.filter((it) => it.value instanceof SlashCommandClosure).map((it) => it.value),
-      ...this.unnamedArgumentList.filter((it) => it.value instanceof SlashCommandClosure).map((it) => it.value),
+      ...this.namedArgumentList.filter((it: any) => it.value instanceof SlashCommandClosure).map((it: any) => it.value),
+      ...this.unnamedArgumentList.filter((it: any) => it.value instanceof SlashCommandClosure).map((it: any) => it.value),
     ]);
     for (const closure of closures) {
       closure.onProgress = value;

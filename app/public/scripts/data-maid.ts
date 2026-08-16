@@ -111,7 +111,7 @@ class DataMaidDialog {
     this.container.innerHTML = template;
 
     const startButton = this.container.querySelector(".dataMaidStartButton");
-    startButton.addEventListener("click", () => this.handleScanClick());
+    startButton?.addEventListener("click", () => this.handleScanClick());
   }
 
   /**
@@ -125,8 +125,8 @@ class DataMaidDialog {
     }
 
     try {
-      const resultsList = this.container.querySelector(".dataMaidResultsList");
-      resultsList.innerHTML = "";
+      const resultsList = this.container!.querySelector(".dataMaidResultsList");
+      resultsList!.innerHTML = "";
       this.showSpinner();
       this.isScanning = true;
 
@@ -149,10 +149,10 @@ class DataMaidDialog {
    * @private
    */
   showSpinner() {
-    const spinner = this.container.querySelector(".dataMaidSpinner");
-    const placeholder = this.container.querySelector(".dataMaidPlaceholder");
-    placeholder.classList.add("displayNone");
-    spinner.classList.remove("displayNone");
+    const spinner = this.container!.querySelector(".dataMaidSpinner");
+    const placeholder = this.container!.querySelector(".dataMaidPlaceholder");
+    placeholder!.classList.add("displayNone");
+    spinner!.classList.remove("displayNone");
   }
 
   /**
@@ -160,8 +160,8 @@ class DataMaidDialog {
    * @private
    */
   hideSpinner() {
-    const spinner = this.container.querySelector(".dataMaidSpinner");
-    spinner.classList.add("displayNone");
+    const spinner = this.container!.querySelector(".dataMaidSpinner");
+    spinner!.classList.add("displayNone");
   }
 
   /**
@@ -170,7 +170,7 @@ class DataMaidDialog {
    * @param {Element} resultsList
    * @private
    */
-  async renderReport(report, resultsList) {
+  async renderReport(report: any, resultsList: any) {
     for (const [prop, data] of Object.entries(this.DATA_MAID_CATEGORIES)) {
       const category = await this.renderCategory(prop, data.name, data.description, report.report[prop]);
       if (!category) {
@@ -186,11 +186,11 @@ class DataMaidDialog {
    * @private
    */
   displayEmptyPlaceholder() {
-    const resultsList = this.container.querySelector(".dataMaidResultsList");
-    if (resultsList.children.length === 0) {
-      const placeholder = this.container.querySelector(".dataMaidPlaceholder");
-      placeholder.classList.remove("displayNone");
-      placeholder.textContent = t`No items found to clean up. Come back later!`;
+    const resultsList = this.container!.querySelector(".dataMaidResultsList");
+    if (resultsList!.children.length === 0) {
+      const placeholder = this.container!.querySelector(".dataMaidPlaceholder");
+      placeholder!.classList.remove("displayNone");
+      placeholder!.textContent = t`No items found to clean up. Come back later!`;
     }
   }
 
@@ -203,7 +203,7 @@ class DataMaidDialog {
    * @return {Promise<Element|null>} A promise that resolves to a DOM element containing the rendered category
    * @private
    */
-  async renderCategory(prop, name, description, items) {
+  async renderCategory(prop: any, name: any, description: any, items: any) {
     if (!Array.isArray(items) || items.length === 0) {
       return null;
     }
@@ -275,7 +275,7 @@ class DataMaidDialog {
             return;
           }
           if (await this.delete([hash])) {
-            item.remove();
+            item!.remove();
             items.splice(
               items.findIndex((i) => i.hash === hash),
               1,
@@ -297,8 +297,8 @@ class DataMaidDialog {
    * @returns {string} URL to view the item
    * @private
    */
-  getViewUrl(hash) {
-    return `/api/data-maid/view?hash=${encodeURIComponent(hash)}&token=${encodeURIComponent(this.token)}`;
+  getViewUrl(hash: any) {
+    return `/api/data-maid/view?hash=${encodeURIComponent(hash)}&token=${encodeURIComponent(this.token as any)}`;
   }
 
   /**
@@ -307,8 +307,8 @@ class DataMaidDialog {
    * @param {string} hash Hash of the item to download
    * @private
    */
-  async download(items, hash) {
-    const item = items.find((i) => i.hash === hash);
+  async download(items: any, hash: any) {
+    const item = items.find((i: any) => i.hash === hash);
     if (!item) {
       return;
     }
@@ -328,7 +328,7 @@ class DataMaidDialog {
    * @param {string} name Name of the item to view
    * @private
    */
-  async view(prop, hash, name) {
+  async view(prop: any, hash: any, name: any) {
     const url = this.getViewUrl(hash);
     const isImage = ["images", "avatarThumbnails", "backgroundThumbnails"].includes(prop);
     const element = isImage ? await this.getViewElement(url, name) : await this.getTextViewElement(url);
@@ -341,7 +341,7 @@ class DataMaidDialog {
    * @return {Promise<boolean>} True if the deletion was successful, false otherwise
    * @private
    */
-  async delete(hashes) {
+  async delete(hashes: any) {
     try {
       const response = await fetch("/api/data-maid/delete", {
         method: "POST",
@@ -367,7 +367,7 @@ class DataMaidDialog {
    * @returns {Promise<HTMLElement>} Image element
    * @private
    */
-  async getViewElement(url, name) {
+  async getViewElement(url: any, name: any) {
     const isVideo = VIDEO_EXTENSIONS.includes(name.split(".").pop());
     const mediaElement = document.createElement(isVideo ? "video" : "img");
     if (mediaElement instanceof HTMLVideoElement) {
@@ -384,7 +384,7 @@ class DataMaidDialog {
    * @returns {Promise<HTMLTextAreaElement>} Frame element
    * @private
    */
-  async getTextViewElement(url) {
+  async getTextViewElement(url: any) {
     const response = await fetch(url);
     const text = await response.text();
     const element = document.createElement("textarea");

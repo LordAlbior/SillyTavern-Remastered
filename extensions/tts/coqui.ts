@@ -41,7 +41,7 @@ const languageLabels = {
 };
 
 function throwIfModuleMissing() {
-  if (!modules.includes("coqui-tts")) {
+  if (!(modules as any).includes("coqui-tts")) {
     const message = "Coqui TTS module not loaded. Add coqui-tts to enable-modules and restart the Extras API.";
     // toastr.error(message, { timeOut: 10000, extendedTimeOut: 20000, preventDuplicates: true });
     throw new (Error as any)(DEBUG_PREFIX, message);
@@ -58,7 +58,7 @@ class CoquiTtsProvider {
   //  Extension UI and Settings  //
   //#############################//
 
-  settings;
+  settings: any;
 
   defaultSettings = {
     voiceMap: {},
@@ -123,7 +123,7 @@ class CoquiTtsProvider {
     return html;
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Only accept keys defined in defaultSettings
     this.settings = this.defaultSettings;
 
@@ -319,9 +319,9 @@ class CoquiTtsProvider {
       return;
     }
 
-    if (model_setting_language == "none") model_setting_language = null;
+    if (model_setting_language == "none") model_setting_language = null as any;
 
-    if (model_setting_speaker == "none") model_setting_speaker = null;
+    if (model_setting_speaker == "none") model_setting_speaker = null as any;
 
     const tokens = ($("#coqui_api_model_name").val() as string).split("/");
     const model_dataset = tokens[0];
@@ -375,9 +375,9 @@ class CoquiTtsProvider {
     return;
   }
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     let match = (await this.fetchTtsVoiceObjects()) as any;
-    match = match.filter((voice) => voice.name == voiceName)[0];
+    match = match.filter((voice: any) => voice.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found in CoquiTTS Provider voice list`;
     }
@@ -425,7 +425,7 @@ class CoquiTtsProvider {
 
       for (const language in coquiApiModels) {
         let languageLabel = language;
-        if (language in languageLabels) languageLabel = languageLabels[language];
+        if (language in languageLabels) languageLabel = (languageLabels as Record<string, any>)[language];
         $("#coqui_api_language").append(new Option(languageLabel, language));
         console.log(DEBUG_PREFIX, "added language", languageLabel, "(", language, ")");
       }
@@ -446,7 +446,7 @@ class CoquiTtsProvider {
 
       for (const language in coquiApiModelsFull) {
         let languageLabel = language;
-        if (language in languageLabels) languageLabel = languageLabels[language];
+        if (language in languageLabels) languageLabel = (languageLabels as Record<string, any>)[language];
         $("#coqui_api_language").append(new Option(languageLabel, language));
         console.log(DEBUG_PREFIX, "added language", languageLabel, "(", language, ")");
       }
@@ -638,7 +638,7 @@ class CoquiTtsProvider {
   /*
         Check model installation state, return one of ["installed", "corrupted", "absent"]
     */
-  static async checkmodel_state(model_id) {
+  static async checkmodel_state(model_id: any) {
     throwIfModuleMissing();
     const url = new URL(getApiUrl());
     url.pathname = "/api/text-to-speech/coqui/coqui-api/check-model-state";
@@ -662,7 +662,7 @@ class CoquiTtsProvider {
     return apiResult;
   }
 
-  static async installModel(model_id, action) {
+  static async installModel(model_id: any, action: any) {
     throwIfModuleMissing();
     const url = new URL(getApiUrl());
     url.pathname = "/api/text-to-speech/coqui/coqui-api/install-model";
@@ -719,7 +719,7 @@ class CoquiTtsProvider {
   // tts_models/multilingual/multi-dataset/your_tts[2][1]
   // tts_models/en/ljspeech/glow-tts
   // ts_models/ja/kokoro/tacotron2-DDC
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     throwIfModuleMissing();
     voiceId = this.settings.customVoices[voiceId];
 
@@ -777,17 +777,17 @@ class CoquiTtsProvider {
   }
 
   // Do nothing
-  previewTtsVoice(id) {
+  previewTtsVoice(id: any) {
     return;
   }
 
-  async fetchTtsFromHistory(history_item_id) {
+  async fetchTtsFromHistory(history_item_id: any) {
     return Promise.resolve(history_item_id);
   }
 }
 
 async function initLocalModels() {
-  if (!modules.includes("coqui-tts")) return;
+  if (!(modules as any[]).includes("coqui-tts")) return;
 
   // Initialized local model once
   if (!coquiLocalModelsReceived) {

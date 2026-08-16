@@ -18,7 +18,7 @@ const SESSION_EXTEND_INTERVAL = 10 * 60 * 1000;
  * @param {boolean} isEnabled User account controls enabled
  * @returns {Promise<void>}
  */
-export async function setUserControls(isEnabled) {
+export async function setUserControls(isEnabled: any) {
   accountsEnabled = isEnabled;
 
   if (!isEnabled) {
@@ -44,7 +44,7 @@ export function isAdmin() {
     return false;
   }
 
-  return Boolean(currentUser.admin);
+  return Boolean((currentUser as any).admin);
 }
 
 /**
@@ -52,7 +52,7 @@ export function isAdmin() {
  * @returns {string} User handle
  */
 export function getCurrentUserHandle() {
-  return currentUser?.handle || "default-user";
+  return (currentUser as any)?.handle || "default-user";
 }
 
 /**
@@ -103,7 +103,7 @@ async function getUsers() {
  * @param {function} callback Success callback
  * @returns {Promise<void>}
  */
-async function enableUser(handle, callback) {
+async function enableUser(handle: any, callback: any) {
   try {
     const response = await fetch("/api/users/enable", {
       method: "POST",
@@ -123,7 +123,7 @@ async function enableUser(handle, callback) {
   }
 }
 
-async function disableUser(handle, callback) {
+async function disableUser(handle: any, callback: any) {
   try {
     const response = await fetch("/api/users/disable", {
       method: "POST",
@@ -149,7 +149,7 @@ async function disableUser(handle, callback) {
  * @param {function} callback Success callback
  * @returns {Promise<void>}
  */
-async function promoteUser(handle, callback) {
+async function promoteUser(handle: any, callback: any) {
   try {
     const response = await fetch("/api/users/promote", {
       method: "POST",
@@ -174,7 +174,7 @@ async function promoteUser(handle, callback) {
  * @param {string} handle User handle
  * @param {function} callback Success callback
  */
-async function demoteUser(handle, callback) {
+async function demoteUser(handle: any, callback: any) {
   try {
     const response = await fetch("/api/users/demote", {
       method: "POST",
@@ -198,7 +198,7 @@ async function demoteUser(handle, callback) {
  * Create a new user.
  * @param {HTMLFormElement} form Form element
  */
-async function createUser(form, callback) {
+async function createUser(form: any, callback: any) {
   const errors = [];
   const formData = new FormData(form);
 
@@ -223,7 +223,7 @@ async function createUser(form, callback) {
     if (key.startsWith("_")) {
       key = key.substring(1);
     }
-    body[key] = value;
+    (body as Record<string, any>)[key] = value;
   });
 
   try {
@@ -252,7 +252,7 @@ async function createUser(form, callback) {
  * @param {function} callback Success callback
  * @returns {Promise<void>}
  */
-async function backupUserData(handle, callback) {
+async function backupUserData(handle: any, callback: any) {
   try {
     toastr.info("Please wait for the download to start.", "Backup Requested");
     const response = await fetch("/api/users/backup", {
@@ -274,7 +274,7 @@ async function backupUserData(handle, callback) {
 
     const blob = await response.blob();
     const header = response.headers.get("Content-Disposition");
-    const parts = header.split(";");
+    const parts = (header ?? "").split(";");
     const filename = parts[1].split("=")[1].replaceAll('"', "");
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -293,7 +293,7 @@ async function backupUserData(handle, callback) {
  * @param {string} handle User handle
  * @param {function} callback Success callback
  */
-async function changePassword(handle, callback) {
+async function changePassword(handle: any, callback: any) {
   try {
     const template = $(await renderTemplateAsync("changePassword"));
     template.find(".currentPasswordBlock").toggle(!isAdmin());
@@ -348,9 +348,9 @@ async function changePassword(handle, callback) {
  * @param {string} handle User handle
  * @param {function} callback Success callback
  */
-async function deleteUser(handle, callback) {
+async function deleteUser(handle: any, callback: any) {
   try {
-    if (handle === currentUser.handle) {
+    if (handle === (currentUser as any).handle) {
       toastr.error("Cannot delete yourself", "Failed to delete user");
       throw new Error("Cannot delete yourself");
     }
@@ -407,7 +407,7 @@ async function deleteUser(handle, callback) {
  * @param {string} handle User handle
  * @param {function} callback Success callback
  */
-async function resetSettings(handle, callback) {
+async function resetSettings(handle: any, callback: any) {
   try {
     let password = "";
     const template = $(await renderTemplateAsync("resetSettings"));
@@ -450,7 +450,7 @@ async function resetSettings(handle, callback) {
  * @param {string} name Current name
  * @param {function} callback Success callback
  */
-async function changeName(handle, name, callback) {
+async function changeName(handle: any, name: any, callback: any) {
   try {
     const template = $(await renderTemplateAsync("changeName"));
     const result = await callGenericPopup(template, POPUP_TYPE.INPUT, name, {
@@ -490,7 +490,7 @@ async function changeName(handle, name, callback) {
  * @param {string} name Snapshot name
  * @param {function} callback Success callback
  */
-async function restoreSnapshot(name, callback) {
+async function restoreSnapshot(name: any, callback: any) {
   try {
     const confirm = await callGenericPopup(
       `Are you sure you want to restore the settings from "${name}"?`,
@@ -526,7 +526,7 @@ async function restoreSnapshot(name, callback) {
  * @param {string} name Snapshot name
  * @returns {Promise<string>} Snapshot content
  */
-async function loadSnapshotContent(name) {
+async function loadSnapshotContent(name: any) {
   try {
     const response = await fetch("/api/settings/load-snapshot", {
       method: "POST",
@@ -580,7 +580,7 @@ async function getSnapshots() {
  * @param {function} callback Success callback
  * @returns {Promise<void>}
  */
-async function makeSnapshot(callback) {
+async function makeSnapshot(callback: any) {
   try {
     const response = await fetch("/api/settings/make-snapshot", {
       method: "POST",
@@ -609,7 +609,7 @@ async function viewSettingsSnapshots() {
     const snapshots = await getSnapshots();
     template.find(".snapshotList").empty();
 
-    for (const snapshot of snapshots.sort((a, b) => b.date - a.date)) {
+    for (const snapshot of snapshots.sort((a: any, b: any) => b.date - a.date)) {
       const snapshotBlock = template.find(".snapshotTemplate .snapshot").clone();
       snapshotBlock.find(".snapshotName").text(snapshot.name);
       snapshotBlock.find(".snapshotDate").text(new Date(snapshot.date).toLocaleString());
@@ -622,7 +622,7 @@ async function viewSettingsSnapshots() {
         const contentBlock = snapshotBlock.find(".snapshotContent");
         if (!contentBlock.val()) {
           const content = await loadSnapshotContent(snapshot.name);
-          contentBlock.val(content);
+          contentBlock.val(content as any);
         }
       });
       template.find(".snapshotList").append(snapshotBlock);
@@ -643,7 +643,7 @@ async function viewSettingsSnapshots() {
  * Reset everything to default.
  * @param {function} callback Success callback
  */
-async function resetEverything(callback) {
+async function resetEverything(callback: any) {
   try {
     const step1Response = await fetch("/api/users/reset-step1", {
       method: "POST",
@@ -699,36 +699,36 @@ async function resetEverything(callback) {
 async function openUserProfile() {
   await getCurrentUser();
   const template = $(await renderTemplateAsync("userProfile"));
-  template.find(".userName").text(currentUser.name);
-  template.find(".userHandle").text(currentUser.handle);
-  template.find(".avatar img").attr("src", currentUser.avatar);
-  template.find(".userRole").text(currentUser.admin ? "Admin" : "User");
-  template.find(".userCreated").text(new Date(currentUser.created).toLocaleString());
-  template.find(".hasPassword").toggle(currentUser.password);
-  template.find(".noPassword").toggle(!currentUser.password);
+  template.find(".userName").text((currentUser as any).name);
+  template.find(".userHandle").text((currentUser as any).handle);
+  template.find(".avatar img").attr("src", (currentUser as any).avatar);
+  template.find(".userRole").text((currentUser as any).admin ? "Admin" : "User");
+  template.find(".userCreated").text(new Date((currentUser as any).created).toLocaleString());
+  template.find(".hasPassword").toggle((currentUser as any).password);
+  template.find(".noPassword").toggle(!(currentUser as any).password);
   template.find(".userSettingsSnapshotsButton").on("click", () => viewSettingsSnapshots());
   template.find(".userChangeNameButton").on("click", async () =>
-    changeName(currentUser.handle, currentUser.name, async () => {
+    changeName((currentUser as any).handle, (currentUser as any).name, async () => {
       await getCurrentUser();
-      template.find(".userName").text(currentUser.name);
+      template.find(".userName").text((currentUser as any).name);
     }),
   );
   template.find(".userChangePasswordButton").on("click", () =>
-    changePassword(currentUser.handle, async () => {
+    changePassword((currentUser as any).handle, async () => {
       await getCurrentUser();
-      template.find(".hasPassword").toggle(currentUser.password);
-      template.find(".noPassword").toggle(!currentUser.password);
+      template.find(".hasPassword").toggle((currentUser as any).password);
+      template.find(".noPassword").toggle(!(currentUser as any).password);
     }),
   );
   template.find(".userBackupButton").on("click", function () {
     $(this).addClass("disabled");
-    backupUserData(currentUser.handle, () => {
+    backupUserData((currentUser as any).handle, () => {
       $(this).removeClass("disabled");
     });
   });
   template
     .find(".userResetSettingsButton")
-    .on("click", () => resetSettings(currentUser.handle, () => location.reload()));
+    .on("click", () => resetSettings((currentUser as any).handle, () => location.reload()));
   template.find(".userResetAllButton").on("click", () => resetEverything(() => location.reload()));
   template.find(".userAvatarChange").on("click", () => template.find(".avatarUpload").trigger("click"));
   template.find(".avatarUpload").on("change", async function () {
@@ -736,19 +736,19 @@ async function openUserProfile() {
       return;
     }
 
-    const file = this.files[0];
+        const file = this.files![0];
     if (!file) {
       return;
     }
 
-    await cropAndUploadAvatar(currentUser.handle, file);
+    await cropAndUploadAvatar((currentUser as any).handle, file);
     await getCurrentUser();
-    template.find(".avatar img").attr("src", currentUser.avatar);
+    template.find(".avatar img").attr("src", (currentUser as any).avatar);
   });
   template.find(".userAvatarRemove").on("click", async () => {
-    await changeAvatar(currentUser.handle, "");
+    await changeAvatar((currentUser as any).handle, "");
     await getCurrentUser();
-    template.find(".avatar img").attr("src", currentUser.avatar);
+    template.find(".avatar img").attr("src", (currentUser as any).avatar);
   });
 
   if (!accountsEnabled) {
@@ -772,7 +772,7 @@ async function openUserProfile() {
  * @param {File} file Avatar file
  * @returns {Promise<string>}
  */
-async function cropAndUploadAvatar(handle, file) {
+async function cropAndUploadAvatar(handle: any, file: any) {
   const dataUrl = await getBase64Async(await ensureImageFormatSupported(file));
   const croppedImage = await callGenericPopup("Set the crop position of the avatar image", POPUP_TYPE.CROP, "", {
     cropAspect: 1,
@@ -793,7 +793,7 @@ async function cropAndUploadAvatar(handle, file) {
  * @param {string} avatar File to upload or base64 string
  * @returns {Promise<void>} Avatar URL
  */
-async function changeAvatar(handle, avatar) {
+async function changeAvatar(handle: any, avatar: any) {
   try {
     const response = await fetch("/api/users/change-avatar", {
       method: "POST",
@@ -854,7 +854,7 @@ async function openAdminPanel() {
           return;
         }
 
-        const file = this.files[0];
+    const file = this.files![0];
         if (!file) {
           return;
         }
@@ -931,7 +931,7 @@ async function logout() {
  * @param {string} text Text to slugify
  * @returns {Promise<string>} Slugified text
  */
-async function slugify(text) {
+async function slugify(text: any) {
   try {
     const response = await fetch("/api/users/slugify", {
       method: "POST",

@@ -5,10 +5,10 @@ import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
 export { ChutesTtsProvider };
 
 class ChutesTtsProvider {
-  settings;
+  settings: any;
   /** @type {function} */ handler;
-  voices = [];
-  models = [];
+  voices: any[] = [];
+  models: any[] = [];
   separator = " . ";
 
   defaultSettings = {
@@ -40,9 +40,9 @@ class ChutesTtsProvider {
   }
 
   constructor() {
-    this.handler = async function (/** @type {string} */ key) {
+    this.handler = async function (this: any, /** @type {string} */ key: any) {
       if (key !== SECRET_KEYS.CHUTES) return;
-      $("#chutes_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.CHUTES]);
+      $("#chutes_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.CHUTES]);
       await this.onRefreshClick();
     }.bind(this);
   }
@@ -59,7 +59,7 @@ class ChutesTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     if (Object.keys(settings).length === 0) {
       Object.assign(settings, this.defaultSettings);
     }
@@ -75,7 +75,7 @@ class ChutesTtsProvider {
     $("#chutes_tts_speed").val(this.settings.speed);
     $("#chutes_tts_speed_output").text(this.settings.speed);
 
-    $("#chutes_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.CHUTES]);
+    $("#chutes_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.CHUTES]);
     [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
       eventSource.on(event, this.handler);
     });
@@ -179,7 +179,7 @@ class ChutesTtsProvider {
     }));
   }
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length === 0) {
       await this.updateVoices();
     }
@@ -187,13 +187,13 @@ class ChutesTtsProvider {
     return voice || this.voices.find((v) => v.voice_id === "af_heart");
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
 
-  async fetchTtsGeneration(text, voiceId) {
-    const apiKey = secret_state[SECRET_KEYS.CHUTES];
+  async fetchTtsGeneration(text: any, voiceId: any) {
+    const apiKey = (secret_state as Record<string, any>)[SECRET_KEYS.CHUTES];
 
     if (!apiKey) {
       throw new Error("No Chutes API key found");
@@ -226,7 +226,7 @@ class ChutesTtsProvider {
     return voiceIds;
   }
 
-  async previewTtsVoice(voiceId) {
+  async previewTtsVoice(voiceId: any) {
     const text = getPreviewString(voiceId);
     await this.generateTts(text, voiceId);
   }

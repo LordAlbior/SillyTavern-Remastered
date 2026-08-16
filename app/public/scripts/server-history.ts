@@ -7,18 +7,18 @@ import { isValidUrl } from "./utils.ts";
  * @param {function} resolve
  * @param {string} serverLabel
  */
-function findServers(request, resolve, serverLabel) {
+function findServers(request: any, resolve: any, serverLabel: any) {
   if (!power_user.servers) {
     power_user.servers = [];
   }
 
   const needle = request.term.toLowerCase();
   const result = power_user.servers
-    .filter((x) => x.label == serverLabel)
-    .sort((a, b) => b.lastConnection - a.lastConnection)
-    .map((x) => x.url)
+    .filter((x: any) => x.label == serverLabel)
+    .sort((a: any, b: any) => b.lastConnection - a.lastConnection)
+    .map((x: any) => x.url)
     .slice(0, 5);
-  const hasExactMatch = result.findIndex((x) => x.toLowerCase() == needle) !== -1;
+  const hasExactMatch = result.findIndex((x: any) => x.toLowerCase() == needle) !== -1;
 
   if (request.term && !hasExactMatch) {
     result.unshift(request.term);
@@ -27,7 +27,7 @@ function findServers(request, resolve, serverLabel) {
   resolve(result);
 }
 
-function selectServer(event, ui, serverLabel) {
+function selectServer(event: any, ui: any, serverLabel: any) {
   // unfocus the input
   $(event.target).val(ui.item.value).trigger("input").trigger("blur");
 
@@ -40,24 +40,24 @@ function selectServer(event, ui, serverLabel) {
   });
 }
 
-function createServerAutocomplete() {
+function createServerAutocomplete(this: any) {
   const inputElement = $(this);
   const serverLabel = inputElement.data("server-history");
 
   inputElement
     .autocomplete({
-      source: (i, o) => findServers(i, o, serverLabel),
-      select: (e, u) => selectServer(e, u, serverLabel),
+      source: (i: any, o: any) => findServers(i, o, serverLabel),
+      select: (e: any, u: any) => selectServer(e, u, serverLabel),
       minLength: 0,
     })
     .on("focus", onInputFocus); // <== show tag list on click
 }
 
-function onInputFocus() {
+function onInputFocus(this: any) {
   $(this).autocomplete("search", $(this).val());
 }
 
-function onServerConnectClick() {
+function onServerConnectClick(this: any) {
   const serverLabels = String($(this).data("server-connect")).split(",");
 
   serverLabels.forEach((serverLabel) => {
@@ -74,7 +74,7 @@ function onServerConnectClick() {
       return;
     }
 
-    const server = power_user.servers.find((x) => x.url === value && x.label === serverLabel);
+    const server = power_user.servers.find((x: any) => x.url === value && x.label === serverLabel);
 
     if (!server) {
       power_user.servers.push({ label: serverLabel, url: value, lastConnection: Date.now() });

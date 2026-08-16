@@ -70,8 +70,8 @@ const elementAutoCompleteMap = new WeakMap();
  * @returns {boolean}
  */
 function shouldActivateMacroAutocomplete(
-  text,
-  cursorPos,
+  text: any,
+  cursorPos: any,
   { isForced = false, autocompleteMode = MACRO_AUTOCOMPLETE_MODE.DEFAULT } = {},
 ) {
   // If mode is 'hide', never show autocomplete
@@ -122,7 +122,7 @@ function shouldActivateMacroAutocomplete(
  * @returns {AutoComplete} The autocomplete instance.
  */
 export function setMacroAutoComplete(
-  textarea,
+  textarea: any,
   { autocompleteMode = MACRO_AUTOCOMPLETE_MODE.DEFAULT, autocompleteStyle = MACRO_AUTOCOMPLETE_STYLE.SMALL } = {},
 ) {
   const ac = new AutoComplete(
@@ -132,7 +132,7 @@ export function setMacroAutoComplete(
         isForced: (ac as any).isShowForced,
         autocompleteMode,
       }),
-    (text, index) => getMacroAutoCompleteAt(text, index, { isForced: (ac as any).isShowForced }),
+    (text: any, index: any) => getMacroAutoCompleteAt(text, index, { isForced: (ac as any).isShowForced }),
     true, // isFloating - always use floating mode for free text macro autocomplete
   );
 
@@ -150,7 +150,7 @@ export function setMacroAutoComplete(
  * @param {Element} element - The element to check.
  * @returns {MACRO_AUTOCOMPLETE_MODE} The mode ('default', 'always', 'hide').
  */
-function getAutocompleteMode(element) {
+function getAutocompleteMode(element: any) {
   if (!element.hasAttribute(MACRO_AUTOCOMPLETE_MODE_ATTRIBUTE)) {
     return MACRO_AUTOCOMPLETE_MODE.DEFAULT;
   }
@@ -167,7 +167,7 @@ function getAutocompleteMode(element) {
  * @param {Element} element - The element to check.
  * @returns {MACRO_AUTOCOMPLETE_STYLE} The style ('expanded', 'small').
  */
-function getAutocompleteStyle(element) {
+function getAutocompleteStyle(element: any) {
   if (!element.hasAttribute(MACRO_AUTOCOMPLETE_STYLE_ATTRIBUTE)) {
     return MACRO_AUTOCOMPLETE_STYLE.SMALL; // Default for macro autocomplete is small
   }
@@ -184,7 +184,7 @@ function getAutocompleteStyle(element) {
  * @param {HTMLTextAreaElement|HTMLInputElement} element - The element to initialize.
  * @returns {AutoComplete|null} The autocomplete instance, or null if already initialized.
  */
-function initializeElement(element) {
+function initializeElement(element: any) {
   if (initializedElements.has(element)) {
     return null;
   }
@@ -206,7 +206,7 @@ function initializeElement(element) {
  * @param {Element} element - The element to check.
  * @returns {boolean}
  */
-function hasMacroAttribute(element) {
+function hasMacroAttribute(element: any) {
   if (!element.hasAttribute(MACRO_AUTOCOMPLETE_ATTRIBUTE)) {
     return false;
   }
@@ -220,7 +220,7 @@ function hasMacroAttribute(element) {
  *
  * @param {Node} node - The node to check.
  */
-function handleNodeChange(node) {
+function handleNodeChange(node: any) {
   if (node.nodeType !== Node.ELEMENT_NODE || !(node instanceof Element)) {
     return;
   }
@@ -309,7 +309,7 @@ export function initMacroAutoComplete() {
  * @param {string} elementId - The element ID (without #).
  * @returns {AutoComplete|null} The autocomplete instance, or null if element not found.
  */
-export function enableMacroAutoCompleteById(elementId) {
+export function enableMacroAutoCompleteById(elementId: any) {
   const element = /** @type {HTMLTextAreaElement|HTMLInputElement|null} */ (document.getElementById(elementId));
 
   if (!element || !(element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement)) {

@@ -5,11 +5,11 @@ export class AutoCompleteOption {
   /** @type {string} */ typeIcon;
   /** @type {string} */ type;
   /** @type {number} */ nameOffset = 0;
-  /** @type {AutoCompleteFuzzyScore} */ score;
-  /** @type {string} */ replacer;
-  /** @type {HTMLElement} */ dom;
-  /** @type {(input:string)=>boolean} */ matchProvider;
-  /** @type {(input:string)=>string} */ valueProvider;
+  /** @type {AutoCompleteFuzzyScore} */ score: any;
+  /** @type {string} */ replacer: any;
+  /** @type {HTMLElement} */ dom: any;
+  /** @type {(input:string)=>boolean} */ matchProvider: any;
+  /** @type {(input:string)=>string} */ valueProvider: any;
   /** @type {boolean} */ makeSelectable = false;
   /** @type {boolean} */ forceFullNameMatch = false;
 
@@ -43,7 +43,7 @@ export class AutoCompleteOption {
   /**
    * @param {string} name
    */
-  constructor(name, typeIcon = " ", type = "", matchProvider = null, valueProvider = null, makeSelectable = false) {
+  constructor(name: any, typeIcon: any = " ", type: any = "", matchProvider: any = null, valueProvider: any = null, makeSelectable: any = false) {
     this.name = name;
     this.typeIcon = typeIcon;
     this.type = type;
@@ -53,14 +53,14 @@ export class AutoCompleteOption {
   }
 
   makeItem(
-    key,
-    typeIcon,
-    noSlash,
-    namedArguments = [],
-    unnamedArguments = [],
-    returnType = "void",
-    helpString = "",
-    aliasList = [],
+    key: any,
+    typeIcon: any,
+    noSlash: any,
+    namedArguments: any[] = [],
+    unnamedArguments: any[] = [],
+    returnType: any = "void",
+    helpString: any = "",
+    aliasList: any[] = [],
   ) {
     const li = document.createElement("li");
     {
@@ -77,7 +77,7 @@ export class AutoCompleteOption {
         name.classList.add("name");
         name.classList.add("monospace");
         name.textContent = noSlash ? "" : "/";
-        key.split("").forEach((char) => {
+        key.split("").forEach((char: any) => {
           const span = document.createElement("span");
           span.textContent = char;
           name.append(span);
@@ -88,7 +88,7 @@ export class AutoCompleteOption {
           body.classList.add("body");
           const args = document.createElement("span");
           args.classList.add("arguments");
-          for (const arg of namedArguments) {
+          for (const arg of namedArguments as any[]) {
             const argItem = document.createElement("span");
             {
               argItem.classList.add("argument");
@@ -123,7 +123,7 @@ export class AutoCompleteOption {
               args.append(argItem);
             }
           }
-          for (const arg of unnamedArguments) {
+          for (const arg of unnamedArguments as any[]) {
             const argItem = document.createElement("span");
             argItem.classList.add("argument");
             argItem.classList.add("unnamedArgument");

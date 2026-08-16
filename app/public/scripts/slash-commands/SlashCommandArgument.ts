@@ -31,7 +31,7 @@ export class SlashCommandArgument {
    * @param {(executor:SlashCommandExecutor, scope:SlashCommandScope)=>SlashCommandEnumValue[]} [props.enumProvider=null] function that returns auto complete options
    * @param {boolean} [props.forceEnum=false] default: false - whether the input must match one of the enum values
    */
-  static fromProps(props) {
+  static fromProps(props: any) {
     return new SlashCommandArgument(
       props.description,
       props.typeList ?? [ARGUMENT_TYPE.STRING],
@@ -45,11 +45,11 @@ export class SlashCommandArgument {
   }
 
   /**@type {string}*/ description;
-  /**@type {ARGUMENT_TYPE[]}*/ typeList = [];
+  /**@type {ARGUMENT_TYPE[]}*/ typeList: any[] = [];
   /**@type {boolean}*/ isRequired = false;
   /**@type {boolean}*/ acceptsMultiple = false;
-  /**@type {string|SlashCommandClosure}*/ defaultValue;
-  /**@type {SlashCommandEnumValue[]}*/ enumList = [];
+  /**@type {string|SlashCommandClosure}*/ defaultValue: any;
+  /**@type {SlashCommandEnumValue[]}*/ enumList: any[] = [];
   /**@type {(executor:SlashCommandExecutor, scope:SlashCommandScope)=>SlashCommandEnumValue[]}*/ enumProvider = null;
   /**@type {boolean}*/ forceEnum = false;
 
@@ -61,8 +61,8 @@ export class SlashCommandArgument {
    * @param {(executor:SlashCommandExecutor, scope:SlashCommandScope)=>SlashCommandEnumValue[]} enumProvider function that returns auto complete options
    */
   constructor(
-    description,
-    types,
+    description: any,
+    types: any,
     isRequired = false,
     acceptsMultiple = false,
     defaultValue = null,
@@ -75,7 +75,7 @@ export class SlashCommandArgument {
     this.isRequired = isRequired ?? false;
     this.acceptsMultiple = acceptsMultiple ?? false;
     this.defaultValue = defaultValue;
-    this.enumList = (enums ? (Array.isArray(enums) ? enums : [enums]) : []).map((it) => {
+    this.enumList = (enums ? (Array.isArray(enums) ? enums : [enums]) : []).map((it: any) => {
       if (it instanceof SlashCommandEnumValue) return it;
       return new SlashCommandEnumValue(it);
     });
@@ -103,7 +103,7 @@ export class SlashCommandNamedArgument extends SlashCommandArgument {
    * @param {(executor:SlashCommandExecutor, scope:SlashCommandScope)=>SlashCommandEnumValue[]} [props.enumProvider=null] function that returns auto complete options
    * @param {boolean} [props.forceEnum=false] default: false - whether the input must match one of the enum values
    */
-  static fromProps(props) {
+  static fromProps(props: any) {
     return new SlashCommandNamedArgument(
       props.name,
       props.description,
@@ -134,9 +134,9 @@ export class SlashCommandNamedArgument extends SlashCommandArgument {
    * @param {boolean} [forceEnum=false]
    */
   constructor(
-    name,
-    description,
-    types,
+    name: any,
+    description: any,
+    types: any,
     isRequired = false,
     acceptsMultiple = false,
     defaultValue = null,

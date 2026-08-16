@@ -103,7 +103,7 @@ const showPopupHelper = {
    * @param {PopupOptions} [popupOptions={}] - Options for the popup.
    * @return {Promise<string?>} A Promise that resolves with the user's input.
    */
-  input: async (header, text, defaultValue = "", popupOptions = {}) => {
+  input: async (header: any, text: any, defaultValue = "", popupOptions = {}) => {
     const content = PopupUtils.BuildTextWithHeader(header, text);
     const popup = new Popup(content, POPUP_TYPE.INPUT, defaultValue, popupOptions);
     const value = await popup.show();
@@ -121,9 +121,9 @@ const showPopupHelper = {
    * @param {PopupOptions} [popupOptions={}] - Options for the popup.
    * @return {Promise<POPUP_RESULT?>} A Promise that resolves with the result of the user's interaction.
    */
-  confirm: async (header, text, popupOptions = {}) => {
+  confirm: async (header: any, text: any, popupOptions = {}) => {
     const content = PopupUtils.BuildTextWithHeader(header, text);
-    const popup = new Popup(content, POPUP_TYPE.CONFIRM, null, popupOptions);
+    const popup = new Popup(content, POPUP_TYPE.CONFIRM, null as any, popupOptions);
     const result = await popup.show();
     if (typeof result === "string" || typeof result === "boolean")
       throw new Error(`Invalid popup result. CONFIRM popups only support numbers, or null. Result: ${result}`);
@@ -137,9 +137,9 @@ const showPopupHelper = {
    * @param {PopupOptions} [popupOptions={}] - Options for the popup.
    * @return {Promise<POPUP_RESULT?>} A Promise that resolves with the result of the user's interaction.
    */
-  text: async (header, text, popupOptions = {}) => {
+  text: async (header: any, text: any, popupOptions = {}) => {
     const content = PopupUtils.BuildTextWithHeader(header, text);
-    const popup = new Popup(content, POPUP_TYPE.TEXT, null, popupOptions);
+    const popup = new Popup(content, POPUP_TYPE.TEXT, null as any, popupOptions);
     const result = await popup.show();
     if (typeof result === "string" || typeof result === "boolean")
       throw new Error(`Invalid popup result. TEXT popups only support numbers, or null. Result: ${result}`);
@@ -164,25 +164,25 @@ export class Popup {
   /** @readonly @type {HTMLDivElement} */ cropWrap;
   /** @readonly @type {HTMLImageElement} */ cropImage;
   /** @readonly @type {POPUP_RESULT|number?} */ defaultResult;
-  /** @readonly @type {CustomPopupButton[]|string[]?} */ customButtons;
-  /** @readonly @type {CustomPopupInput[]} */ customInputs;
+  /** @readonly @type {CustomPopupButton[]|string[]?} */ customButtons: any;
+  /** @readonly @type {CustomPopupInput[]} */ customInputs: any;
 
-  /** @type {(popup: Popup) => Promise<boolean?>|boolean?} */ onClosing;
-  /** @type {(popup: Popup) => Promise<void?>|void?} */ onClose;
-  /** @type {(popup: Popup) => Promise<void?>|void?} */ onOpen;
+  /** @type {(popup: Popup) => Promise<boolean?>|boolean?} */ onClosing: any;
+  /** @type {(popup: Popup) => Promise<void?>|void?} */ onClose: any;
+  /** @type {(popup: Popup) => Promise<void?>|void?} */ onOpen: any;
 
-  /** @type {POPUP_RESULT|number} */ result;
-  /** @type {any} */ value;
-  /** @type {Map<string,string|boolean>?} */ inputResults;
-  /** @type {any} */ cropData;
+  /** @type {POPUP_RESULT|number} */ result: any;
+  /** @type {any} */ value: any;
+  /** @type {Map<string,string|boolean>?} */ inputResults: any;
+  /** @type {any} */ cropData: any;
 
-  /** @type {HTMLElement} */ lastFocus;
+  /** @type {HTMLElement} */ lastFocus: any;
 
-  /** @type {Promise<any>} */ #promise;
-  /** @type {(result: any) => any} */ #resolver;
+  /** @type {Promise<any>} */ #promise: any;
+  /** @type {(result: any) => any} */ #resolver: any;
 
-  /** @type {boolean} */ #allowEscapeClose;
-  /** @type {boolean} */ #isClosingPrevented;
+  /** @type {boolean} */ #allowEscapeClose: any;
+  /** @type {boolean} */ #isClosingPrevented: any;
   /** @type {number} */ #lastEscapePress = 0;
   /** @type {boolean} */ #isShowingForceCloseConfirm = false;
 
@@ -195,8 +195,8 @@ export class Popup {
    * @param {PopupOptions} [options={}] - Additional options for the popup
    */
   constructor(
-    content,
-    type,
+    content: any,
+    type: any,
     inputValue = "",
     {
       okButton = null,
@@ -223,7 +223,7 @@ export class Popup {
       cropImage = null,
     } = {},
   ) {
-    Popup.util.popups.push(this);
+    (Popup.util.popups as any[]).push(this);
 
     // Make this popup uniquely identifiable
     this.id = uuidv4();
@@ -278,11 +278,11 @@ export class Popup {
     this.okButton.textContent = typeof okButton === "string" ? okButton : "OK";
     this.okButton.dataset.i18n = this.okButton.textContent;
     this.cancelButton.textContent =
-      typeof cancelButton === "string" ? cancelButton : template.getAttribute("popup-button-cancel");
+      typeof cancelButton === "string" ? cancelButton : template!.getAttribute("popup-button-cancel");
     this.cancelButton.dataset.i18n = this.cancelButton.textContent;
 
     /** @param {HTMLElement} control @param {string} text Sets the title attribute and translation, if text is provided  */
-    function setTitleFromTooltip(control, text) {
+    function setTitleFromTooltip(control: any, text: any) {
       if (!text) return;
       control.title = text;
       if (!control.dataset.i18n) {
@@ -292,7 +292,7 @@ export class Popup {
 
     this.defaultResult = defaultResult;
     this.customButtons = customButtons;
-    this.customButtons?.forEach((x, index) => {
+    this.customButtons?.forEach((x: any, index: any) => {
       /** @type {CustomPopupButton} */
       const button = typeof x === "string" ? { text: x, result: index + 2 } : x;
 
@@ -329,7 +329,7 @@ export class Popup {
     });
 
     this.customInputs = customInputs;
-    this.customInputs?.forEach((input) => {
+    this.customInputs?.forEach((input: any) => {
       if (!input.id || !(typeof input.id === "string")) {
         console.warn("Given custom input does not have a valid id set");
         return;
@@ -470,8 +470,8 @@ export class Popup {
         if (okButton === false) this.okButton.style.display = "none";
         if (cancelButton === false) this.cancelButton.style.display = "none";
         // Override default captions for confirm on OK->Yes, CANCEL->No
-        if (!okButton) this.okButton.textContent = template.getAttribute("popup-button-yes");
-        if (!cancelButton) this.cancelButton.textContent = template.getAttribute("popup-button-no");
+        if (!okButton) this.okButton.textContent = template!.getAttribute("popup-button-yes");
+        if (!cancelButton) this.cancelButton.textContent = template!.getAttribute("popup-button-no");
         break;
       }
       case POPUP_TYPE.INPUT: {
@@ -480,7 +480,7 @@ export class Popup {
         if (okButton === false) this.okButton.style.display = "none";
         if (cancelButton === false) this.cancelButton.style.display = "none";
         // Override default captions for input on OK->Save
-        if (!okButton) this.okButton.textContent = template.getAttribute("popup-button-save");
+        if (!okButton) this.okButton.textContent = template!.getAttribute("popup-button-save");
         break;
       }
       case POPUP_TYPE.DISPLAY: {
@@ -497,7 +497,7 @@ export class Popup {
           autoCropArea: 1,
           viewMode: 2,
           rotatable: false,
-          crop: (event) => {
+          crop: (event: any) => {
             this.cropData = event.detail;
             this.cropData.want_resize = !power_user.never_resize_avatars;
           },
@@ -506,7 +506,7 @@ export class Popup {
         if (okButton === false) this.okButton.style.display = "none";
         if (cancelButton === false) this.cancelButton.style.display = "none";
         // Override default captions for crop on OK->Crop
-        if (!okButton) this.okButton.textContent = template.getAttribute("popup-button-crop");
+        if (!okButton) this.okButton.textContent = template!.getAttribute("popup-button-crop");
         break;
       }
       default: {
@@ -543,12 +543,12 @@ export class Popup {
     this.setAutoFocus({ applyAutoFocus: true });
 
     // Set focus event that remembers the focused element
-    this.dlg.addEventListener("focusin", (evt) => {
+    this.dlg.addEventListener("focusin", (evt: any) => {
       if (evt.target instanceof HTMLElement && evt.target != this.dlg) this.lastFocus = evt.target;
     });
 
     // Bind event listeners for all result controls to their defined event type
-    this.dlg.querySelectorAll("[data-result]").forEach((resultControl) => {
+    this.dlg.querySelectorAll("[data-result]").forEach((resultControl: any) => {
       if (!(resultControl instanceof HTMLElement)) return;
       // If no value was set, we exit out and don't bind an action
       if (String(resultControl.dataset.result) === String(undefined)) return;
@@ -564,7 +564,7 @@ export class Popup {
     });
 
     // Bind dialog listeners manually, so we can be sure context is preserved
-    const cancelListener = async (evt) => {
+    const cancelListener = async (evt: any) => {
       if (!this.#allowEscapeClose) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -597,7 +597,7 @@ export class Popup {
 
             // If the the main popup closes while the force-close popup is still being displayed, we gracefully cancel that.
             const originalOnClose = this.onClose;
-            this.onClose = async (x) => {
+            this.onClose = async (x: any) => {
               if (originalOnClose) await originalOnClose;
               await confirmPopup.completeCancelled();
             };
@@ -624,7 +624,7 @@ export class Popup {
     // We make sure that the modal on its own doesn't hide. Dunno why, if onClosing is triggered multiple times through the cancel event, and stopped,
     // it seems to just call 'close' on the dialog even if the 'cancel' event was prevented.
     // So here we just say that close should not happen if it was prevented.
-    const closeListener = async (evt) => {
+    const closeListener = async (evt: any) => {
       if (this.#isClosingPrevented) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -633,7 +633,7 @@ export class Popup {
     };
     this.dlg.addEventListener("close", closeListener.bind(this));
 
-    const keyListener = async (evt) => {
+    const keyListener = async (evt: any) => {
       switch (evt.key) {
         case "Enter": {
           // CTRL+Enter counts as a closing action, but all other modifiers (ALT, SHIFT) should not trigger this
@@ -664,7 +664,7 @@ export class Popup {
 
           evt.preventDefault();
           evt.stopPropagation();
-          const result = Number(document.activeElement.getAttribute("data-result") ?? this.defaultResult);
+          const result = Number(document.activeElement!.getAttribute("data-result") ?? this.defaultResult);
 
           // Call complete on the popup. Make sure that we handle `onClosing` cancels correctly and don't remove the listener then.
           await this.complete(result);
@@ -758,7 +758,7 @@ export class Popup {
    *
    * @returns {Promise<string|number|boolean|undefined?>} A promise that resolves with the value of the popup when it is completed. <b>Returns `undefined` if the closing action was cancelled.</b>
    */
-  async complete(result) {
+  async complete(result: any) {
     // In all cases besides INPUT the popup value should be the result
     /** @type {POPUP_RESULT|number|boolean|string?} */
     let value = result;
@@ -780,7 +780,7 @@ export class Popup {
 
     if (this.customInputs?.length) {
       this.inputResults = new Map(
-        this.customInputs.map((input) => {
+        this.customInputs.map((input: any) => {
           /** @type {HTMLInputElement} */
           const inputControl = this.dlg.querySelector(`#${input.id}`);
           const value = ["text", "textarea", "number"].includes(input.type) ? inputControl.value : inputControl.checked;
@@ -805,7 +805,7 @@ export class Popup {
     }
     this.#isClosingPrevented = false;
 
-    Popup.util.lastResult = { value, result, inputResults: this.inputResults };
+    Popup.util.lastResult = { value, result, inputResults: this.inputResults } as any;
     this.#hide();
 
     return this.#promise;
@@ -850,7 +850,7 @@ export class Popup {
       if (Popup.util.popups.length > 0) {
         const activeDialog = document.activeElement?.closest(".popup");
         const id = activeDialog?.getAttribute("data-id");
-        const popup = Popup.util.popups.find((x) => x.id == id);
+        const popup = Popup.util.popups.find((x: any) => x.id == id);
         if (popup) {
           if (popup.lastFocus) popup.lastFocus.focus();
           else popup.setAutoFocus();
@@ -873,14 +873,14 @@ export class Popup {
    */
   static util = {
     /** @readonly @type {Popup[]} Remember all popups */
-    popups: [],
+    popups: [] as any[],
 
     /** @type {{value: any, result: POPUP_RESULT|number?, inputResults: Map<string, string|boolean>?}?} Last popup result */
     lastResult: null,
 
     /** @returns {boolean} Checks if any modal popup dialog is open */
     isPopupOpen() {
-      return Popup.util.popups.filter((x) => x.dlg.hasAttribute("open")).length > 0;
+      return Popup.util.popups.filter((x: any) => x.dlg.hasAttribute("open")).length > 0;
     },
 
     /**
@@ -902,7 +902,7 @@ export class PopupUtils {
    * @param {string?} header - The header to be added to the text
    * @param {string?} text - The main text content
    */
-  static BuildTextWithHeader(header, text) {
+  static BuildTextWithHeader(header: any, text: any) {
     if (!header) {
       return text;
     }
@@ -920,7 +920,7 @@ export class PopupUtils {
  * @param {PopupOptions} [popupOptions={}] - Options for the popup
  * @returns {Promise<POPUP_RESULT|string|boolean?>} The value for this popup, which can either be the popup retult or the input value if chosen
  */
-export function callGenericPopup(content, type, inputValue = "", popupOptions = {}) {
+export function callGenericPopup(content: any, type: any, inputValue = "", popupOptions = {}) {
   const popup = new Popup(content, type, inputValue, popupOptions);
   return popup.show();
 }
@@ -969,7 +969,7 @@ export function fixToastrForDialogs() {
     } else {
       document.body.appendChild(toastContainer);
       toastContainer.classList.remove(...toastPositionClasses);
-      toastContainer.classList.add(toastr.options.positionClass);
+      toastContainer.classList.add(toastr.options.positionClass as string);
     }
   }
 }

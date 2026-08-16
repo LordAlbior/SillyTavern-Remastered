@@ -15,7 +15,7 @@ let charStats: Record<string, any> = {};
  * @param {number|string} statValue - The value of the stat to be displayed.
  * @returns {string} - An HTML string representing the stat block.
  */
-function createStatBlock(statName, statValue) {
+function createStatBlock(statName: any, statValue: any) {
   return `<div class="rm_stat_block">
                 <div class="rm_stat_name">${statName}:</div>
                 <div class="rm_stat_value">${statValue}</div>
@@ -28,7 +28,7 @@ function createStatBlock(statName, statValue) {
  * @param {number|string} stat - The stat value to be checked and returned.
  * @returns {number} - The stat value if it is a number, otherwise 0.
  */
-function verifyStatValue(stat) {
+function verifyStatValue(stat: any) {
   return isNaN(Number(stat)) ? 0 : Number(stat);
 }
 
@@ -86,7 +86,7 @@ function calculateTotalStats() {
  *      non_user_word_count - count of words used by the non-user
  *      total_swipe_count - total swipe count
  */
-function createHtml(statsType, stats) {
+function createHtml(statsType: any, stats: any) {
   // Get time string
   const timeStirng = humanizeGenTime(stats.total_gen_time);
   let chatAge = "Never";
@@ -132,7 +132,7 @@ async function userStatsHandler() {
  * @param {Object} characters - Object containing character data.
  * @param {string} this_chid - The character id.
  */
-async function characterStatsHandler(characters, this_chid) {
+async function characterStatsHandler(characters: any, this_chid: any) {
   // Get stats from server
   await getStats();
   // Get character stats
@@ -204,7 +204,7 @@ async function recreateStats() {
  * @param {string} gen_finished - The finish time in ISO 8601 format.
  * @returns {number} - The difference in time in milliseconds.
  */
-function calculateGenTime(gen_started, gen_finished) {
+function calculateGenTime(gen_started: any, gen_finished: any) {
   if (gen_started === undefined || gen_finished === undefined) {
     return 0;
   }
@@ -236,7 +236,7 @@ async function updateStats() {
  * @param {string} str - The string to count words in.
  * @returns {number} - Number of words.
  */
-function countWords(str) {
+function countWords(str: any) {
   const match = str.match(/\b\w+\b/g);
   return match ? match.length : 0;
 }
@@ -250,7 +250,7 @@ function countWords(str) {
  * @param {string} this_chid - The character id.
  * @param {string} oldMessage - The old message that's being processed.
  */
-async function statMesProcess(line, type, characters, this_chid, oldMessage) {
+async function statMesProcess(line: any, type: any, characters: any, this_chid: any, oldMessage: any) {
   if (this_chid === undefined || characters[this_chid] === undefined) {
     return;
   }

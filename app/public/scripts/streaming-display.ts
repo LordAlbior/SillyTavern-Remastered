@@ -34,46 +34,46 @@ const CSS_PREFIX = "streaming-display";
 
 export class StreamingDisplay {
   /** @type {HTMLElement | null} */
-  #element = null;
+  #element: HTMLElement | null = null;
   /** @type {HTMLElement | null} */
-  #labelElement = null;
+  #labelElement: HTMLElement | null = null;
   /** @type {HTMLElement | null} */
-  #labelText = null;
+  #labelText: HTMLElement | null = null;
   /** @type {HTMLElement | null} */
-  #reasoningSection = null;
+  #reasoningSection: HTMLElement | null = null;
   /** @type {HTMLElement | null} */
-  #reasoningContent = null;
+  #reasoningContent: HTMLElement | null = null;
   /** @type {HTMLElement | null} */
-  #textSection = null;
+  #textSection: HTMLElement | null = null;
   /** @type {HTMLElement | null} */
-  #textContent = null;
+  #textContent: HTMLElement | null = null;
   /** @type {HTMLButtonElement | null} */
-  #stopButton = null;
+  #stopButton: HTMLButtonElement | null = null;
   /** @type {HTMLButtonElement | null} */
-  #minimizeButton = null;
+  #minimizeButton: HTMLButtonElement | null = null;
   /** @type {HTMLButtonElement | null} */
-  #closeButton = null;
+  #closeButton: HTMLButtonElement | null = null;
   /** @type {(() => (void | Promise<void>)) | null} */
-  #onStop = null;
+  #onStop: (() => void | Promise<void>) | null = null;
   /** @type {HTMLElement | null} */
-  #ledIndicator = null;
+  #ledIndicator: HTMLElement | null = null;
   /** @type {boolean} */
-  #hasContent = false;
+  #hasContent: boolean = false;
   /** @type {boolean} */
-  #isMinimized = false;
+  #isMinimized: boolean = false;
   /** @type {boolean} */
-  #isComplete = false;
+  #isComplete: boolean = false;
   /** @type {boolean} */
-  #isStopped = false;
+  #isStopped: boolean = false;
   /** @type {ReturnType<typeof setTimeout> | null} */
-  #hideTimeoutId = null;
+  #hideTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Shows the streaming display panel.
    * @param {StreamingDisplayOptions} [options]
    * @returns {StreamingDisplay} this instance for chaining
    */
-  show({ label = "", icon = null, onStop = null } = {}) {
+  show({ label = "", icon = null, onStop = null }: any = {}) {
     if (this.#element) this.hide({ instant: true });
 
     this.#isMinimized = false;
@@ -245,7 +245,7 @@ export class StreamingDisplay {
    * @param {string} label
    * @returns {StreamingDisplay} this instance for chaining
    */
-  setLabel(label) {
+  setLabel(label: any) {
     if (this.#labelText) {
       this.#labelText.textContent = label;
     }
@@ -258,7 +258,7 @@ export class StreamingDisplay {
    * @param {string} text - Accumulated reasoning text
    * @returns {StreamingDisplay} this instance for chaining
    */
-  updateReasoning(text) {
+  updateReasoning(text: any) {
     if (!this.#reasoningContent || !this.#reasoningSection || !text) return this;
 
     this.#reasoningSection.style.display = "";
@@ -273,7 +273,7 @@ export class StreamingDisplay {
    * @param {string|null|undefined} text - Accumulated content text
    * @returns {StreamingDisplay} this instance for chaining
    */
-  updateContent(text) {
+  updateContent(text: any) {
     if (!this.#textContent || !this.#textSection || !text) return this;
 
     this.#hasContent = true;

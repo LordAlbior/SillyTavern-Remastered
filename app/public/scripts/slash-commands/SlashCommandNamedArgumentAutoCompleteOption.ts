@@ -9,7 +9,7 @@ export class SlashCommandNamedArgumentAutoCompleteOption extends AutoCompleteOpt
   /**
    * @param {SlashCommandNamedArgument} arg
    */
-  constructor(arg, cmd) {
+  constructor(arg: any, cmd: any) {
     super(`${arg.name}=`);
     this.arg = arg;
     this.cmd = cmd;

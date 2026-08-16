@@ -22,9 +22,9 @@ import { selected_group } from "/scripts/group-chats.js";
 export { debounceAsync };
 
 const _VERBOSE = true;
-export const debug = (...msg) => (_VERBOSE ? console.debug("[QR2]", ...msg) : null);
-export const log = (...msg) => (_VERBOSE ? console.log("[QR2]", ...msg) : null);
-export const warn = (...msg) => (_VERBOSE ? console.warn("[QR2]", ...msg) : null);
+export const debug = (...msg: any[]) => (_VERBOSE ? console.debug("[QR2]", ...msg) : null);
+export const log = (...msg: any[]) => (_VERBOSE ? console.log("[QR2]", ...msg) : null);
+export const warn = (...msg: any[]) => (_VERBOSE ? console.warn("[QR2]", ...msg) : null);
 
 const defaultConfig = {
   setList: [
@@ -44,19 +44,19 @@ const defaultSettings = {
 /** @type {Boolean}*/
 let isReady = false;
 /** @type {Function[]}*/
-const executeQueue = [];
+const executeQueue: any[] = [];
 /** @type {string}*/
-let lastCharId;
+let lastCharId: any;
 /** @type {QuickReplySettings}*/
-let settings;
+let settings: any;
 /** @type {SettingsUi} */
-let manager;
+let manager: any;
 /** @type {ButtonUi} */
-let buttons;
+let buttons: any;
 /** @type {AutoExecuteHandler} */
-let autoExec;
+let autoExec: any;
 /** @type {QuickReplyApi} */
-export let quickReplyApi;
+export let quickReplyApi: any;
 
 const loadSets = async () => {
   const response = await fetch("/api/settings/get", {
@@ -74,7 +74,7 @@ const loadSets = async () => {
         set.disableSend = set.quickActionEnabled ?? false;
         set.placeBeforeInput = set.placeBeforeInputEnabled ?? false;
         set.injectInput = set.AutoInputInject ?? false;
-        set.qrList = set.quickReplySlots.map((slot, idx) => {
+        set.qrList = set.quickReplySlots.map((slot: any, idx: any) => {
           const qr = {} as any;
           qr.id = idx + 1;
           qr.label = slot.label ?? "";
@@ -89,7 +89,7 @@ const loadSets = async () => {
           qr.executeOnNewChat = slot.autoExecute_newChat ?? false;
           qr.executeBeforeGeneration = slot.autoExecute_beforeGeneration ?? false;
           qr.automationId = slot.automationId ?? "";
-          qr.contextList = (slot.contextMenu ?? []).map((it) => ({
+          qr.contextList = (slot.contextMenu ?? []).map((it: any) => ({
             set: it.preset,
             isChained: it.chain,
           }));
@@ -101,8 +101,8 @@ const loadSets = async () => {
       }
     }
     // need to load QR lists after all sets are loaded to be able to resolve context menu entries
-    setList.forEach((set, idx) => {
-      QuickReplySet.list[idx].qrList = set.qrList.map((it) => QuickReply.from(it));
+    setList.forEach((set: any, idx: any) => {
+      QuickReplySet.list[idx].qrList = set.qrList.map((it: any) => QuickReply.from(it));
       QuickReplySet.list[idx].init();
     });
     log("sets: ", QuickReplySet.list);
@@ -138,7 +138,7 @@ const loadSettings = async () => {
   }
 };
 
-const executeIfReadyElseQueue = async (functionToCall, args) => {
+const executeIfReadyElseQueue = async (functionToCall: any, args: any) => {
   if (isReady) {
     log("calling", { functionToCall, args });
     await functionToCall(...args);
@@ -157,7 +157,7 @@ const handleCharChange = () => {
 
   // If no character is loaded, there's nothing more to do.
   /** @type {Character} */
-  const character = characters[this_chid];
+  const character = characters[this_chid as any];
   if (!character || selected_group) {
     return;
   }
@@ -183,26 +183,26 @@ export async function init() {
   log("settings: ", settings);
 
   manager = new SettingsUi(settings);
-  document.querySelector("#qr_container").append(await manager.render());
+  document.querySelector("#qr_container")!.append(await manager.render());
 
   buttons = new ButtonUi(settings);
   buttons.show();
   settings.onSave = () => buttons.refresh();
 
-  globalThis.executeQuickReplyByName = async (name, args = {}, options = {}) => {
+  (globalThis as any).executeQuickReplyByName = async (name: any, args: any = {}, options: any = {}) => {
     let qr = [
       ...settings.config.setList,
       ...(settings.chatConfig?.setList ?? []),
       ...(settings.charConfig?.setList ?? []),
     ]
-      .flatMap((it) => it.set.qrList)
-      .find((it) => it.label == name);
+      .flatMap((it: any) => it.set.qrList)
+      .find((it: any) => it.label == name);
     if (!qr) {
       let [setName, ...qrName] = name.split(".");
       qrName = qrName.join(".");
       const qrs = QuickReplySet.get(setName);
       if (qrs) {
-        qr = qrs.qrList.find((it) => it.label == qrName);
+        qr = qrs.qrList.find((it: any) => it.label == qrName);
       }
     }
     if (qr && qr.onExecute) {
@@ -237,7 +237,7 @@ const finalizeInit = async () => {
   debug("READY");
 };
 
-const purgeCharacterQuickReplySets = ({ character }) => {
+const purgeCharacterQuickReplySets = ({ character }: any) => {
   // Remove the character's Quick Reply Sets from the settings.
   const avatar = character?.avatar;
   if (avatar && avatar in settings.characterConfigs) {
@@ -247,7 +247,7 @@ const purgeCharacterQuickReplySets = ({ character }) => {
   }
 };
 
-const updateCharacterQuickReplySets = (oldAvatar, newAvatar) => {
+const updateCharacterQuickReplySets = (oldAvatar: any, newAvatar: any) => {
   // Update the character's Quick Reply Sets in the settings.
   if (oldAvatar && newAvatar && oldAvatar !== newAvatar) {
     log(`Updating Quick Reply Sets for character: ${oldAvatar} -> ${newAvatar}`);
@@ -259,7 +259,7 @@ const updateCharacterQuickReplySets = (oldAvatar, newAvatar) => {
   }
 };
 
-const onChatChanged = async (chatIdx) => {
+const onChatChanged = async (chatIdx: any) => {
   log("CHAT_CHANGED", chatIdx);
 
   handleCharChange();
@@ -277,16 +277,16 @@ const onChatChanged = async (chatIdx) => {
 
   await autoExec.handleChatChanged();
 };
-eventSource.on(event_types.CHAT_CHANGED, (...args) => executeIfReadyElseQueue(onChatChanged, args));
+eventSource.on(event_types.CHAT_CHANGED, (...args: any[]) => executeIfReadyElseQueue(onChatChanged, args));
 eventSource.on(event_types.CHARACTER_DELETED, purgeCharacterQuickReplySets);
 eventSource.on(event_types.CHARACTER_RENAMED, updateCharacterQuickReplySets);
 
 const onUserMessage = async () => {
   await autoExec.handleUser();
 };
-eventSource.makeFirst(event_types.USER_MESSAGE_RENDERED, (...args) => executeIfReadyElseQueue(onUserMessage, args));
+eventSource.makeFirst(event_types.USER_MESSAGE_RENDERED, (...args: any[]) => executeIfReadyElseQueue(onUserMessage, args));
 
-const onAiMessage = async (messageId) => {
+const onAiMessage = async (messageId: any) => {
   if (["..."].includes(chat[messageId]?.mes)) {
     log("QR auto-execution suppressed for swiped message");
     return;
@@ -294,25 +294,25 @@ const onAiMessage = async (messageId) => {
 
   await autoExec.handleAi();
 };
-eventSource.makeFirst(event_types.CHARACTER_MESSAGE_RENDERED, (...args) => executeIfReadyElseQueue(onAiMessage, args));
+eventSource.makeFirst(event_types.CHARACTER_MESSAGE_RENDERED, (...args: any[]) => executeIfReadyElseQueue(onAiMessage, args));
 
 const onGroupMemberDraft = async () => {
   await autoExec.handleGroupMemberDraft();
 };
-eventSource.on(event_types.GROUP_MEMBER_DRAFTED, (...args) => executeIfReadyElseQueue(onGroupMemberDraft, args));
+eventSource.on(event_types.GROUP_MEMBER_DRAFTED, (...args: any[]) => executeIfReadyElseQueue(onGroupMemberDraft, args));
 
-const onWIActivation = async (entries) => {
+const onWIActivation = async (entries: any) => {
   await autoExec.handleWIActivation(entries);
 };
-eventSource.on(event_types.WORLD_INFO_ACTIVATED, (...args) => executeIfReadyElseQueue(onWIActivation, args));
+eventSource.on(event_types.WORLD_INFO_ACTIVATED, (...args: any[]) => executeIfReadyElseQueue(onWIActivation, args));
 
 const onNewChat = async () => {
   await autoExec.handleNewChat();
 };
-eventSource.on(event_types.CHAT_CREATED, (...args) => executeIfReadyElseQueue(onNewChat, args));
-eventSource.on(event_types.GROUP_CHAT_CREATED, (...args) => executeIfReadyElseQueue(onNewChat, args));
+eventSource.on(event_types.CHAT_CREATED, (...args: any[]) => executeIfReadyElseQueue(onNewChat, args));
+eventSource.on(event_types.GROUP_CHAT_CREATED, (...args: any[]) => executeIfReadyElseQueue(onNewChat, args));
 
-const onBeforeGeneration = async (_generationType, _options = {}, isDryRun = false) => {
+const onBeforeGeneration = async (_generationType: any, _options: any = {}, isDryRun: any = false) => {
   if (isDryRun) {
     log("Before-generation hook skipped due to dryRun.");
     return;
@@ -323,4 +323,4 @@ const onBeforeGeneration = async (_generationType, _options = {}, isDryRun = fal
   }
   await autoExec.handleBeforeGeneration();
 };
-eventSource.on(event_types.GENERATION_AFTER_COMMANDS, (...args) => executeIfReadyElseQueue(onBeforeGeneration, args));
+eventSource.on(event_types.GENERATION_AFTER_COMMANDS, (...args: any[]) => executeIfReadyElseQueue(onBeforeGeneration, args));

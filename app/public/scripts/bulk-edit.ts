@@ -10,7 +10,7 @@ const enableBulkEdit = () => {
   // show the bulk edit option buttons
   $(".bulkEditOptionElement").show();
   is_bulk_edit = true;
-  characterGroupOverlay.updateSelectedCount(0);
+  characterGroupOverlay.updateSelectedCount(0 as any);
 };
 
 const disableBulkEdit = () => {
@@ -19,10 +19,10 @@ const disableBulkEdit = () => {
   // hide the bulk edit option buttons
   $(".bulkEditOptionElement").hide();
   is_bulk_edit = false;
-  characterGroupOverlay.updateSelectedCount(0);
+  characterGroupOverlay.updateSelectedCount(0 as any);
 };
 
-const toggleBulkEditMode = (isBulkEdit) => {
+const toggleBulkEditMode = (isBulkEdit: any) => {
   if (isBulkEdit) {
     disableBulkEdit();
   } else {
@@ -117,7 +117,7 @@ function disableBulkSelect() {
  * Entry point that runs on page load.
  */
 export function initBulkEdit() {
-  characterGroupOverlay.addStateChangeCallback((state) => {
+  characterGroupOverlay.addStateChangeCallback((state: any) => {
     if (state === BulkEditOverlayState.select) enableBulkEdit();
     if (state === BulkEditOverlayState.browse) disableBulkEdit();
   });

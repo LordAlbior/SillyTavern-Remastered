@@ -8,9 +8,9 @@ class SileroTtsProvider {
   // Config //
   //########//
 
-  settings;
+  settings: any;
   ready = false;
-  voices = [];
+  voices: any[] = [];
   separator = " ";
 
   defaultSettings = {
@@ -35,7 +35,7 @@ class SileroTtsProvider {
     this.refreshSession();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Pupulate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -54,7 +54,7 @@ class SileroTtsProvider {
 
     const apiCheckInterval = setInterval(() => {
       // Use Extras API if TTS support is enabled
-      if (modules.includes("tts") || modules.includes("silero-tts")) {
+      if ((modules as any[]).includes("tts") || (modules as any[]).includes("silero-tts")) {
         const baseUrl = new URL(getApiUrl());
         baseUrl.pathname = "/api/tts";
         this.settings.provider_endpoint = baseUrl.toString();
@@ -91,18 +91,18 @@ class SileroTtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((sileroVoice) => sileroVoice.name == voiceName)[0];
+    const match = (this.voices as any[]).filter((sileroVoice: any) => sileroVoice.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found`;
     }
     return match;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -119,7 +119,7 @@ class SileroTtsProvider {
     return responseJson;
   }
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(inputText: any, voiceId: any) {
     console.info(`Generating new TTS for voice_id ${voiceId}`);
     const response = await doExtrasFetch(`${this.settings.provider_endpoint}/generate`, {
       method: "POST",
@@ -163,7 +163,7 @@ class SileroTtsProvider {
   }
 
   // Interface not used by Silero TTS
-  async fetchTtsFromHistory(history_item_id) {
+  async fetchTtsFromHistory(history_item_id: any) {
     return Promise.resolve(history_item_id);
   }
 }

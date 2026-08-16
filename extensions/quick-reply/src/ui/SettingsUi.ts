@@ -6,32 +6,32 @@ import { QuickReplySet } from "../QuickReplySet.ts";
 import { QuickReplySettings } from "../QuickReplySettings.ts";
 
 export class SettingsUi {
-  /** @type {QuickReplySettings} */ settings;
+  /** @type {QuickReplySettings} */ settings: any;
 
-  /** @type {HTMLElement} */ template;
-  /** @type {HTMLElement} */ dom;
+  /** @type {HTMLElement} */ template: any;
+  /** @type {HTMLElement} */ dom: any;
 
-  /**@type {HTMLInputElement}*/ isEnabled;
-  /**@type {HTMLInputElement}*/ isCombined;
-  /**@type {HTMLInputElement}*/ showPopoutButton;
+  /**@type {HTMLInputElement}*/ isEnabled: any;
+  /**@type {HTMLInputElement}*/ isCombined: any;
+  /**@type {HTMLInputElement}*/ showPopoutButton: any;
 
-  /**@type {HTMLElement}*/ globalSetList;
+  /**@type {HTMLElement}*/ globalSetList: any;
 
-  /**@type {HTMLElement}*/ chatSetList;
-  /**@type {HTMLElement}*/ characterSetList;
+  /**@type {HTMLElement}*/ chatSetList: any;
+  /**@type {HTMLElement}*/ characterSetList: any;
 
-  /**@type {QuickReplySet}*/ currentQrSet;
-  /**@type {HTMLInputElement}*/ disableSend;
-  /**@type {HTMLInputElement}*/ placeBeforeInput;
-  /**@type {HTMLInputElement}*/ injectInput;
-  /**@type {HTMLInputElement}*/ color;
-  /**@type {HTMLInputElement}*/ onlyBorderColor;
-  /**@type {HTMLSelectElement}*/ currentSet;
-  /**@type {HTMLElement}*/ qrList;
+  /**@type {QuickReplySet}*/ currentQrSet: any;
+  /**@type {HTMLInputElement}*/ disableSend: any;
+  /**@type {HTMLInputElement}*/ placeBeforeInput: any;
+  /**@type {HTMLInputElement}*/ injectInput: any;
+  /**@type {HTMLInputElement}*/ color: any;
+  /**@type {HTMLInputElement}*/ onlyBorderColor: any;
+  /**@type {HTMLSelectElement}*/ currentSet: any;
+  /**@type {HTMLElement}*/ qrList: any;
 
-  constructor(/**@type {QuickReplySettings}*/ settings) {
+  constructor(/**@type {QuickReplySettings}*/ settings: any) {
     this.settings = settings;
-    settings.onRequestEditSet = (qrs) => this.selectQrSet(qrs);
+    settings.onRequestEditSet = (qrs: any) => this.selectQrSet(qrs);
   }
 
   rerender() {
@@ -143,8 +143,8 @@ export class SettingsUi {
       inp.type = "file";
       inp.accept = ".json";
       inp.addEventListener("change", async () => {
-        if (inp.files.length > 0) {
-          for (const file of inp.files) {
+        if (inp.files!.length > 0) {
+          for (const file of inp.files!) {
             const text = await file.text();
             this.currentQrSet.addQuickReply(JSON.parse(text));
           }
@@ -184,7 +184,7 @@ export class SettingsUi {
     let initialColorChange = true;
     this.color = this.dom.querySelector("#qr--color");
     this.color.color = this.currentQrSet?.color ?? "transparent";
-    this.color.addEventListener("change", (evt) => {
+    this.color.addEventListener("change", (evt: any) => {
       if (!this.dom.closest("body")) return;
       const qrs = this.currentQrSet;
       if (initialColorChange) {
@@ -196,7 +196,7 @@ export class SettingsUi {
       qrs.save();
       this.currentQrSet.updateColor();
     });
-    this.dom.querySelector("#qr--colorClear").addEventListener("click", (evt) => {
+    this.dom.querySelector("#qr--colorClear").addEventListener("click", (evt: any) => {
       const qrs = this.currentQrSet;
       this.color.color = "transparent";
       qrs.save();
@@ -269,7 +269,7 @@ export class SettingsUi {
     this.settings.save();
   }
 
-  updateOrder(list) {
+  updateOrder(list: any) {
     Array.from(list.children).forEach((it, idx) => {
       (it as Element).setAttribute("data-order", String(idx));
     });
@@ -277,7 +277,7 @@ export class SettingsUi {
 
   async onQrListSort() {
     this.currentQrSet.qrList = Array.from(this.qrList.querySelectorAll(".qr--set-item")).map((it, idx) => {
-      const qr = this.currentQrSet.qrList.find((qr) => qr.id == Number((it as Element).getAttribute("data-id")));
+      const qr = this.currentQrSet.qrList.find((qr: any) => qr.id == Number((it as Element).getAttribute("data-id")));
       (it as Element).setAttribute("data-order", String(idx));
       return qr;
     });
@@ -294,7 +294,7 @@ export class SettingsUi {
       this.rerender();
     }
   }
-  async doDeleteQrSet(qrs) {
+  async doDeleteQrSet(qrs: any) {
     await qrs.delete();
     //TODO (HACK) should just bubble up from QuickReplySet.delete() but that would require proper or at least more comples onDelete listeners
     for (let i = this.settings.config.setList.length - 1; i >= 0; i--) {
@@ -332,17 +332,17 @@ export class SettingsUi {
       await this.currentQrSet.save();
 
       // Update it in both set lists
-      this.settings.config.setList.forEach((set) => {
+      this.settings.config.setList.forEach((set: any) => {
         if (set.set.name === oldName) {
           set.set.name = newName;
         }
       });
-      this.settings.chatConfig?.setList.forEach((set) => {
+      this.settings.chatConfig?.setList.forEach((set: any) => {
         if (set.set.name === oldName) {
           set.set.name = newName;
         }
       });
-      this.settings.charConfig?.setList.forEach((set) => {
+      this.settings.charConfig?.setList.forEach((set: any) => {
         if (set.set.name === oldName) {
           set.set.name = newName;
         }
@@ -370,11 +370,11 @@ export class SettingsUi {
     if (name && name.length > 0) {
       const oldQrs = QuickReplySet.get(name);
       if (oldQrs) {
-        const replace = Popup.show.confirm(
-          "Replace existing World Info",
-          `A Quick Reply Set named "${name}" already exists.<br>Do you want to overwrite the existing Quick Reply Set?<br>The existing set will be deleted. This cannot be undone.`,
-        );
-        if (replace) {
+          const replace = Popup.show.confirm(
+            "Replace existing World Info",
+            `A Quick Reply Set named "${name}" already exists.<br>Do you want to overwrite the existing Quick Reply Set?<br>The existing set will be deleted. This cannot be undone.`,
+          );
+          if (replace as any) {
           const idx = QuickReplySet.list.indexOf(oldQrs);
           await this.doDeleteQrSet(oldQrs);
           const qrs = new QuickReplySet();
@@ -415,12 +415,12 @@ export class SettingsUi {
     }
   }
 
-  async importQrSet(/**@type {FileList}*/ files) {
+  async importQrSet(/**@type {FileList}*/ files: any) {
     for (let i = 0; i < files.length; i++) {
       await this.importSingleQrSet(files.item(i));
     }
   }
-  async importSingleQrSet(/**@type {File}*/ file) {
+  async importSingleQrSet(/**@type {File}*/ file: any) {
     log("FILE", file);
     try {
       const text = await file.text();
@@ -431,7 +431,7 @@ export class SettingsUi {
       } else {
         /**@type {QuickReplySet}*/
         const qrs = QuickReplySet.from(JSON.parse(JSON.stringify(props)));
-        qrs.qrList = props.qrList.map((it) => QuickReply.from(it));
+        qrs.qrList = props.qrList.map((it: any) => QuickReply.from(it));
         qrs.init();
         const oldQrs = QuickReplySet.get(props.name);
         if (oldQrs) {
@@ -439,7 +439,7 @@ export class SettingsUi {
             "Replace existing World Info",
             `A Quick Reply Set named "${name}" already exists.<br>Do you want to overwrite the existing Quick Reply Set?<br>The existing set will be deleted. This cannot be undone.`,
           );
-          if (replace) {
+          if (replace as any) {
             const idx = QuickReplySet.list.indexOf(oldQrs);
             await this.doDeleteQrSet(oldQrs);
             QuickReplySet.list.splice(idx, 0, qrs);
@@ -506,7 +506,7 @@ export class SettingsUi {
       }
       const newQrSet = QuickReplySet.from(this.currentQrSet.toJSON());
       newQrSet.name = newName;
-      newQrSet.qrList = this.currentQrSet.qrList.map((qr) => QuickReply.from(qr.toJSON()));
+      newQrSet.qrList = this.currentQrSet.qrList.map((qr: any) => QuickReply.from(qr.toJSON()));
       newQrSet.init();
       const idx = QuickReplySet.list.findIndex((it) => it.name.toLowerCase().localeCompare(newName.toLowerCase()) == 1);
       if (idx > -1) {
@@ -530,7 +530,7 @@ export class SettingsUi {
     }
   }
 
-  selectQrSet(qrs) {
+  selectQrSet(qrs: any) {
     this.currentSet.value = qrs.name;
     this.onQrSetChange();
   }

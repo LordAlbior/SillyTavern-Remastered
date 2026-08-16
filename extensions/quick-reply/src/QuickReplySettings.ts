@@ -3,7 +3,7 @@ import { extension_settings, saveMetadataDebounced } from "/scripts/extensions.j
 import { QuickReplyConfig } from "./QuickReplyConfig.ts";
 
 export class QuickReplySettings {
-  static from(props) {
+  static from(props:any) {
     props.config = QuickReplyConfig.from(props.config);
     props.characterConfigs = props.characterConfigs ?? {};
     for (const key of Object.keys(props.characterConfigs)) {
@@ -18,10 +18,10 @@ export class QuickReplySettings {
   /**@type {Boolean}*/ isCombined = false;
   /**@type {Boolean}*/ isPopout = false;
   /**@type {Boolean}*/ showPopoutButton = true;
-  /**@type {QuickReplyConfig}*/ config;
-  /**@type {{[key:string]: QuickReplyConfig}}*/ characterConfigs = {};
-  /**@type {QuickReplyConfig}*/ _chatConfig;
-  /**@type {QuickReplyConfig}*/ _charConfig;
+  /**@type {QuickReplyConfig}*/ config:any;
+  /**@type {{[key:string]: QuickReplyConfig}}*/ characterConfigs:any = {};
+  /**@type {QuickReplyConfig}*/ _chatConfig:any;
+  /**@type {QuickReplyConfig}*/ _charConfig:any;
   get chatConfig() {
     return this._chatConfig;
   }
@@ -43,8 +43,8 @@ export class QuickReplySettings {
     }
   }
 
-  /**@type {Function}*/ onSave;
-  /**@type {Function}*/ onRequestEditSet;
+  /**@type {Function}*/ onSave:any;
+  /**@type {Function}*/ onRequestEditSet:any;
 
   init() {
     this.hookConfig(this.config);
@@ -52,13 +52,13 @@ export class QuickReplySettings {
     this.hookConfig(this.charConfig);
   }
 
-  hookConfig(config) {
+  hookConfig(config:any) {
     if (config) {
       config.onUpdate = () => this.save();
-      config.onRequestEditSet = (qrs) => this.requestEditSet(qrs);
+      config.onRequestEditSet = (qrs:any) => this.requestEditSet(qrs);
     }
   }
-  unhookConfig(config) {
+  unhookConfig(config:any) {
     if (config) {
       config.onUpdate = null;
       config.onRequestEditSet = null;
@@ -77,14 +77,14 @@ export class QuickReplySettings {
     }
   }
 
-  requestEditSet(qrs) {
+  requestEditSet(qrs:any) {
     if (this.onRequestEditSet) {
       this.onRequestEditSet(qrs);
     }
   }
 
   toJSON() {
-    const characterConfigs = {};
+    const characterConfigs:any = {};
     for (const key of Object.keys(this.characterConfigs)) {
       if (this.characterConfigs[key]?.setList?.length === 0) {
         continue;

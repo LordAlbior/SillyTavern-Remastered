@@ -4,8 +4,8 @@ import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
 export { GoogleTranslateTtsProvider };
 
 class GoogleTranslateTtsProvider {
-  settings;
-  voices = [];
+  settings: any;
+  voices: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -23,7 +23,7 @@ class GoogleTranslateTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Populate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -61,7 +61,7 @@ class GoogleTranslateTtsProvider {
   //  TTS Interfaces //
   //#################//
 
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
@@ -72,7 +72,7 @@ class GoogleTranslateTtsProvider {
     return match;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -101,7 +101,7 @@ class GoogleTranslateTtsProvider {
    * Preview TTS for a given voice ID.
    * @param {string} id Voice ID
    */
-  async previewTtsVoice(id) {
+  async previewTtsVoice(id: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
     const voice = await this.getVoice(id);
@@ -118,7 +118,7 @@ class GoogleTranslateTtsProvider {
     this.audioElement.onended = () => URL.revokeObjectURL(url);
   }
 
-  async fetchTtsGeneration(text, voiceId) {
+  async fetchTtsGeneration(text: any, voiceId: any) {
     const response = await fetch("/api/google/generate-voice", {
       method: "POST",
       headers: getRequestHeaders(),

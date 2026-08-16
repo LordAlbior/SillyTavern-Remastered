@@ -10,7 +10,7 @@ export const BIAS_CACHE = new Map();
  * @param {string} containerSelector Container element selector
  * @returns
  */
-export function displayLogitBias(logitBias, containerSelector) {
+export function displayLogitBias(logitBias: any, containerSelector: any) {
   if (!Array.isArray(logitBias)) {
     console.log("Logit bias set not found");
     return;
@@ -36,7 +36,7 @@ export function displayLogitBias(logitBias, containerSelector) {
     delay: getSortableDelay(),
     handle: ".drag-handle",
     stop: () => {
-      const order = [];
+      const order: any[] = [];
       list.children().each(function () {
         order.unshift($(this).data("id"));
       });
@@ -54,7 +54,7 @@ export function displayLogitBias(logitBias, containerSelector) {
  * @param {object[]} logitBias Array of logit bias objects
  * @param {string} containerSelector Container element ID
  */
-export function createNewLogitBiasEntry(logitBias, containerSelector) {
+export function createNewLogitBiasEntry(logitBias: any, containerSelector: any) {
   const entry = { id: uuidv4(), text: "", value: 0 };
   logitBias.push(entry);
   BIAS_CACHE.delete(containerSelector);
@@ -68,7 +68,7 @@ export function createNewLogitBiasEntry(logitBias, containerSelector) {
  * @param {object[]} logitBias Array of logit bias objects
  * @param {string} containerSelector Container element ID
  */
-function createLogitBiasListItem(entry, logitBias, containerSelector) {
+function createLogitBiasListItem(entry: any, logitBias: any, containerSelector: any) {
   const id = entry.id;
   const template = $("#logit_bias_template .logit_bias_form").clone();
   template.data("id", id);
@@ -107,7 +107,7 @@ function createLogitBiasListItem(entry, logitBias, containerSelector) {
  * @param {(bias: number, sequence: number[]) => object} getBiasObject Transformer function to create bias object
  * @returns {object[]} Array of logit bias objects
  */
-export function getLogitBiasListResult(biasPreset, tokenizerType, getBiasObject) {
+export function getLogitBiasListResult(biasPreset: any, tokenizerType: any, getBiasObject: any) {
   const result = [];
 
   for (const entry of biasPreset) {

@@ -10,17 +10,17 @@ export class SlashCommandAbortController extends AbstractEventTarget {
   abort(reason = "No reason.", isQuiet = false) {
     this.signal.isQuiet = isQuiet;
     this.signal.aborted = true;
-    this.signal.reason = reason;
+    this.signal.reason = reason as any;
     this.dispatchEvent(new Event("abort"));
   }
   pause(reason = "No reason.") {
     this.signal.paused = true;
-    this.signal.reason = reason;
+    this.signal.reason = reason as any;
     this.dispatchEvent(new Event("pause"));
   }
   continue(reason = "No reason.") {
     this.signal.paused = false;
-    this.signal.reason = reason;
+    this.signal.reason = reason as any;
     this.dispatchEvent(new Event("continue"));
   }
 }

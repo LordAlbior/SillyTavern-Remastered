@@ -5,7 +5,7 @@ import { getBase64Async } from "/scripts/utils.js";
 export { ElevenLabsTtsProvider };
 
 class ElevenLabsTtsProvider {
-  settings;
+  settings: any;
   /** @type {function} */ handler;
   voices = [];
   separator = " ... ... ... ";
@@ -77,9 +77,9 @@ class ElevenLabsTtsProvider {
   }
 
   constructor() {
-    this.handler = async function (/** @type {string} */ key) {
+    this.handler = async function (this: any, /** @type {string} */ key: any) {
       if (key !== SECRET_KEYS.ELEVENLABS) return;
-      $("#elevenlabs_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.ELEVENLABS]);
+      $("#elevenlabs_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.ELEVENLABS]);
       await this.fetchTtsVoiceObjects();
     }.bind(this);
   }
@@ -117,7 +117,7 @@ class ElevenLabsTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     // Pupulate Provider UI given input settings
     if (Object.keys(settings).length == 0) {
       console.info("Using default TTS Provider settings");
@@ -133,13 +133,13 @@ class ElevenLabsTtsProvider {
     }
 
     if (Object.hasOwn(settings, "apiKey")) {
-      if (settings.apiKey && !secret_state[SECRET_KEYS.ELEVENLABS]) {
+      if (settings.apiKey && !(secret_state as Record<string, any>)[SECRET_KEYS.ELEVENLABS]) {
         await (writeSecret as any)(SECRET_KEYS.ELEVENLABS, settings.apiKey);
       }
       delete settings.apiKey;
     }
 
-    $("#elevenlabs_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.ELEVENLABS]);
+    $("#elevenlabs_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.ELEVENLABS]);
     [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
       eventSource.on(event, this.handler);
     });
@@ -202,7 +202,7 @@ class ElevenLabsTtsProvider {
     ) as HTMLInputElement;
 
     const updateCloneVoiceButtonVisibility = () => {
-      cloneVoiceButton.style.display = audioFilesInput.files.length > 0 ? "inline-block" : "none";
+      cloneVoiceButton.style.display = audioFilesInput.files!.length > 0 ? "inline-block" : "none";
     };
 
     const clearSelectedFiles = () => {
@@ -217,7 +217,7 @@ class ElevenLabsTtsProvider {
 
     audioFilesInput.addEventListener("change", () => {
       selectedFilesListElement.innerHTML = "";
-      for (const file of audioFilesInput.files) {
+      for (const file of audioFilesInput.files!) {
         const listItem = document.createElement("div");
         listItem.textContent = file.name;
         selectedFilesListElement.appendChild(listItem);
@@ -255,11 +255,11 @@ class ElevenLabsTtsProvider {
    * @param {string} voiceName Voice name to look up
    * @returns {Promise<Object>} Voice object
    */
-  async getVoice(voiceName) {
+  async getVoice(voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((elevenVoice) => elevenVoice.name == voiceName)[0];
+    const match = this.voices.filter((elevenVoice: any) => elevenVoice.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found in ElevenLabs account`;
     }
@@ -272,7 +272,7 @@ class ElevenLabsTtsProvider {
    * @param {string} voiceId Voice ID to use for synthesis
    * @returns {Promise<Response>} Response object containing audio data
    */
-  async generateTts(text, voiceId) {
+  async generateTts(text: any, voiceId: any) {
     const historyId = await this.findTtsGenerationInHistory(text, voiceId);
 
     if (historyId) {
@@ -290,7 +290,7 @@ class ElevenLabsTtsProvider {
    * @param {string} voiceId Voice ID used for TTS generation
    * @returns {Promise<string>} History item ID if found, empty string otherwise
    */
-  async findTtsGenerationInHistory(message, voiceId) {
+  async findTtsGenerationInHistory(message: any, voiceId: any) {
     const ttsHistory = await this.fetchTtsHistory();
     for (const history of ttsHistory) {
       const text = history.text;
@@ -332,7 +332,7 @@ class ElevenLabsTtsProvider {
    * @param {string} voiceId Voice ID to use for synthesis
    * @returns {Promise<Response>} Response object containing audio data
    */
-  async fetchTtsGeneration(text, voiceId) {
+  async fetchTtsGeneration(text: any, voiceId: any) {
     const model = this.settings.model ?? "eleven_monolingual_v1";
     console.info(`Generating new TTS for voice_id ${voiceId}, model ${model}`);
         const request = {
@@ -368,7 +368,7 @@ class ElevenLabsTtsProvider {
    * @param {string} historyItemId History item ID to fetch audio for
    * @returns {Promise<Response>} Response object containing audio data
    */
-  async fetchTtsFromHistory(historyItemId) {
+  async fetchTtsFromHistory(historyItemId: any) {
     console.info(`Fetched existing TTS with history_item_id ${historyItemId}`);
     const response = await fetch("/api/speech/elevenlabs/history-audio", {
       method: "POST",
@@ -406,9 +406,9 @@ class ElevenLabsTtsProvider {
    * @param {string} labels Voice labels
    * @returns {Promise<Object>} Newly created voice object
    */
-  async addVoice(name, description, labels) {
+  async addVoice(name: any, description: any, labels: any) {
     const audioFilesInput = /** @type {HTMLInputElement} */ (document.getElementById("elevenlabs_tts_audio_files"));
-    if (!(audioFilesInput instanceof HTMLInputElement) || audioFilesInput.files.length === 0) {
+    if (!(audioFilesInput instanceof HTMLInputElement) || audioFilesInput.files!.length === 0) {
       throw new Error("No audio files selected for voice cloning.");
     }
 
@@ -416,10 +416,10 @@ class ElevenLabsTtsProvider {
       name: name,
       description: description,
       labels: labels,
-      files: [],
+      files: [] as any[],
     };
 
-    for (const file of audioFilesInput.files) {
+    for (const file of audioFilesInput.files!) {
       const base64Data = await getBase64Async(file);
       data.files.push(base64Data);
     }

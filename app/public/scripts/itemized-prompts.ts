@@ -9,8 +9,8 @@ import { renderTemplateAsync } from "./templates.ts";
 import { getFriendlyTokenizerName, getTokenCountAsync } from "./tokenizers.ts";
 import { copyText } from "./utils.ts";
 
-let PromptArrayItemForRawPromptDisplay;
-let priorPromptArrayItemForRawPromptDisplay;
+let PromptArrayItemForRawPromptDisplay: any;
+let priorPromptArrayItemForRawPromptDisplay: any;
 
 const promptStorage = localforage.createInstance({ name: "SillyTavern_Prompts" });
 export let itemizedPrompts: any[] = [];
@@ -19,14 +19,14 @@ export let itemizedPrompts: any[] = [];
  * Gets the itemized prompts for a chat.
  * @param {string} chatId Chat ID to load
  */
-export async function loadItemizedPrompts(chatId) {
+export async function loadItemizedPrompts(chatId: any) {
   try {
     if (!chatId) {
       itemizedPrompts = [];
       return;
     }
 
-    itemizedPrompts = await promptStorage.getItem(chatId);
+    itemizedPrompts = (await promptStorage.getItem(chatId)) as any[];
 
     if (!itemizedPrompts) {
       itemizedPrompts = [];
@@ -43,7 +43,7 @@ export async function loadItemizedPrompts(chatId) {
  * Saves the itemized prompts for a chat.
  * @param {string} chatId Chat ID to save itemized prompts for
  */
-export async function saveItemizedPrompts(chatId) {
+export async function saveItemizedPrompts(chatId: any) {
   try {
     if (!chatId) {
       return;
@@ -62,7 +62,7 @@ export async function saveItemizedPrompts(chatId) {
  * @param {string} promptText New raw prompt text
  * @returns
  */
-export async function replaceItemizedPromptText(mesId, promptText) {
+export async function replaceItemizedPromptText(mesId: any, promptText: any) {
   if (!Array.isArray(itemizedPrompts)) {
     itemizedPrompts = [];
   }
@@ -80,7 +80,7 @@ export async function replaceItemizedPromptText(mesId, promptText) {
  * Deletes the itemized prompts for a chat.
  * @param {string} chatId Chat ID to delete itemized prompts for
  */
-export async function deleteItemizedPrompts(chatId) {
+export async function deleteItemizedPrompts(chatId: any) {
   try {
     if (!chatId) {
       return;
@@ -106,7 +106,7 @@ export async function clearItemizedPrompts() {
   }
 }
 
-export async function itemizedParams(itemizedPrompts, thisPromptSet, incomingMesId) {
+export async function itemizedParams(itemizedPrompts: any, thisPromptSet: any, incomingMesId: any) {
   const params: Record<string, any> = {
     charDescriptionTokens: await getTokenCountAsync(itemizedPrompts[thisPromptSet].charDescription),
     charPersonalityTokens: await getTokenCountAsync(itemizedPrompts[thisPromptSet].charPersonality),
@@ -132,7 +132,7 @@ export async function itemizedParams(itemizedPrompts, thisPromptSet, incomingMes
     examplesCount: String(itemizedPrompts[thisPromptSet].examplesCount ?? ""),
   };
 
-  const getFriendlyName = (value) => $(`#rm_api_block select option[value="${value}"]`).first().text() || value;
+  const getFriendlyName = (value: any) => $(`#rm_api_block select option[value="${value}"]`).first().text() || value;
 
   if (params.apiUsed) {
     params.apiUsed = getFriendlyName(params.apiUsed);
@@ -254,7 +254,7 @@ export async function itemizedParams(itemizedPrompts, thisPromptSet, incomingMes
   return params;
 }
 
-export function findItemizedPromptSet(itemizedPrompts, incomingMesId) {
+export function findItemizedPromptSet(itemizedPrompts: any, incomingMesId: any) {
   let thisPromptSet;
   priorPromptArrayItemForRawPromptDisplay = -1;
 
@@ -276,7 +276,7 @@ export function findItemizedPromptSet(itemizedPrompts, incomingMesId) {
   return thisPromptSet;
 }
 
-export async function promptItemize(itemizedPrompts, requestedMesId) {
+export async function promptItemize(itemizedPrompts: any, requestedMesId: any) {
   console.log("PROMPT ITEMIZE ENTERED");
   var incomingMesId = Number(requestedMesId);
   console.debug(`looking for MesId ${incomingMesId}`);
@@ -289,7 +289,7 @@ export async function promptItemize(itemizedPrompts, requestedMesId) {
   }
 
   const params = await itemizedParams(itemizedPrompts, thisPromptSet, incomingMesId);
-  const flatten = (rawPrompt) => (Array.isArray(rawPrompt) ? rawPrompt.map((x) => x.content).join("\n") : rawPrompt);
+  const flatten = (rawPrompt: any) => (Array.isArray(rawPrompt) ? rawPrompt.map((x) => x.content).join("\n") : rawPrompt);
 
   const template =
     params.this_main_api == "openai"
@@ -318,7 +318,7 @@ export async function promptItemize(itemizedPrompts, requestedMesId) {
       const container = document.createElement("div");
       container.innerHTML = DOMPurify.sanitize(ds);
       const rawPromptWrapper = document.getElementById("rawPromptWrapper");
-      rawPromptWrapper.replaceChildren(container);
+      rawPromptWrapper!.replaceChildren(container);
       $("#rawPromptPopup").slideToggle();
     });
   } else {
@@ -350,14 +350,14 @@ export async function promptItemize(itemizedPrompts, requestedMesId) {
       const content = document.createElement("div");
       content.classList.add("tokenItemizingMaintext");
       content.innerText = rawPrompt;
-      const popup = new Popup(content, POPUP_TYPE.TEXT, null, { allowVerticalScrolling: true, leftAlign: true });
+      const popup = new Popup(content, POPUP_TYPE.TEXT, null as any, { allowVerticalScrolling: true, leftAlign: true });
       await popup.show();
       return;
     }
 
     //let DisplayStringifiedPrompt = JSON.stringify(itemizedPrompts[PromptArrayItemForRawPromptDisplay].rawPrompt).replace(/\n+/g, '<br>');
     const rawPromptWrapper = document.getElementById("rawPromptWrapper");
-    rawPromptWrapper.innerText = rawPrompt;
+    rawPromptWrapper!.innerText = rawPrompt;
     $("#rawPromptPopup").slideToggle();
   });
 
@@ -386,10 +386,10 @@ export function initItemizedPrompts() {
     }
   });
 
-  eventSource.on(event_types.CHAT_DELETED, async (name) => {
+  eventSource.on(event_types.CHAT_DELETED, async (name: any) => {
     await deleteItemizedPrompts(name);
   });
-  eventSource.on(event_types.GROUP_CHAT_DELETED, async (name) => {
+  eventSource.on(event_types.GROUP_CHAT_DELETED, async (name: any) => {
     await deleteItemizedPrompts(name);
   });
 }
@@ -399,7 +399,7 @@ export function initItemizedPrompts() {
  * @param {number} sourceMessageId Source message ID
  * @param {number} targetMessageId Target message ID
  */
-export function swapItemizedPrompts(sourceMessageId, targetMessageId) {
+export function swapItemizedPrompts(sourceMessageId: any, targetMessageId: any) {
   if (!Array.isArray(itemizedPrompts)) {
     return;
   }
@@ -423,7 +423,7 @@ export function swapItemizedPrompts(sourceMessageId, targetMessageId) {
  * Shifts down other itemized prompts as necessary.
  * @param {number} messageId Message ID to delete itemized prompt for
  */
-export function deleteItemizedPromptForMessage(messageId) {
+export function deleteItemizedPromptForMessage(messageId: any) {
   if (!Array.isArray(itemizedPrompts)) {
     return;
   }

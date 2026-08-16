@@ -73,7 +73,7 @@ export class MacrosParser {
    * @param {IArguments} [methodArgs=null]
    * @returns {void}
    */
-  static #logDeprecated(method, replacement, methodArgs = null) {
+  static #logDeprecated(method: any, replacement: any, methodArgs: any = null) {
     console.warn(
       `[DEPRECATED] MacrosParser.${method} is deprecated and will be removed in a future version. Use ${replacement} instead. Arguments:`,
       methodArgs ?? "none",
@@ -93,7 +93,7 @@ export class MacrosParser {
    * @param {string} description
    * @returns {void}
    */
-  static #registerMacroInNewEngine(key, value, description) {
+  static #registerMacroInNewEngine(key: any, value: any, description: any) {
     if (!power_user.experimental_macro_engine) {
       return;
     }
@@ -138,7 +138,7 @@ export class MacrosParser {
    * @param {string} key
    * @returns {void}
    */
-  static #unregisterMacroInNewEngine(key) {
+  static #unregisterMacroInNewEngine(key: any) {
     if (!power_user.experimental_macro_engine) {
       return;
     }
@@ -170,7 +170,7 @@ export class MacrosParser {
    * @param {string} key Macro name (key)
    * @returns {string|MacroFunction|undefined} The macro value
    */
-  static get(key) {
+  static get(key: any) {
     MacrosParser.#logDeprecated("get", "macros.registry.getMacro (from scripts/macros/macro-system.js)", arguments);
     return MacrosParser.#macros.get(key);
   }
@@ -180,7 +180,7 @@ export class MacrosParser {
    * @param {string} key Macro name (key)
    * @returns {boolean} True if the macro is registered, false otherwise
    */
-  static has(key) {
+  static has(key: any) {
     MacrosParser.#logDeprecated("has", "macros.registry.hasMacro (from scripts/macros/macro-system.js)", arguments);
     if (power_user.experimental_macro_engine) {
       return macroSystem.registry.hasMacro(key);
@@ -195,7 +195,7 @@ export class MacrosParser {
    * @param {string|MacroFunction} value A string or a function that returns a string
    * @param {string} [description] Optional description of the macro
    */
-  static registerMacro(key, value, description = "") {
+  static registerMacro(key: any, value: any, description: any = "") {
     MacrosParser.#logDeprecated(
       "registerMacro",
       "macros.registry.registerMacro (from scripts/macros/macro-system.js) or substituteParams({ dynamicMacros })",
@@ -242,7 +242,7 @@ export class MacrosParser {
    *
    * @param {string} key Macro name (key)
    */
-  static unregisterMacro(key) {
+  static unregisterMacro(key: any) {
     MacrosParser.#logDeprecated(
       "unregisterMacro",
       "macros.registry.unregisterMacro (from scripts/macros/macro-system.js)",
@@ -278,7 +278,7 @@ export class MacrosParser {
    * @param {EnvObject} env Env object for the current evaluation context
    * @returns {void}
    */
-  static populateEnv(env) {
+  static populateEnv(env: any) {
     if (!env || typeof env !== "object") {
       console.warn("Env object is not provided");
       return;
@@ -299,7 +299,7 @@ export class MacrosParser {
    * @param {any} value Value returned by a macro
    * @returns {string} Sanitized value
    */
-  static sanitizeMacroValue(value) {
+  static sanitizeMacroValue(value: any) {
     if (typeof value === "string") {
       return value;
     }
@@ -360,7 +360,7 @@ function getChatIdHash() {
  * @param {function(object):boolean} [param0.filter] - A filter applied to the search, ignoring all messages that don't match the criteria. For example to only find user messages, etc.
  * @returns {number|null} The message id, or null if none was found
  */
-export function getLastMessageId({ exclude_swipe_in_propress = true, filter = null } = {}) {
+export function getLastMessageId({ exclude_swipe_in_propress = true, filter = null }: { exclude_swipe_in_propress?: boolean; filter?: any } = {}) {
   for (let i = chat?.length - 1; i >= 0; i--) {
     const message = chat[i];
 
@@ -410,7 +410,7 @@ function getFirstDisplayedMessageId() {
  */
 function getLastMessage() {
   const mid = getLastMessageId();
-  return chat[mid]?.mes ?? "";
+  return chat[mid as any]?.mes ?? "";
 }
 
 /**
@@ -419,8 +419,8 @@ function getLastMessage() {
  * @returns {string} The last message from the user
  */
 function getLastUserMessage() {
-  const mid = getLastMessageId({ filter: (m) => m.is_user && !m.is_system });
-  return chat[mid]?.mes ?? "";
+  const mid = getLastMessageId({ filter: (m: any) => m.is_user && !m.is_system });
+  return chat[mid as any]?.mes ?? "";
 }
 
 /**
@@ -429,8 +429,8 @@ function getLastUserMessage() {
  * @returns {string} The last message from the bot
  */
 function getLastCharMessage() {
-  const mid = getLastMessageId({ filter: (m) => !m.is_user && !m.is_system });
-  return chat[mid]?.mes ?? "";
+  const mid = getLastMessageId({ filter: (m: any) => !m.is_user && !m.is_system });
+  return chat[mid as any]?.mes ?? "";
 }
 
 /**
@@ -441,7 +441,7 @@ function getLastCharMessage() {
 function getLastSwipeId() {
   // For swipe macro, we are accepting using the message that is currently being swiped
   const mid = getLastMessageId({ exclude_swipe_in_propress: false });
-  const swipes = chat[mid]?.swipes;
+  const swipes = chat[mid as any]?.swipes;
   return swipes?.length;
 }
 
@@ -453,7 +453,7 @@ function getLastSwipeId() {
 function getCurrentSwipeId() {
   // For swipe macro, we are accepting using the message that is currently being swiped
   const mid = getLastMessageId({ exclude_swipe_in_propress: false });
-  const swipeId = chat[mid]?.swipe_id;
+  const swipeId = chat[mid as any]?.swipe_id;
   return swipeId !== null ? swipeId + 1 : null;
 }
 
@@ -464,7 +464,7 @@ function getCurrentSwipeId() {
  */
 function getBannedWordsMacro() {
   const banPattern = /{{banned "(.*)"}}/gi;
-  const banReplace = (match, bannedWord) => {
+  const banReplace = (match: any, bannedWord: any) => {
     if (main_api == "textgenerationwebui") {
       console.log("Found banned word in macros: " + bannedWord);
       textgenerationwebui_banned_in_macros.push(bannedWord);
@@ -513,7 +513,7 @@ function getTimeSinceLastMessage() {
  */
 function getRandomReplaceMacro() {
   const randomPattern = /{{random\s?::?([^}]+)}}/gi;
-  const randomReplace = (match, listString) => {
+  const randomReplace = (match: any, listString: any) => {
     // Split on either double colons or comma. If comma is the separator, we are also trimming all items.
     const list = listString.includes("::")
       ? listString.split("::")
@@ -521,7 +521,7 @@ function getRandomReplaceMacro() {
         listString
           .replace(/\\,/g, "##�COMMA�##")
           .split(",")
-          .map((item) => item.trim().replace(/##�COMMA�##/g, ","));
+          .map((item: any) => item.trim().replace(/##�COMMA�##/g, ","));
 
     if (list.length === 0) {
       return "";
@@ -539,14 +539,14 @@ function getRandomReplaceMacro() {
  * @param {string} rawContent The raw content of the string
  * @returns {Macro} The pick replace macro
  */
-function getPickReplaceMacro(rawContent) {
+function getPickReplaceMacro(rawContent: any) {
   // We need to have a consistent chat hash, otherwise we'll lose rolls on chat file rename or branch switches
   // No need to save metadata here - branching and renaming will implicitly do the save for us, and until then loading it like this is consistent
   const chatIdHash = getChatIdHash();
   const rawContentHash = getStringHash(rawContent);
 
   const pickPattern = /{{pick\s?::?([^}]+)}}/gi;
-  const pickReplace = (match, listString, offset) => {
+  const pickReplace = (match: any, listString: any, offset: any) => {
     // Split on either double colons or comma. If comma is the separator, we are also trimming all items.
     const list = listString.includes("::")
       ? listString.split("::")
@@ -554,7 +554,7 @@ function getPickReplaceMacro(rawContent) {
         listString
           .replace(/\\,/g, "##�COMMA�##")
           .split(",")
-          .map((item) => item.trim().replace(/##�COMMA�##/g, ","));
+          .map((item: any) => item.trim().replace(/##�COMMA�##/g, ","));
 
     if (list.length === 0) {
       return "";
@@ -578,7 +578,7 @@ function getPickReplaceMacro(rawContent) {
  */
 function getDiceRollMacro() {
   const rollPattern = /{{roll[ : ]([^}]+)}}/gi;
-  const rollReplace = (match, matchValue) => {
+  const rollReplace = (match: any, matchValue: any) => {
     let formula = matchValue.trim();
 
     if (isDigitsOnly(formula)) {
@@ -607,7 +607,7 @@ function getDiceRollMacro() {
  */
 function getTimeDiffMacro() {
   const timeDiffPattern = /{{timeDiff::(.*?)::(.*?)}}/gi;
-  const timeDiffReplace = (_match, matchPart1, matchPart2) => {
+  const timeDiffReplace = (_match: any, matchPart1: any, matchPart2: any) => {
     const time1 = moment(matchPart1);
     const time2 = moment(matchPart2);
 
@@ -623,7 +623,7 @@ function getTimeDiffMacro() {
  * @param {string} key - The outlet key
  * @returns {string} The outlet prompt
  */
-function getOutletPrompt(key) {
+function getOutletPrompt(key: any) {
   const value = extension_prompts[inject_ids.CUSTOM_WI_OUTLET(key)]?.value;
   return value || "";
 }
@@ -636,12 +636,12 @@ function getOutletPrompt(key) {
  * @param {function(string): string} postProcessFn - Function to run on the macro value before replacing it.
  * @returns {string} The string with substituted parameters.
  */
-export function evaluateMacros(content, env, postProcessFn) {
+export function evaluateMacros(content: any, env: any, postProcessFn: any) {
   if (!content) {
     return "";
   }
 
-  postProcessFn = typeof postProcessFn === "function" ? postProcessFn : (x) => x;
+  postProcessFn = typeof postProcessFn === "function" ? postProcessFn : (x: any) => x;
   const rawContent = content;
 
   /**
@@ -684,20 +684,20 @@ export function evaluateMacros(content, env, postProcessFn) {
     { regex: /{{lastSwipeId}}/gi, replace: () => String(getLastSwipeId() ?? "") },
     { regex: /{{currentSwipeId}}/gi, replace: () => String(getCurrentSwipeId() ?? "") },
     { regex: /{{allChatRange}}/gi, replace: () => (chat.length === 0 ? "" : `0-${chat.length - 1}`) },
-    { regex: /{{reverse:(.+?)}}/gi, replace: (_, str) => Array.from(str).reverse().join("") },
+    { regex: /{{reverse:(.+?)}}/gi, replace: (_: any, str: any) => Array.from(str).reverse().join("") },
     { regex: /\{\{\/\/([\s\S]*?)\}\}/gm, replace: () => "" },
     { regex: /{{time}}/gi, replace: () => moment().format("LT") },
     { regex: /{{date}}/gi, replace: () => moment().format("LL") },
     { regex: /{{weekday}}/gi, replace: () => moment().format("dddd") },
     { regex: /{{isotime}}/gi, replace: () => moment().format("HH:mm") },
     { regex: /{{isodate}}/gi, replace: () => moment().format("YYYY-MM-DD") },
-    { regex: /{{datetimeformat +([^}]*)}}/gi, replace: (_, format) => moment().format(format) },
+    { regex: /{{datetimeformat +([^}]*)}}/gi, replace: (_: any, format: any) => moment().format(format) },
     { regex: /{{idle_duration}}/gi, replace: () => getTimeSinceLastMessage() },
     {
       regex: /{{time_UTC([-+]\d+)}}/gi,
-      replace: (_, offset) => moment().utc().utcOffset(parseInt(offset, 10)).format("LT"),
+      replace: (_: any, offset: any) => moment().utc().utcOffset(parseInt(offset, 10)).format("LT"),
     },
-    { regex: /{{outlet::(.+?)}}/gi, replace: (_, key) => getOutletPrompt(key.trim()) || "" },
+    { regex: /{{outlet::(.+?)}}/gi, replace: (_: any, key: any) => getOutletPrompt(key.trim()) || "" },
     getTimeDiffMacro(),
     getBannedWordsMacro(),
     getRandomReplaceMacro(),
@@ -737,7 +737,7 @@ export function evaluateMacros(content, env, postProcessFn) {
     }
 
     try {
-      content = content.replace(macro.regex, (...args) => postProcessFn(macro.replace(...args)));
+      content = content.replace(macro.regex, (...args: any[]) => postProcessFn((macro.replace as any)(...args)));
     } catch (e) {
       console.warn(`Macro content can't be replaced: ${macro.regex} in ${content}`, e);
     }
@@ -758,7 +758,7 @@ export function initMacros() {
         'Returns the type of the last generation (e.g., "normal", "swipe", "continue", "impersonate", "quiet").',
       );
 
-      eventSource.on(event_types.GENERATION_STARTED, (type, _params, isDryRun) => {
+      eventSource.on(event_types.GENERATION_STARTED, (type: any, _params: any, isDryRun: any) => {
         if (isDryRun) return;
         lastGenerationType = type || "normal";
       });

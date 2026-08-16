@@ -49,7 +49,7 @@ export class SlashCommandExecutionError extends Error {
     return hint.join("\n");
   }
 
-  constructor(cause, message, commandName, start, end, commandText, fullText) {
+  constructor(cause: any, message: any, commandName: any, start: any, end: any, commandText: any, fullText: any) {
     super(message, { cause });
     this.commandName = commandName;
     this.start = start;

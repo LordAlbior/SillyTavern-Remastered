@@ -6,10 +6,10 @@ import { QuickReplySettings } from "../QuickReplySettings.ts";
 export class ButtonUi {
   /** @type {QuickReplySettings} */ settings;
 
-  /**@type {HTMLElement}*/ dom;
-  /**@type {HTMLElement}*/ popoutDom;
+  /**@type {HTMLElement}*/ dom: any;
+  /**@type {HTMLElement}*/ popoutDom: any;
 
-  constructor(/**@type {QuickReplySettings}*/ settings) {
+  constructor(/**@type {QuickReplySettings}*/ settings: any) {
     this.settings = settings;
   }
 
@@ -34,7 +34,7 @@ export class ButtonUi {
       $(this.render()).fadeIn(animation_duration);
       dragElement($(this.render()));
     } else {
-      const sendForm = document.querySelector("#send_form");
+      const sendForm = document.querySelector("#send_form")!;
       if (sendForm.children.length > 0) {
         sendForm.children[0].insertAdjacentElement("beforebegin", this.render());
       } else {

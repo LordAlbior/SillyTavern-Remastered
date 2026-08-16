@@ -26,8 +26,8 @@ const default_presets = {
   "llama-3-erato-v1": "Erato-Dragonfruit",
 };
 
-export let novelai_settings;
-export let novelai_setting_names;
+export let novelai_settings: any;
+export let novelai_setting_names: any;
 
 export const nai_settings: any = {
   temperature: 1.5,
@@ -77,11 +77,11 @@ const samplers = {
   min_p: 10,
 };
 
-let novel_data = null;
+let novel_data: any = null;
 const badWordsCache = {};
 const BIAS_KEY = "#range_block_novel";
 
-export function setNovelData(data) {
+export function setNovelData(data: any) {
   novel_data = data;
 }
 
@@ -111,7 +111,7 @@ export function getNovelMaxResponseTokens() {
   return maximum_output_length;
 }
 
-export function convertNovelPreset(data) {
+export function convertNovelPreset(data: any) {
   if (
     !data ||
     typeof data !== "object" ||
@@ -146,15 +146,15 @@ export function convertNovelPreset(data) {
     min_p: data.parameters.min_p,
     order: Array.isArray(data.parameters.order)
       ? data.parameters.order
-          .filter((s) => s.enabled && Object.keys(samplers).includes(s.id))
-          .map((s) => samplers[s.id])
+          .filter((s: any) => s.enabled && Object.keys(samplers).includes(s.id))
+          .map((s: any) => (samplers as Record<string, any>)[s.id])
       : default_order,
     extensions: {},
   };
 }
 
 export function getNovelTier() {
-  return nai_tiers[novel_data?.tier] ?? "no_connection";
+  return (nai_tiers as Record<string, any>)[novel_data?.tier] ?? "no_connection";
 }
 
 export function getNovelAnlas() {
@@ -180,7 +180,7 @@ export async function loadNovelSubscriptionData() {
   return result.ok;
 }
 
-export function loadNovelPreset(preset) {
+export function loadNovelPreset(preset: any) {
   if (preset.genamt === undefined) {
     const needsUnlock = preset.max_context > MAX_CONTEXT_DEFAULT || preset.max_length > MAX_RESPONSE_DEFAULT;
     $("#amount_gen").val(preset.max_length).trigger("input");
@@ -218,16 +218,16 @@ export function loadNovelPreset(preset) {
   loadNovelSettingsUi(nai_settings);
 }
 
-export function loadNovelSettings(data, settings) {
+export function loadNovelSettings(data: any, settings: any) {
   novelai_setting_names = data.novelai_setting_names;
   novelai_settings = data.novelai_settings;
-  novelai_settings.forEach((item, i, arr) => {
+  novelai_settings.forEach((item: any, i: any, arr: any) => {
     novelai_settings[i] = JSON.parse(item);
   });
 
   $("#settings_preset_novel").empty();
-  const presetNames = {};
-  novelai_setting_names.forEach((item, i, arr) => {
+  const presetNames: Record<string, any> = {};
+  novelai_setting_names.forEach((item: any, i: any, arr: any) => {
     presetNames[item] = i;
     $("#settings_preset_novel").append(`<option value=${i}>${item}</option>`);
   });
@@ -272,7 +272,7 @@ export function loadNovelSettings(data, settings) {
   loadNovelSettingsUi(nai_settings);
 }
 
-function loadNovelSettingsUi(ui_settings) {
+function loadNovelSettingsUi(ui_settings: any) {
   $("#temp_novel").val(ui_settings.temperature);
   $("#temp_counter_novel").val(Number(ui_settings.temperature).toFixed(2));
   $("#rep_pen_novel").val(ui_settings.repetition_penalty);
@@ -327,167 +327,167 @@ const sliders = [
   {
     sliderId: "#temp_novel",
     counterId: "#temp_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.temperature = Number(val);
     },
   },
   {
     sliderId: "#rep_pen_novel",
     counterId: "#rep_pen_counter_novel",
-    format: (val) => Number(val).toFixed(3),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(3),
+    setValue: (val: any) => {
       nai_settings.repetition_penalty = Number(val);
     },
   },
   {
     sliderId: "#rep_pen_size_novel",
     counterId: "#rep_pen_size_counter_novel",
-    format: (val) => `${val}`,
-    setValue: (val) => {
+    format: (val: any) => `${val}`,
+    setValue: (val: any) => {
       nai_settings.repetition_penalty_range = Number(val);
     },
   },
   {
     sliderId: "#rep_pen_slope_novel",
     counterId: "#rep_pen_slope_counter_novel",
-    format: (val) => `${val}`,
-    setValue: (val) => {
+    format: (val: any) => `${val}`,
+    setValue: (val: any) => {
       nai_settings.repetition_penalty_slope = Number(val);
     },
   },
   {
     sliderId: "#rep_pen_freq_novel",
     counterId: "#rep_pen_freq_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.repetition_penalty_frequency = Number(val);
     },
   },
   {
     sliderId: "#rep_pen_presence_novel",
     counterId: "#rep_pen_presence_counter_novel",
-    format: (val) => `${val}`,
-    setValue: (val) => {
+    format: (val: any) => `${val}`,
+    setValue: (val: any) => {
       nai_settings.repetition_penalty_presence = Number(val);
     },
   },
   {
     sliderId: "#tail_free_sampling_novel",
     counterId: "#tail_free_sampling_counter_novel",
-    format: (val) => `${val}`,
-    setValue: (val) => {
+    format: (val: any) => `${val}`,
+    setValue: (val: any) => {
       nai_settings.tail_free_sampling = Number(val);
     },
   },
   {
     sliderId: "#top_k_novel",
     counterId: "#top_k_counter_novel",
-    format: (val) => `${val}`,
-    setValue: (val) => {
+    format: (val: any) => `${val}`,
+    setValue: (val: any) => {
       nai_settings.top_k = Number(val);
     },
   },
   {
     sliderId: "#top_p_novel",
     counterId: "#top_p_counter_novel",
-    format: (val) => Number(val).toFixed(3),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(3),
+    setValue: (val: any) => {
       nai_settings.top_p = Number(val);
     },
   },
   {
     sliderId: "#top_a_novel",
     counterId: "#top_a_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.top_a = Number(val);
     },
   },
   {
     sliderId: "#typical_p_novel",
     counterId: "#typical_p_counter_novel",
-    format: (val) => Number(val).toFixed(3),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(3),
+    setValue: (val: any) => {
       nai_settings.typical_p = Number(val);
     },
   },
   {
     sliderId: "#mirostat_tau_novel",
     counterId: "#mirostat_tau_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.mirostat_tau = Number(val);
     },
   },
   {
     sliderId: "#mirostat_lr_novel",
     counterId: "#mirostat_lr_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.mirostat_lr = Number(val);
     },
   },
   {
     sliderId: "#min_length_novel",
     counterId: "#min_length_counter_novel",
-    format: (val) => `${val}`,
-    setValue: (val) => {
+    format: (val: any) => `${val}`,
+    setValue: (val: any) => {
       nai_settings.min_length = Number(val);
     },
   },
   {
     sliderId: "#nai_banned_tokens",
     counterId: "#nai_banned_tokens_counter",
-    format: (val) => val,
-    setValue: (val) => {
+    format: (val: any) => val,
+    setValue: (val: any) => {
       nai_settings.banned_tokens = val;
     },
   },
   {
     sliderId: "#min_p_novel",
     counterId: "#min_p_counter_novel",
-    format: (val) => Number(val).toFixed(3),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(3),
+    setValue: (val: any) => {
       nai_settings.min_p = Number(val);
     },
   },
   {
     sliderId: "#math1_temp_novel",
     counterId: "#math1_temp_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.math1_temp = Number(val);
     },
   },
   {
     sliderId: "#math1_quad_novel",
     counterId: "#math1_quad_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.math1_quad = Number(val);
     },
   },
   {
     sliderId: "#math1_quad_entropy_scale_novel",
     counterId: "#math1_quad_entropy_scale_counter_novel",
-    format: (val) => Number(val).toFixed(2),
-    setValue: (val) => {
+    format: (val: any) => Number(val).toFixed(2),
+    setValue: (val: any) => {
       nai_settings.math1_quad_entropy_scale = Number(val);
     },
   },
 ];
 
-function getBadWordIds(banned_tokens, tokenizerType) {
+function getBadWordIds(banned_tokens: any, tokenizerType: any) {
   if (tokenizerType === tokenizers.NONE) {
     return [];
   }
 
   const cacheKey = `${getStringHash(banned_tokens)}-${tokenizerType}`;
 
-  if (cacheKey in badWordsCache && Array.isArray(badWordsCache[cacheKey])) {
-    console.debug(`Bad words ids cache hit for "${banned_tokens}"`, badWordsCache[cacheKey]);
-    return badWordsCache[cacheKey];
+  if (cacheKey in badWordsCache && Array.isArray((badWordsCache as Record<string, any>)[cacheKey])) {
+    console.debug(`Bad words ids cache hit for "${banned_tokens}"`, (badWordsCache as Record<string, any>)[cacheKey]);
+    return (badWordsCache as Record<string, any>)[cacheKey];
   }
 
   const result = [];
@@ -527,12 +527,12 @@ function getBadWordIds(banned_tokens, tokenizerType) {
 
   // Cache the result
   console.debug(`Bad words ids for "${banned_tokens}"`, result);
-  badWordsCache[cacheKey] = result;
+  (badWordsCache as Record<string, any>)[cacheKey] = result;
 
   return result;
 }
 
-function getBadWordPermutations(text) {
+function getBadWordPermutations(text: any) {
   const result = [];
 
   // Original text
@@ -559,7 +559,7 @@ function getBadWordPermutations(text) {
   return result.filter(onlyUnique);
 }
 
-export function getNovelGenerationData(finalPrompt, settings, maxLength, isImpersonate, isContinue, _cfgValues, type) {
+export function getNovelGenerationData(finalPrompt: any, settings: any, maxLength: any, isImpersonate: any, isContinue: any, _cfgValues: any, type: any) {
   console.debug("NovelAI generation data for", type);
   const isKayra = nai_settings.model_novel.includes("kayra");
   const isErato = nai_settings.model_novel.includes("erato");
@@ -653,7 +653,7 @@ export function getNovelGenerationData(finalPrompt, settings, maxLength, isImper
 }
 
 // Check if the prefix needs to be overridden to use instruct mode
-function selectPrefix(selected_prefix, finalPrompt) {
+function selectPrefix(selected_prefix: any, finalPrompt: any) {
   let useInstruct = false;
   const clio = nai_settings.model_novel.includes("clio");
   const kayra = nai_settings.model_novel.includes("kayra");
@@ -670,7 +670,7 @@ function selectPrefix(selected_prefix, finalPrompt) {
   return "vanilla";
 }
 
-function getTokenizerTypeForModel(model) {
+function getTokenizerTypeForModel(model: any) {
   if (model.includes("clio")) {
     return tokenizers.NERD;
   }
@@ -684,7 +684,7 @@ function getTokenizerTypeForModel(model) {
 }
 
 // Sort the samplers by the order array
-function sortItemsByOrder(orderArray) {
+function sortItemsByOrder(orderArray: any) {
   console.debug("Preset samplers order: " + orderArray);
   const $draggableItems = $("#novel_order");
 
@@ -709,7 +709,7 @@ function sortItemsByOrder(orderArray) {
 }
 
 function saveSamplingOrder() {
-  const order = [];
+  const order: any[] = [];
   $("#novel_order")
     .children()
     .each(function () {
@@ -741,7 +741,7 @@ function calculateLogitBias() {
    * @param {number} bias Bias value
    * @param {number[]} sequence Sequence of token ids
    */
-  function getBiasObject(bias, sequence) {
+  function getBiasObject(bias: any, sequence: any) {
     return {
       bias: bias,
       ensure_sequence_finish: false,
@@ -761,7 +761,7 @@ function calculateLogitBias() {
  * @param {string} prompt Original instruction prompt
  * @returns Processed prompt
  */
-export function adjustNovelInstructionPrompt(prompt) {
+export function adjustNovelInstructionPrompt(prompt: any) {
   const stripedPrompt = prompt.replace(/[[\]]/g, "").trim();
   if (!stripedPrompt.includes("{ ")) {
     return `{ ${stripedPrompt} }`;
@@ -769,7 +769,7 @@ export function adjustNovelInstructionPrompt(prompt) {
   return stripedPrompt;
 }
 
-function tryParseStreamingError(response, decoded) {
+function tryParseStreamingError(response: any, decoded: any) {
   try {
     const data = JSON.parse(decoded);
 
@@ -786,7 +786,7 @@ function tryParseStreamingError(response, decoded) {
   }
 }
 
-export async function generateNovelWithStreaming(generate_data, signal) {
+export async function generateNovelWithStreaming(generate_data: any, signal: any) {
   generate_data.streaming = nai_settings.streaming_novel;
 
   const response = await fetch("/api/novelai/generate", {
@@ -800,7 +800,7 @@ export async function generateNovelWithStreaming(generate_data, signal) {
     throw new Error(`Got response status ${response.status}`);
   }
   const eventStream = getEventSourceStream() as any;
-  response.body.pipeThrough(eventStream);
+  response.body!.pipeThrough(eventStream);
   const reader = eventStream.readable.getReader();
 
   return async function* streamData() {
@@ -848,23 +848,25 @@ export async function generateNovelWithStreaming(generate_data, signal) {
  * @param {NAITokenLogprobs} data - NAI logprobs object for one token
  * @returns {import('./logprobs.js').TokenLogprobs | null} converted logprobs
  */
-export function parseNovelAILogprobs(data) {
+export function parseNovelAILogprobs(data: any) {
   if (!data) {
     return null;
   }
-  const befores = data.before.map(([[tokenId], [before, _]]) => [tokenId, before]);
-  const afters = data.after.map(([[tokenId], [_, after]]) => [tokenId, after]);
+  const befores = data.before.map((entry: any) => [entry[0][0], entry[1][0]]);
+  const afters = data.after.map((entry: any) => [entry[0][0], entry[1][1]]);
 
   // Find any tokens in `befores` that are missing from `afters`. Then add
   // them with a logprob of -Infinity (0% probability)
-  const notInAfter = befores.filter(([id]) => !afters.some(([aid]) => aid === id)).map(([id]) => [id, -Infinity]);
+  const notInAfter = befores.filter((entry: any) => !afters.some((a: any) => a[0] === entry[0])).map((entry: any) => [entry[0], -Infinity]);
   const merged = afters.concat(notInAfter);
 
   // Add the chosen token to `merged` if it's not already there. This can
   // happen if the chosen token was not among the top 10 most likely ones.
   // eslint-disable-next-line no-unused-vars
-  const [[chosenId], [_, chosenAfter]] = data.chosen[0];
-  if (!merged.some(([id]) => id === chosenId)) {
+  const chosenEntry = data.chosen[0];
+  const chosenId = chosenEntry[0][0];
+  const chosenAfter = chosenEntry[1][1];
+  if (!merged.some(([id]: any) => id === chosenId)) {
     merged.push([chosenId, chosenAfter]);
   }
 
@@ -923,7 +925,7 @@ export function initNovelAISettings() {
       await (writeSecret as any)(SECRET_KEYS.NOVEL, api_key_novel);
     }
 
-    if (!secret_state[SECRET_KEYS.NOVEL]) {
+    if (!(secret_state as Record<string, any>)[SECRET_KEYS.NOVEL]) {
       console.log("No secret key saved for NovelAI");
       return;
     }
@@ -951,9 +953,9 @@ export function initNovelAISettings() {
     saveSettingsDebounced();
 
     // Update the selected preset to something appropriate
-    const default_preset = default_presets[nai_settings.model_novel];
-    $("#settings_preset_novel").val(novelai_setting_names[default_preset]);
-    $(`#settings_preset_novel option[value=${novelai_setting_names[default_preset]}]`).attr("selected", "true");
+    const default_preset = (default_presets as Record<string, any>)[nai_settings.model_novel];
+    $("#settings_preset_novel").val((novelai_setting_names as Record<string, any>)[default_preset]);
+    $(`#settings_preset_novel option[value=${(novelai_setting_names as Record<string, any>)[default_preset]}]`).attr("selected", "true");
     $("#settings_preset_novel").trigger("change");
   });
 

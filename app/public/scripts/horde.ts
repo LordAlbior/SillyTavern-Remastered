@@ -18,10 +18,10 @@ import { kai_settings } from "./kai-settings.ts";
 
 export { MIN_LENGTH };
 
-let models = [];
+let models: any[] = [];
 
 export const horde_settings = {
-  models: [],
+  models: [] as any[],
   auto_adjust_response_length: true,
   auto_adjust_context_length: false,
   trusted_workers_only: false,
@@ -36,7 +36,7 @@ const MIN_LENGTH = 16;
  * @param {boolean} force Do a force refresh of the workers
  * @returns {Promise<Array>} Array of workers
  */
-async function getWorkers(force) {
+async function getWorkers(force: any) {
   const response = await fetch("/api/horde/text-workers", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -50,7 +50,7 @@ async function getWorkers(force) {
  * @param {boolean} force Do a force refresh of the models
  * @returns {Promise<Array>} Array of models
  */
-async function getModels(force) {
+async function getModels(force: any) {
   const response = await fetch("/api/horde/text-models", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -66,7 +66,7 @@ async function getModels(force) {
  * @param {string} taskId Task ID
  * @returns {Promise<Object>} Task status
  */
-async function getTaskStatus(taskId) {
+async function getTaskStatus(taskId: any) {
   const response = await fetch("/api/horde/task-status", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -84,7 +84,7 @@ async function getTaskStatus(taskId) {
  * Cancels a Horde task.
  * @param {string} taskId Task ID
  */
-async function cancelTask(taskId) {
+async function cancelTask(taskId: any) {
   const response = await fetch("/api/horde/cancel-task", {
     method: "POST",
     headers: getRequestHeaders(),
@@ -131,7 +131,7 @@ export async function getStatusHorde() {
 }
 
 function validateHordeModel() {
-  const selectedModels = models.filter((m) => horde_settings.models.includes(m.name));
+  const selectedModels: any[] = models.filter((m: any) => (horde_settings.models as any[]).includes(m.name));
 
   if (selectedModels.length === 0) {
     toastr.warning(
@@ -143,12 +143,12 @@ function validateHordeModel() {
   return selectedModels;
 }
 
-export async function adjustHordeGenerationParams(max_context_length, max_length) {
+export async function adjustHordeGenerationParams(max_context_length: any, max_length: any) {
   console.log(max_context_length, max_length);
   const workers = await getWorkers(false);
   let maxContextLength = max_context_length;
   let maxLength = max_length;
-  const availableWorkers = [];
+  const availableWorkers: any[] = [];
   const selectedModels = validateHordeModel();
 
   if (selectedModels.length === 0) {
@@ -198,7 +198,7 @@ function setContextSizePreview() {
  * @returns {Promise<{text: *, workerName: string}>}
  * @throws {Error}
  */
-export async function generateHorde(prompt, params, signal, reportProgress) {
+export async function generateHorde(prompt: any, params: any, signal: any, reportProgress: any) {
   validateHordeModel();
   delete params.prompt;
 
@@ -289,32 +289,32 @@ export async function generateHorde(prompt, params, signal, reportProgress) {
  * Displays the available models in the Horde model selection dropdown.
  * @param {boolean} force Force refresh of the models
  */
-export async function getHordeModels(force) {
-  const sortByPerformance = (a, b) => b.performance - a.performance;
-  const sortByWhitelisted = (a, b) => b.is_whitelisted - a.is_whitelisted;
-  const sortByPopular = (a, b) => b.tags?.includes("popular") - a.tags?.includes("popular");
+export async function getHordeModels(force: any) {
+  const sortByPerformance = (a: any, b: any) => b.performance - a.performance;
+  const sortByWhitelisted = (a: any, b: any) => b.is_whitelisted - a.is_whitelisted;
+  const sortByPopular = (a: any, b: any) => b.tags?.includes("popular") - a.tags?.includes("popular");
 
   $("#horde_model").empty();
-  models = (await getModels(force)).sort((a, b) => {
+  models = (await getModels(force)).sort((a: any, b: any) => {
     return sortByWhitelisted(a, b) || sortByPopular(a, b) || sortByPerformance(a, b);
   });
   for (const model of models) {
     const option = document.createElement("option");
     option.value = model.name;
     option.innerText = hordeModelTextString(model);
-    option.selected = horde_settings.models.includes(model.name);
+    option.selected = (horde_settings.models as any[]).includes(model.name);
     $("#horde_model").append(option);
   }
 
   // if previously selected is no longer available
-  if (horde_settings.models.length && models.filter((m) => horde_settings.models.includes(m.name)).length === 0) {
+  if (horde_settings.models.length && models.filter((m: any) => (horde_settings.models as any[]).includes(m.name)).length === 0) {
     horde_settings.models = [];
   }
 
   setContextSizePreview();
 }
 
-export function loadHordeSettings(settings) {
+export function loadHordeSettings(settings: any) {
   if (settings.horde_settings) {
     Object.assign(horde_settings, settings.horde_settings);
   }
@@ -347,12 +347,12 @@ async function showKudos() {
   toastr.info(`Kudos: ${kudos}`, data.user.username);
 }
 
-function hordeModelTextString(model) {
+function hordeModelTextString(model: any) {
   const q = hordeModelQueueStateString(model);
   return `${model.name} (${q})`;
 }
 
-function hordeModelQueueStateString(model) {
+function hordeModelQueueStateString(model: any) {
   return `ETA: ${model.eta}s, Speed: ${model.performance}, Queue: ${model.queued}, Workers: ${model.count}`;
 }
 
@@ -365,7 +365,7 @@ export function isHordeGenerationNotAllowed() {
   return false;
 }
 
-function getHordeModelTemplate(option) {
+function getHordeModelTemplate(option: any) {
   const model = models.find((x) => x.name === option?.element?.value);
 
   if (!option.id || !model) {
@@ -374,7 +374,7 @@ function getHordeModelTemplate(option) {
     return option.text;
   }
 
-  const strip = (html) => {
+  const strip = (html: any) => {
     const tmp = document.createElement("DIV");
     tmp.innerHTML = html || "";
     return tmp.textContent || tmp.innerText || "";
@@ -391,12 +391,12 @@ function getHordeModelTemplate(option) {
   const isPopular = model.tags?.includes("popular");
   const descriptionDiv = description ? `<div class="horde-model-description">${description}</div>` : "";
   const tagSpans =
-    (tags.length > 0 && `${tags.map((tag) => `<span class="tag tag_name">${tag}</span>`).join("")}</span>`) || "";
+    (tags.length > 0 && `${tags.map((tag: any) => `<span class="tag tag_name">${tag}</span>`).join("")}</span>`) || "";
 
   const modelDetailsLink =
     url &&
     `<a href="${url}" target="_blank" rel="noopener noreferrer" class="model-details-link fa-solid fa-circle-question"> </a>`;
-  const capitalize = (s) => (s ? s[0].toUpperCase() + s.slice(1) : "");
+  const capitalize = (s: any) => (s ? s[0].toUpperCase() + s.slice(1) : "");
   const innerContent = [
     `<strong>${displayName}</strong> ${modelDetailsLink}`,
     style ? `${capitalize(style)}` : "",
@@ -472,7 +472,7 @@ export function initHorde() {
       placeholder: t`Select Horde models`,
       allowClear: true,
       closeOnSelect: false,
-      templateSelection: (data) => {
+      templateSelection: (data: any) => {
         // Customize the pillbox text by shortening the full text
         return data.id;
       },

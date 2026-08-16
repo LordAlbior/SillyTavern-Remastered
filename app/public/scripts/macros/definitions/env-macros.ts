@@ -1,4 +1,7 @@
-import { MacroRegistry, MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+// @ts-ignore - MacroRegistry export has implicit any due to circular class reference in source file
+import { MacroRegistry as _MacroRegistry, MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+// @ts-ignore - see above
+const MacroRegistry: any = _MacroRegistry;
 import { isMobile } from "../../RossAscends-mods.ts";
 import { parseMesExamples, main_api } from "../../../script.ts";
 import { power_user } from "../../power-user.ts";
@@ -17,14 +20,14 @@ export function registerEnvMacros() {
     category: MacroCategory.NAMES,
     description: "Your current Persona username.",
     returns: "Persona username.",
-    handler: ({ env }) => env.names.user,
+    handler: ({ env }: any) => env.names.user,
   });
 
   MacroRegistry.registerMacro("char", {
     category: MacroCategory.NAMES,
     description: "The character's name.",
     returns: "Character name.",
-    handler: ({ env }) => env.names.char,
+    handler: ({ env }: any) => env.names.char,
   });
 
   MacroRegistry.registerMacro("group", {
@@ -32,21 +35,21 @@ export function registerEnvMacros() {
     category: MacroCategory.NAMES,
     description: "Comma-separated list of group member names (including muted) or the character name in solo chats.",
     returns: "List of group member names.",
-    handler: ({ env }) => env.names.group ?? "",
+    handler: ({ env }: any) => env.names.group ?? "",
   });
 
   MacroRegistry.registerMacro("groupNotMuted", {
     category: MacroCategory.NAMES,
     description: "Comma-separated list of group member names excluding muted members.",
     returns: "List of group member names excluding muted members.",
-    handler: ({ env }) => env.names.groupNotMuted ?? "",
+    handler: ({ env }: any) => env.names.groupNotMuted ?? "",
   });
 
   MacroRegistry.registerMacro("notChar", {
     category: MacroCategory.NAMES,
     description: "Comma-separated list of all participants except the current speaker.",
     returns: "List of all participants except the current speaker.",
-    handler: ({ env }) => env.names.notChar ?? "",
+    handler: ({ env }: any) => env.names.notChar ?? "",
   });
 
   // Character card field macros (from MacroEnv.character)
@@ -54,14 +57,14 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "The character's Main Prompt override.",
     returns: "Character Main Prompt override.",
-    handler: ({ env }) => env.character.charPrompt ?? "",
+    handler: ({ env }: any) => env.character.charPrompt ?? "",
   });
 
   MacroRegistry.registerMacro("charInstruction", {
     category: MacroCategory.CHARACTER,
     description: "The character's Post-History Instructions override.",
     returns: "Character Post-History Instructions override.",
-    handler: ({ env }) => env.character.charInstruction ?? "",
+    handler: ({ env }: any) => env.character.charInstruction ?? "",
   });
 
   MacroRegistry.registerMacro("charDescription", {
@@ -69,7 +72,7 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "The character's description.",
     returns: "Character description.",
-    handler: ({ env }) => env.character.description ?? "",
+    handler: ({ env }: any) => env.character.description ?? "",
   });
 
   MacroRegistry.registerMacro("charPersonality", {
@@ -77,7 +80,7 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "The character's personality.",
     returns: "Character personality.",
-    handler: ({ env }) => env.character.personality ?? "",
+    handler: ({ env }: any) => env.character.personality ?? "",
   });
 
   MacroRegistry.registerMacro("charScenario", {
@@ -85,28 +88,28 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "The character's scenario.",
     returns: "Character scenario.",
-    handler: ({ env }) => env.character.scenario ?? "",
+    handler: ({ env }: any) => env.character.scenario ?? "",
   });
 
   MacroRegistry.registerMacro("persona", {
     category: MacroCategory.CHARACTER,
     description: "Your current Persona description.",
     returns: "Persona description.",
-    handler: ({ env }) => env.character.persona ?? "",
+    handler: ({ env }: any) => env.character.persona ?? "",
   });
 
   MacroRegistry.registerMacro("mesExamplesRaw", {
     category: MacroCategory.CHARACTER,
     description: "Unformatted dialogue examples from the character card.",
     returns: "Unformatted dialogue examples.",
-    handler: ({ env }) => env.character.mesExamplesRaw ?? "",
+    handler: ({ env }: any) => env.character.mesExamplesRaw ?? "",
   });
 
   MacroRegistry.registerMacro("mesExamples", {
     category: MacroCategory.CHARACTER,
     description: "The character's dialogue examples, formatted for instruct mode when enabled.",
     returns: "Formatted dialogue examples.",
-    handler: ({ env }) => {
+    handler: ({ env }: any) => {
       const raw = env.character.mesExamplesRaw ?? "";
       if (!raw) return "";
 
@@ -129,7 +132,7 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "The character's @ Depth Note.",
     returns: "Character @ Depth Note.",
-    handler: ({ env }) => env.character.charDepthPrompt ?? "",
+    handler: ({ env }: any) => env.character.charDepthPrompt ?? "",
   });
 
   MacroRegistry.registerMacro("charCreatorNotes", {
@@ -137,7 +140,7 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "Creator notes from the character card.",
     returns: "Creator notes.",
-    handler: ({ env }) => env.character.creatorNotes ?? "",
+    handler: ({ env }: any) => env.character.creatorNotes ?? "",
   });
 
   MacroRegistry.registerMacro("charFirstMessage", {
@@ -155,7 +158,7 @@ export function registerEnvMacros() {
     description: "The character's first message / greeting. Optionally specify an index to access alternate greetings.",
     returns: "Character greeting at the given index, or empty string if out of bounds.",
     exampleUsage: ["{{greeting}}", "{{greeting::0}}", "{{greeting::1}}"],
-    handler: ({ env, unnamedArgs: [index] }) => {
+    handler: ({ env, unnamedArgs: [index] }: any) => {
       const i = Number(index ?? 0);
       if (i === 0) return env.character.firstMessage ?? "";
       const altGreetings = env.character.alternateGreetings;
@@ -173,7 +176,7 @@ export function registerEnvMacros() {
     category: MacroCategory.CHARACTER,
     description: "The character's version number.",
     returns: "Character version number.",
-    handler: ({ env }) => env.character.version ?? "",
+    handler: ({ env }: any) => env.character.version ?? "",
   });
 
   // System / env extras macros (from MacroEnv.system / MacroEnv.extra)
@@ -181,14 +184,14 @@ export function registerEnvMacros() {
     category: MacroCategory.STATE,
     description: "Model name for the currently selected API (Chat Completion or Chat Completion).",
     returns: "Model name.",
-    handler: ({ env }) => env.system.model,
+    handler: ({ env }: any) => env.system.model,
   });
 
   MacroRegistry.registerMacro("original", {
     category: MacroCategory.CHARACTER,
     description: "Original message content for {{original}} substitution in in character prompt overrides.",
     returns: "Original message content.",
-    handler: ({ env }) => {
+    handler: ({ env }: any) => {
       const value = env.functions.original();
       return value;
     },

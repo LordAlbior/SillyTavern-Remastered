@@ -3,7 +3,9 @@
  * Similar to SlashCommandBrowser but for the macro system.
  */
 
-import { MacroRegistry, MacroCategory } from "./MacroRegistry.ts";
+import { MacroCategory } from "./MacroRegistry.ts";
+import * as MacroRegistryModule from "./MacroRegistry.ts";
+const MacroRegistry: any = (MacroRegistryModule as any).MacroRegistry;
 import { performFuzzySearch } from "../../power-user.ts";
 
 import { escapeRegex } from "/scripts/utils.ts";
@@ -36,13 +38,13 @@ export class MacroBrowser {
   macrosByCategory = new Map();
 
   /** @type {HTMLElement} */
-  dom;
+  dom: any;
 
   /** @type {HTMLInputElement} */
-  searchInput;
+  searchInput: any;
 
   /** @type {HTMLElement} */
-  detailsPanel;
+  detailsPanel: any;
 
   /** @type {Map<string, HTMLElement>} */
   itemMap = new Map();
@@ -73,7 +75,7 @@ export class MacroBrowser {
    */
   #sortMacros() {
     for (const [, macros] of this.macrosByCategory) {
-      macros.sort((a, b) => a.name.localeCompare(b.name));
+      macros.sort((a: any, b: any) => a.name.localeCompare(b.name));
     }
   }
 
@@ -92,7 +94,7 @@ export class MacroBrowser {
    * @param {HTMLElement} parent
    * @returns {HTMLElement}
    */
-  renderInto(parent) {
+  renderInto(parent: any) {
     this.#loadMacros();
 
     const root = document.createElement("div");
@@ -152,7 +154,7 @@ export class MacroBrowser {
    * Renders the macro list grouped by category.
    * @param {HTMLElement} listPanel
    */
-  #renderList(listPanel) {
+  #renderList(listPanel: any) {
     listPanel.innerHTML = "";
     this.itemMap.clear();
 
@@ -182,9 +184,9 @@ export class MacroBrowser {
    * @param {MacroDefinition} macro
    * @param {HTMLElement} item
    */
-  #showDetails(macro, item) {
+  #showDetails(macro: any, item: any) {
     // Clear previous selection
-    this.dom.querySelectorAll(".macro-item.selected").forEach((el) => el.classList.remove("selected"));
+    this.dom.querySelectorAll(".macro-item.selected").forEach((el: any) => el.classList.remove("selected"));
     item.classList.add("selected");
 
     // Render details
@@ -196,19 +198,19 @@ export class MacroBrowser {
    * Handles search input using fuzzy search.
    * @param {string} query
    */
-  #handleSearch(query) {
+  #handleSearch(query: any) {
     query = query.trim();
 
     // Clear details on search
     this.detailsPanel.innerHTML = '<div class="macro-details-placeholder">Select a macro to view details</div>';
-    this.dom.querySelectorAll(".macro-item.selected").forEach((el) => el.classList.remove("selected"));
+    this.dom.querySelectorAll(".macro-item.selected").forEach((el: any) => el.classList.remove("selected"));
 
     // If empty query, show all
     if (!query) {
       for (const item of this.itemMap.values()) {
         item.classList.remove("isFiltered");
       }
-      this.dom.querySelectorAll(".macro-category-header").forEach((h) => h.classList.remove("isFiltered"));
+      this.dom.querySelectorAll(".macro-category-header").forEach((h: any) => h.classList.remove("isFiltered"));
       return;
     }
 
@@ -217,13 +219,13 @@ export class MacroBrowser {
 
     // Build searchable data array from all macros
     const allMacros = MacroRegistry.getAllMacros();
-    const searchData = allMacros.map((macro) => ({
+    const searchData = allMacros.map((macro: any) => ({
       name: macro.name,
-      aliases: macro.aliases?.map((a) => a.alias).join(" "),
+      aliases: macro.aliases?.map((a: any) => a.alias).join(" "),
       description: macro.description || "",
       category: getCategoryConfig(macro.category).label,
-      argNames: macro.unnamedArgDefs.map((d) => d.name).join(" "),
-      argDescriptions: macro.unnamedArgDefs.map((d) => d.description || "").join(" "),
+      argNames: macro.unnamedArgDefs.map((d: any) => d.name).join(" "),
+      argDescriptions: macro.unnamedArgDefs.map((d: any) => d.description || "").join(" "),
     }));
 
     // Fuzzy search with weighted keys
@@ -237,7 +239,7 @@ export class MacroBrowser {
     ];
 
     const results = performFuzzySearch("macro-browser", searchData, keys, query);
-    const matchedNames = new Set(results.map((r) => r.item.name));
+    const matchedNames = new Set(results.map((r: any) => r.item.name));
 
     // Filter items based on fuzzy results
     for (const [name, item] of this.itemMap) {
@@ -245,7 +247,7 @@ export class MacroBrowser {
     }
 
     // Hide empty category headers
-    this.dom.querySelectorAll(".macro-category-header").forEach((header) => {
+    this.dom.querySelectorAll(".macro-category-header").forEach((header: any) => {
       if (!(header instanceof HTMLElement)) return;
       const category = header.dataset.category;
       const hasVisible = Array.from(this.itemMap.values())
@@ -288,7 +290,7 @@ export class MacroBrowser {
    * Handles keyboard shortcuts.
    * @param {KeyboardEvent} evt
    */
-  #handleKeyDown(evt) {
+  #handleKeyDown(evt: any) {
     if (!evt.shiftKey && !evt.altKey && evt.ctrlKey && evt.key.toLowerCase() === "f") {
       if (!this.dom.closest("body")) return;
       if (this.dom.closest(".mes") && !this.dom.closest(".last_mes")) return;
@@ -317,8 +319,8 @@ export function getMacrosHelp() {
  * @param {string} category
  * @returns {{ label: string, order: number }}
  */
-function getCategoryConfig(category) {
-  return CATEGORY_CONFIG[category] ?? { label: category, order: 100 };
+function getCategoryConfig(category: any) {
+  return (CATEGORY_CONFIG as Record<string, any>)[category] ?? { label: category, order: 100 };
 }
 
 /**
@@ -328,7 +330,7 @@ function getCategoryConfig(category) {
  * @param {MacroDefinition} macro
  * @returns {string}
  */
-export function formatMacroSignature(macro) {
+export function formatMacroSignature(macro: any) {
   // Use displayOverride if provided
   if (macro.displayOverride) {
     if (macro.aliasOf) {
@@ -375,7 +377,7 @@ export function formatMacroSignature(macro) {
  * @param {MacroDefinition} macro
  * @returns {HTMLElement}
  */
-export function createSourceIndicator(macro) {
+export function createSourceIndicator(macro: any) {
   const src = document.createElement("span");
   src.classList.add("macro-source", "fa-solid");
 
@@ -401,7 +403,7 @@ export function createSourceIndicator(macro) {
  * @param {MacroDefinition} macro
  * @returns {HTMLElement|null}
  */
-export function createAliasIndicator(macro) {
+export function createAliasIndicator(macro: any) {
   if (!macro.aliasOf) return null;
 
   const icon = document.createElement("span");
@@ -415,7 +417,7 @@ export function createAliasIndicator(macro) {
  * @param {MacroValueType|MacroValueType[]} type - Single type or array of accepted types.
  * @returns {HTMLElement}
  */
-export function createTypeBadge(type) {
+export function createTypeBadge(type: any) {
   const badge = document.createElement("span");
   badge.classList.add("macro-arg-type");
 
@@ -435,7 +437,7 @@ export function createTypeBadge(type) {
  * @param {MacroDefinition} macro
  * @returns {HTMLElement}
  */
-function renderMacroItem(macro) {
+function renderMacroItem(macro: any) {
   const item = document.createElement("div");
   item.classList.add("macro-item");
   if (macro.aliasOf) item.classList.add("isAlias");
@@ -472,7 +474,7 @@ function renderMacroItem(macro) {
  * @param {boolean} [options.showCategory=true] - Whether to show category badge.
  * @returns {HTMLElement}
  */
-export function renderMacroDetails(macro, options: any = {}) {
+export function renderMacroDetails(macro: any, options: any = {}) {
   const { currentArgIndex = -1, showCategory = true } = options;
   const details = document.createElement("div");
   details.classList.add("macro-details");

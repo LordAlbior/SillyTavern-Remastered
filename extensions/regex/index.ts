@@ -58,7 +58,7 @@ import { getPresetManager } from "/scripts/preset-manager.js";
 // Re-exports for legacy extensions
 export { getRegexScripts };
 
-const sanitizeFileName = (name) => name.replace(/[\s.<>:"/\\|?*\x00-\x1F\x7F]/g, "_").toLowerCase();
+const sanitizeFileName = (name: any) => name.replace(/[\s.<>:"/\\|?*\x00-\x1F\x7F]/g, "_").toLowerCase();
 
 /**
  * @typedef {import("/scripts/char-data.js").RegexScriptData} RegexScript
@@ -118,9 +118,9 @@ class RegexPresetManager {
     const presetScripts = this.regexListToPresetItems(getScriptsByType(SCRIPT_TYPES.PRESET));
 
     return {
-      global: globalScripts.map((item) => item.id).sort(),
-      scoped: scopedScripts.map((item) => item.id).sort(),
-      preset: presetScripts.map((item) => item.id).sort(),
+      global: (globalScripts ?? []).map((item: any) => item.id).sort(),
+      scoped: (scopedScripts ?? []).map((item: any) => item.id).sort(),
+      preset: (presetScripts ?? []).map((item: any) => item.id).sort(),
     };
   }
 
@@ -130,7 +130,7 @@ class RegexPresetManager {
    * @param {RegexPresetState} state2 Second state object
    * @returns {boolean} True if states are different
    */
-  hasStateChanged(state1, state2) {
+  hasStateChanged(state1: any, state2: any) {
     if (!state1 || !state2) return false;
 
     const global1 = state1.global || [];
@@ -145,9 +145,9 @@ class RegexPresetManager {
     }
 
     return (
-      !global1.every((id) => global2.includes(id)) ||
-      !scoped1.every((id) => scoped2.includes(id)) ||
-      !preset1.every((id) => preset2.includes(id))
+      !global1.every((id: any) => global2.includes(id)) ||
+      !scoped1.every((id: any) => scoped2.includes(id)) ||
+      !preset1.every((id: any) => preset2.includes(id))
     );
   }
 
@@ -155,9 +155,9 @@ class RegexPresetManager {
    * Updates the stored state after a preset is applied or saved.
    * @param {string} presetId - The current preset ID
    */
-  updateStoredState(presetId) {
+  updateStoredState(presetId: any) {
     this.currentPresetId = presetId;
-    this.lastKnownState = this.captureCurrentState();
+    this.lastKnownState = this.captureCurrentState() as any;
   }
 
   /**
@@ -174,7 +174,7 @@ class RegexPresetManager {
       return true; // No changes detected
     }
 
-    const currentPreset = extension_settings.regex_presets.find((p) => p.id === this.currentPresetId);
+    const currentPreset = extension_settings.regex_presets.find((p: any) => p.id === this.currentPresetId);
     const presetName = currentPreset ? currentPreset.name : t`Unknown Preset`;
 
     const choice = await Popup.show.confirm(
@@ -202,14 +202,14 @@ class RegexPresetManager {
    * @returns {void}
    */
   setupEventListeners() {
-    this.presetSelect = /** @type {HTMLSelectElement} */ (document.getElementById("regex_presets"));
+    this.presetSelect = /** @type {HTMLSelectElement} */ (document.getElementById("regex_presets")) as any;
     if (!this.presetSelect) {
       console.error("RegexPresetManager: Could not find preset select element in the DOM.");
       return;
     }
 
-    this.presetSelect.addEventListener("change", async (event) => {
-      const selectedPresetId = this.presetSelect.value;
+    (this.presetSelect as any).addEventListener("change", async (event: any) => {
+      const selectedPresetId = (this.presetSelect as any).value;
       const fromSlashCommand = event instanceof CustomEvent && event?.detail?.fromSlashCommand === true;
 
       // Check for unsaved changes before switching
@@ -218,75 +218,75 @@ class RegexPresetManager {
         if (!canProceed) {
           // Revert the selection
           event.preventDefault();
-          const currentPreset = extension_settings.regex_presets.find((p) => p.id === this.currentPresetId);
+          const currentPreset = extension_settings.regex_presets.find((p: any) => p.id === this.currentPresetId);
           if (currentPreset) {
-            this.presetSelect.value = currentPreset.id;
+            (this.presetSelect as any).value = currentPreset.id;
           }
           return;
         }
       }
 
       await this.applyPreset(selectedPresetId);
-      extension_settings.regex_presets.forEach((p) => {
+      extension_settings.regex_presets.forEach((p: any) => {
         p.isSelected = p.id === selectedPresetId;
       });
       saveSettingsDebounced();
       this.updateStoredState(selectedPresetId);
     });
 
-    this.presetCreateButton = document.getElementById("regex_preset_create");
+    this.presetCreateButton = document.getElementById("regex_preset_create") as any;
     if (!this.presetCreateButton) {
       console.error("RegexPresetManager: Could not find preset create button in the DOM.");
       return;
     }
 
-    this.presetCreateButton.addEventListener("click", async () => {
+    (this.presetCreateButton as any).addEventListener("click", async () => {
       const newId = uuidv4();
       await this.savePreset(newId, false);
       this.renderPresetList();
       this.updateStoredState(newId);
     });
 
-    this.presetUpdateButton = document.getElementById("regex_preset_update");
+    this.presetUpdateButton = document.getElementById("regex_preset_update") as any;
     if (!this.presetUpdateButton) {
       console.error("RegexPresetManager: Could not find preset update button in the DOM.");
       return;
     }
 
-    this.presetUpdateButton.addEventListener("click", async () => {
-      const selectedPresetId = this.presetSelect.value;
+    (this.presetUpdateButton as any).addEventListener("click", async () => {
+      const selectedPresetId = (this.presetSelect as any).value;
       await this.savePreset(selectedPresetId, true);
       this.renderPresetList();
       this.updateStoredState(selectedPresetId);
     });
 
-    this.presetApplyButton = document.getElementById("regex_preset_apply");
+    this.presetApplyButton = document.getElementById("regex_preset_apply") as any;
     if (!this.presetApplyButton) {
       console.error("RegexPresetManager: Could not find preset apply button in the DOM.");
       return;
     }
 
-    this.presetApplyButton.addEventListener("click", async () => {
-      const selectedPresetId = this.presetSelect.value;
+    (this.presetApplyButton as any).addEventListener("click", async () => {
+      const selectedPresetId = (this.presetSelect as any).value;
       await this.applyPreset(selectedPresetId);
       this.updateStoredState(selectedPresetId);
     });
 
-    this.presetDeleteButton = document.getElementById("regex_preset_delete");
+    this.presetDeleteButton = document.getElementById("regex_preset_delete") as any;
     if (!this.presetDeleteButton) {
       console.error("RegexPresetManager: Could not find preset delete button in the DOM.");
       return;
     }
 
-    this.presetDeleteButton.addEventListener("click", async () => {
-      const selectedPresetId = this.presetSelect.value;
+    (this.presetDeleteButton as any).addEventListener("click", async () => {
+      const selectedPresetId = (this.presetSelect as any).value;
       await this.deletePreset(selectedPresetId);
       this.renderPresetList();
 
-      const newSelectedPresetId = extension_settings.regex_presets.find((p) => p.isSelected)?.id;
+      const newSelectedPresetId = extension_settings.regex_presets.find((p: any) => p.isSelected)?.id;
       if (newSelectedPresetId) {
         await this.applyPreset(newSelectedPresetId);
-        this.presetSelect.value = newSelectedPresetId;
+        (this.presetSelect as any).value = newSelectedPresetId;
         this.updateStoredState(newSelectedPresetId);
       } else {
         this.currentPresetId = null;
@@ -297,7 +297,7 @@ class RegexPresetManager {
     this.renderPresetList();
 
     // Initialize the stored state with the currently selected preset
-    const selectedPreset = extension_settings.regex_presets?.find((p) => p.isSelected);
+    const selectedPreset = extension_settings.regex_presets?.find((p: any) => p.isSelected);
     if (selectedPreset) {
       this.updateStoredState(selectedPreset.id);
     }
@@ -312,7 +312,7 @@ class RegexPresetManager {
       SlashCommand.fromProps({
         name: "regex-preset",
         helpString: t`Selects a regex preset by name or ID. Gets the current regex preset ID if no argument is provided.`,
-        callback: (args, name) => {
+        callback: (args: any, name: any) => {
           if (!this.presetSelect) {
             return "";
           }
@@ -322,12 +322,12 @@ class RegexPresetManager {
           if (name) {
             const quiet = isTrueBoolean(args?.quiet?.toString());
             const foundId = extension_settings.regex_presets.find(
-              (p) => equalsIgnoreCaseAndAccents(p.id, name) || equalsIgnoreCaseAndAccents(p.name, name),
+              (p: any) => equalsIgnoreCaseAndAccents(p.id, name) || equalsIgnoreCaseAndAccents(p.name, name),
             )?.id;
 
             if (foundId) {
-              this.presetSelect.value = foundId;
-              this.presetSelect.dispatchEvent(new CustomEvent("change", { detail: { fromSlashCommand: true } }));
+              (this.presetSelect as any).value = foundId;
+              (this.presetSelect as any).dispatchEvent(new CustomEvent("change", { detail: { fromSlashCommand: true } }));
               return foundId;
             }
 
@@ -335,7 +335,7 @@ class RegexPresetManager {
             return "";
           }
 
-          return this.presetSelect.value;
+          return (this.presetSelect as any).value;
         },
         returns: "current preset ID",
         namedArgumentList: [
@@ -353,7 +353,7 @@ class RegexPresetManager {
             typeList: [ARGUMENT_TYPE.STRING],
             enumProvider: () =>
               extension_settings.regex_presets.map(
-                (x) => new SlashCommandEnumValue(x.id, x.name, enumTypes.enum, enumIcons.preset),
+                (x: any) => new SlashCommandEnumValue(x.id, x.name, enumTypes.enum, enumIcons.preset),
               ),
           }),
         ],
@@ -370,21 +370,21 @@ class RegexPresetManager {
       return;
     }
 
-    this.presetSelect.innerHTML = "";
+    (this.presetSelect as any).innerHTML = "";
 
     if (!Array.isArray(extension_settings.regex_presets) || extension_settings.regex_presets.length === 0) {
       const fallbackOption = new Option(t`[No presets saved]`, "", true, true);
-      this.presetSelect.appendChild(fallbackOption);
-      this.presetSelect.disabled = true;
+      (this.presetSelect as any).appendChild(fallbackOption);
+      (this.presetSelect as any).disabled = true;
       return;
     }
 
-    extension_settings.regex_presets.forEach((preset) => {
+    extension_settings.regex_presets.forEach((preset: any) => {
       const option = new Option(preset.name, preset.id, preset.isSelected, preset.isSelected);
-      this.presetSelect.appendChild(option);
+      (this.presetSelect as any).appendChild(option);
     });
 
-    this.presetSelect.disabled = false;
+    (this.presetSelect as any).disabled = false;
   }
 
   /**
@@ -394,7 +394,7 @@ class RegexPresetManager {
    * @param {RegexScript[]} params.targetList The list of target scripts to modify
    * @param {(targetList: RegexScript[]) => Promise<any>} params.saveFunction Function to save the modified list
    */
-  async applyPresetList({ presetList, targetList, saveFunction }) {
+  async applyPresetList({ presetList, targetList, saveFunction }: any) {
     if (!Array.isArray(targetList) || !Array.isArray(presetList)) {
       return;
     }
@@ -419,8 +419,8 @@ class RegexPresetManager {
    * @param {string} presetId - The ID of the preset to apply
    * @returns {Promise<void>}
    */
-  async applyPreset(presetId) {
-    const preset = extension_settings.regex_presets.find((p) => p.id === presetId);
+  async applyPreset(presetId: any) {
+    const preset = extension_settings.regex_presets.find((p: any) => p.id === presetId);
     if (!preset) {
       toastr.error(t`Could not find the selected preset.`);
       return;
@@ -435,7 +435,7 @@ class RegexPresetManager {
           [SCRIPT_TYPES.PRESET]: preset.preset,
         }[scriptType],
         targetList: getScriptsByType(scriptType),
-        saveFunction: (scripts) => saveScriptsByType(scripts, scriptType),
+        saveFunction: (scripts: any) => saveScriptsByType(scripts, scriptType),
       });
     }
 
@@ -450,7 +450,7 @@ class RegexPresetManager {
    * @param {RegexScript[]} list The list of regex scripts
    * @returns {RegexPresetItem[] | null} The list of preset items, or null if the input is invalid
    */
-  regexListToPresetItems(list) {
+  regexListToPresetItems(list: any) {
     if (!Array.isArray(list)) {
       return null;
     }
@@ -464,8 +464,8 @@ class RegexPresetManager {
    * @param {boolean} isUpdate - Whether this is an update operation
    * @returns {Promise<void>}
    */
-  async savePreset(presetId, isUpdate) {
-    const existingPreset = isUpdate ? extension_settings.regex_presets.find((p) => p.id === presetId) : null;
+  async savePreset(presetId: any, isUpdate: any) {
+    const existingPreset = isUpdate ? extension_settings.regex_presets.find((p: any) => p.id === presetId) : null;
 
     if (isUpdate && !existingPreset) {
       toastr.error(t`Could not find the preset to update.`);
@@ -494,7 +494,7 @@ class RegexPresetManager {
       extension_settings.regex_presets.push(preset);
     }
 
-    extension_settings.regex_presets.forEach((p) => {
+    extension_settings.regex_presets.forEach((p: any) => {
       p.isSelected = p.id === id;
     });
     saveSettingsDebounced();
@@ -507,8 +507,8 @@ class RegexPresetManager {
    * @param {string} presetId - The ID of the preset to delete
    * @returns {Promise<void>}
    */
-  async deletePreset(presetId) {
-    const presetIndex = extension_settings.regex_presets.findIndex((p) => p.id === presetId);
+  async deletePreset(presetId: any) {
+    const presetIndex = extension_settings.regex_presets.findIndex((p: any) => p.id === presetId);
     if (presetIndex === -1) {
       toastr.error(t`Could not find the preset to delete.`);
       return;
@@ -523,7 +523,7 @@ class RegexPresetManager {
     extension_settings.regex_presets.splice(presetIndex, 1);
 
     // Select the first preset if any exist
-    extension_settings.regex_presets.forEach((p, i) => {
+    extension_settings.regex_presets.forEach((p: any, i: any) => {
       p.isSelected = i === 0;
     });
     saveSettingsDebounced();
@@ -540,7 +540,7 @@ const presetManager = new RegexPresetManager();
  * - Use `fa-minus` when the checkbox is checked (indicating all scripts are selected).
  * @param {boolean} allAreChecked Should the "select all" icon be in the checked state?
  */
-function setToggleAllIcon(allAreChecked) {
+function setToggleAllIcon(allAreChecked: any) {
   const selectAllIcon = $("#bulk_select_all_toggle").find("i");
   selectAllIcon.toggleClass("fa-check-double", !allAreChecked);
   selectAllIcon.toggleClass("fa-minus", allAreChecked);
@@ -566,7 +566,7 @@ function setMoveButtonsVisibility() {
  * @param {boolean} [saveSettings=true] Whether to save the settings immediately
  * @returns {Promise<void>}
  */
-async function saveRegexScript(regexScript, existingScriptIndex, scriptType, saveSettings = true) {
+async function saveRegexScript(regexScript: any, existingScriptIndex: any, scriptType: any, saveSettings = true) {
   // If not editing
   const array = getScriptsByType(scriptType);
 
@@ -599,7 +599,7 @@ async function saveRegexScript(regexScript, existingScriptIndex, scriptType, sav
 
   if (scriptType === SCRIPT_TYPES.SCOPED) {
     await saveScriptsByType(array, SCRIPT_TYPES.SCOPED);
-    allowScopedScripts(characters?.[this_chid]);
+    allowScopedScripts(characters?.[this_chid as any]);
   }
 
   if (scriptType === SCRIPT_TYPES.PRESET) {
@@ -631,10 +631,10 @@ async function saveRegexScript(regexScript, existingScriptIndex, scriptType, sav
  * @param {boolean} saveSettings Whether to save the settings immediately
  * @returns {Promise<void>}
  */
-async function deleteRegexScript(id, scriptType, saveSettings = true) {
+async function deleteRegexScript(id: any, scriptType: any, saveSettings = true) {
   const array = getScriptsByType(scriptType);
 
-  const existingScriptIndex = array.findIndex((script) => script.id === id);
+  const existingScriptIndex = array.findIndex((script: any) => script.id === id);
   if (existingScriptIndex !== -1) {
     array.splice(existingScriptIndex, 1);
 
@@ -666,12 +666,12 @@ async function deleteRegexScript(id, scriptType, saveSettings = true) {
  * @param {boolean} saveSettings Whether to save the settings immediately
  * @returns {Promise<void>}
  */
-async function moveRegexScript(script, toType, fromType = null, saveSettings = true) {
+async function moveRegexScript(script: any, toType: any, fromType: any = null, saveSettings = true) {
   if (!Object.values(SCRIPT_TYPES).includes(toType)) {
     console.warn(`moveRegexScript: Invalid target script type ${toType}`);
     return;
   }
-  if (!Object.values(SCRIPT_TYPES).includes(fromType)) {
+  if (!Object.values(SCRIPT_TYPES).includes(fromType as any)) {
     fromType = getScriptType(script);
   }
   if (fromType === toType || fromType === SCRIPT_TYPE_UNKNOWN || toType === SCRIPT_TYPE_UNKNOWN) {
@@ -696,7 +696,7 @@ async function loadRegexScripts() {
    * @param {SCRIPT_TYPES} scriptType Type of the script
    * @param {number} index Index of the script in the array
    */
-  function renderScript(container, script, scriptType, index) {
+  function renderScript(container: any, script: any, scriptType: any, index: any) {
     // Have to clone here
     const scriptHtml = scriptTemplate.clone();
     const save = () => saveRegexScript(script, index, scriptType);
@@ -790,7 +790,7 @@ async function loadRegexScripts() {
         return;
       }
 
-      const closeMenuHandler = (e) => {
+      const closeMenuHandler = (e: any) => {
         if (e.target instanceof HTMLElement) {
           if (e.target.closest(".regex-script-label")) {
             return;
@@ -809,17 +809,17 @@ async function loadRegexScripts() {
     $(container).append(scriptHtml);
   }
 
-  getScriptsByType(SCRIPT_TYPES.GLOBAL).forEach((script, index) =>
+  getScriptsByType(SCRIPT_TYPES.GLOBAL).forEach((script: any, index: any) =>
     renderScript("#saved_regex_scripts", script, SCRIPT_TYPES.GLOBAL, index),
   );
-  getScriptsByType(SCRIPT_TYPES.SCOPED).forEach((script, index) =>
+  getScriptsByType(SCRIPT_TYPES.SCOPED).forEach((script: any, index: any) =>
     renderScript("#saved_scoped_scripts", script, SCRIPT_TYPES.SCOPED, index),
   );
-  getScriptsByType(SCRIPT_TYPES.PRESET).forEach((script, index) =>
+  getScriptsByType(SCRIPT_TYPES.PRESET).forEach((script: any, index: any) =>
     renderScript("#saved_preset_scripts", script, SCRIPT_TYPES.PRESET, index),
   );
 
-  $("#regex_scoped_toggle").prop("checked", isScopedScriptsAllowed(characters?.[this_chid]));
+  $("#regex_scoped_toggle").prop("checked", isScopedScriptsAllowed(characters?.[this_chid as any]));
   $("#regex_preset_toggle").prop("checked", isPresetScriptsAllowed(getCurrentPresetAPI(), getCurrentPresetName()));
 
   setMoveButtonsVisibility();
@@ -831,14 +831,14 @@ async function loadRegexScripts() {
  * @param {SCRIPT_TYPES} scriptType Type of the script
  * @returns {Promise<void>}
  */
-async function onRegexEditorOpenClick(existingId, scriptType) {
+async function onRegexEditorOpenClick(existingId: any, scriptType: any) {
   const editorHtml = $(await renderExtensionTemplateAsync("regex", "editor"));
   const array = getScriptsByType(scriptType);
 
   // If an ID exists, fill in all the values
   let existingScriptIndex = -1;
   if (existingId) {
-    existingScriptIndex = array.findIndex((script) => script.id === existingId);
+    existingScriptIndex = array.findIndex((script: any) => script.id === existingId);
     if (existingScriptIndex !== -1) {
       const existingScript = array[existingScriptIndex];
       if (existingScript.scriptName) {
@@ -861,7 +861,7 @@ async function onRegexEditorOpenClick(existingId, scriptType) {
       editorHtml.find('input[name="min_depth"]').val(existingScript.minDepth ?? "");
       editorHtml.find('input[name="max_depth"]').val(existingScript.maxDepth ?? "");
 
-      existingScript.placement.forEach((element) => {
+      existingScript.placement.forEach((element: any) => {
         editorHtml.find(`input[name="replace_position"][value="${element}"]`).prop("checked", true);
       });
     }
@@ -887,9 +887,9 @@ async function onRegexEditorOpenClick(existingId, scriptType) {
 
     const testScript = {
       id: uuidv4(),
-      scriptName: editorHtml.find(".regex_script_name").val().toString(),
-      findRegex: editorHtml.find(".find_regex").val().toString(),
-      replaceString: editorHtml.find(".regex_replace_string").val().toString(),
+      scriptName: editorHtml.find(".regex_script_name").val()!.toString(),
+      findRegex: editorHtml.find(".find_regex").val()!.toString(),
+      replaceString: editorHtml.find(".regex_replace_string").val()!.toString(),
       trimStrings:
         String(editorHtml.find(".regex_trim_strings").val())
           .split("\n")
@@ -931,7 +931,7 @@ async function onRegexEditorOpenClick(existingId, scriptType) {
           .find('input[name="replace_position"]')
           .filter(":checked")
           .map(function () {
-            return parseInt($(this).val().toString());
+            return parseInt($(this).val()!.toString());
           })
           .get()
           .filter((e) => !isNaN(e)) || [],
@@ -955,7 +955,7 @@ async function onRegexEditorOpenClick(existingId, scriptType) {
  * @param {string} pattern The replacement pattern string (e.g., "new text $1").
  * @returns {string} The constructed HTML string.
  */
-function buildReplacementHtml(match, pattern) {
+function buildReplacementHtml(match: any, pattern: any) {
   const container = document.createDocumentFragment();
   let lastIndex = 0;
   const backrefRegex = /\$\$|\$&|\$`|\$'|\$(\d{1,2})/g;
@@ -1017,7 +1017,7 @@ function buildReplacementHtml(match, pattern) {
   return tempDiv.innerHTML;
 }
 
-function executeRegexScriptForDebugging(script, text) {
+function executeRegexScriptForDebugging(script: any, text: any) {
   let err;
   let originalRegex;
 
@@ -1140,7 +1140,7 @@ function executeRegexScriptForDebugging(script, text) {
   };
 }
 
-function populateDebuggerRuleList(container) {
+function populateDebuggerRuleList(container: any) {
   const rulesContainer = container.find("#regex_debugger_rules");
   const ruleTemplate = container.find("#regex_debugger_rule_template");
   if (!rulesContainer.length || !ruleTemplate.length) {
@@ -1156,14 +1156,14 @@ function populateDebuggerRuleList(container) {
     return;
   }
 
-  const globalScriptIds = new Set(getScriptsByType(SCRIPT_TYPES.GLOBAL).map((s) => s.id));
-  const scopedScriptIds = new Set(getScriptsByType(SCRIPT_TYPES.SCOPED).map((s) => s.id));
-  const presetScriptIds = new Set(getScriptsByType(SCRIPT_TYPES.PRESET).map((s) => s.id));
-  const globalScripts = [];
-  const scopedScripts = [];
-  const presetScripts = [];
+  const globalScriptIds = new Set(getScriptsByType(SCRIPT_TYPES.GLOBAL).map((s: any) => s.id));
+  const scopedScriptIds = new Set(getScriptsByType(SCRIPT_TYPES.SCOPED).map((s: any) => s.id));
+  const presetScriptIds = new Set(getScriptsByType(SCRIPT_TYPES.PRESET).map((s: any) => s.id));
+  const globalScripts: any[] = [];
+  const scopedScripts: any[] = [];
+  const presetScripts: any[] = [];
 
-  allScripts.forEach((script) => {
+  allScripts.forEach((script: any) => {
     const scriptCopy = structuredClone(script); // Use structuredClone for deep copy
     if (globalScriptIds.has(script.id)) {
       scriptCopy.type = SCRIPT_TYPES.GLOBAL;
@@ -1179,7 +1179,7 @@ function populateDebuggerRuleList(container) {
 
   container.data("allScripts", [...globalScripts, ...presetScripts, ...scopedScripts]);
 
-  const renderRule = (script) => {
+  const renderRule = (script: any) => {
     if (!script.id) script.id = uuidv4();
     const ruleElementContent = $(ruleTemplate.prop("content")).clone();
     const ruleElement = ruleElementContent.find(".regex-debugger-rule");
@@ -1212,7 +1212,7 @@ function populateDebuggerRuleList(container) {
         const containerHeight = container.height();
 
         // Center the element if possible
-        const scrollTo = containerScrollTop + targetTop - containerHeight / 2 + stepElement.height() / 2;
+        const scrollTo = containerScrollTop! + targetTop - containerHeight! / 2 + stepElement.height()! / 2;
 
         container.animate({ scrollTop: scrollTo }, 300); // 300ms smooth scroll
 
@@ -1303,7 +1303,7 @@ async function onRegexDebuggerOpenClick() {
       const ruleElement = $(`#regex_debugger_rules [data-id="${scriptId}"]`);
       if (!ruleElement.find(".rule-enabled").is(":checked")) return;
 
-      const script = allScripts.find((s) => s.id === scriptId);
+      const script = allScripts.find((s: any) => s.id === scriptId);
 
       if (script) {
         const result = executeRegexScriptForDebugging(script, textForNextStep);
@@ -1431,7 +1431,7 @@ async function onRegexDebuggerOpenClick() {
         const targetElement = contentPanel.find(`#${targetId}`);
 
         if (targetElement.length) {
-          const scrollTo = contentPanel.scrollTop() + targetElement.position().top;
+          const scrollTo = contentPanel.scrollTop()! + targetElement.position()!.top;
           contentPanel.animate({ scrollTop: scrollTo }, 300);
 
           targetElement.css("transition", "background-color 0.5s").css("background-color", "var(--highlight_color)");
@@ -1466,7 +1466,7 @@ async function onRegexDebuggerOpenClick() {
  * Updates the info block in the regex editor with hints regarding the find regex.
  * @param {JQuery<HTMLElement>} editorHtml The editor HTML
  */
-function updateInfoBlock(editorHtml) {
+function updateInfoBlock(editorHtml: any) {
   const infoBlock = editorHtml.find(".info-block").get(0);
   const infoBlockFlagsHint = editorHtml.find("#regex_info_block_flags_hint");
   const findRegex = String(editorHtml.find(".find_regex").val());
@@ -1502,7 +1502,7 @@ function migrateSettings() {
   let performSave = false;
 
   // Current: If MD Display is present in placement, remove it and add new placements/MD option
-  extension_settings.regex.forEach((script) => {
+  extension_settings.regex.forEach((script: any) => {
     if (!script.id) {
       script.id = uuidv4();
       performSave = true;
@@ -1516,8 +1516,8 @@ function migrateSettings() {
     if (script.placement.includes(regex_placement.MD_DISPLAY)) {
       script.placement =
         script.placement.length === 1
-          ? Object.values(regex_placement).filter((e) => e !== regex_placement.MD_DISPLAY)
-          : (script.placement = script.placement.filter((e) => e !== regex_placement.MD_DISPLAY));
+          ? Object.values(regex_placement).filter((e: any) => e !== regex_placement.MD_DISPLAY)
+          : (script.placement = script.placement.filter((e: any) => e !== regex_placement.MD_DISPLAY));
 
       script.markdownOnly = true;
       script.promptOnly = true;
@@ -1531,7 +1531,7 @@ function migrateSettings() {
       script.placement =
         script.placement.length === 1
           ? [regex_placement.SLASH_COMMAND]
-          : (script.placement = script.placement.filter((e) => e !== 4));
+          : (script.placement = script.placement.filter((e: any) => e !== 4));
 
       performSave = true;
     }
@@ -1548,7 +1548,7 @@ function migrateSettings() {
  * @param {string} value Unnamed argument
  * @returns {string} The regexed string
  */
-function runRegexCallback(args, value) {
+function runRegexCallback(args: any, value: any) {
   if (!args.name) {
     toastr.warning("No regex script name provided.");
     return value;
@@ -1579,7 +1579,7 @@ function runRegexCallback(args, value) {
  * @param {string} scriptName The name of the script to toggle
  * @returns {Promise<string>} The name of the script
  */
-async function toggleRegexCallback(args, scriptName) {
+async function toggleRegexCallback(args: any, scriptName: any) {
   if (typeof scriptName !== "string") throw new Error("Script name must be a string.");
 
   const quiet = isTrueBoolean(args?.quiet);
@@ -1623,7 +1623,7 @@ async function toggleRegexCallback(args, scriptName) {
  * @param {RegexScript} regexScript Input object
  * @param {SCRIPT_TYPES} scriptType The type of script to import as
  */
-async function onRegexImportObjectChange(regexScript, scriptType) {
+async function onRegexImportObjectChange(regexScript: any, scriptType: any) {
   try {
     if (!regexScript.scriptName) {
       throw new Error("No script name provided.");
@@ -1664,7 +1664,7 @@ async function onRegexImportObjectChange(regexScript, scriptType) {
  * @param {File} file Input file
  * @param {SCRIPT_TYPES} scriptType The type of script to import as
  */
-async function onRegexImportFileChange(file, scriptType) {
+async function onRegexImportFileChange(file: any, scriptType: any) {
   if (!file) {
     toastr.error("No file provided.");
     return;
@@ -1691,10 +1691,10 @@ async function onRegexImportFileChange(file, scriptType) {
  * @param {RegexScript} script The script to check
  * @returns {SCRIPT_TYPES} The script type.
  */
-function getScriptType(script) {
+function getScriptType(script: any) {
   for (const scriptType of Object.values(SCRIPT_TYPES)) {
     const scripts = getScriptsByType(scriptType);
-    if (scripts.some((s) => s.id === script.id)) {
+    if (scripts.some((s: any) => s.id === script.id)) {
       return scriptType;
     }
   }
@@ -1710,7 +1710,7 @@ function getSelectedScripts() {
   return scripts.filter((script) => selectedIds.includes(script.id));
 }
 
-function purgeEmbeddedRegexScripts({ character }) {
+function purgeEmbeddedRegexScripts({ character }: any) {
   const avatar = character?.avatar;
   if (!avatar) {
     return;
@@ -1719,10 +1719,10 @@ function purgeEmbeddedRegexScripts({ character }) {
   if (accountStorage.getItem(checkKey)) {
     accountStorage.removeItem(checkKey);
   }
-  disallowScopedScripts(characters?.[this_chid]);
+  disallowScopedScripts(characters?.[this_chid as any]);
 }
 
-function purgePresetEmbeddedRegexScripts({ apiId, name }) {
+function purgePresetEmbeddedRegexScripts({ apiId, name }: any) {
   const checkKey = `AlertRegex_${apiId}_${name}`;
   if (accountStorage.getItem(checkKey)) {
     accountStorage.removeItem(checkKey);
@@ -1734,7 +1734,7 @@ async function checkCharEmbeddedRegexScripts() {
   const chid = this_chid;
 
   if (chid !== undefined && !selected_group) {
-    const character = characters[chid];
+    const character = characters[chid as any];
     const scripts = getScriptsByType(SCRIPT_TYPES.SCOPED);
 
     if (Array.isArray(scripts) && scripts.length > 0) {
@@ -1763,7 +1763,7 @@ async function checkCharEmbeddedRegexScripts() {
  * Notify whether to reload current chat when preset is changed
  * @param {string} presetName The name of the preset
  */
-function notifyReloadCurrentChat(presetName) {
+function notifyReloadCurrentChat(presetName: any) {
   toastr.info(
     t`Reload the chat for regex to take effect` + "<br><u>" + t`Click here to reload immediately` + "</u>",
     t`Preset '${escapeHtml(presetName)}' contains enabled regex scripts`,
@@ -1804,7 +1804,7 @@ async function checkPresetEmbeddedRegexScripts() {
   await loadRegexScripts();
 }
 
-async function onMainApiChanged({ apiId }) {
+async function onMainApiChanged({ apiId }: any) {
   const presetManager = getPresetManager(apiId);
   if (!presetManager) {
     return;
@@ -1823,7 +1823,7 @@ async function onMainApiChanged({ apiId }) {
   await loadRegexScripts();
 }
 
-function onPresetRenamed({ apiId, oldName, newName }) {
+function onPresetRenamed({ apiId, oldName, newName }: any) {
   const oldCheckKey = `AlertRegex_${apiId}_${oldName}`;
   const checkKey = `AlertRegex_${apiId}_${newName}`;
   const value = accountStorage.getItem(oldCheckKey);
@@ -1886,7 +1886,7 @@ export async function init() {
 
     await callGenericPopup(template, POPUP_TYPE.TEXT);
 
-    const inputElement = this instanceof HTMLInputElement && this;
+    const inputElement = (this instanceof HTMLInputElement && this) as any;
     for (const file of inputElement.files) {
       await onRegexImportFileChange(file, target);
     }
@@ -1923,7 +1923,7 @@ export async function init() {
    * @param {boolean} newState New state to set (true = enable, false = disable)
    * @returns {Promise<void>}
    */
-  async function bulkToggleRegexScripts(newState) {
+  async function bulkToggleRegexScripts(newState: any) {
     const scripts = getSelectedScripts().filter((script) => script.disabled === newState);
     if (scripts.length === 0) {
       toastr.warning(
@@ -1956,7 +1956,7 @@ export async function init() {
    * Bulk move regex scripts to the specified type
    * @param {SCRIPT_TYPES} toType destination type
    */
-  async function bulkMoveRegexScript(toType) {
+  async function bulkMoveRegexScript(toType: any) {
     const scripts = getSelectedScripts();
     if (scripts.length === 0) {
       toastr.warning(t`No regex scripts selected for moving.`);
@@ -2053,17 +2053,17 @@ export async function init() {
   const sortableDatas = [
     {
       selector: "#saved_regex_scripts",
-      setter: (scripts) => saveScriptsByType(scripts, SCRIPT_TYPES.GLOBAL),
+      setter: (scripts: any) => saveScriptsByType(scripts, SCRIPT_TYPES.GLOBAL),
       getter: () => getScriptsByType(SCRIPT_TYPES.GLOBAL),
     },
     {
       selector: "#saved_scoped_scripts",
-      setter: (scripts) => saveScriptsByType(scripts, SCRIPT_TYPES.SCOPED),
+      setter: (scripts: any) => saveScriptsByType(scripts, SCRIPT_TYPES.SCOPED),
       getter: () => getScriptsByType(SCRIPT_TYPES.SCOPED),
     },
     {
       selector: "#saved_preset_scripts",
-      setter: (scripts) => saveScriptsByType(scripts, SCRIPT_TYPES.PRESET),
+      setter: (scripts: any) => saveScriptsByType(scripts, SCRIPT_TYPES.PRESET),
       getter: () => getScriptsByType(SCRIPT_TYPES.PRESET),
     },
   ];
@@ -2073,12 +2073,12 @@ export async function init() {
       handle: ".drag-handle",
       stop: async () => {
         const oldScripts = getter();
-        const newScripts = [];
+        const newScripts: any[] = [];
         $(selector)
           .children()
           .each(function () {
             const id = $(this).attr("id");
-            const existingScript = oldScripts.find((e) => e.id === id);
+            const existingScript = oldScripts.find((e: any) => e.id === id);
             if (existingScript) {
               newScripts.push(existingScript);
             }
@@ -2106,7 +2106,7 @@ export async function init() {
     }
 
     const isEnable = !!$(this).prop("checked");
-    const character = characters[this_chid];
+    const character = characters[this_chid as any];
 
     if (isEnable) {
       allowScopedScripts(character);
@@ -2146,7 +2146,7 @@ export async function init() {
    * @param {SCRIPT_TYPES} type The script type
    * @returns {ScriptDecorators} The decorators for the script type
    */
-  function getScriptDecorators(type) {
+  function getScriptDecorators(type: any) {
     switch (type) {
       case SCRIPT_TYPES.GLOBAL:
         return {
@@ -2182,7 +2182,7 @@ export async function init() {
         const { typename, color, icon } = getScriptDecorators(type);
         return new SlashCommandEnumValue(
           script.scriptName,
-          `${enumIcons.getStateIcon(!script.disabled)} [${typename}] ${script.findRegex}`,
+          `${enumIcons.getStateIcon(!script.disabled)} [${typename}] ${script.findRegex}` as any,
           color,
           icon,
         );
@@ -2211,7 +2211,7 @@ export async function init() {
     SlashCommand.fromProps({
       name: "regex-state",
       /** @param {object} _ @param {string} name */
-      callback: (_, name) => {
+      callback: (_: any, name: any) => {
         if (!name) {
           toastr.warning("No regex script name provided.");
           return "";

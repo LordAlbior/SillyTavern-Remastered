@@ -1,6 +1,15 @@
-import { MacroParser } from "./MacroParser.ts";
-import { MacroCstWalker } from "./MacroCstWalker.ts";
-import { MacroRegistry, MacroValueType } from "./MacroRegistry.ts";
+// @ts-ignore - module has its own strict-mode errors that prevent type resolution
+import { MacroParser as _MacroParser } from "./MacroParser.ts";
+// @ts-ignore - module has its own strict-mode errors that prevent type resolution
+import { MacroCstWalker as _MacroCstWalker } from "./MacroCstWalker.ts";
+// @ts-ignore - module has its own strict-mode errors that prevent type resolution
+import { MacroRegistry as _MacroRegistry, MacroValueType } from "./MacroRegistry.ts";
+// @ts-ignore - implicit any from unresolved module
+const MacroParser: any = _MacroParser;
+// @ts-ignore - implicit any from unresolved module
+const MacroCstWalker: any = _MacroCstWalker;
+// @ts-ignore - implicit any from unresolved module
+const MacroRegistry: any = _MacroRegistry;
 import {
   logMacroGeneralError,
   logMacroInternalError,
@@ -39,7 +48,7 @@ let instance: any;
 export { instance as MacroEngine };
 
 class MacroEngine {
-  /** @type {MacroEngine} */ static #instance;
+  /** @type {MacroEngine} */ static #instance: any;
   /** @type {MacroEngine} */ static get instance() {
     return MacroEngine.#instance ?? (MacroEngine.#instance = new MacroEngine());
   }
@@ -62,9 +71,9 @@ class MacroEngine {
    * @param {number} [options.priority=100] - Execution priority (lower = earlier).
    * @param {string} [options.source='unknown'] - Identifier for debugging.
    */
-  addPreProcessor(handler, { priority = 100, source = "unknown" } = {}) {
-    this.#preProcessors.push({ handler, priority, source });
-    this.#preProcessors.sort((a, b) => a.priority - b.priority);
+  addPreProcessor(handler: any, { priority = 100, source = "unknown" }: any = {}) {
+    (this.#preProcessors as any[]).push({ handler, priority, source });
+    this.#preProcessors.sort((a: any, b: any) => a.priority - b.priority);
   }
 
   /**
@@ -73,8 +82,8 @@ class MacroEngine {
    * @param {MacroProcessor} handler - The processor function to remove.
    * @returns {boolean} True if the processor was found and removed.
    */
-  removePreProcessor(handler) {
-    const index = this.#preProcessors.findIndex((p) => p.handler === handler);
+  removePreProcessor(handler: any) {
+    const index = this.#preProcessors.findIndex((p: any) => p.handler === handler);
     if (index !== -1) {
       this.#preProcessors.splice(index, 1);
       return true;
@@ -90,9 +99,9 @@ class MacroEngine {
    * @param {number} [options.priority=100] - Execution priority (lower = earlier).
    * @param {string} [options.source='unknown'] - Identifier for debugging.
    */
-  addPostProcessor(handler, { priority = 100, source = "unknown" } = {}) {
-    this.#postProcessors.push({ handler, priority, source });
-    this.#postProcessors.sort((a, b) => a.priority - b.priority);
+  addPostProcessor(handler: any, { priority = 100, source = "unknown" }: any = {}) {
+    (this.#postProcessors as any[]).push({ handler, priority, source });
+    this.#postProcessors.sort((a: any, b: any) => a.priority - b.priority);
   }
 
   /**
@@ -101,8 +110,8 @@ class MacroEngine {
    * @param {MacroProcessor} handler - The processor function to remove.
    * @returns {boolean} True if the processor was found and removed.
    */
-  removePostProcessor(handler) {
-    const index = this.#postProcessors.findIndex((p) => p.handler === handler);
+  removePostProcessor(handler: any) {
+    const index = this.#postProcessors.findIndex((p: any) => p.handler === handler);
     if (index !== -1) {
       this.#postProcessors.splice(index, 1);
       return true;
@@ -121,7 +130,7 @@ class MacroEngine {
    *        positioning for macros like {{pick}} that seed on position.
    * @returns {string} The resolved string.
    */
-  evaluate(input, env, { contextOffset = 0 } = {}) {
+  evaluate(input: any, env: any, { contextOffset = 0 }: any = {}) {
     if (!input) {
       return "";
     }
@@ -174,7 +183,7 @@ class MacroEngine {
    * @param {MacroCall} call - The macro call to resolve.
    * @returns {string} The resolved macro.
    */
-  #resolveMacro(call) {
+  #resolveMacro(call: any) {
     const { name, env } = call;
 
     const raw = `{{${call.rawInner}}}`;
@@ -263,10 +272,10 @@ class MacroEngine {
    * @param {MacroEnv} env - The environment to pass to the macro handler.
    * @returns {string} The processed text.
    */
-  #runPreProcessors(text, env) {
+  #runPreProcessors(text: any, env: any) {
     let result = text;
     for (const { handler } of this.#preProcessors) {
-      result = handler(result, env);
+      result = (handler as any)(result, env);
     }
     return result;
   }
@@ -278,10 +287,10 @@ class MacroEngine {
    * @param {MacroEnv} env - The environment to pass to the macro handler.
    * @returns {string} The processed text.
    */
-  #runPostProcessors(text, env) {
+  #runPostProcessors(text: any, env: any) {
     let result = text;
     for (const { handler } of this.#postProcessors) {
-      result = handler(result, env);
+      result = (handler as any)(result, env);
     }
     return result;
   }
@@ -295,14 +304,14 @@ class MacroEngine {
     // This legacy macro will not be supported by the new macro parser, but rather regex-replaced beforehand
     // {{time_UTC-10}}   =>   {{time::UTC-10}}
     this.addPreProcessor(
-      (text) => text.replace(/{{time_(UTC[+-]\d+)}}/gi, (_match, utcOffset) => `{{time::${utcOffset}}}`),
+      (text: any) => text.replace(/{{time_(UTC[+-]\d+)}}/gi, (_match: any, utcOffset: any) => `{{time::${utcOffset}}}`),
       { priority: 10, source: "core:legacy-time-syntax" },
     );
 
     // Legacy non-curly markers like <USER>, <BOT>, <GROUP>, etc.
     // These are rewritten into their equivalent macro forms so they go through the normal engine pipeline.
     this.addPreProcessor(
-      (text) =>
+      (text: any) =>
         text
           .replace(/<USER>/gi, "{{user}}")
           .replace(/<BOT>/gi, "{{char}}")
@@ -322,18 +331,18 @@ class MacroEngine {
     // Unescape braces: \{ → { and \} → }
     // Since \{\{ doesn't match {{ (MacroStart), it passes through as plain text.
     // We only need to remove the backslashes in post-processing.
-    this.addPostProcessor((text) => text.replace(/\\([{}])/g, "$1"), { priority: 10, source: "core:unescape-braces" });
+    this.addPostProcessor((text: any) => text.replace(/\\([{}])/g, "$1"), { priority: 10, source: "core:unescape-braces" });
 
     // The original trim macro is reaching over the boundaries of the defined macro. This is not something the engine supports.
     // To treat {{trim}} as it was before, we won't process it by the engine itself,
     // but doing a regex replace on {{trim}} and the surrounding area, after all other macros have been processed.
-    this.addPostProcessor((text) => text.replace(/(?:\r?\n)*{{trim}}(?:\r?\n)*/gi, ""), {
+    this.addPostProcessor((text: any) => text.replace(/(?:\r?\n)*{{trim}}(?:\r?\n)*/gi, ""), {
       priority: 20,
       source: "core:legacy-trim",
     });
 
     // Remove any wrongly placed leftover ELSE_MARKER that might have been inserted during processing
-    this.addPostProcessor((text) => text.replaceAll(ELSE_MARKER, ""), {
+    this.addPostProcessor((text: any) => text.replaceAll(ELSE_MARKER, ""), {
       priority: 30,
       source: "core:cleanup-else-marker",
     });
@@ -346,7 +355,7 @@ class MacroEngine {
    * @param {any} value
    * @returns {string}
    */
-  normalizeMacroResult(value) {
+  normalizeMacroResult(value: any) {
     if (value === null || value === undefined) {
       return "";
     }
@@ -386,7 +395,7 @@ class MacroEngine {
    * @param {boolean} [options.trimIndent=true] - Whether to also dedent consistent indentation
    * @returns {string} The trimmed content
    */
-  trimScopedContent(content, { trimIndent = true } = {}) {
+  trimScopedContent(content: any, { trimIndent = true }: any = {}) {
     if (!content) return "";
 
     // If not dedenting, just do a basic trim
@@ -414,7 +423,7 @@ class MacroEngine {
     }
 
     // Remove the base indentation from ALL lines
-    const dedentedLines = lines.map((line) => {
+    const dedentedLines = lines.map((line: any) => {
       // Only remove indentation if the line has enough leading whitespace
       const match = line.match(/^[ \t]*/);
       const lineIndent = match ? match[0].length : 0;

@@ -5,10 +5,10 @@ import { getPreviewString, saveTtsProviderSettings, initVoiceMap } from "./index
 export { ElectronHubTtsProvider };
 
 class ElectronHubTtsProvider {
-  settings;
-  /** @type {function} */ handler;
-  voices = [];
-  models = [];
+  settings: any;
+  /** @type {function} */ handler: any;
+  voices: any[] = [];
+  models: any[] = [];
   separator = " . ";
   audioElement = document.createElement("audio");
 
@@ -97,9 +97,9 @@ class ElectronHubTtsProvider {
   }
 
   constructor() {
-    this.handler = async function (/** @type {string} */ key) {
+    this.handler = async function (this: any, /** @type {string} */ key: any) {
       if (key !== SECRET_KEYS.ELECTRONHUB) return;
-      $("#electronhub_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.ELECTRONHUB]);
+      $("#electronhub_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.ELECTRONHUB]);
       await this.onRefreshClick();
     }.bind(this);
   }
@@ -110,7 +110,7 @@ class ElectronHubTtsProvider {
     });
   }
 
-  async loadSettings(settings) {
+  async loadSettings(settings: any) {
     if (Object.keys(settings).length == 0) {
       console.info("Using default Electron Hub TTS settings");
     }
@@ -172,7 +172,7 @@ class ElectronHubTtsProvider {
       this.onSettingsChange();
     });
 
-    $("#electronhub_tts_key").toggleClass("success", !!secret_state[SECRET_KEYS.ELECTRONHUB]);
+    $("#electronhub_tts_key").toggleClass("success", !!(secret_state as Record<string, any>)[SECRET_KEYS.ELECTRONHUB]);
     [event_types.SECRET_WRITTEN, event_types.SECRET_DELETED, event_types.SECRET_ROTATED].forEach((event) => {
       eventSource.on(event, this.handler);
     });
@@ -220,7 +220,7 @@ class ElectronHubTtsProvider {
       const allModels = Array.isArray(data) ? data : [];
       const ttsModels = allModels.filter((m) => {
         const eps = Array.isArray(m?.endpoints) ? m.endpoints : [];
-        return eps.some((ep) => {
+        return eps.some((ep: any) => {
           if (typeof ep !== "string") return false;
           return ep === "/v1/audio/speech" || ep.endsWith("/audio/speech") || ep === "audio/speech";
         });
@@ -264,8 +264,8 @@ class ElectronHubTtsProvider {
    * @param {Array<any>} array
    * @returns {Map<string, any[]>}
    */
-  groupByVendor(array) {
-    return array.reduce((acc, curr) => {
+  groupByVendor(array: any) {
+    return array.reduce((acc: any, curr: any) => {
       const name = String(curr?.name || curr?.id || "Other");
       const vendor = name.split(":")[0].trim() || "Other";
       if (!acc.has(vendor)) acc.set(vendor, []);
@@ -335,7 +335,7 @@ class ElectronHubTtsProvider {
     if (entries.length === 0) return;
 
     for (const [key, spec] of entries as any) {
-      const nice = key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      const nice = key.replace(/_/g, " ").replace(/\b\w/g, (c: any) => c.toUpperCase());
       const type = String(spec?.type || "string");
       const id = `electronhub_dyn_${key.replace(/[^a-zA-Z0-9_-]/g, "_")}`;
 
@@ -426,18 +426,18 @@ class ElectronHubTtsProvider {
     saveTtsProviderSettings();
   }
 
-  async getVoice(voiceName) {
+  async getVoice(this: any, voiceName: any) {
     if (this.voices.length == 0) {
       this.voices = await this.fetchTtsVoiceObjects();
     }
-    const match = this.voices.filter((v) => v.name == voiceName)[0];
+    const match = this.voices.filter((v: any) => v.name == voiceName)[0];
     if (!match) {
       throw `TTS Voice name ${voiceName} not found`;
     }
     return match;
   }
 
-  async generateTts(text, voiceId) {
+  async generateTts(this: any, text: any, voiceId: any) {
     const response = await this.fetchTtsGeneration(text, voiceId);
     return response;
   }
@@ -446,14 +446,14 @@ class ElectronHubTtsProvider {
     const modelId = this.settings.model;
     const model = this.models.find((m) => m.id === modelId);
     if (model && Array.isArray(model.voices) && model.voices.length) {
-      return model.voices.map((name) => ({ name, voice_id: name, lang: "en-US" }));
+      return model.voices.map((name: any) => ({ name, voice_id: name, lang: "en-US" }));
     }
     // Fallback to common OpenAI voices
     const fallback = ["alloy", "ash", "ballad", "coral", "echo", "fable", "onyx", "nova", "sage", "shimmer", "verse"];
-    return fallback.map((name) => ({ name, voice_id: name, lang: "en-US" }));
+    return fallback.map((name: any) => ({ name, voice_id: name, lang: "en-US" }));
   }
 
-  async previewTtsVoice(voiceId) {
+  async previewTtsVoice(this: any, voiceId: any) {
     this.audioElement.pause();
     this.audioElement.currentTime = 0;
     const text = getPreviewString("en-US");
@@ -468,7 +468,7 @@ class ElectronHubTtsProvider {
     this.audioElement.onended = () => URL.revokeObjectURL(url);
   }
 
-  async fetchTtsGeneration(inputText, voiceId) {
+  async fetchTtsGeneration(this: any, inputText: any, voiceId: any) {
     console.info(`Generating Electron Hub TTS for voice_id ${voiceId}`);
     const body = {
       input: inputText,
@@ -500,7 +500,7 @@ class ElectronHubTtsProvider {
     }
 
     // add dynamic params based on schema
-    const modelObj = this.models.find((m) => m.id === this.settings.model);
+    const modelObj = this.models.find((m: any) => m.id === this.settings.model);
     const params = modelObj?.parameters || {};
     const modelHasVoices = Array.isArray(modelObj?.voices) && modelObj.voices.length > 0;
     const exclude = new Set([

@@ -16,8 +16,8 @@ import { isFalseBoolean, isTrueBoolean } from "./utils.ts";
  * @typedef {import('./slash-commands/SlashCommand.js').NamedArguments | import('./slash-commands/SlashCommand.js').NamedArgumentsCapture} NamedArgumentsAssignment
  * @returns {(args: NamedArgumentsAssignment, extensionName: string | SlashCommandClosure) => Promise<string>}
  */
-function getExtensionActionCallback(action) {
-  return async (args, extensionName) => {
+function getExtensionActionCallback(action:any) {
+  return async (args:any, extensionName:any) => {
     if (args?.reload instanceof SlashCommandClosure) throw new Error("'reload' argument cannot be a closure.");
     if (typeof extensionName !== "string")
       throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
@@ -84,9 +84,9 @@ function getExtensionActionCallback(action) {
  * @returns {SlashCommandEnumValue[]} An array of SlashCommandEnumValue objects
  */
 const extensionNamesEnumProvider = () =>
-  extensionNames.map((name) => {
-    const isThirdParty = name.startsWith("third-party/");
-    if (isThirdParty) name = name.slice("third-party/".length);
+  extensionNames.map((name:any) => {
+    const isThirdParty = (name as string).startsWith("third-party/");
+    if (isThirdParty) name = (name as string).slice("third-party/".length);
 
     const description = isThirdParty ? "third party extension" : null;
 
@@ -183,7 +183,7 @@ export function registerExtensionSlashCommands() {
   SlashCommandParser.addCommandObject(
     SlashCommand.fromProps({
       name: "extension-toggle",
-      callback: async (args, extensionName) => {
+      callback: async (args:any, extensionName:any) => {
         if (args?.state instanceof SlashCommandClosure) throw new Error("'state' argument cannot be a closure.");
         if (typeof extensionName !== "string")
           throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
@@ -248,7 +248,7 @@ export function registerExtensionSlashCommands() {
   SlashCommandParser.addCommandObject(
     SlashCommand.fromProps({
       name: "extension-state",
-      callback: async (_, extensionName) => {
+      callback: async (_:any, extensionName:any) => {
         if (typeof extensionName !== "string")
           throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
         const extension = findExtension(extensionName);
@@ -288,7 +288,7 @@ export function registerExtensionSlashCommands() {
     SlashCommand.fromProps({
       name: "extension-exists",
       aliases: ["extension-installed"],
-      callback: async (_, extensionName) => {
+      callback: async (_:any, extensionName:any) => {
         if (typeof extensionName !== "string")
           throw new Error("Extension name must be a string. Closures or arrays are not allowed.");
         const extension = findExtension(extensionName);

@@ -30,7 +30,7 @@ const FIELDS = ["name", "url"];
  * @param {string} [source] Source for the attachments
  * @returns {import("/scripts/chats").FileAttachment[]} List of attachments
  */
-function getAttachments(source) {
+function getAttachments(source: any) {
   if (!source || !TYPES.includes(source)) {
     return getDataBankAttachments(true);
   }
@@ -44,10 +44,10 @@ function getAttachments(source) {
  * @param {string} value Name or URL of the attachment
  * @returns {import("/scripts/chats").FileAttachment} Attachment
  */
-function getAttachmentByField(attachments, value) {
-  const match = (a) => String(a).trim().toLowerCase() === String(value).trim().toLowerCase();
-  const fullMatchByURL = attachments.find((it) => match(it.url));
-  const fullMatchByName = attachments.find((it) => match(it.name));
+function getAttachmentByField(attachments: any, value: any) {
+  const match = (a: any) => String(a).trim().toLowerCase() === String(value).trim().toLowerCase();
+  const fullMatchByURL = attachments.find((it: any) => match(it.url));
+  const fullMatchByName = attachments.find((it: any) => match(it.name));
   return fullMatchByURL || fullMatchByName;
 }
 
@@ -57,7 +57,7 @@ function getAttachmentByField(attachments, value) {
  * @param {string[]} values Name and URL of the attachment to search for
  * @returns
  */
-function getAttachmentByFields(attachments, values) {
+function getAttachmentByFields(attachments: any, values: any) {
   for (const value of values) {
     const attachment = getAttachmentByField(attachments, value);
     if (attachment) {
@@ -73,10 +73,10 @@ function getAttachmentByFields(attachments, values) {
  * @param {object} args Named arguments
  * @returns {string} JSON string of the list of attachments
  */
-function listDataBankAttachments(args) {
+function listDataBankAttachments(args: any) {
   const attachments = getAttachments(args?.source);
   const field = args?.field;
-  return JSON.stringify(attachments.map((a) => (FIELDS.includes(field) ? a[field] : a.url)));
+  return JSON.stringify(attachments.map((a: any) => (FIELDS.includes(field) ? a[field] : a.url)));
 }
 
 /**
@@ -85,7 +85,7 @@ function listDataBankAttachments(args) {
  * @param {string} value Name or URL of the attachment
  * @returns {Promise<string>} Content of the attachment
  */
-async function getDataBankText(args, value) {
+async function getDataBankText(args: any, value: any) {
   if (!value) {
     toastr.warning("No attachment name or URL provided.");
     return;
@@ -109,7 +109,7 @@ async function getDataBankText(args, value) {
  * @param {string} value Content of the attachment
  * @returns {Promise<string>} URL of the attachment
  */
-async function uploadDataBankAttachment(args, value) {
+async function uploadDataBankAttachment(args: any, value: any) {
   const source = args?.source && TYPES.includes(args.source) ? args.source : "chat";
   const name = args?.name || new Date().toLocaleString();
   const file = new File([value], name, { type: "text/plain" });
@@ -123,7 +123,7 @@ async function uploadDataBankAttachment(args, value) {
  * @param {string} value Content of the attachment
  * @returns {Promise<string>} URL of the attachment
  */
-async function updateDataBankAttachment(args, value) {
+async function updateDataBankAttachment(args: any, value: any) {
   const source = args?.source && TYPES.includes(args.source) ? args.source : "chat";
   const attachments = getAttachments(source);
   const attachment = getAttachmentByFields(attachments, [args?.url, args?.name]);
@@ -145,7 +145,7 @@ async function updateDataBankAttachment(args, value) {
  * @param {string} value Name or URL of the attachment
  * @returns {Promise<string>} Empty string
  */
-async function deleteDataBankAttachment(args, value) {
+async function deleteDataBankAttachment(args: any, value: any) {
   const source = args?.source && TYPES.includes(args.source) ? args.source : "chat";
   const attachments = getAttachments(source);
   const attachment = getAttachmentByField(attachments, value);
@@ -165,7 +165,7 @@ async function deleteDataBankAttachment(args, value) {
  * @param {string} value Name or URL of the attachment
  * @returns {Promise<string>} Empty string
  */
-async function disableDataBankAttachment(args, value) {
+async function disableDataBankAttachment(args: any, value: any) {
   const attachments = getAttachments(args?.source);
   const attachment = getAttachmentByField(attachments, value);
 
@@ -188,7 +188,7 @@ async function disableDataBankAttachment(args, value) {
  * @param {string} value Name or URL of the attachment
  * @returns {Promise<string>} Empty string
  */
-async function enableDataBankAttachment(args, value) {
+async function enableDataBankAttachment(args: any, value: any) {
   const attachments = getAttachments(args?.source);
   const attachment = getAttachmentByField(attachments, value);
 
@@ -233,7 +233,7 @@ function cleanUpAttachments() {
  * Clean up character attachments when a character is deleted.
  * @param {{character: Character}} data Event data
  */
-function cleanUpCharacterAttachments(data) {
+function cleanUpCharacterAttachments(data: any) {
   const avatar = data?.character?.avatar;
   if (!avatar) return;
   if (Array.isArray(extension_settings?.character_attachments?.[avatar])) {
@@ -247,7 +247,7 @@ function cleanUpCharacterAttachments(data) {
  * @param {string} oldAvatar Old avatar name
  * @param {string} newAvatar New avatar name
  */
-function handleCharacterRename(oldAvatar, newAvatar) {
+function handleCharacterRename(oldAvatar: any, newAvatar: any) {
   if (!oldAvatar || !newAvatar) return;
   if (Array.isArray(extension_settings?.character_attachments?.[oldAvatar])) {
     extension_settings.character_attachments[newAvatar] = extension_settings.character_attachments[oldAvatar];
@@ -274,13 +274,13 @@ export async function init() {
      * */
     attachments:
       (returnField = "name", fallbackSource = "chat") =>
-      (/** @type {SlashCommandExecutor} */ executor) => {
-        const source = executor.namedArgumentList.find((it) => it.name == "source")?.value ?? fallbackSource;
+      (/** @type {SlashCommandExecutor} */ executor: any) => {
+        const source = executor.namedArgumentList.find((it: any) => it.name == "source")?.value ?? fallbackSource;
         if (source instanceof SlashCommandClosure) throw new Error("Argument 'source' does not support closures");
         const attachments = getAttachments(source);
 
         return attachments.map(
-          (attachment) =>
+          (attachment: any) =>
             new SlashCommandEnumValue(
               returnField === "name" ? attachment.name : attachment.url,
               `${enumIcons.getStateIcon(!extension_settings.disabled_attachments.includes(attachment.url))} [${source}] ${returnField === "url" ? attachment.name : attachment.url}`,
@@ -317,8 +317,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "",
-          TYPES,
+          "" as any,
+          TYPES as any,
         ),
         new SlashCommandNamedArgument(
           "field",
@@ -326,8 +326,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "url",
-          FIELDS,
+          "url" as any,
+          FIELDS as any,
         ),
       ],
       returns: ARGUMENT_TYPE.LIST,
@@ -348,8 +348,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "",
-          TYPES,
+          "" as any,
+          TYPES as any,
         ),
       ],
       unnamedArgumentList: [
@@ -379,8 +379,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "chat",
-          TYPES,
+          "chat" as any,
+          TYPES as any,
         ),
         new SlashCommandNamedArgument("name", "The name of the attachment.", ARGUMENT_TYPE.STRING, false, false),
       ],
@@ -404,8 +404,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "chat",
-          TYPES,
+          "chat" as any,
+          TYPES as any,
         ),
         SlashCommandNamedArgument.fromProps({
           name: "name",
@@ -441,8 +441,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "",
-          TYPES,
+          "" as any,
+          TYPES as any,
         ),
       ],
       unnamedArgumentList: [
@@ -470,8 +470,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "",
-          TYPES,
+          "" as any,
+          TYPES as any,
         ),
       ],
       unnamedArgumentList: [
@@ -498,8 +498,8 @@ export async function init() {
           ARGUMENT_TYPE.STRING,
           false,
           false,
-          "chat",
-          TYPES,
+          "chat" as any,
+          TYPES as any,
         ),
       ],
       unnamedArgumentList: [

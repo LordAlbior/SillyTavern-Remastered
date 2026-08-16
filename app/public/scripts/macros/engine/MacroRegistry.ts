@@ -178,7 +178,7 @@ let instance;
 export { instance as MacroRegistry };
 
 class MacroRegistry {
-  /** @type {MacroRegistry} */ static #instance;
+  /** @type {MacroRegistry} */ static #instance: any;
   /** @type {MacroRegistry} */ static get instance() {
     return MacroRegistry.#instance ?? (MacroRegistry.#instance = new MacroRegistry());
   }
@@ -202,7 +202,7 @@ class MacroRegistry {
    * @param {MacroDefinitionOptions} options - Macro registration options including handler and metadata.
    * @returns {MacroDefinition|null} The registered definition, or null if registration failed.
    */
-  registerMacro(name, options) {
+  registerMacro(name: any, options: any) {
     // Extract name early for error logging
     name = typeof name === "string" ? name.trim() : String(name);
 
@@ -220,7 +220,7 @@ class MacroRegistry {
 
       // Register alias entries pointing to the same definition
       for (const { alias, visible } of definition.aliases) {
-        this.#registerMacroEntry(alias, definition, { primaryMacroName: name, aliasVisible: visible });
+        this.#registerMacroEntry(alias, definition, { primaryMacroName: name, aliasVisible: visible as any });
       }
 
       return definition;
@@ -245,7 +245,7 @@ class MacroRegistry {
    * @param {boolean} [options.visible=true] - Whether this alias appears in documentation/autocomplete.
    * @returns {boolean} True if the alias was registered successfully, false if registration failed.
    */
-  registerMacroAlias(targetMacroName, aliasName, { visible = true } = {}) {
+  registerMacroAlias(targetMacroName: any, aliasName: any, { visible = true } = {}) {
     // Extract names early for error logging
     targetMacroName = typeof targetMacroName === "string" ? targetMacroName.trim() : String(targetMacroName);
     aliasName = typeof aliasName === "string" ? aliasName.trim() : String(aliasName);
@@ -287,7 +287,7 @@ class MacroRegistry {
       // Register the alias using the shared utility
       this.#registerMacroEntry(aliasName, aliasDefinition, {
         primaryMacroName: primaryDefinition.name,
-        aliasVisible: visible,
+        aliasVisible: visible as any,
       });
 
       return true;
@@ -310,7 +310,7 @@ class MacroRegistry {
    * @param {string} [options.primaryMacroName=null] - For aliases, the primary macro name.
    * @param {boolean} [options.aliasVisible=null] - For aliases, visibility flag.
    */
-  #registerMacroEntry(name, definition, { primaryMacroName = null, aliasVisible = null } = {}) {
+  #registerMacroEntry(name: any, definition: any, { primaryMacroName = null, aliasVisible = null } = {}) {
     const nameKey = name.toLowerCase();
 
     if (this.#macros.has(nameKey)) {
@@ -340,7 +340,7 @@ class MacroRegistry {
    * @param {string} name - Macro name (identifier).
    * @returns {boolean} True if a macro was removed.
    */
-  unregisterMacro(name) {
+  unregisterMacro(name: any) {
     if (typeof name !== "string" || !name.trim()) throw new Error("Macro name must be a non-empty string");
     name = name.trim();
     return this.#macros.delete(name.toLowerCase());
@@ -352,7 +352,7 @@ class MacroRegistry {
    * @param {string} name - Macro name (identifier).
    * @returns {boolean}
    */
-  hasMacro(name) {
+  hasMacro(name: any) {
     if (typeof name !== "string" || !name.trim()) return false;
     name = name.trim();
     return this.#macros.has(name.toLowerCase());
@@ -364,7 +364,7 @@ class MacroRegistry {
    * @param {string} name - Macro name (identifier).
    * @returns {MacroDefinition|undefined}
    */
-  getMacro(name) {
+  getMacro(name: any) {
     if (typeof name !== "string" || !name.trim()) return undefined;
     name = name.trim();
     return this.#macros.get(name.toLowerCase());
@@ -377,7 +377,7 @@ class MacroRegistry {
    * @param {string} name - Macro name or alias.
    * @returns {MacroDefinition|undefined}
    */
-  getPrimaryMacro(name) {
+  getPrimaryMacro(name: any) {
     const def = this.getMacro(name);
     if (!def) return undefined;
     return def.aliasOf ? this.getMacro(def.aliasOf) : def;
@@ -409,7 +409,7 @@ class MacroRegistry {
    * @param {MacroDefinition} [options.defOverride] - Override the macro definition.
    * @returns {string}
    */
-  executeMacro(call, { defOverride }: any = {}) {
+  executeMacro(call: any, { defOverride }: any = {}) {
     const name = call.name;
     const def = defOverride || this.getMacro(name);
     if (!def) {
@@ -465,11 +465,11 @@ class MacroRegistry {
       globalOffset: call.globalOffset,
       normalize: MacroEngine.normalizeMacroResult.bind(MacroEngine),
       trimContent: MacroEngine.trimScopedContent.bind(MacroEngine),
-      resolve: (text, { offsetDelta = 0 } = {}) =>
+      resolve: (text: any, { offsetDelta = 0 } = {}) =>
         MacroEngine.evaluate(text, call.env, {
           contextOffset: call.globalOffset + offsetDelta,
         }),
-      warn: (message, error = undefined) => logMacroRuntimeWarning({ message, call, def, error, macroName: def?.name }),
+      warn: (message: any, error = undefined) => logMacroRuntimeWarning({ message, call, def, error, macroName: def?.name }),
     };
 
     const result = def.handler(executionContext);
@@ -497,7 +497,7 @@ class MacroRegistry {
    * @returns {MacroDefinition} The built macro definition.
    * @throws {Error} If validation fails.
    */
-  buildMacroDefFromOptions(name, options, { source }: any = {}) {
+  buildMacroDefFromOptions(name: any, options: any, { source }: any = {}) {
     name = typeof name === "string" ? name.trim() : String(name);
 
     if (!isIdentifierValid(name))
@@ -555,7 +555,7 @@ class MacroRegistry {
     let minArgs = 0;
     let maxArgs = 0;
     /** @type {MacroUnnamedArgDef[]} */
-    let unnamedArgDefs = [];
+    let unnamedArgDefs: any[] = [];
     if (rawUnnamedArgs !== undefined) {
       if (Array.isArray(rawUnnamedArgs)) {
         let foundOptional = false;
@@ -718,7 +718,7 @@ class MacroRegistry {
       category,
       minArgs,
       maxArgs,
-      unnamedArgDefs,
+      unnamedArgDefs: unnamedArgDefs as any[],
       list,
       strictArgs,
       description,
@@ -747,7 +747,7 @@ instance = MacroRegistry.instance;
  * @param {boolean} [options.allowComment = true] - Whether return that the comment identifier '//' is valid.
  * @returns {boolean} True if the identifier is valid, false otherwise.
  */
-function isIdentifierValid(name, { allowComment = true } = {}) {
+function isIdentifierValid(name: any, { allowComment = true } = {}) {
   if (typeof name !== "string" || !name.trim()) return false;
   if (allowComment && name === "//") return true;
   return MACRO_IDENTIFIER_PATTERN.test(name);
@@ -761,7 +761,7 @@ function isIdentifierValid(name, { allowComment = true } = {}) {
  * @param {any[]} args - Arguments to validate.
  * @returns {boolean} True if the arguments are valid, false otherwise.
  */
-function isArgsValid(def, args) {
+function isArgsValid(def: any, args: any) {
   const hasListArgs = def.list !== null;
 
   // Without list: args must be between minArgs and maxArgs (inclusive)
@@ -790,7 +790,7 @@ function isArgsValid(def, args) {
  * @param {MacroDefinition} def
  * @param {string[]} unnamedArgs
  */
-function validateArgTypes(call, def, unnamedArgs) {
+function validateArgTypes(call: any, def: any, unnamedArgs: any) {
   if (def.unnamedArgDefs.length === 0) return;
 
   const defs = def.unnamedArgDefs;
@@ -804,7 +804,7 @@ function validateArgTypes(call, def, unnamedArgs) {
     }
 
     const types = Array.isArray(argDef.type) ? argDef.type : [argDef.type];
-    if (!types.some((type) => isValueOfType(value, type))) {
+    if (!types.some((type: any) => isValueOfType(value, type))) {
       const argName = argDef.name || `Argument ${i + 1}`;
       const optionalLabel = argDef.optional ? " (optional)" : "";
       const message = `Macro "${call.name}" (position ${i + 1}${optionalLabel}) argument "${argName}" expected type ${argDef.type} but got value "${value}".`;
@@ -823,7 +823,7 @@ function validateArgTypes(call, def, unnamedArgs) {
  * @param {MacroValueType} type
  * @returns {boolean}
  */
-function isValueOfType(value, type) {
+function isValueOfType(value: any, type: any) {
   const trimmed = value.trim();
 
   if (type === "string") {

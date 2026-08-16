@@ -8,7 +8,7 @@ export class AudioPlayer {
   isDestroyed: boolean;
   boundHandlers: Record<string, any>;
   observer: MutationObserver | null;
-  elements: Record<string, any>;
+  elements: Record<string, any> = {} as Record<string, any>;
 
   /**
    * Creates an audio player instance
@@ -16,7 +16,7 @@ export class AudioPlayer {
    * @param {HTMLElement} containerElement - The container element with player controls
    * @param {Object} options - Configuration options
    */
-  constructor(audioElement, containerElement, options = {}) {
+  constructor(audioElement: HTMLAudioElement, containerElement: HTMLElement, options: Record<string, any> = {}) {
     if (!(audioElement instanceof HTMLAudioElement)) {
       throw new Error("First argument must be an HTMLAudioElement");
     }
@@ -313,7 +313,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The click event
    * @returns {void}
    */
-  onPlayPauseClick(e) {
+  onPlayPauseClick(e: any) {
     e.preventDefault();
     this.togglePlay();
   }
@@ -323,7 +323,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The click event
    * @returns {void}
    */
-  onVolumeClick(e) {
+  onVolumeClick(e: any) {
     e.preventDefault();
     this.toggleMute();
   }
@@ -333,7 +333,7 @@ export class AudioPlayer {
    * @param {InputEvent} e - The input event
    * @returns {void}
    */
-  onVolumeInput(e) {
+  onVolumeInput(e: any) {
     if (!(e.target instanceof HTMLInputElement)) return;
     const value = parseFloat(e.target.value);
     this.setVolume(value);
@@ -344,7 +344,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The mousedown event
    * @returns {void}
    */
-  onProgressMouseDown(e) {
+  onProgressMouseDown(e: any) {
     this.isDragging = true;
     this.updateProgress(e);
     document.addEventListener("mousemove", this.boundHandlers.documentMouseMove);
@@ -356,7 +356,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The click event
    * @returns {void}
    */
-  onProgressClick(e) {
+  onProgressClick(e: any) {
     if (!this.isDragging) {
       this.updateProgress(e);
     }
@@ -367,7 +367,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The mousemove event
    * @returns {void}
    */
-  onProgressMouseMove(e) {
+  onProgressMouseMove(e: any) {
     if (!this.isDragging) {
       this.updateProgressTitle(e);
     }
@@ -378,7 +378,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The mousemove event
    * @returns {void}
    */
-  onDocumentMouseMove(e) {
+  onDocumentMouseMove(e: any) {
     if (this.isDragging) {
       this.updateProgress(e);
     }
@@ -401,7 +401,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The mouse event containing position information
    * @returns {void}
    */
-  updateProgress(e) {
+  updateProgress(e: any) {
     if (!this.elements.progress) return;
 
     const rect = this.elements.progress.getBoundingClientRect();
@@ -461,7 +461,7 @@ export class AudioPlayer {
    * @param {MouseEvent} e - The mouse event
    * @returns {void}
    */
-  updateProgressTitle(e) {
+  updateProgressTitle(e: any) {
     if (!this.elements.progress) return;
 
     const rect = this.elements.progress.getBoundingClientRect();
@@ -517,7 +517,7 @@ export class AudioPlayer {
    * @param {number} time - The time in seconds to seek to
    * @returns {void}
    */
-  seek(time) {
+  seek(time: any) {
     if (this.isDestroyed) return;
     if (isFinite(time) && time >= 0 && time <= this.audio.duration) {
       this.audio.currentTime = time;
@@ -529,7 +529,7 @@ export class AudioPlayer {
    * @param {number} volume - Volume level between 0.0 and 1.0
    * @returns {void}
    */
-  setVolume(volume) {
+  setVolume(volume: any) {
     if (this.isDestroyed) return;
     volume = Math.max(0, Math.min(1, volume));
     this.audio.volume = volume;
@@ -571,7 +571,7 @@ export class AudioPlayer {
    * @param {string} src - The URL of the audio file
    * @returns {void}
    */
-  setSrc(src) {
+  setSrc(src: any) {
     if (this.isDestroyed) return;
     this.audio.src = src;
   }
@@ -581,7 +581,7 @@ export class AudioPlayer {
    * @param {string} title - The title text to display
    * @returns {void}
    */
-  setTitle(title) {
+  setTitle(title: any) {
     if (this.isDestroyed) return;
     this.options.title = title;
     if (this.elements.title) {
@@ -611,10 +611,10 @@ export class AudioPlayer {
     this.unbindEvents();
 
     // Clear references to prevent memory leaks
-    this.audio = null;
-    this.container = null;
-    this.elements = null;
-    this.options = null;
-    this.boundHandlers = null;
+    this.audio = null as any;
+    this.container = null as any;
+    this.elements = null as any;
+    this.options = null as any;
+    this.boundHandlers = null as any;
   }
 }
