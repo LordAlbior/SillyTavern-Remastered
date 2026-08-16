@@ -140,8 +140,6 @@
     "quality:security": "bunx fallow security",
     "quality:recommend": "bunx fallow recommend",
     "quality:type-aware": "bunx fallow dead-code --type-aware",
-    "security:scan": "bunx trivy filesystem . --severity HIGH,CRITICAL --exit-code 1",
-    "security:sast": "bunx semgrep scan --config auto",
     "security:spectral": "bunx spectral lint ."
   },
   "bin": {
