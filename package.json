@@ -131,7 +131,15 @@
     "format:check": "biome format .",
     "typecheck": "tsc -p app/tsconfig.json --noEmit",
     "plugins:update": "bun --cwd app plugins update",
-    "plugins:install": "bun --cwd app plugins install"
+    "plugins:install": "bun --cwd app plugins install",
+    "quality": "bunx fallow",
+    "quality:audit": "bunx fallow audit",
+    "quality:dead-code": "bunx fallow dead-code",
+    "quality:dupes": "bunx fallow dupes",
+    "quality:health": "bunx fallow health --score",
+    "quality:security": "bunx fallow security",
+    "quality:recommend": "bunx fallow recommend",
+    "quality:type-aware": "bunx fallow dead-code --type-aware"
   },
   "bin": {
     "sillytavern": "./app/src/server-global.ts"
@@ -191,6 +199,7 @@
     "@types/ws": "^8.18.1",
     "@types/yargs": "^17.0.33",
     "@types/yauzl": "^2.10.3",
+    "fallow": "^3.16.0",
     "typescript": "^7.0"
   },
   "private": true,
