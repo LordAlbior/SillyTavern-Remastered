@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "entry": [
+    "app/src/server-main.ts",
+    "app/src/server-global.ts",
+    "app/src/server-startup.ts",
+    "app/src/electron/index.ts",
+    "extensions/*/src/index.ts"
+  ],
+  "workspaces": {
+    "patterns": ["app", "extensions/*"]
+  },
+  "ignorePatterns": [
+    "**/*.generated.ts",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/backups/**",
+    "**/tokenizers/**",
+    "app/electron/**",
+    "app/frontend/**"
+  ],
+  "audit": {
+    "gate": "new-only",
+    "changedSince": "HEAD~1"
+  },
+  "duplicates": {
+    "mode": "mild"
+  },
+  "typeAware": {
+    "enabled": false
+  }
+}
