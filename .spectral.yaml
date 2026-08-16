@@ -1,0 +1,29 @@
+extends: ["spectral:oas", "spectral:asyncapi"]
+rules:
+  secret-detection:
+    description: Detect exposed secrets and credentials
+    severity: error
+    given: "$..*"
+    then:
+      field: "pattern"
+      function: pattern
+      functionOptions:
+        match: "(?i)(password|secret|api[_\\s-]?key|token|auth|credential|private[_\\s-]?key|access[_\\s-]?key)"
+  insecure-protocol:
+    description: Detect insecure HTTP URLs
+    severity: warn
+    given: "$..*"
+    then:
+      field: "pattern"
+      function: pattern
+      functionOptions:
+        match: "http://"
+  hardcoded-ip:
+    description: Detect hardcoded IP addresses
+    severity: warn
+    given: "$..*"
+    then:
+      field: "pattern"
+      function: pattern
+      functionOptions:
+        match: "\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"
