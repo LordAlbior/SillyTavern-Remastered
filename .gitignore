@@ -1,4 +1,22 @@
+# Dependencies and package managers
 node_modules/
+bun.lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build artifacts and bundles
+dist/
+/app/public/dist/
+extensions/*/index.js
+
+# IDE and editor configs
+.vscode/**
+!.vscode/extensions.json
+.idea/
+*.code-workspace
+
+# Runtime and generated data
 public/chats/
 public/characters/
 public/User Avatars/
@@ -7,7 +25,6 @@ public/groups/
 public/group chats/
 public/worlds/
 public/user/
-public/css/bg_load.css
 public/themes/
 public/OpenAI Settings/
 public/KoboldAI Settings/
@@ -17,67 +34,69 @@ public/instruct/
 public/context/
 public/scripts/extensions/third-party/
 public/stats.json
+public/settings.json
+public/css/bg_load.css
+public/css/user.css
+public/movingUI/
+public/QuickReplies/
+public/assets/
+public/error/
 /uploads/
-*.jsonl
-/config.conf
-/config.yaml
-/config.conf.bak
+/vectors/
+/cache/
+/plugins/
+/data
+/default/scaffold
+/certs
+/thumbnails
+
+# Docker volumes and configs
 /docker/config
 /docker/user
 /docker/extensions
 /docker/data
 /docker/dist
+
+# Logs and temporary files
 *.log
 *.err.log
 *.out.log
-.DS_Store
-public/settings.json
-/thumbnails
-whitelist.txt
-.vscode/**
-!.vscode/extensions.json
-.idea/
-secrets.json
-/dist
-/backups/
-public/movingUI/
-public/QuickReplies/
-content.log
-cloudflared.exe
-public/assets/
 access.log
-/vectors/
-/cache/
-public/css/user.css
-public/error/
-/plugins/
-/data
-/default/scaffold
-public/scripts/extensions/third-party
-/certs
-.aider*
-.env
-/StartDev.bat
-yarn.lock
-*.code-workspace
+content.log
 test-results/
+*.jsonl
+
+# Config and secrets
+/config.conf
+/config.yaml
+/config.conf.bak
+secrets.json
+whitelist.txt
+.env
+
+# OS and editor junk
+.DS_Store
+cloudflared.exe
+
+# AI and project scaffolding
+.aider*
+AGENTS.md
+DEBT.md
+IDEA.md
+
+# Local tooling and specs
 /.specify
 /.hermes
 /.opencode
-/specs
-IDEA.md
-package-lock.json
-pnpm-lock.yaml
-opencode.json
-opencode.json.openchamber.backup
-AGENTS.md
-DEBT.md
+/.gemini
 /.kilo
 /.reflex
 /.cortexkit
-# Build artifacts (transpiled TypeScript frontend)
-/app/public/dist/
+/.omp
+/openspec
+/specs
+opencode.json
+opencode.json.openchamber.backup
 
-
-# Generated extension bundles (TS source is committed; index.js is build output)
-extensions/*/index.js
+# Dev shortcuts
+/StartDev.bat

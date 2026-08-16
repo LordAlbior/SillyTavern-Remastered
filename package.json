@@ -123,13 +123,7 @@
   "scripts": {
     "init": "bun",
     "start": "bun --cwd app build-frontend.ts && bun --cwd app server.ts",
-    "start:node": "node --cwd app --experimental-strip-types server.ts",
-    "debug": "bun --cwd app build-frontend.ts && bun --cwd app --inspect server.ts",
     "start:global": "bun --cwd app build-frontend.ts && bun --cwd app server.ts --global",
-    "start:global:node": "node --cwd app --experimental-strip-types server.ts --global",
-    "start:electron": "cd ./app/src/electron && bun run start",
-    "start:deno": "deno run --allow-run --allow-net --allow-read --allow-write --allow-sys --allow-env app/server.ts",
-    "start:bun": "bun --cwd app build-frontend.ts && bun --cwd app server.ts",
     "start:no-csrf": "bun --cwd app build-frontend.ts && bun --cwd app server.ts --disableCsrf",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",

@@ -5,7 +5,7 @@
     "checkJs": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-"strict": true,
+    "strict": true,
     "useUnknownInCatchVariables": false,
     "types": ["node", "jquery", "toastr"],
     "paths": {

@@ -3,17 +3,10 @@
   "version": "1.18.0",
   "private": true,
   "type": "module",
-  "main": "server.ts",
-  "bin": {
-    "sillytavern": "./src/server-global.ts"
-  },
   "scripts": {
     "build:frontend": "bun build-frontend.ts",
     "start": "bun build-frontend.ts && bun server.ts",
-    "start:node": "node --experimental-strip-types server.ts",
-    "debug": "bun build-frontend.ts && bun --inspect server.ts",
     "start:global": "bun build-frontend.ts && bun server.ts --global",
-    "start:electron": "cd ./src/electron && bun run start",
     "start:no-csrf": "bun build-frontend.ts && bun server.ts --disableCsrf",
     "plugins:update": "bun plugins update",
     "plugins:install": "bun plugins install"
