@@ -140,6 +140,7 @@
     "quality:security": "bunx fallow security",
     "quality:recommend": "bunx fallow recommend",
     "quality:type-aware": "bunx fallow dead-code --type-aware",
+    "quality:a11y": "bunx pa11y --runner axe --level error --threshold 0 http://localhost:8000",
     "security:sast": "semgrep scan --config auto",
     "security:trivy": "trivy filesystem . --severity HIGH,CRITICAL --exit-code 1",
     "security:spectral": "spectral lint ."
@@ -204,6 +205,7 @@
     "@types/yargs": "^17.0.33",
     "@types/yauzl": "^2.10.3",
     "fallow": "^3.16.0",
+    "pa11y": "^9.1.1",
     "typescript": "^7.0"
   },
   "private": true,
