@@ -141,6 +141,7 @@
     "quality:recommend": "bunx fallow recommend",
     "quality:type-aware": "bunx fallow dead-code --type-aware",
     "security:sast": "semgrep scan --config auto",
+    "security:trivy": "trivy filesystem . --severity HIGH,CRITICAL --exit-code 1",
     "security:spectral": "spectral lint ."
   },
   "bin": {
