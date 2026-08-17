@@ -28,3 +28,40 @@ jobs:
 
       - name: Run full quality pipeline
         run: bun run quality
+
+  pa11y:
+    name: Accessibility gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@b1c8c05e5e0ad086c3d68ec22f1d293c294c7bf9 # v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Chrome for Pa11y
+        run: npm install --no-save puppeteer && npx puppeteer browsers install chrome
+
+      - name: Build frontend
+        run: bun --cwd app build-frontend.ts
+
+      - name: Start server
+        run: |
+          bun --cwd app server.ts &
+          npx wait-on http://localhost:8000 --timeout 60000
+
+      - name: Run Pa11y accessibility tests
+        run: npm run quality:a11y
+
+      - name: Upload Pa11y report
+        if: always()
+        uses: actions/upload-artifact@b4b07b711226ed2d8275e9d46c6ed3143c4e17d7 # v4
+        with:
+          name: pa11y-report
+          path: pa11y-report.html
