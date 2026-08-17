@@ -75,7 +75,7 @@ We have a few workflows that keep the repo tidy without manual work:
 - `pr-auto-manager.yml` — labels PRs by size, checks for merge conflicts, and posts automatic comments.
 - `pr-check-merge-conflicts.yaml` — lightweight check that stops obvious merge conflicts before they get messy.
 
-All of these workflows use `actions/create-github-app-token@v3.2.0`. We moved off `v2` because GitHub's runners no longer run Node 20 by default, and `v2` was tied to that runtime.
+All of these workflows use `actions/create-github-app-token@v3.2.0`. We moved off `v2` because it was tied to Node 20, and our workflows now use Node 24.
 
 ## When something breaks
 
