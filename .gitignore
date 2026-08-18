@@ -87,16 +87,14 @@ IDEA.md
 # Local tooling and specs
 /.specify
 /.hermes
-/.opencode
 /.gemini
 /.kilo
 /.reflex
 /.cortexkit
 /.omp
 /openspec
+/.llm-wiki
 /specs
-opencode.json
-opencode.json.openchamber.backup
 
 # Dev shortcuts
 /StartDev.bat
