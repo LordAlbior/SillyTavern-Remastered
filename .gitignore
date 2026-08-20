@@ -98,3 +98,7 @@ IDEA.md
 
 # Dev shortcuts
 /StartDev.bat
+
+src/client/extensions/*/index.js
+
+.extensions_build/
