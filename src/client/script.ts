@@ -12671,6 +12671,9 @@ export * from "./scripts/slash-commands/SlashCommandUnnamedArgumentAssignment.ts
 export * from "./scripts/slash-commands/SlashCommandVariableAutoCompleteOption.ts";
 export * from "./scripts/slash-commands.ts";
 export * from "./scripts/sse-stream.ts";
+// Third-party extensions import /scripts/sse-stream.js as a default export;
+// `export *` above drops the default, so re-export it explicitly.
+export { default } from "./scripts/sse-stream.ts";
 export * from "./scripts/st-context.ts";
 export * from "./scripts/stats.ts";
 export * from "./scripts/streaming-display.ts";
