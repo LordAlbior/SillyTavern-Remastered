@@ -111,8 +111,8 @@
   "name": "sillytavern-remastered",
   "type": "module",
   "workspaces": [
-    "app",
-    "extensions/*"
+    "src",
+    "src/client/extensions/*"
   ],
   "license": "AGPL-3.0",
   "repository": {
@@ -122,16 +122,16 @@
   "version": "1.18.0",
   "scripts": {
     "init": "bun",
-    "start": "bun --cwd app build-frontend.ts && bun --cwd app server.ts",
-    "start:global": "bun --cwd app build-frontend.ts && bun --cwd app server.ts --global",
-    "start:no-csrf": "bun --cwd app build-frontend.ts && bun --cwd app server.ts --disableCsrf",
+    "start": "bun --cwd src build-frontend.ts && bun --cwd src server.ts",
+    "start:global": "bun --cwd src build-frontend.ts && bun --cwd src server.ts --global",
+    "start:no-csrf": "bun --cwd src build-frontend.ts && bun --cwd src server.ts --disableCsrf",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "typecheck": "tsc -p app/tsconfig.json --noEmit",
-    "plugins:update": "bun --cwd app plugins update",
-    "plugins:install": "bun --cwd app plugins install",
+    "typecheck": "tsc -p src/tsconfig.json --noEmit",
+    "plugins:update": "bun --cwd src plugins update",
+    "plugins:install": "bun --cwd src plugins install",
     "quality": "bunx fallow",
     "quality:audit": "bunx fallow audit",
     "quality:dead-code": "bunx fallow dead-code",
@@ -146,13 +146,13 @@
     "security:spectral": "spectral lint ."
   },
   "bin": {
-    "sillytavern": "./app/src/server-global.ts"
+    "sillytavern": "./src/server/server-global.ts"
   },
   "rules": {
     "no-path-concat": "off",
     "no-var": "off"
   },
-  "main": "app/server.js",
+  "main": "src/server.ts",
   "devDependencies": {
     "@biomejs/biome": "^2.5.5",
     "@chevrotain/types": "^11.2.0",
