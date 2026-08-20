@@ -311,7 +311,7 @@ async function preSetupTasks() {
   console.log();
 
   // Auto-build frontend if dist/ is missing (e.g., after git pull)
-  const distEntry = path.join(serverDirectory, "src", "client", "dist", "script.js");
+  const distEntry = path.join(serverDirectory, "client", "dist", "script.js");
   if (!fs.existsSync(distEntry)) {
     console.log("Frontend build output (src/client/dist/) not found. Running build...");
     const { spawnSync } = await import("node:child_process");
