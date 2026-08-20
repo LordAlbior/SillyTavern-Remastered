@@ -1,117 +1,138 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { rootDirectory } from './server/server-directory.ts';
+import { readdirSync } from 'node:fs';
 
 const publicDir = path.join(import.meta.dir, 'client');
 const distDir = path.join(publicDir, 'dist');
+const extRoot = path.join(publicDir, 'extensions');
+const publicScripts = path.join(publicDir, 'scripts');
 
 fs.mkdirSync(distDir, { recursive: true });
 
-console.log('===== Frontend Build → public/dist/ =====');
+console.log('===== Frontend Build → client/dist/ =====');
 
-const resolveEdgeCases = {
-    name: 'resolve-edge-cases' as const,
-    setup(build: any) {
-        const publicLib = path.join(publicDir, 'lib') + path.sep;
-        build.onResolve({ filter: /^\.{1,2}\/lib\// }, (args: any) => {
-            const resolved = path.resolve(args.resolveDir, args.path);
-            if (resolved.startsWith(publicLib)) {
-                return { path: args.path, external: true };
-            }
-            return undefined;
-        });
-        build.onResolve({ filter: /^(\/|\.{1,2}\/)lib\.js$/ }, (args: any) => {
-            const resolved = path.resolve(args.resolveDir, args.path);
-            if (resolved.startsWith(publicLib) || args.path === '/lib.js') {
-                return { path: '/lib.js', external: true };
-            }
-            return undefined;
-        });
-        build.onResolve({ filter: /^\/(script\.ts|script\.js|scripts\/.*|lib\/.*|lib\.js)$/ }, (args: unknown) => {
-            if (typeof args === 'object' && args && 'path' in args) {
-                const p = (args as { path: string }).path;
-                if (p === '/lib.js') {
-                    return { path: '/lib.js', external: true };
-                }
-                if (p === '/script.ts' || p === '/script.js') {
-                    return { path: path.join(publicDir, 'script.ts') };
-                }
-                const relative = p.startsWith('/') ? p.slice(1) : p;
-                const candidateTs = path.join(publicDir, relative.replace(/\.js$/, '.ts'));
-                const candidate = fs.existsSync(candidateTs) ? candidateTs : path.join(publicDir, relative);
-                return { path: candidate };
-            }
-            return undefined;
-        });
-        build.onResolve({ filter: /^JSZip$/ }, () => ({
-            path: 'JSZip',
-            external: true,
-        }));
-    },
+// Shared framework plugin.
+// - Absolute `/lib.js` and `/script.js` are the singleton hosts: left external
+//   so every built-in extension resolves to the SAME module instance (stateful
+//   eventSource / getContext live in /script.js; third-party libs in /lib.js).
+// - Absolute `/scripts/**` and `/lib/**` are resolved to their TypeScript
+//   source and bundled (stateless helpers; per-extension copies are fine).
+// - Relative imports (used inside the app shell) resolve natively.
+const sharedFramework = {
+  name: 'shared-framework' as const,
+  setup(build: Bun.PluginBuilder) {
+    build.onResolve({ filter: /^\// }, (args: Bun.OnResolveArgs) => {
+      const p = args.path;
+      if (p === '/lib.js' || p === '/script.js') {
+        return { path: p, external: true };
+      }
+      const rel = p.slice(1);
+      const candidateTs = path.join(publicDir, rel.replace(/\.js$/, '') + '.ts');
+      const candidate = fs.existsSync(candidateTs) ? candidateTs : path.join(publicDir, rel);
+      return { path: candidate };
+    });
+    build.onResolve({ filter: /^JSZip$/ }, () => ({ path: 'JSZip', external: true }));
+  },
+};
+// Redirect extension-local `../lib/X` to the global `src/client/lib/X`.
+// This fork relocated shared extension libs there; deps still import the
+// legacy `../lib/...` path. Only fires when the local path is missing, so
+// genuine local files are never touched.
+const redirectExtensionLib = {
+  name: 'redirect-extension-lib' as const,
+  setup(build: Bun.PluginBuilder) {
+    build.onResolve({ filter: /^\.{1,2}\// }, (args: Bun.OnResolveArgs) => {
+      const isLib = args.path === '../lib' || args.path.startsWith('../lib/');
+      if (!isLib) return undefined;
+      const resolved = path.resolve(args.resolveDir, args.path);
+      if (fs.existsSync(resolved)) return undefined;
+      const rel = args.path.slice('../lib'.length).replace(/^\//, '');
+      const globalPath = path.join(publicDir, 'lib', rel);
+      if (fs.existsSync(globalPath)) return { path: globalPath };
+      return undefined;
+    });
+  },
 };
 
+async function buildOrFail(label: string, opts: Bun.BuildConfig) {
+  const res = await Bun.build(opts);
+  if (!res.success) {
+    console.error(`FAILED: ${label}`);
+    for (const log of res.logs) console.error(log);
+    process.exit(1);
+  }
+  return res;
+}
+
 async function main() {
-  console.log('[1/3] Bundling lib.ts...');
-  const libResult = await Bun.build({
+  // [1/4] lib bundle → dist/lib.js (third-party libs, served as a shared module)
+  const libRes = await buildOrFail('[1/4] Bundling lib.ts → dist/lib.js', {
     entrypoints: [path.join(publicDir, 'lib.ts')],
     outdir: distDir,
     target: 'browser',
     format: 'esm',
-    minify: true,
-    plugins: [resolveEdgeCases],
+    minify: { identifiers: false, whitespace: true },
+    plugins: [sharedFramework, redirectExtensionLib],
   });
-  if (!libResult.success) {
-    console.error('Lib bundle FAILED:');
-    for (const log of libResult.logs) console.error(log);
-    process.exit(1);
-  }
-  console.log(`  → dist/lib.js (${(libResult.outputs[0].size / 1024).toFixed(0)} KB)`);
+  console.log(`  → dist/lib.js (${(libRes.outputs[0].size / 1024).toFixed(0)} KB)`);
 
-  console.log('[2/3] Bundling script.ts...');
-  const scriptResult = await Bun.build({
+  // [2/4] app shell → dist/script.js (monolith; /lib.js + /script.js stay external hosts)
+  const scriptRes = await buildOrFail('[2/4] Bundling script.ts → dist/script.js', {
     entrypoints: [path.join(publicDir, 'script.ts')],
-    root: publicDir,
     outdir: distDir,
     target: 'browser',
     format: 'esm',
-    minify: true,
-    plugins: [resolveEdgeCases],
+    minify: { identifiers: false, whitespace: true },
+    plugins: [sharedFramework, redirectExtensionLib],
+    external: [/^\/(lib|script)\.js$/],
   });
-  if (!scriptResult.success) {
-    console.error('Script bundle FAILED:');
-    for (const log of scriptResult.logs) console.error(log);
-    process.exit(1);
-  }
-  console.log(`  → dist/script.js (${(scriptResult.outputs[0].size / 1024).toFixed(0)} KB)`);
+  console.log(`  → dist/script.js (${(scriptRes.outputs[0].size / 1024).toFixed(0)} KB)`);
 
-  console.log('[3/3] Bundling login.ts...');
-  fs.mkdirSync(path.join(distDir, 'scripts'), { recursive: true });
-  const loginResult = await Bun.build({
-    entrypoints: [path.join(publicDir, 'scripts', 'login.ts')],
-    root: publicDir,
-    outdir: path.join(distDir, 'scripts'),
-    target: 'browser',
-    format: 'esm',
-    minify: true,
-    plugins: [resolveEdgeCases],
-  });
-  if (!loginResult.success) {
-    console.error('Login bundle FAILED:');
-    for (const log of loginResult.logs) console.error(log);
-    process.exit(1);
+  // [3/4] login page module → dist/scripts/login.js (loaded standalone by login.html)
+  const loginEntry = path.join(publicScripts, 'login.ts');
+  if (fs.existsSync(loginEntry)) {
+    await buildOrFail('[3/4] Bundling login.ts → dist/scripts/login.js', {
+      entrypoints: [loginEntry],
+      outdir: path.join(distDir, 'scripts'),
+      target: 'browser',
+      format: 'esm',
+    minify: { identifiers: false, whitespace: true },
+    plugins: [sharedFramework, redirectExtensionLib],
+      external: [/^\/(lib|script)\.js$/],
+    });
+    console.log('  → dist/scripts/login.js');
   }
-  const nestedLogin = path.join(distDir, 'scripts', 'scripts', 'login.js');
-  if (fs.existsSync(nestedLogin)) {
-    fs.renameSync(nestedLogin, path.join(distDir, 'scripts', 'login.js'));
-  }
-  console.log(`  → dist/scripts/login.js (${fs.statSync(path.join(distDir, 'scripts', 'login.js')).size} bytes)`);
 
-  console.log('[4/4] Extensions...');
-  console.log('Skipping extension bundling; serving built-in extensions from src/client/extensions/');
+  // [4/4] built-in extensions → client/extensions/<name>/index.js (served from source)
+  const extDirs = readdirSync(extRoot, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name);
+  let built = 0;
+  let skipped = 0;
+  for (const name of extDirs) {
+    const ep = path.join(extRoot, name, 'index.ts');
+    if (!fs.existsSync(ep)) {
+      skipped++;
+      continue;
+    }
+    await buildOrFail(`[4/4] Extension: ${name}`, {
+      entrypoints: [ep],
+      outdir: path.join(extRoot, name),
+      target: 'browser',
+      format: 'esm',
+    minify: { identifiers: false, whitespace: true },
+    plugins: [sharedFramework, redirectExtensionLib],
+      external: [/^\/(lib|script)\.js$/],
+    });
+    built++;
+    console.log(`  → extensions/${name}/index.js`);
+  }
+  console.log(`Extensions: ${built} built, ${skipped} skipped (no index.ts)`);
+
   console.log('===== Frontend Build complete =====');
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
