@@ -1,54 +1,61 @@
-import path from 'node:path';
-import fs from 'node:fs';
-import { readdirSync } from 'node:fs';
+import path from "node:path";
+import fs from "node:fs";
+import { readdirSync, cpSync } from "node:fs";
 
-const publicDir = path.join(import.meta.dir, 'client');
-const distDir = path.join(publicDir, 'dist');
-const extRoot = path.join(publicDir, 'extensions');
-const publicScripts = path.join(publicDir, 'scripts');
+const publicDir = path.join(import.meta.dir, "client");
+const distDir = path.join(publicDir, "dist");
+const publicScripts = path.join(publicDir, "scripts");
+// Extension SOURCE lives in src/client/extensions (tracked). The build rewrites
+// their /scripts/X.js imports to /script.js, then emits built index.js into the
+// same dir (gitignored; served at /scripts/extensions by server-main.ts).
+const extSrc = path.join(publicDir, "extensions");
+const extOut = path.join(publicDir, "extensions");
+// Temporary copy of extSrc where imports are rewritten to the monolith before
+// bundling (see rewriteExtensionImports).
+const extBuild = path.join(publicDir, ".extensions_build");
 
 fs.mkdirSync(distDir, { recursive: true });
+fs.mkdirSync(extOut, { recursive: true });
 
-console.log('===== Frontend Build → client/dist/ =====');
+console.log("===== Frontend Build → client/dist/ =====");
 
-// Shared framework plugin.
-// - Absolute `/lib.js` and `/script.js` are the singleton hosts: left external
-//   so every built-in extension resolves to the SAME module instance (stateful
-//   eventSource / getContext live in /script.js; third-party libs in /lib.js).
-// - Absolute `/scripts/**` and `/lib/**` are resolved to their TypeScript
-//   source and bundled (stateless helpers; per-extension copies are fine).
-// - Relative imports (used inside the app shell) resolve natively.
-const sharedFramework = {
-  name: 'shared-framework' as const,
+// Resolves absolute specifiers used inside the client source:
+//   /scripts/X.js | /scripts/X.ts  -> src/client/scripts/X.ts (bundled in)
+//   /script.ts  | /script.js      -> the shell entrypoint itself (self-reference)
+//   /lib.js                        -> external shared module
+// Without this, Bun cannot resolve the absolute /script.ts and /scripts/*.ts
+// imports that exist in the codebase.
+const shellResolve = {
+  name: "shell-resolve" as const,
   setup(build: Bun.PluginBuilder) {
+    build.onResolve({ filter: /^JSZip$/ }, () => ({ path: "JSZip", external: true }));
     build.onResolve({ filter: /^\// }, (args: Bun.OnResolveArgs) => {
       const p = args.path;
-      if (p === '/lib.js' || p === '/script.js') {
-        return { path: p, external: true };
+      if (p === "/lib.js" || p === "/lib.ts") return { path: "/lib.js", external: true };
+      if (p === "/script.js" || p === "/script.ts") {
+        return { path: path.join(publicDir, "script.ts") };
       }
-      const rel = p.slice(1);
-      const candidateTs = path.join(publicDir, rel.replace(/\.js$/, '') + '.ts');
-      const candidate = fs.existsSync(candidateTs) ? candidateTs : path.join(publicDir, rel);
-      return { path: candidate };
+      const base = path.join(publicDir, p.slice(1).replace(/\.(ts|js)$/, ""));
+      const tsPath = `${base}.ts`;
+      if (fs.existsSync(tsPath)) return { path: tsPath };
+      const jsPath = `${base}.js`;
+      if (fs.existsSync(jsPath)) return { path: jsPath };
+      return undefined;
     });
-    build.onResolve({ filter: /^JSZip$/ }, () => ({ path: 'JSZip', external: true }));
   },
 };
-// Redirect extension-local `../lib/X` to the global `src/client/lib/X`.
-// This fork relocated shared extension libs there; deps still import the
-// legacy `../lib/...` path. Only fires when the local path is missing, so
-// genuine local files are never touched.
-const redirectExtensionLib = {
-  name: 'redirect-extension-lib' as const,
+
+// Extensions import shared state from /script.js and /lib.js. Those are
+// absolute specifiers; Bun's config `external` does not intercept absolute
+// paths, so we mark them external via a plugin (catch-all `/^\//` filter is
+// the one proven to fire for absolute specifiers).
+const extResolve = {
+  name: "ext-resolve" as const,
   setup(build: Bun.PluginBuilder) {
-    build.onResolve({ filter: /^\.{1,2}\// }, (args: Bun.OnResolveArgs) => {
-      const isLib = args.path === '../lib' || args.path.startsWith('../lib/');
-      if (!isLib) return undefined;
-      const resolved = path.resolve(args.resolveDir, args.path);
-      if (fs.existsSync(resolved)) return undefined;
-      const rel = args.path.slice('../lib'.length).replace(/^\//, '');
-      const globalPath = path.join(publicDir, 'lib', rel);
-      if (fs.existsSync(globalPath)) return { path: globalPath };
+    build.onResolve({ filter: /^JSZip$/ }, () => ({ path: "JSZip", external: true }));
+    build.onResolve({ filter: /^\// }, (args: Bun.OnResolveArgs) => {
+      if (args.path === "/lib.js" || args.path === "/lib.ts") return { path: args.path, external: true };
+      if (args.path === "/script.js" || args.path === "/script.ts") return { path: args.path, external: true };
       return undefined;
     });
   },
@@ -64,72 +71,119 @@ async function buildOrFail(label: string, opts: Bun.BuildConfig) {
   return res;
 }
 
+// Copy every non-TS file from an extension's source dir into its build output
+// (manifest.json, css, html, icons, bundled .js libs, …). The bundler only
+// emits index.js; these static assets are served alongside it.
+function copyStatic(src: string, dest: string) {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const ent of fs.readdirSync(src, { withFileTypes: true })) {
+    const s = path.join(src, ent.name);
+    const d = path.join(dest, ent.name);
+    if (ent.isDirectory()) copyStatic(s, d);
+    else if (!ent.name.endsWith(".ts")) fs.copyFileSync(s, d);
+  }
+}
+
+// Extensions import shared state (oai_settings, eventSource, getContext, …) from
+// the app shell. We rewrite their `/scripts/X.js` imports to `/script.js` so
+// there is exactly ONE instance of every stateful module — bundling those
+// modules per-extension duplicates state and re-binds eventSource/DOM handlers,
+// which caused the infinite change-event loop. Bun does not consult onResolve
+// plugins for absolute `/`-prefixed specifiers, so this is a source rewrite.
+function rewriteExtensionImports(srcDir: string) {
+  for (const ent of readdirSync(srcDir, { withFileTypes: true })) {
+    const p = path.join(srcDir, ent.name);
+    if (ent.isDirectory()) {
+      rewriteExtensionImports(p);
+    } else if (ent.name.endsWith(".ts")) {
+      let src = fs.readFileSync(p, "utf8");
+      // /scripts/X.js  -> /script.js   (shared monolith, single instance)
+      src = src.replace(/(["'])\/scripts\/[\w\-/]+\.js\1/g, "$1/script.js$1");
+      // ../lib/X (if unresolved in tree) -> /lib.js (shared)
+      src = src.replace(/(["'])\.\.\/lib(\/[\w\-/]+)?\.js\1/g, "$1/lib.js$1");
+      fs.writeFileSync(p, src);
+    }
+  }
+}
+
 async function main() {
-  // [1/4] lib bundle → dist/lib.js (third-party libs, served as a shared module)
-  const libRes = await buildOrFail('[1/4] Bundling lib.ts → dist/lib.js', {
-    entrypoints: [path.join(publicDir, 'lib.ts')],
+  // [1/4] third-party libs → dist/lib.js (shared module, external to everything)
+  const libRes = await buildOrFail("[1/4] Bundling lib.ts → dist/lib.js", {
+    entrypoints: [path.join(publicDir, "lib.ts")],
     outdir: distDir,
-    target: 'browser',
-    format: 'esm',
+    target: "browser",
+    format: "esm",
     minify: { identifiers: false, whitespace: true },
-    plugins: [sharedFramework, redirectExtensionLib],
+    plugins: [shellResolve],
+    external: [/^\/(lib|script)\.js$/],
   });
   console.log(`  → dist/lib.js (${(libRes.outputs[0].size / 1024).toFixed(0)} KB)`);
 
-  // [2/4] app shell → dist/script.js (monolith; /lib.js + /script.js stay external hosts)
-  const scriptRes = await buildOrFail('[2/4] Bundling script.ts → dist/script.js', {
-    entrypoints: [path.join(publicDir, 'script.ts')],
+  // [2/4] app shell → dist/script.js. Bundles every ./scripts/* and /scripts/*
+  // module into ONE monolith. Only /lib.js is external (separate shared file).
+  // Every stateful module therefore exists exactly once and is shared with
+  // extensions (script.ts re-exports them).
+  const scriptRes = await buildOrFail("[2/4] Bundling script.ts → dist/script.js", {
+    entrypoints: [path.join(publicDir, "script.ts")],
     outdir: distDir,
-    target: 'browser',
-    format: 'esm',
+    target: "browser",
+    format: "esm",
     minify: { identifiers: false, whitespace: true },
-    plugins: [sharedFramework, redirectExtensionLib],
+    plugins: [shellResolve],
     external: [/^\/(lib|script)\.js$/],
   });
   console.log(`  → dist/script.js (${(scriptRes.outputs[0].size / 1024).toFixed(0)} KB)`);
 
-  // [3/4] login page module → dist/scripts/login.js (loaded standalone by login.html)
-  const loginEntry = path.join(publicScripts, 'login.ts');
+  // [3/4] login page → dist/scripts/login.js (standalone, self-contained)
+  const loginEntry = path.join(publicScripts, "login.ts");
   if (fs.existsSync(loginEntry)) {
-    await buildOrFail('[3/4] Bundling login.ts → dist/scripts/login.js', {
+    await buildOrFail("[3/4] Bundling login.ts → dist/scripts/login.js", {
       entrypoints: [loginEntry],
-      outdir: path.join(distDir, 'scripts'),
-      target: 'browser',
-      format: 'esm',
-    minify: { identifiers: false, whitespace: true },
-    plugins: [sharedFramework, redirectExtensionLib],
+      outdir: path.join(distDir, "scripts"),
+      target: "browser",
+      format: "esm",
+      minify: { identifiers: false, whitespace: true },
+      plugins: [shellResolve],
       external: [/^\/(lib|script)\.js$/],
     });
-    console.log('  → dist/scripts/login.js');
+    console.log("  → dist/scripts/login.js");
   }
 
-  // [4/4] built-in extensions → client/extensions/<name>/index.js (served from source)
-  const extDirs = readdirSync(extRoot, { withFileTypes: true })
+  // [4/4] built-in extensions → client/extensions/<name>/index.js. They import
+  // shared state from /script.js (rewritten from /scripts/X.js) — single
+  // instance, no duplication.
+  fs.rmSync(extBuild, { recursive: true, force: true });
+  cpSync(extSrc, extBuild, { recursive: true });
+  rewriteExtensionImports(extBuild);
+
+  const extDirs = readdirSync(extBuild, { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => d.name);
   let built = 0;
   let skipped = 0;
   for (const name of extDirs) {
-    const ep = path.join(extRoot, name, 'index.ts');
+    const ep = path.join(extBuild, name, "index.ts");
     if (!fs.existsSync(ep)) {
       skipped++;
       continue;
     }
     await buildOrFail(`[4/4] Extension: ${name}`, {
       entrypoints: [ep],
-      outdir: path.join(extRoot, name),
-      target: 'browser',
-      format: 'esm',
-    minify: { identifiers: false, whitespace: true },
-    plugins: [sharedFramework, redirectExtensionLib],
+      outdir: path.join(extOut, name),
+      target: "browser",
+      format: "esm",
+      minify: { identifiers: false, whitespace: true },
+      plugins: [extResolve],
       external: [/^\/(lib|script)\.js$/],
     });
+    copyStatic(path.join(extSrc, name), path.join(extOut, name));
     built++;
     console.log(`  → extensions/${name}/index.js`);
   }
   console.log(`Extensions: ${built} built, ${skipped} skipped (no index.ts)`);
 
-  console.log('===== Frontend Build complete =====');
+  fs.rmSync(extBuild, { recursive: true, force: true });
+  console.log("===== Frontend Build complete =====");
 }
 
 main().catch((err) => {
