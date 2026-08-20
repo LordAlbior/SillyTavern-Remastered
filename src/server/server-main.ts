@@ -251,6 +251,28 @@ app.use("/scripts", express.static(path.join(rootDirectory, "src", "client", "di
 app.use("/css", express.static(path.join(rootDirectory, "src", "client", "css"), {}));
 app.use(express.static(path.join(rootDirectory, "src", "client"), { index: false }));
 
+// Third-party extensions import shared SillyTavern modules via legacy URLs
+// (/scripts/i18n.js, /scripts/extensions.js, /scripts/slash-commands/...). Those
+// modules are bundled in the shell monolith (/script.js), which re-exports every
+// /scripts module. Serve those URLs as a thin re-export stub so extensions keep
+// working after the frontend restructure. Real files (login.js, extension bundles
+// under /scripts/extensions/) are served by the static middleware above and never
+// reach this handler.
+app.get(/^\/(scripts(\/[A-Za-z0-9_\-]+)+\.js|\/?[A-Za-z0-9_\-]+\.js)$/, (request, response, next) => {
+  const p = request.path;
+  if (p === "/script.js" || p === "/lib.js" || p === "/scripts/login.js") return next();
+  // Real extension bundles live under /scripts/extensions/. Serve the thin
+  // re-export stub only for legacy paths that no longer exist on disk
+  // (e.g. extensions/regex/engine.js, since renamed to scripts/regex-engine.ts);
+  // existing bundles keep being served by the static middleware above.
+  if (p.startsWith("/scripts/extensions/")) {
+    const diskPath = path.join(rootDirectory, "src", "client", "extensions", p.slice("/scripts/extensions/".length));
+    if (fs.existsSync(diskPath)) return next();
+  }
+  response.type("application/javascript");
+  response.send("export * from '/script.js';\nexport { default } from '/script.js';\n");
+});
+
 // Public API
 app.use("/api/users", usersPublicRouter);
 

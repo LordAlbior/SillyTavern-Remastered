@@ -3,7 +3,7 @@ export const PUBLIC_DIRECTORIES = {
   backups: "backups/",
   sounds: "src/client/sounds",
   extensions: "src/client/extensions",
-  globalExtensions: "src/client/scripts/extensions/third-party",
+  globalExtensions: "src/client/extensions/third-party",
 };
 
 export const SETTINGS_FILE = "settings.json";
