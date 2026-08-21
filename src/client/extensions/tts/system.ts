@@ -1,6 +1,6 @@
 import { isMobile } from "/scripts/RossAscends-mods.js";
-import { getPreviewString } from "./index.ts";
-import { saveTtsProviderSettings } from "./index.ts";
+import { getPreviewString } from "./index";
+import { saveTtsProviderSettings } from "./index";
 export { SystemTtsProvider };
 import { t } from "/scripts/i18n.js";
 

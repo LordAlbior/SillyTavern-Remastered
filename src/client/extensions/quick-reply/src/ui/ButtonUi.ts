@@ -1,7 +1,7 @@
 import { animation_duration } from "/script.js";
 import { dragElement } from "/scripts/RossAscends-mods.js";
 import { loadMovingUIState } from "/scripts/power-user.js";
-import { QuickReplySettings } from "../QuickReplySettings.ts";
+import { QuickReplySettings } from "../QuickReplySettings";
 
 export class ButtonUi {
   /** @type {QuickReplySettings} */ settings;

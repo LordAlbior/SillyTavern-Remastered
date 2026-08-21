@@ -1,15 +1,15 @@
 import fetch from "node-fetch";
-import { SECRET_KEYS, readSecret } from "../endpoints/secrets.ts";
+import { SECRET_KEYS, readSecret } from "../endpoints/secrets";
 
 /**
  * Gets the vector for the given text batch from an OpenAI compatible endpoint.
  * @param {string[]} texts - The array of texts to get the vector for
  * @param {boolean} isQuery - If the text is a query for embedding search
- * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
+ * @param {import('../users').UserDirectoryList} directories - The directories object for the user
  * @param {string} model - The model to use for the embedding
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getCohereBatchVector(texts: string[], isQuery: boolean, directories: import('../users.js').UserDirectoryList, model: string) {
+export async function getCohereBatchVector(texts: string[], isQuery: boolean, directories: import('../users').UserDirectoryList, model: string) {
   const key = readSecret(directories, SECRET_KEYS.COHERE);
 
   if (!key) {
@@ -51,11 +51,11 @@ export async function getCohereBatchVector(texts: string[], isQuery: boolean, di
  * Gets the vector for the given text from an OpenAI compatible endpoint.
  * @param {string} text - The text to get the vector for
  * @param {boolean} isQuery - If the text is a query for embedding search
- * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
+ * @param {import('../users').UserDirectoryList} directories - The directories object for the user
  * @param {string} model - The model to use for the embedding
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getCohereVector(text: string, isQuery: boolean, directories: import('../users.js').UserDirectoryList, model: string) {
+export async function getCohereVector(text: string, isQuery: boolean, directories: import('../users').UserDirectoryList, model: string) {
   const vectors = await getCohereBatchVector([text], isQuery, directories, model);
   return vectors[0];
 }

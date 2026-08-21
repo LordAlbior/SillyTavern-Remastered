@@ -22,7 +22,7 @@ import {
   PUBLIC_DIRECTORIES,
   SETTINGS_FILE,
   UPLOADS_DIRECTORY,
-} from "./constants.ts";
+} from "./constants";
 import {
   getConfigValue,
   color,
@@ -31,12 +31,12 @@ import {
   invalidateFirefoxCache,
   isPathUnderParent,
   setPermissionsSync,
-} from "./util.ts";
-import { allowKeysExposure, readSecret, writeSecret, SECRETS_FILE } from "./endpoints/secrets.ts";
-import { getContentOfType } from "./endpoints/content-manager.ts";
-import { serverDirectory } from "./server-directory.ts";
-import { filterValidIpPatterns, getIpFromRequest } from "./express-common.ts";
-import { extensionsEnabledFeatureGuard } from "./endpoints/extensions.ts";
+} from "./util";
+import { allowKeysExposure, readSecret, writeSecret, SECRETS_FILE } from "./endpoints/secrets";
+import { getContentOfType } from "./endpoints/content-manager";
+import { serverDirectory } from "./server-directory";
+import { filterValidIpPatterns, getIpFromRequest } from "./express-common";
+import { extensionsEnabledFeatureGuard } from "./endpoints/extensions";
 
 export const KEY_PREFIX = "user:";
 const AVATAR_PREFIX = "avatar:";
@@ -134,7 +134,7 @@ export interface UserDirectoryList {
 
 /**
  * Ensures that the content directories exist.
- * @returns {Promise<import('./users.js').UserDirectoryList[]>} - The list of user directories
+ * @returns {Promise<import('./users').UserDirectoryList[]>} - The list of user directories
  */
 export async function ensurePublicDirectoriesExist() {
   for (const dir of Object.values(PUBLIC_DIRECTORIES)) {
@@ -250,7 +250,7 @@ export function cleanUploads() {
 
 /**
  * Gets a list of all user directories.
- * @returns {Promise<import('./users.js').UserDirectoryList[]>} - The list of user directories
+ * @returns {Promise<import('./users').UserDirectoryList[]>} - The list of user directories
  */
 export async function getUserDirectoriesList() {
   const userHandles = await getAllUserHandles();

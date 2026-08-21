@@ -1,4 +1,4 @@
-import { formatTime } from "./utils.ts";
+import { formatTime } from "./utils";
 
 export class AudioPlayer {
   audio: HTMLAudioElement;

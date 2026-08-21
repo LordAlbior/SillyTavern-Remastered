@@ -2,9 +2,9 @@ import fs from "node:fs";
 import express from "express";
 import fetch from "node-fetch";
 
-import { forwardFetchResponse, delay } from "../../util.ts";
-import { getOverrideHeaders, setAdditionalHeaders, setAdditionalHeadersByType } from "../../additional-headers.ts";
-import { TEXTGEN_TYPES } from "../../constants.ts";
+import { forwardFetchResponse, delay } from "../../util";
+import { getOverrideHeaders, setAdditionalHeaders, setAdditionalHeadersByType } from "../../additional-headers";
+import { TEXTGEN_TYPES } from "../../constants";
 
 export const router = express.Router();
 

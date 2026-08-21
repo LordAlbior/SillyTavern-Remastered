@@ -1,9 +1,9 @@
 // @ts-ignore - module has its own strict-mode errors that prevent type resolution
-import { MacroParser as _MacroParser } from "./MacroParser.ts";
+import { MacroParser as _MacroParser } from "./MacroParser";
 // @ts-ignore - module has its own strict-mode errors that prevent type resolution
-import { MacroCstWalker as _MacroCstWalker } from "./MacroCstWalker.ts";
+import { MacroCstWalker as _MacroCstWalker } from "./MacroCstWalker";
 // @ts-ignore - module has its own strict-mode errors that prevent type resolution
-import { MacroRegistry as _MacroRegistry, MacroValueType } from "./MacroRegistry.ts";
+import { MacroRegistry as _MacroRegistry, MacroValueType } from "./MacroRegistry";
 // @ts-ignore - implicit any from unresolved module
 const MacroParser: any = _MacroParser;
 // @ts-ignore - implicit any from unresolved module
@@ -15,13 +15,13 @@ import {
   logMacroInternalError,
   logMacroRuntimeWarning,
   logMacroSyntaxWarning,
-} from "./MacroDiagnostics.ts";
-import { ELSE_MARKER } from "../../constants.ts";
+} from "./MacroDiagnostics";
+import { ELSE_MARKER } from "../../constants";
 
-/** @typedef {import('./MacroCstWalker.js').MacroCall} MacroCall */
-/** @typedef {import('./MacroEnv.types.js').MacroEnv} MacroEnv */
-/** @typedef {import('./MacroRegistry.js').MacroDefinitionOptions} MacroDefinitionOptions */
-/** @typedef {import('./MacroRegistry.js').MacroDefinition} MacroDefinition */
+/** @typedef {import('./MacroCstWalker').MacroCall} MacroCall */
+/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('./MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
+/** @typedef {import('./MacroRegistry').MacroDefinition} MacroDefinition */
 
 /**
  * A processor function that transforms text before or after macro evaluation.

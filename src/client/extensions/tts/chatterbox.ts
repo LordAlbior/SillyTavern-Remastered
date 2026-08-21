@@ -1,4 +1,4 @@
-import { saveTtsProviderSettings } from "./index.ts";
+import { saveTtsProviderSettings } from "./index";
 
 export { ChatterboxTtsProvider };
 

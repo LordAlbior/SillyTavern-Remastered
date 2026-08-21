@@ -9,12 +9,12 @@ import {
   is_send_press,
   isStreamingEnabled,
   substituteParamsExtended,
-} from "../script.ts";
-import { debounce, delay, getStringHash } from "./utils.ts";
-import { decodeTextTokens, getTokenizerBestMatch } from "./tokenizers.ts";
-import { power_user } from "./power-user.ts";
-import { callGenericPopup, POPUP_TYPE } from "./popup.ts";
-import { t } from "./i18n.ts";
+} from "../script";
+import { debounce, delay, getStringHash } from "./utils";
+import { decodeTextTokens, getTokenizerBestMatch } from "./tokenizers";
+import { power_user } from "./power-user";
+import { callGenericPopup, POPUP_TYPE } from "./popup";
+import { t } from "./i18n";
 
 const TINTS = 4;
 const MAX_MESSAGE_LOGPROBS = 100;

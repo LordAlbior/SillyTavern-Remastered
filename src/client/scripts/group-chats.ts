@@ -1,4 +1,4 @@
-import { Fuse } from '../lib.js';
+import { Fuse } from '../lib';
 
 import {
     shuffle,
@@ -18,10 +18,10 @@ import {
     paginationDropdownChangeHandler,
     waitUntilCondition,
     uuidv4,
-} from './utils.ts';
-import { RA_CountCharTokens, humanizedDateTime, dragElement, favsToHotswap, getMessageTimeStamp } from './RossAscends-mods.ts';
-import { power_user, loadMovingUIState, sortEntitiesList } from './power-user.ts';
-import { debounce_timeout } from './constants.ts';
+} from './utils';
+import { RA_CountCharTokens, humanizedDateTime, dragElement, favsToHotswap, getMessageTimeStamp } from './RossAscends-mods';
+import { power_user, loadMovingUIState, sortEntitiesList } from './power-user';
+import { debounce_timeout } from './constants';
 
 import {
     chat,
@@ -79,14 +79,14 @@ import {
     unshallowCharacter,
     chatElement,
     ensureMessageMediaIsArray,
-} from '../script.ts';
-import { printTagList, createTagMapFromList, applyTagsOnCharacterSelect, tag_map, applyTagsOnGroupSelect, printTagFilters, tag_filter_type } from './tags.ts';
-import { FILTER_TYPES, FilterHelper } from './filters.ts';
-import { isExternalMediaAllowed } from './chats.ts';
-import { POPUP_TYPE, Popup, callGenericPopup } from './popup.ts';
-import { t } from './i18n.ts';
-import { accountStorage } from './util/AccountStorage.ts';
-import { compressRequest } from './request-compression.ts';
+} from '../script';
+import { printTagList, createTagMapFromList, applyTagsOnCharacterSelect, tag_map, applyTagsOnGroupSelect, printTagFilters, tag_filter_type } from './tags';
+import { FILTER_TYPES, FilterHelper } from './filters';
+import { isExternalMediaAllowed } from './chats';
+import { POPUP_TYPE, Popup, callGenericPopup } from './popup';
+import { t } from './i18n';
+import { accountStorage } from './util/AccountStorage';
+import { compressRequest } from './request-compression';
 
 export {
     selected_group,

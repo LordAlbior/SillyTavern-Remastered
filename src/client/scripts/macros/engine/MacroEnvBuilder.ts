@@ -1,7 +1,7 @@
-import { name1, name2, characters, getCharacterCardFieldsLazy, getGeneratingModel } from "../../../script.ts";
-import { groups, selected_group } from "../../../scripts/group-chats.ts";
-import { logMacroGeneralError } from "./MacroDiagnostics.ts";
-import { getStringHash } from "../../utils.ts";
+import { name1, name2, characters, getCharacterCardFieldsLazy, getGeneratingModel } from "../../../script";
+import { groups, selected_group } from "../../../scripts/group-chats";
+import { logMacroGeneralError } from "./MacroDiagnostics";
+import { getStringHash } from "../../utils";
 /**
  * MacroEnvBuilder is responsible for constructing the MacroEnv object
  * that is passed to macro handlers.
@@ -12,7 +12,7 @@ import { getStringHash } from "../../utils.ts";
  * environment-building block in substituteParams.
  */
 
-/** @typedef {import('./MacroEnv.types.js').MacroEnv} MacroEnv */
+/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
 
 /**
  * @typedef {Object} MacroEnvRawContext
@@ -22,7 +22,7 @@ import { getStringHash } from "../../utils.ts";
  * @property {string|null} [original]
  * @property {string|null} [groupOverride]
  * @property {boolean} [replaceCharacterCard]
- * @property {Record<string, import('./MacroEnv.types.js').DynamicMacroValue>|null} [dynamicMacros]
+ * @property {Record<string, import('./MacroEnv.types').DynamicMacroValue>|null} [dynamicMacros]
  * @property {(value: string) => string} [postProcessFn]
  */
 

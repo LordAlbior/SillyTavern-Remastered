@@ -1,8 +1,8 @@
-import { getRequestHeaders } from "../script.ts";
-import { POPUP_RESULT, POPUP_TYPE, callGenericPopup } from "./popup.ts";
-import { canViewSecrets } from "./secrets.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { ensureImageFormatSupported, getBase64Async, humanFileSize } from "./utils.ts";
+import { getRequestHeaders } from "../script";
+import { POPUP_RESULT, POPUP_TYPE, callGenericPopup } from "./popup";
+import { canViewSecrets } from "./secrets";
+import { renderTemplateAsync } from "./templates";
+import { ensureImageFormatSupported, getBase64Async, humanFileSize } from "./utils";
 
 /**
  * @type {import('../../src/users.js').UserViewModel} Logged in user

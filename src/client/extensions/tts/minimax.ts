@@ -1,4 +1,4 @@
-import { getPreviewString, initVoiceMap, saveTtsProviderSettings } from "./index.ts";
+import { getPreviewString, initVoiceMap, saveTtsProviderSettings } from "./index";
 import { event_types, eventSource, getRequestHeaders } from "/script.js";
 import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
 import { getBase64Async } from "/scripts/utils.js";

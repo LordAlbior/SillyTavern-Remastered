@@ -1,4 +1,4 @@
-import { QuickReplySet } from "./QuickReplySet.ts";
+import { QuickReplySet } from "./QuickReplySet";
 
 export class QuickReplyContextLink {
   static from(props: any) {

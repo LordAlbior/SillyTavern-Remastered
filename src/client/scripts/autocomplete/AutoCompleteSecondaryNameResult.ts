@@ -1,4 +1,4 @@
-import { AutoCompleteNameResultBase } from "./AutoCompleteNameResultBase.ts";
+import { AutoCompleteNameResultBase } from "./AutoCompleteNameResultBase";
 
 export class AutoCompleteSecondaryNameResult extends AutoCompleteNameResultBase {
   /**@type {boolean}*/ isRequired = false;

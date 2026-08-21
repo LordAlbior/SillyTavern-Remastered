@@ -3,14 +3,14 @@ import fs from "node:fs";
 
 import express from "express";
 import sanitize from "sanitize-filename";
-import { Jimp } from "../jimp.ts";
+import { Jimp } from "../jimp";
 import { sync as writeFileAtomicSync } from "write-file-atomic";
 
-import { getImages, tryParse } from "../util.ts";
-import { getFileNameValidationFunction } from "../middleware/validateFileName.ts";
-import { applyAvatarCropResize } from "./characters.ts";
-import { invalidateThumbnail } from "./thumbnails.ts";
-import cacheBuster from "../middleware/cacheBuster.ts";
+import { getImages, tryParse } from "../util";
+import { getFileNameValidationFunction } from "../middleware/validateFileName";
+import { applyAvatarCropResize } from "./characters";
+import { invalidateThumbnail } from "./thumbnails";
+import cacheBuster from "../middleware/cacheBuster";
 
 export const router = express.Router();
 

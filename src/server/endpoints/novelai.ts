@@ -4,8 +4,8 @@ import { Buffer } from "node:buffer";
 import fetch from "node-fetch";
 import express from "express";
 
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
-import { readAllChunks, extractFileFromZipBuffer, forwardFetchResponse } from "../util.ts";
+import { readSecret, SECRET_KEYS } from "./secrets";
+import { readAllChunks, extractFileFromZipBuffer, forwardFetchResponse } from "../util";
 
 const API_NOVELAI = "https://api.novelai.net";
 const TEXT_NOVELAI = "https://text.novelai.net";

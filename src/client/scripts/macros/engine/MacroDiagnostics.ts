@@ -1,5 +1,5 @@
-/** @typedef {import('./MacroCstWalker.js').MacroCall} MacroCall */
-/** @typedef {import('./MacroRegistry.js').MacroDefinition} MacroDefinition */
+/** @typedef {import('./MacroCstWalker').MacroCall} MacroCall */
+/** @typedef {import('./MacroRegistry').MacroDefinition} MacroDefinition */
 /** @typedef {import('chevrotain').ILexingError} ILexingError */
 /** @typedef {import('chevrotain').IRecognitionException} IRecognitionException */
 

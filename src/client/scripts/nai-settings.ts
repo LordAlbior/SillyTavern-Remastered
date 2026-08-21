@@ -9,13 +9,13 @@ import {
   setGenerationParamsFromPreset,
   setOnlineStatus,
   startStatusLoading,
-} from "../script.ts";
-import { MAX_CONTEXT_DEFAULT, MAX_RESPONSE_DEFAULT, power_user } from "./power-user.ts";
-import { getTextTokens, tokenizers } from "./tokenizers.ts";
-import { getEventSourceStream } from "./sse-stream.ts";
-import { getSortableDelay, getStringHash, onlyUnique } from "./utils.ts";
-import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from "./logit-bias.ts";
-import { SECRET_KEYS, secret_state, writeSecret } from "./secrets.ts";
+} from "../script";
+import { MAX_CONTEXT_DEFAULT, MAX_RESPONSE_DEFAULT, power_user } from "./power-user";
+import { getTextTokens, tokenizers } from "./tokenizers";
+import { getEventSourceStream } from "./sse-stream";
+import { getSortableDelay, getStringHash, onlyUnique } from "./utils";
+import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from "./logit-bias";
+import { SECRET_KEYS, secret_state, writeSecret } from "./secrets";
 
 const default_preamble = "[ Style: chat, complex, sensory, visceral ]";
 const default_order = [1, 5, 0, 2, 3, 4];
@@ -846,7 +846,7 @@ export async function generateNovelWithStreaming(generate_data: any, signal: any
  * for a single token into a TokenLogprobs object used by the Token Probabilities
  * feature.
  * @param {NAITokenLogprobs} data - NAI logprobs object for one token
- * @returns {import('./logprobs.js').TokenLogprobs | null} converted logprobs
+ * @returns {import('./logprobs').TokenLogprobs | null} converted logprobs
  */
 export function parseNovelAILogprobs(data: any) {
   if (!data) {

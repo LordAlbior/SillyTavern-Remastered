@@ -13,20 +13,20 @@ import {
   setOnlineStatus,
   startStatusLoading,
   substituteParams,
-} from "../script.ts";
-import { deriveTemplatesFromChatTemplate } from "./chat-templates.ts";
-import { t } from "./i18n.ts";
-import { autoSelectInstructPreset, selectContextPreset, selectInstructPreset } from "./instruct-mode.ts";
-import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from "./logit-bias.ts";
+} from "../script";
+import { deriveTemplatesFromChatTemplate } from "./chat-templates";
+import { t } from "./i18n";
+import { autoSelectInstructPreset, selectContextPreset, selectInstructPreset } from "./instruct-mode";
+import { BIAS_CACHE, createNewLogitBiasEntry, displayLogitBias, getLogitBiasListResult } from "./logit-bias";
 
-import { power_user, registerDebugFunction } from "./power-user.ts";
+import { power_user, registerDebugFunction } from "./power-user";
 import {
   getActiveManualApiSamplers,
   loadApiSelectedSamplers,
   isSamplerManualPriorityEnabled,
-} from "./samplerSelect.ts";
-import { SECRET_KEYS, writeSecret } from "./secrets.ts";
-import { getEventSourceStream } from "./sse-stream.ts";
+} from "./samplerSelect";
+import { SECRET_KEYS, writeSecret } from "./secrets";
+import { getEventSourceStream } from "./sse-stream";
 import {
   getCurrentDreamGenModelTokenizer,
   getCurrentOpenRouterModelTokenizer,
@@ -43,7 +43,7 @@ import {
   loadTogetherAIModels,
   loadVllmModels,
   updateOpenRouterProvidersWarning,
-} from "./textgen-models.ts";
+} from "./textgen-models";
 import {
   ENCODE_TOKENIZERS,
   TEXTGEN_TOKENIZERS,
@@ -51,9 +51,9 @@ import {
   getTextTokens,
   getTokenizerBestMatch,
   tokenizers,
-} from "./tokenizers.ts";
-import { AbortReason } from "./util/AbortReason.ts";
-import { getSortableDelay, onlyUnique, arraysEqual, isObject } from "./utils.ts";
+} from "./tokenizers";
+import { AbortReason } from "./util/AbortReason";
+import { getSortableDelay, onlyUnique, arraysEqual, isObject } from "./utils";
 
 export const textgen_types = {
   OOBA: "ooba",
@@ -1388,7 +1388,7 @@ export async function generateTextGenWithStreaming(generate_data: any, signal: a
 
   return async function* streamData() {
     let text = "";
-    /** @type {import('./logprobs.js').TokenLogprobs | null} */
+    /** @type {import('./logprobs').TokenLogprobs | null} */
     let logprobs = null;
     const swipes: any[] = [];
     const toolCalls: any[] = [];
@@ -1427,7 +1427,7 @@ export async function generateTextGenWithStreaming(generate_data: any, signal: a
  * Probabilities feature.
  * @param {string} token - the text of the token that the logprobs are for
  * @param {Object} logprobs - logprobs object returned from the API
- * @returns {import('./logprobs.js').TokenLogprobs | null} - converted logprobs
+ * @returns {import('./logprobs').TokenLogprobs | null} - converted logprobs
  */
 export function parseTextgenLogprobs(token: any, logprobs: any) {
   if (!logprobs) {

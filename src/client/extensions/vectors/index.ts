@@ -50,7 +50,7 @@ import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashC
 import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
 import { slashCommandReturnHelper } from "/scripts/slash-commands/SlashCommandReturnHelper.js";
 import { generateWebLlmChatPrompt, isWebLlmSupported } from "/scripts/extensions/shared.js";
-import { WebLlmVectorProvider } from "./webllm.ts";
+import { WebLlmVectorProvider } from "./webllm";
 import { removeReasoningFromString } from "/scripts/reasoning.js";
 import { oai_settings } from "/scripts/openai.js";
 

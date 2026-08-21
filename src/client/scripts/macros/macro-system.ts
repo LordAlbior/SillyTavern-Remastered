@@ -7,16 +7,16 @@
  */
 
 // Engine singletons and enums
-import { MacroEngine } from "./engine/MacroEngine.ts";
+import { MacroEngine } from "./engine/MacroEngine";
 // @ts-expect-error -- circular module, type resolved at runtime
-import { MacroRegistry as _MacroRegistry, MacroCategory, MacroValueType } from "./engine/MacroRegistry.ts";
+import { MacroRegistry as _MacroRegistry, MacroCategory, MacroValueType } from "./engine/MacroRegistry";
 // @ts-expect-error -- circular module, type resolved at runtime
-import { MacroLexer as _MacroLexer } from "./engine/MacroLexer.ts";
+import { MacroLexer as _MacroLexer } from "./engine/MacroLexer";
 // @ts-expect-error -- circular module, type resolved at runtime
-import { MacroParser as _MacroParser } from "./engine/MacroParser.ts";
+import { MacroParser as _MacroParser } from "./engine/MacroParser";
 // @ts-expect-error -- circular module, type resolved at runtime
-import { MacroCstWalker as _MacroCstWalker } from "./engine/MacroCstWalker.ts";
-import { MacroEnvBuilder } from "./engine/MacroEnvBuilder.ts";
+import { MacroCstWalker as _MacroCstWalker } from "./engine/MacroCstWalker";
+import { MacroEnvBuilder } from "./engine/MacroEnvBuilder";
 
 // Anchor implicit-any from circular modules
 // @ts-expect-error -- implicit any from circular module
@@ -29,31 +29,31 @@ const MacroParser: any = _MacroParser;
 const MacroCstWalker: any = _MacroCstWalker;
 
 // Macro definition groups
-import { registerCoreMacros } from "./definitions/core-macros.ts";
-import { registerEnvMacros } from "./definitions/env-macros.ts";
-import { registerStateMacros } from "./definitions/state-macros.ts";
-import { registerChatMacros } from "./definitions/chat-macros.ts";
-import { registerTimeMacros } from "./definitions/time-macros.ts";
-import { registerVariableMacros } from "./definitions/variable-macros.ts";
-import { registerInstructMacros } from "./definitions/instruct-macros.ts";
+import { registerCoreMacros } from "./definitions/core-macros";
+import { registerEnvMacros } from "./definitions/env-macros";
+import { registerStateMacros } from "./definitions/state-macros";
+import { registerChatMacros } from "./definitions/chat-macros";
+import { registerTimeMacros } from "./definitions/time-macros";
+import { registerVariableMacros } from "./definitions/variable-macros";
+import { registerInstructMacros } from "./definitions/instruct-macros";
 
 // Re-export the category enum for external use
 export { MacroCategory, MacroValueType };
 
 // Re-export most-used jsdoc definitions
-/** @typedef {import('./engine/MacroRegistry.js').MacroDefinitionOptions} MacroDefinitionOptions */
-/** @typedef {import('./engine/MacroRegistry.js').MacroDefinition} MacroDefinition */
-/** @typedef {import('./engine/MacroRegistry.js').MacroUnnamedArgDef} MacroUnnamedArgDef */
-/** @typedef {import('./engine/MacroRegistry.js').MacroListSpec} MacroListSpec */
-/** @typedef {import('./engine/MacroRegistry.js').MacroHandler} MacroHandler */
-/** @typedef {import('./engine/MacroRegistry.js').MacroExecutionContext} MacroExecutionContext */
+/** @typedef {import('./engine/MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
+/** @typedef {import('./engine/MacroRegistry').MacroDefinition} MacroDefinition */
+/** @typedef {import('./engine/MacroRegistry').MacroUnnamedArgDef} MacroUnnamedArgDef */
+/** @typedef {import('./engine/MacroRegistry').MacroListSpec} MacroListSpec */
+/** @typedef {import('./engine/MacroRegistry').MacroHandler} MacroHandler */
+/** @typedef {import('./engine/MacroRegistry').MacroExecutionContext} MacroExecutionContext */
 
 /** @typedef {import('chevrotain').CstNode} CstNode */
-/** @typedef {import('./engine/MacroEnv.types.js').MacroEnv} MacroEnv */
-/** @typedef {import('./engine/MacroEnv.types.js').MacroEnvNames} MacroEnvNames */
-/** @typedef {import('./engine/MacroEnv.types.js').MacroEnvCharacter} MacroEnvCharacter */
-/** @typedef {import('./engine/MacroEnv.types.js').MacroEnvSystem} MacroEnvSystem */
-/** @typedef {import('./engine/MacroEnv.types.js').MacroEnvFunctions} MacroEnvFunctions */
+/** @typedef {import('./engine/MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('./engine/MacroEnv.types').MacroEnvNames} MacroEnvNames */
+/** @typedef {import('./engine/MacroEnv.types').MacroEnvCharacter} MacroEnvCharacter */
+/** @typedef {import('./engine/MacroEnv.types').MacroEnvSystem} MacroEnvSystem */
+/** @typedef {import('./engine/MacroEnv.types').MacroEnvFunctions} MacroEnvFunctions */
 
 export const macros = {
   // engine singletons

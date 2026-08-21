@@ -21,9 +21,9 @@ import {
   saveSettingsDebounced,
   setUserName,
   this_chid,
-} from "../script.ts";
-import { power_user } from "./power-user.ts";
-import { getTokenCountAsync } from "./tokenizers.ts";
+} from "../script";
+import { power_user } from "./power-user";
+import { getTokenCountAsync } from "./tokenizers";
 import {
   PAGINATION_TEMPLATE,
   clearInfoBlock,
@@ -50,31 +50,31 @@ import {
   resolveAvatarData,
   findPersona,
   escapeHtml,
-} from "./utils.ts";
-import { debounce_timeout } from "./constants.ts";
-import { FILTER_TYPES, FilterHelper } from "./filters.ts";
-import { groups, selected_group } from "./group-chats.ts";
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "./popup.ts";
-import { t } from "./i18n.ts";
-import { openWorldInfoEditor, world_names } from "./world-info.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { saveMetadataDebounced } from "./extensions.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+} from "./utils";
+import { debounce_timeout } from "./constants";
+import { FILTER_TYPES, FilterHelper } from "./filters";
+import { groups, selected_group } from "./group-chats";
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "./popup";
+import { t } from "./i18n";
+import { openWorldInfoEditor, world_names } from "./world-info";
+import { renderTemplateAsync } from "./templates";
+import { saveMetadataDebounced } from "./extensions";
+import { accountStorage } from "./util/AccountStorage";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   SlashCommandNamedArgument,
   ARGUMENT_TYPE,
   SlashCommandArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
+} from "./slash-commands/SlashCommandArgument";
 import {
   commonEnumMatchProviders,
   commonEnumProviders,
   enumIcons,
-} from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { isFirefox } from "./browser-fixes.ts";
-import { slashCommandReturnHelper } from "./slash-commands/SlashCommandReturnHelper.ts";
+} from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { isFirefox } from "./browser-fixes";
+import { slashCommandReturnHelper } from "./slash-commands/SlashCommandReturnHelper";
 
 /**
  * @typedef {object} PersonaConnection A connection between a character and a character or group entity
@@ -825,7 +825,7 @@ export async function askForPersonaSelection(
     }
   });
 
-  /** @type {import('./popup.js').CustomPopupButton[]} */
+  /** @type {import('./popup').CustomPopupButton[]} */
   const customButtons = [];
   if (targetedChar) {
     customButtons.push({
@@ -2192,7 +2192,7 @@ async function uploadPersonaAvatar(avatarId: any, base64Data: any, { resizePromp
 /**
  * Resolves a persona from the given argument or falls back to the currently active persona.
  * @param {string} [personaArg] Persona name or avatar key argument
- * @returns {import('./utils.js').PersonaViewModel|null} The resolved persona, or null if not found
+ * @returns {import('./utils').PersonaViewModel|null} The resolved persona, or null if not found
  */
 function getTargetPersona(personaArg: any) {
   if (personaArg) {

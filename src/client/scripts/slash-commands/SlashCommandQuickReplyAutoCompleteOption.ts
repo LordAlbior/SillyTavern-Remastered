@@ -1,4 +1,4 @@
-import { AutoCompleteOption } from "../autocomplete/AutoCompleteOption.ts";
+import { AutoCompleteOption } from "../autocomplete/AutoCompleteOption";
 
 export class SlashCommandQuickReplyAutoCompleteOption extends AutoCompleteOption {
   /**

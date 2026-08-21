@@ -1,4 +1,4 @@
-import { DOMPurify } from "../lib.js";
+import { DOMPurify } from "../lib";
 
 import {
   addOneMessage,
@@ -11,27 +11,27 @@ import {
   saveChatConditional,
   system_avatar,
   systemUserName,
-} from "../script.ts";
+} from "../script";
 import {
   chat_completion_sources,
   custom_prompt_post_processing_types,
   getChatCompletionModel,
   model_list,
   oai_settings,
-} from "./openai.ts";
-import { Popup } from "./popup.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+} from "./openai";
+import { Popup } from "./popup";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure.ts";
-import { enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { slashCommandReturnHelper } from "./slash-commands/SlashCommandReturnHelper.ts";
-import { isTrueBoolean } from "./utils.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure";
+import { enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { slashCommandReturnHelper } from "./slash-commands/SlashCommandReturnHelper";
+import { isTrueBoolean } from "./utils";
 
 /**
  * @typedef {object} ToolInvocation
@@ -76,7 +76,7 @@ import { isTrueBoolean } from "./utils.ts";
 
 /**
  * Assigns nested variables to a scope.
- * @param {import('./slash-commands/SlashCommandScope.js').SlashCommandScope} scope The scope to assign variables to.
+ * @param {import('./slash-commands/SlashCommandScope').SlashCommandScope} scope The scope to assign variables to.
  * @param {object} arg Object to assign variables from.
  * @param {string} prefix Prefix for the variable names.
  */

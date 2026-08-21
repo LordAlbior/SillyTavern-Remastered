@@ -1,9 +1,9 @@
 import fetch from "node-fetch";
 import urlJoin from "url-join";
-import { setAdditionalHeadersByType } from "../additional-headers.ts";
-import { TEXTGEN_TYPES } from "../constants.ts";
-import { trimV1 } from "../util.ts";
-import type { UserDirectoryList } from "../users.ts";
+import { setAdditionalHeadersByType } from "../additional-headers";
+import { TEXTGEN_TYPES } from "../constants";
+import { trimV1 } from "../util";
+import type { UserDirectoryList } from "../users";
 
 interface LlamaCppEmbeddingData {
   index: number;

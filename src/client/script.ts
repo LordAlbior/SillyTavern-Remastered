@@ -9,10 +9,10 @@ import {
     initLibraryShims,
     default as libs,
     lodash,
-} from './lib.ts';
+} from './lib';
 
-import { humanizedDateTime, favsToHotswap, getMessageTimeStamp, dragElement, isMobile, initRossMods } from './scripts/RossAscends-mods.ts';
-import { userStatsHandler, statMesProcess, initStats } from './scripts/stats.ts';
+import { humanizedDateTime, favsToHotswap, getMessageTimeStamp, dragElement, isMobile, initRossMods } from './scripts/RossAscends-mods';
+import { userStatsHandler, statMesProcess, initStats } from './scripts/stats';
 import {
     generateKoboldWithStreaming,
     kai_settings,
@@ -22,7 +22,7 @@ import {
     koboldai_settings,
     koboldai_setting_names,
     initKoboldSettings,
-} from './scripts/kai-settings.ts';
+} from './scripts/kai-settings';
 
 import {
     textgenerationwebui_settings as textgen_settings,
@@ -33,7 +33,7 @@ import {
     parseTextgenLogprobs,
     parseTabbyLogprobs,
     initTextGenSettings,
-} from './scripts/textgen-settings.ts';
+} from './scripts/textgen-settings';
 
 import {
     world_info,
@@ -49,7 +49,7 @@ import {
     initWorldInfo,
     charUpdatePrimaryWorld,
     charSetAuxWorlds,
-} from './scripts/world-info.ts';
+} from './scripts/world-info';
 
 import {
     groups,
@@ -72,7 +72,7 @@ import {
     getGroupBlock,
     getGroupCharacterCardsLazy,
     getGroupDepthPrompts,
-} from './scripts/group-chats.ts';
+} from './scripts/group-chats';
 
 import {
     collapseNewlines,
@@ -94,7 +94,7 @@ import {
     applyPowerUserSettings,
     generatedTextFiltered,
     applyStylePins,
-} from './scripts/power-user.ts';
+} from './scripts/power-user';
 
 import {
     setOpenAIMessageExamples,
@@ -111,7 +111,7 @@ import {
     loadProxyPresets,
     selected_proxy,
     initOpenAI,
-} from './scripts/openai.ts';
+} from './scripts/openai';
 
 import {
     generateNovelWithStreaming,
@@ -124,13 +124,13 @@ import {
     novelai_settings,
     novelai_setting_names,
     initNovelAISettings,
-} from './scripts/nai-settings.ts';
+} from './scripts/nai-settings';
 
 import {
     initBookmarks,
     showBookmarksButtons,
     updateBookmarkDisplay,
-} from './scripts/bookmarks.ts';
+} from './scripts/bookmarks';
 
 import {
     horde_settings,
@@ -142,7 +142,7 @@ import {
     isHordeGenerationNotAllowed,
     MIN_LENGTH,
     initHorde,
-} from './scripts/horde.ts';
+} from './scripts/horde';
 
 import {
     debounce,
@@ -184,12 +184,12 @@ import {
     clamp,
     shakeElement,
     createTimeout,
-} from './scripts/utils.ts';
-import { debounce_timeout, GENERATION_TYPE_TRIGGERS, IGNORE_SYMBOL, inject_ids, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, OVERSWIPE_BEHAVIOR, SCROLL_BEHAVIOR, SWIPE_DIRECTION, SWIPE_SOURCE, SWIPE_STATE } from './scripts/constants.ts';
+} from './scripts/utils';
+import { debounce_timeout, GENERATION_TYPE_TRIGGERS, IGNORE_SYMBOL, inject_ids, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, OVERSWIPE_BEHAVIOR, SCROLL_BEHAVIOR, SWIPE_DIRECTION, SWIPE_SOURCE, SWIPE_STATE } from './scripts/constants';
 
-import { cancelDebouncedMetadataSave, doDailyExtensionUpdatesCheck, extension_settings, initExtensions, loadExtensionSettings, runGenerationInterceptors } from './scripts/extensions.ts';
-import { COMMENT_NAME_DEFAULT, CONNECT_API_MAP, executeSlashCommandsOnChatInput, initDefaultSlashCommands, initSlashCommandAutoComplete, isExecutingCommandsFromChatInput, pauseScriptExecution, stopScriptExecution, UNIQUE_APIS } from './scripts/slash-commands.ts';
-import { initMacroAutoComplete } from './scripts/autocomplete/MacroAutoComplete.ts';
+import { cancelDebouncedMetadataSave, doDailyExtensionUpdatesCheck, extension_settings, initExtensions, loadExtensionSettings, runGenerationInterceptors } from './scripts/extensions';
+import { COMMENT_NAME_DEFAULT, CONNECT_API_MAP, executeSlashCommandsOnChatInput, initDefaultSlashCommands, initSlashCommandAutoComplete, isExecutingCommandsFromChatInput, pauseScriptExecution, stopScriptExecution, UNIQUE_APIS } from './scripts/slash-commands';
+import { initMacroAutoComplete } from './scripts/autocomplete/MacroAutoComplete';
 import {
     tag_map,
     tags,
@@ -212,16 +212,16 @@ import {
     applyTagsOnGroupSelect,
     tag_import_setting,
     applyCharacterTagsToMessageDivs,
-} from './scripts/tags.ts';
-import { checkOpenRouterAuth, initSecrets, readSecretState } from './scripts/secrets.ts';
-import { markdownExclusionExt } from './scripts/showdown-exclusion.ts';
-import { markdownUnderscoreExt } from './scripts/showdown-underscore.ts';
-import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from './scripts/authors-note.ts';
-import { registerPromptManagerMigration } from './scripts/PromptManager.ts';
-import { getRegexedString, regex_placement } from './scripts/regex-engine.ts';
-import { initLogprobs, saveLogprobsForActiveMessage } from './scripts/logprobs.ts';
-import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from './scripts/filters.ts';
-import { getCfgPrompt, getGuidanceScale, initCfg } from './scripts/cfg-scale.ts';
+} from './scripts/tags';
+import { checkOpenRouterAuth, initSecrets, readSecretState } from './scripts/secrets';
+import { markdownExclusionExt } from './scripts/showdown-exclusion';
+import { markdownUnderscoreExt } from './scripts/showdown-underscore';
+import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from './scripts/authors-note';
+import { registerPromptManagerMigration } from './scripts/PromptManager';
+import { getRegexedString, regex_placement } from './scripts/regex-engine';
+import { initLogprobs, saveLogprobsForActiveMessage } from './scripts/logprobs';
+import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from './scripts/filters';
+import { getCfgPrompt, getGuidanceScale, initCfg } from './scripts/cfg-scale';
 import {
     force_output_sequence,
     formatInstructModeChat,
@@ -229,9 +229,9 @@ import {
     formatInstructModeExamples,
     formatInstructModeStoryString,
     getInstructStoppingSequences,
-} from './scripts/instruct-mode.ts';
-import { initLocales, t } from './scripts/i18n.ts';
-import { getFriendlyTokenizerName, getTokenCount, getTokenCountAsync, initTokenizers, saveTokenCache } from './scripts/tokenizers.ts';
+} from './scripts/instruct-mode';
+import { initLocales, t } from './scripts/i18n';
+import { getFriendlyTokenizerName, getTokenCount, getTokenCountAsync, initTokenizers, saveTokenCache } from './scripts/tokenizers';
 import {
     user_avatar,
     getUserAvatars,
@@ -242,51 +242,51 @@ import {
     initUserAvatar,
     updatePersonaConnectionsAvatarList,
     isPersonaPanelOpen,
-} from './scripts/personas.ts';
-import { getBackgrounds, initBackgrounds, loadBackgroundSettings, background_settings } from './scripts/backgrounds.ts';
-import { loader } from './scripts/action-loader.ts';
-import { BulkEditOverlay } from './scripts/BulkEditOverlay.ts';
-import { initTextGenModels } from './scripts/textgen-models.ts';
-import { appendFileContent, hasPendingFileAttachment, populateFileAttachment, decodeStyleTags, encodeStyleTags, isExternalMediaAllowed, preserveNeutralChat, restoreNeutralChat, formatCreatorNotes, initChatUtilities, addDOMPurifyHooks } from './scripts/chats.ts';
-import { getPresetManager, initPresetManager } from './scripts/preset-manager.ts';
-import { evaluateMacros, getLastMessageId, initMacros } from './scripts/macros.ts';
-import { currentUser, setUserControls } from './scripts/user.ts';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup, fixToastrForDialogs } from './scripts/popup.ts';
-import { renderTemplate, renderTemplateAsync } from './scripts/templates.ts';
-import { initScrapers } from './scripts/scrapers.ts';
-import { initCustomSelectedSamplers, validateDisabledSamplers } from './scripts/samplerSelect.ts';
-import { DragAndDropHandler } from './scripts/dragdrop.ts';
-import { INTERACTABLE_CONTROL_CLASS, initKeyboard } from './scripts/keyboard.ts';
-import { initDynamicStyles } from './scripts/dynamic-styles.ts';
-import { initInputMarkdown } from './scripts/input-md-formatting.ts';
-import { AbortReason } from './scripts/util/AbortReason.ts';
-import { initSystemPrompts } from './scripts/sysprompt.ts';
-import { registerExtensionSlashCommands as initExtensionSlashCommands } from './scripts/extensions-slashcommands.ts';
-import { ToolManager } from './scripts/tool-calling.ts';
-import { addShowdownPatch } from './scripts/util/showdown-patch.ts';
-import { applyBrowserFixes } from './scripts/browser-fixes.ts';
-import { initServerHistory } from './scripts/server-history.ts';
-import { initSettingsSearch } from './scripts/setting-search.ts';
-import { initBulkEdit } from './scripts/bulk-edit.ts';
-import { getContext } from './scripts/st-context.ts';
-import { extractReasoningFromData, extractReasoningSignatureFromData, initReasoning, parseReasoningInSwipes, PromptReasoning, ReasoningHandler, removeReasoningFromString, updateReasoningUI } from './scripts/reasoning.ts';
-import { accountStorage } from './scripts/util/AccountStorage.ts';
-import { initWelcomeScreen, openPermanentAssistantChat, openPermanentAssistantCard, getPermanentAssistantAvatar } from './scripts/welcome-screen.ts';
-import { initDataMaid } from './scripts/data-maid.ts';
-import { clearItemizedPrompts, deleteItemizedPromptForMessage, deleteItemizedPrompts, findItemizedPromptSet, initItemizedPrompts, itemizedParams, itemizedPrompts, loadItemizedPrompts, promptItemize, replaceItemizedPromptText, saveItemizedPrompts, swapItemizedPrompts } from './scripts/itemized-prompts.ts';
-import { getSystemMessageByType, initSystemMessages, SAFETY_CHAT, sendSystemMessage, system_message_types, system_messages } from './scripts/system-messages.ts';
-import { event_types, eventSource } from './scripts/events.ts';
-import { initAccessibility } from './scripts/a11y.ts';
-import { applyStreamFadeIn } from './scripts/util/stream-fadein.ts';
-import { initDomHandlers } from './scripts/dom-handlers.ts';
-import { SimpleMutex } from './scripts/util/SimpleMutex.ts';
-import { AudioPlayer } from './scripts/audio-player.ts';
-import { MacroEnvBuilder } from './scripts/macros/engine/MacroEnvBuilder.ts';
-import { MacroEngine } from './scripts/macros/engine/MacroEngine.ts';
-import { addChatBackupsBrowser } from './scripts/chat-backups.ts';
-import { onboardingExperimentalMacroEngine } from './scripts/macros/engine/MacroDiagnostics.ts';
-import { compressRequest, setRequestCompressionConfig } from './scripts/request-compression.ts';
-import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker } from './scripts/swipe-picker.ts';
+} from './scripts/personas';
+import { getBackgrounds, initBackgrounds, loadBackgroundSettings, background_settings } from './scripts/backgrounds';
+import { loader } from './scripts/action-loader';
+import { BulkEditOverlay } from './scripts/BulkEditOverlay';
+import { initTextGenModels } from './scripts/textgen-models';
+import { appendFileContent, hasPendingFileAttachment, populateFileAttachment, decodeStyleTags, encodeStyleTags, isExternalMediaAllowed, preserveNeutralChat, restoreNeutralChat, formatCreatorNotes, initChatUtilities, addDOMPurifyHooks } from './scripts/chats';
+import { getPresetManager, initPresetManager } from './scripts/preset-manager';
+import { evaluateMacros, getLastMessageId, initMacros } from './scripts/macros';
+import { currentUser, setUserControls } from './scripts/user';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup, fixToastrForDialogs } from './scripts/popup';
+import { renderTemplate, renderTemplateAsync } from './scripts/templates';
+import { initScrapers } from './scripts/scrapers';
+import { initCustomSelectedSamplers, validateDisabledSamplers } from './scripts/samplerSelect';
+import { DragAndDropHandler } from './scripts/dragdrop';
+import { INTERACTABLE_CONTROL_CLASS, initKeyboard } from './scripts/keyboard';
+import { initDynamicStyles } from './scripts/dynamic-styles';
+import { initInputMarkdown } from './scripts/input-md-formatting';
+import { AbortReason } from './scripts/util/AbortReason';
+import { initSystemPrompts } from './scripts/sysprompt';
+import { registerExtensionSlashCommands as initExtensionSlashCommands } from './scripts/extensions-slashcommands';
+import { ToolManager } from './scripts/tool-calling';
+import { addShowdownPatch } from './scripts/util/showdown-patch';
+import { applyBrowserFixes } from './scripts/browser-fixes';
+import { initServerHistory } from './scripts/server-history';
+import { initSettingsSearch } from './scripts/setting-search';
+import { initBulkEdit } from './scripts/bulk-edit';
+import { getContext } from './scripts/st-context';
+import { extractReasoningFromData, extractReasoningSignatureFromData, initReasoning, parseReasoningInSwipes, PromptReasoning, ReasoningHandler, removeReasoningFromString, updateReasoningUI } from './scripts/reasoning';
+import { accountStorage } from './scripts/util/AccountStorage';
+import { initWelcomeScreen, openPermanentAssistantChat, openPermanentAssistantCard, getPermanentAssistantAvatar } from './scripts/welcome-screen';
+import { initDataMaid } from './scripts/data-maid';
+import { clearItemizedPrompts, deleteItemizedPromptForMessage, deleteItemizedPrompts, findItemizedPromptSet, initItemizedPrompts, itemizedParams, itemizedPrompts, loadItemizedPrompts, promptItemize, replaceItemizedPromptText, saveItemizedPrompts, swapItemizedPrompts } from './scripts/itemized-prompts';
+import { getSystemMessageByType, initSystemMessages, SAFETY_CHAT, sendSystemMessage, system_message_types, system_messages } from './scripts/system-messages';
+import { event_types, eventSource } from './scripts/events';
+import { initAccessibility } from './scripts/a11y';
+import { applyStreamFadeIn } from './scripts/util/stream-fadein';
+import { initDomHandlers } from './scripts/dom-handlers';
+import { SimpleMutex } from './scripts/util/SimpleMutex';
+import { AudioPlayer } from './scripts/audio-player';
+import { MacroEnvBuilder } from './scripts/macros/engine/MacroEnvBuilder';
+import { MacroEngine } from './scripts/macros/engine/MacroEngine';
+import { addChatBackupsBrowser } from './scripts/chat-backups';
+import { onboardingExperimentalMacroEngine } from './scripts/macros/engine/MacroDiagnostics';
+import { compressRequest, setRequestCompressionConfig } from './scripts/request-compression';
+import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker } from './scripts/swipe-picker';
 
 // API OBJECT FOR EXTERNAL WIRING
 globalThis.SillyTavern = {
@@ -410,7 +410,7 @@ export let name2 = systemUserName;
 export let chat: any[] = [];
 
 /**
- * @type {import('./scripts/constants.js').SWIPE_STATE}
+ * @type {import('./scripts/constants').SWIPE_STATE}
  */
 export let swipeState = SWIPE_STATE.NONE;
 let chatSaveTimeout: any;
@@ -1102,7 +1102,7 @@ function verifyCharactersSearchSortRule() {
 
 /**
  * @typedef {object} Entity - Object representing a display entity
- * @property {Character|Group|import('./scripts/tags.js').Tag|*} item - The item
+ * @property {Character|Group|import('./scripts/tags').Tag|*} item - The item
  * @property {string|number} id - The id
  * @property {'character'|'group'|'tag'} type - The type of this entity (character, group, tag)
  * @property {Entity[]?} [entities=null] - An optional list of entities relevant for this item
@@ -1134,7 +1134,7 @@ export function groupToEntity(group: any) {
 /**
  * Converts the given tag to its entity representation
  *
- * @param {import('./scripts/tags.js').Tag} tag - The tag
+ * @param {import('./scripts/tags').Tag} tag - The tag
  * @returns {Entity} The entity for this tag
  */
 export function tagToEntity(tag: any) {
@@ -2902,7 +2902,7 @@ export function substituteParamsLegacy(content: string, _name1: any, _name2: any
     return evaluateMacros(content, environment, postProcessFn);
 }
 
-/** @typedef {import('./scripts/macros/engine/MacroRegistry.js').MacroHandler} MacroHandler */
+/** @typedef {import('./scripts/macros/engine/MacroRegistry').MacroHandler} MacroHandler */
 
 /**
  * Substitutes {{macros}} in a string using the new macro engine.
@@ -2916,7 +2916,7 @@ export function substituteParamsLegacy(content: string, _name1: any, _name2: any
  * @param {string} [options.original] - The original message for {{original}} substitution.
  * @param {string} [options.groupOverride] - The group members list for {{group}} substitution.
  * @param {boolean} [options.replaceCharacterCard=true] - Whether to replace character card macros.
- * @param {Record<string, import('./scripts/macros/engine/MacroEnv.types.js').DynamicMacroValue>} [options.dynamicMacros={}] - Additional environment variables as dynamic macros for substitution. Registered as macro functions.
+ * @param {Record<string, import('./scripts/macros/engine/MacroEnv.types').DynamicMacroValue>} [options.dynamicMacros={}] - Additional environment variables as dynamic macros for substitution. Registered as macro functions.
  * @param {(x: string) => string} [options.postProcessFn=(x) => x] - Post-processing function for each substituted macro.
  * @returns {string} The string with substituted parameters.
  */
@@ -2940,7 +2940,7 @@ export function substituteParams(this: any, content: any, options: any = {}) {
         return substituteParamsLegacy(content, options.name1Override, options.name2Override, options.original, options.groupOverride, options.replaceCharacterCard, options.dynamicMacros, options.postProcessFn);
     }
 
-    const ctx = /** @type {import('./scripts/macros/engine/MacroEnvBuilder.js').MacroEnvRawContext} */ ({
+    const ctx = /** @type {import('./scripts/macros/engine/MacroEnvBuilder').MacroEnvRawContext} */ ({
         content,
         name1Override: options.name1Override,
         name2Override: options.name2Override,
@@ -3533,7 +3533,7 @@ class StreamingProcessor {
         this.createdAt = new Date();
         this.continueMessage = type === 'continue' ? continueMessage : '';
         this.swipes = [];
-        /** @type {import('./scripts/logprobs.js').TokenLogprobs[]} */
+        /** @type {import('./scripts/logprobs').TokenLogprobs[]} */
         this.messageLogprobs = [];
         this.toolCalls = [];
         // Initialize reasoning in its own handler
@@ -3811,7 +3811,7 @@ class StreamingProcessor {
     }
 
     /**
-     * @returns {AsyncGenerator<{ text: string, swipes: string[], logprobs: import('./scripts/logprobs.js').TokenLogprobs, toolCalls: any[], state: any }, void, void>}
+     * @returns {AsyncGenerator<{ text: string, swipes: string[], logprobs: import('./scripts/logprobs').TokenLogprobs, toolCalls: any[], state: any }, void, void>}
      */
     async* nullStreamingGeneration() {
         throw new Error('Generation function for streaming is not hooked up');
@@ -4581,7 +4581,7 @@ export async function Generate(type: string, { automatic_trigger, force_name2, q
     // Make quiet prompt available for WIAN
     setExtensionPrompt(inject_ids.QUIET_PROMPT, quiet_prompt || '', extension_prompt_types.IN_PROMPT, 0, true);
     const chatForWI = coreChat.map(x => world_info_include_names ? `${x.name}: ${x.mes}` : x.mes).reverse();
-    /** @type {import('./scripts/world-info.js').WIGlobalScanData} */
+    /** @type {import('./scripts/world-info').WIGlobalScanData} */
     const globalScanData = {
         personaDescription: persona,
         characterDescription: description,
@@ -6192,7 +6192,7 @@ function extractImagesFromData(data: any, { mainApi = null, chatCompletionSource
  * @param {string} continueFrom - for 'continue' generations, the prompt
  *  */
 function parseAndSaveLogprobs(data: any, continueFrom: string) {
-    /** @type {import('./scripts/logprobs.js').TokenLogprobs[] | null} */
+    /** @type {import('./scripts/logprobs').TokenLogprobs[] | null} */
     let logprobs = null;
 
     switch (main_api) {
@@ -9903,7 +9903,7 @@ function formatSwipeCounter(current: any, total: any) {
  * @param {SwipeEvent} event Event.
  * @param {SWIPE_DIRECTION} direction The direction to swipe.
  * @param {object} params Additional parameters.
- * @param {import('./scripts/constants.js').SWIPE_SOURCE} [params.source]  The source of the swipe event.
+ * @param {import('./scripts/constants').SWIPE_SOURCE} [params.source]  The source of the swipe event.
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {ChatMessage} [params.message=chat[chat.length - 1]] The chat message to swipe.
  * @param {number} [params.forceMesId] The message id to swipe.
@@ -10389,7 +10389,7 @@ export async function swipe(event: any, direction: any, { source, repeated, mess
  * Handles the swipe to the left event.
  * @param {SwipeEvent} [event] Event.
  * @param {object} params Additional parameters.
- * @param {import('./scripts/constants.js').SWIPE_SOURCE} [params.source]  The source of the swipe event.
+ * @param {import('./scripts/constants').SWIPE_SOURCE} [params.source]  The source of the swipe event.
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {object} [params.message] The chat message to swipe.
  */
@@ -10402,7 +10402,7 @@ export async function swipe_left(this: any, event: any, { source, repeated, mess
  * Handles the swipe to the right event.
  * @param {SwipeEvent} [event] Event.
  * @param {object} params Additional parameters.
- * @param {import('./scripts/constants.js').SWIPE_SOURCE} [params.source] The source of the swipe event.
+ * @param {import('./scripts/constants').SWIPE_SOURCE} [params.source] The source of the swipe event.
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {object} [params.message] The chat message to swipe.
  */
@@ -12556,159 +12556,159 @@ const avatarFileNames: string[] = [];
 // === AUTO: re-export every /scripts module so the shell monolith (/script.js)
 // is the single source of truth. Extensions import shared state from /script.js.
 // 139 modules; explicit lines resolve names two modules both export.
-export * from "./scripts/a11y.ts";
-export * from "./scripts/action-loader-slashcommands.ts";
-export * from "./scripts/action-loader.ts";
-export * from "./scripts/audio-player.ts";
-export * from "./scripts/authors-note.ts";
-export * from "./scripts/autocomplete/AutoComplete.ts";
-export * from "./scripts/autocomplete/AutoCompleteFuzzyScore.ts";
-export * from "./scripts/autocomplete/AutoCompleteNameResult.ts";
-export * from "./scripts/autocomplete/AutoCompleteNameResultBase.ts";
-export * from "./scripts/autocomplete/AutoCompleteOption.ts";
-export * from "./scripts/autocomplete/AutoCompleteSecondaryNameResult.ts";
-export * from "./scripts/autocomplete/BlankAutoCompleteOption.ts";
-export * from "./scripts/autocomplete/EnhancedMacroAutoCompleteOption.ts";
-export * from "./scripts/autocomplete/MacroAutoComplete.ts";
-export * from "./scripts/autocomplete/MacroAutoCompleteHelper.ts";
-export * from "./scripts/autocomplete/MacroAutoCompleteOption.ts";
-export * from "./scripts/backgrounds.ts";
-export * from "./scripts/bookmarks.ts";
-export * from "./scripts/browser-fixes.ts";
-export * from "./scripts/bulk-edit.ts";
-export * from "./scripts/BulkEditOverlay.ts";
-export * from "./scripts/cfg-scale.ts";
-export * from "./scripts/char-data.ts";
-export * from "./scripts/chat-backups.ts";
-export * from "./scripts/chat-templates.ts";
-export * from "./scripts/chats.ts";
-export * from "./scripts/constants.ts";
-export * from "./scripts/custom-request.ts";
-export * from "./scripts/data-maid.ts";
-export * from "./scripts/dom-handlers.ts";
-export * from "./scripts/dragdrop.ts";
-export * from "./scripts/dynamic-styles.ts";
-export * from "./scripts/events.ts";
-export * from "./scripts/extensions/shared.ts";
-export * from "./scripts/extensions-slashcommands.ts";
-export * from "./scripts/extensions.ts";
-export * from "./scripts/f-localStorage.ts";
-export * from "./scripts/filters.ts";
-export * from "./scripts/group-chats.ts";
-export * from "./scripts/horde.ts";
-export * from "./scripts/i18n.ts";
-export * from "./scripts/input-md-formatting.ts";
-export * from "./scripts/instruct-mode.ts";
-export * from "./scripts/itemized-prompts.ts";
-export * from "./scripts/kai-settings.ts";
-export * from "./scripts/keyboard.ts";
-export * from "./scripts/loader.ts";
-export * from "./scripts/logit-bias.ts";
-export * from "./scripts/logprobs.ts";
-export * from "./scripts/macros/definitions/chat-macros.ts";
-export * from "./scripts/macros/definitions/core-macros.ts";
-export * from "./scripts/macros/definitions/env-macros.ts";
-export * from "./scripts/macros/definitions/instruct-macros.ts";
-export * from "./scripts/macros/definitions/state-macros.ts";
-export * from "./scripts/macros/definitions/time-macros.ts";
-export * from "./scripts/macros/definitions/variable-macros.ts";
-export * from "./scripts/macros/engine/MacroBrowser.ts";
-export * from "./scripts/macros/engine/MacroCstWalker.ts";
-export * from "./scripts/macros/engine/MacroDiagnostics.ts";
-export * from "./scripts/macros/engine/MacroEngine.ts";
-export * from "./scripts/macros/engine/MacroEnv.types.ts";
-export * from "./scripts/macros/engine/MacroEnvBuilder.ts";
-export * from "./scripts/macros/engine/MacroFlags.ts";
-export * from "./scripts/macros/engine/MacroLexer.ts";
-export * from "./scripts/macros/engine/MacroParser.ts";
-export * from "./scripts/macros/engine/MacroRegistry.ts";
-export * from "./scripts/macros/macro-system.ts";
-export * from "./scripts/macros.ts";
-export * from "./scripts/nai-settings.ts";
-export * from "./scripts/openai.ts";
-export * from "./scripts/personas.ts";
-export * from "./scripts/popup.ts";
-export * from "./scripts/power-user.ts";
-export * from "./scripts/preset-manager.ts";
-export * from "./scripts/PromptManager.ts";
-export * from "./scripts/reasoning.ts";
-export * from "./scripts/regex-engine.ts";
-export * from "./scripts/request-compression.ts";
-export * from "./scripts/RossAscends-mods.ts";
-export * from "./scripts/samplerSelect.ts";
-export * from "./scripts/scrapers.ts";
-export * from "./scripts/secrets.ts";
-export * from "./scripts/server-history.ts";
-export * from "./scripts/setting-search.ts";
-export * from "./scripts/showdown-exclusion.ts";
-export * from "./scripts/showdown-underscore.ts";
-export * from "./scripts/slash-commands/AbstractEventTarget.ts";
-export * from "./scripts/slash-commands/SlashCommand.ts";
-export * from "./scripts/slash-commands/SlashCommandAbortController.ts";
-export * from "./scripts/slash-commands/SlashCommandArgument.ts";
-export * from "./scripts/slash-commands/SlashCommandAutoCompleteNameResult.ts";
-export * from "./scripts/slash-commands/SlashCommandBreak.ts";
-export * from "./scripts/slash-commands/SlashCommandBreakController.ts";
-export * from "./scripts/slash-commands/SlashCommandBreakPoint.ts";
-export * from "./scripts/slash-commands/SlashCommandBrowser.ts";
-export * from "./scripts/slash-commands/SlashCommandClosure.ts";
-export * from "./scripts/slash-commands/SlashCommandClosureResult.ts";
-export * from "./scripts/slash-commands/SlashCommandCommandAutoCompleteOption.ts";
-export * from "./scripts/slash-commands/SlashCommandCommonEnumsProvider.ts";
-export * from "./scripts/slash-commands/SlashCommandDebugController.ts";
-export * from "./scripts/slash-commands/SlashCommandEnumAutoCompleteOption.ts";
-export * from "./scripts/slash-commands/SlashCommandEnumValue.ts";
-export * from "./scripts/slash-commands/SlashCommandExecutionError.ts";
-export * from "./scripts/slash-commands/SlashCommandExecutor.ts";
-export * from "./scripts/slash-commands/SlashCommandNamedArgumentAssignment.ts";
-export * from "./scripts/slash-commands/SlashCommandNamedArgumentAutoCompleteOption.ts";
-export * from "./scripts/slash-commands/SlashCommandParser.ts";
-export * from "./scripts/slash-commands/SlashCommandParserError.ts";
-export * from "./scripts/slash-commands/SlashCommandQuickReplyAutoCompleteOption.ts";
-export * from "./scripts/slash-commands/SlashCommandReturnHelper.ts";
-export * from "./scripts/slash-commands/SlashCommandScope.ts";
-export * from "./scripts/slash-commands/SlashCommandUnnamedArgumentAssignment.ts";
-export * from "./scripts/slash-commands/SlashCommandVariableAutoCompleteOption.ts";
-export * from "./scripts/slash-commands.ts";
-export * from "./scripts/sse-stream.ts";
+export * from "./scripts/a11y";
+export * from "./scripts/action-loader-slashcommands";
+export * from "./scripts/action-loader";
+export * from "./scripts/audio-player";
+export * from "./scripts/authors-note";
+export * from "./scripts/autocomplete/AutoComplete";
+export * from "./scripts/autocomplete/AutoCompleteFuzzyScore";
+export * from "./scripts/autocomplete/AutoCompleteNameResult";
+export * from "./scripts/autocomplete/AutoCompleteNameResultBase";
+export * from "./scripts/autocomplete/AutoCompleteOption";
+export * from "./scripts/autocomplete/AutoCompleteSecondaryNameResult";
+export * from "./scripts/autocomplete/BlankAutoCompleteOption";
+export * from "./scripts/autocomplete/EnhancedMacroAutoCompleteOption";
+export * from "./scripts/autocomplete/MacroAutoComplete";
+export * from "./scripts/autocomplete/MacroAutoCompleteHelper";
+export * from "./scripts/autocomplete/MacroAutoCompleteOption";
+export * from "./scripts/backgrounds";
+export * from "./scripts/bookmarks";
+export * from "./scripts/browser-fixes";
+export * from "./scripts/bulk-edit";
+export * from "./scripts/BulkEditOverlay";
+export * from "./scripts/cfg-scale";
+export * from "./scripts/char-data";
+export * from "./scripts/chat-backups";
+export * from "./scripts/chat-templates";
+export * from "./scripts/chats";
+export * from "./scripts/constants";
+export * from "./scripts/custom-request";
+export * from "./scripts/data-maid";
+export * from "./scripts/dom-handlers";
+export * from "./scripts/dragdrop";
+export * from "./scripts/dynamic-styles";
+export * from "./scripts/events";
+export * from "./scripts/extensions/shared";
+export * from "./scripts/extensions-slashcommands";
+export * from "./scripts/extensions";
+export * from "./scripts/f-localStorage";
+export * from "./scripts/filters";
+export * from "./scripts/group-chats";
+export * from "./scripts/horde";
+export * from "./scripts/i18n";
+export * from "./scripts/input-md-formatting";
+export * from "./scripts/instruct-mode";
+export * from "./scripts/itemized-prompts";
+export * from "./scripts/kai-settings";
+export * from "./scripts/keyboard";
+export * from "./scripts/loader";
+export * from "./scripts/logit-bias";
+export * from "./scripts/logprobs";
+export * from "./scripts/macros/definitions/chat-macros";
+export * from "./scripts/macros/definitions/core-macros";
+export * from "./scripts/macros/definitions/env-macros";
+export * from "./scripts/macros/definitions/instruct-macros";
+export * from "./scripts/macros/definitions/state-macros";
+export * from "./scripts/macros/definitions/time-macros";
+export * from "./scripts/macros/definitions/variable-macros";
+export * from "./scripts/macros/engine/MacroBrowser";
+export * from "./scripts/macros/engine/MacroCstWalker";
+export * from "./scripts/macros/engine/MacroDiagnostics";
+export * from "./scripts/macros/engine/MacroEngine";
+export * from "./scripts/macros/engine/MacroEnv.types";
+export * from "./scripts/macros/engine/MacroEnvBuilder";
+export * from "./scripts/macros/engine/MacroFlags";
+export * from "./scripts/macros/engine/MacroLexer";
+export * from "./scripts/macros/engine/MacroParser";
+export * from "./scripts/macros/engine/MacroRegistry";
+export * from "./scripts/macros/macro-system";
+export * from "./scripts/macros";
+export * from "./scripts/nai-settings";
+export * from "./scripts/openai";
+export * from "./scripts/personas";
+export * from "./scripts/popup";
+export * from "./scripts/power-user";
+export * from "./scripts/preset-manager";
+export * from "./scripts/PromptManager";
+export * from "./scripts/reasoning";
+export * from "./scripts/regex-engine";
+export * from "./scripts/request-compression";
+export * from "./scripts/RossAscends-mods";
+export * from "./scripts/samplerSelect";
+export * from "./scripts/scrapers";
+export * from "./scripts/secrets";
+export * from "./scripts/server-history";
+export * from "./scripts/setting-search";
+export * from "./scripts/showdown-exclusion";
+export * from "./scripts/showdown-underscore";
+export * from "./scripts/slash-commands/AbstractEventTarget";
+export * from "./scripts/slash-commands/SlashCommand";
+export * from "./scripts/slash-commands/SlashCommandAbortController";
+export * from "./scripts/slash-commands/SlashCommandArgument";
+export * from "./scripts/slash-commands/SlashCommandAutoCompleteNameResult";
+export * from "./scripts/slash-commands/SlashCommandBreak";
+export * from "./scripts/slash-commands/SlashCommandBreakController";
+export * from "./scripts/slash-commands/SlashCommandBreakPoint";
+export * from "./scripts/slash-commands/SlashCommandBrowser";
+export * from "./scripts/slash-commands/SlashCommandClosure";
+export * from "./scripts/slash-commands/SlashCommandClosureResult";
+export * from "./scripts/slash-commands/SlashCommandCommandAutoCompleteOption";
+export * from "./scripts/slash-commands/SlashCommandCommonEnumsProvider";
+export * from "./scripts/slash-commands/SlashCommandDebugController";
+export * from "./scripts/slash-commands/SlashCommandEnumAutoCompleteOption";
+export * from "./scripts/slash-commands/SlashCommandEnumValue";
+export * from "./scripts/slash-commands/SlashCommandExecutionError";
+export * from "./scripts/slash-commands/SlashCommandExecutor";
+export * from "./scripts/slash-commands/SlashCommandNamedArgumentAssignment";
+export * from "./scripts/slash-commands/SlashCommandNamedArgumentAutoCompleteOption";
+export * from "./scripts/slash-commands/SlashCommandParser";
+export * from "./scripts/slash-commands/SlashCommandParserError";
+export * from "./scripts/slash-commands/SlashCommandQuickReplyAutoCompleteOption";
+export * from "./scripts/slash-commands/SlashCommandReturnHelper";
+export * from "./scripts/slash-commands/SlashCommandScope";
+export * from "./scripts/slash-commands/SlashCommandUnnamedArgumentAssignment";
+export * from "./scripts/slash-commands/SlashCommandVariableAutoCompleteOption";
+export * from "./scripts/slash-commands";
+export * from "./scripts/sse-stream";
 // Third-party extensions import /scripts/sse-stream.js as a default export;
 // `export *` above drops the default, so re-export it explicitly.
-export { default } from "./scripts/sse-stream.ts";
-export * from "./scripts/st-context.ts";
-export * from "./scripts/stats.ts";
-export * from "./scripts/streaming-display.ts";
-export * from "./scripts/swipe-picker.ts";
-export * from "./scripts/sysprompt.ts";
-export * from "./scripts/system-messages.ts";
-export * from "./scripts/tags.ts";
-export * from "./scripts/templates.ts";
-export * from "./scripts/textgen-models.ts";
-export * from "./scripts/textgen-settings.ts";
-export * from "./scripts/tokenizers.ts";
-export * from "./scripts/tool-calling.ts";
-export * from "./scripts/user.ts";
-export * from "./scripts/util/AbortReason.ts";
-export * from "./scripts/util/AccountStorage.ts";
-export * from "./scripts/util/showdown-patch.ts";
-export * from "./scripts/util/SimpleMutex.ts";
-export * from "./scripts/util/stream-fadein.ts";
-export * from "./scripts/util/StructuredCloneMap.ts";
-export * from "./scripts/util/ThemeGenerator.ts";
-export * from "./scripts/utils.ts";
-export * from "./scripts/variables.ts";
-export * from "./scripts/welcome-screen.ts";
-export * from "./scripts/world-info.ts";
-export { AUTOCOMPLETE_SELECT_KEY } from "./scripts/constants.ts";
-export { AUTOCOMPLETE_STATE } from "./scripts/constants.ts";
-export { AUTOCOMPLETE_WIDTH } from "./scripts/constants.ts";
-export { ELSE_MARKER } from "./scripts/constants.ts";
-export { onlyUniqueJson } from "./scripts/constants.ts";
-export { compareIgnoreCaseAndAccents } from "./scripts/constants.ts";
-export { sortIgnoreCaseAndAccents } from "./scripts/constants.ts";
-export { getContext } from "./scripts/st-context.ts";
-export { SimpleMutex } from "./scripts/util/SimpleMutex.ts";
-export { MacroCategory } from "./scripts/macros/engine/MacroRegistry.ts";
-export { MacroValueType } from "./scripts/macros/engine/MacroRegistry.ts";
-export { persona_description_positions } from "./scripts/personas.ts";
-export { BYTES_PER_TOKEN } from "./scripts/tokenizers.ts";
+export { default } from "./scripts/sse-stream";
+export * from "./scripts/st-context";
+export * from "./scripts/stats";
+export * from "./scripts/streaming-display";
+export * from "./scripts/swipe-picker";
+export * from "./scripts/sysprompt";
+export * from "./scripts/system-messages";
+export * from "./scripts/tags";
+export * from "./scripts/templates";
+export * from "./scripts/textgen-models";
+export * from "./scripts/textgen-settings";
+export * from "./scripts/tokenizers";
+export * from "./scripts/tool-calling";
+export * from "./scripts/user";
+export * from "./scripts/util/AbortReason";
+export * from "./scripts/util/AccountStorage";
+export * from "./scripts/util/showdown-patch";
+export * from "./scripts/util/SimpleMutex";
+export * from "./scripts/util/stream-fadein";
+export * from "./scripts/util/StructuredCloneMap";
+export * from "./scripts/util/ThemeGenerator";
+export * from "./scripts/utils";
+export * from "./scripts/variables";
+export * from "./scripts/welcome-screen";
+export * from "./scripts/world-info";
+export { AUTOCOMPLETE_SELECT_KEY } from "./scripts/constants";
+export { AUTOCOMPLETE_STATE } from "./scripts/constants";
+export { AUTOCOMPLETE_WIDTH } from "./scripts/constants";
+export { ELSE_MARKER } from "./scripts/constants";
+export { onlyUniqueJson } from "./scripts/constants";
+export { compareIgnoreCaseAndAccents } from "./scripts/constants";
+export { sortIgnoreCaseAndAccents } from "./scripts/constants";
+export { getContext } from "./scripts/st-context";
+export { SimpleMutex } from "./scripts/util/SimpleMutex";
+export { MacroCategory } from "./scripts/macros/engine/MacroRegistry";
+export { MacroValueType } from "./scripts/macros/engine/MacroRegistry";
+export { persona_description_positions } from "./scripts/personas";
+export { BYTES_PER_TOKEN } from "./scripts/tokenizers";
 

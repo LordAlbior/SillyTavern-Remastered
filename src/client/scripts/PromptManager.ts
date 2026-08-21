@@ -1,15 +1,15 @@
-import { DOMPurify } from "../lib.js";
+import { DOMPurify } from "../lib";
 
-import { event_types, eventSource, is_send_press, main_api, substituteParams } from "../script.ts";
-import { is_group_generating } from "./group-chats.ts";
-import { Message, MessageCollection, TokenHandler } from "./openai.ts";
-import { power_user } from "./power-user.ts";
-import { debounce, waitUntilCondition, escapeHtml, uuidv4 } from "./utils.ts";
-import { debounce_timeout } from "./constants.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { Popup } from "./popup.ts";
-import { t } from "./i18n.ts";
-import { isMobile } from "./RossAscends-mods.ts";
+import { event_types, eventSource, is_send_press, main_api, substituteParams } from "../script";
+import { is_group_generating } from "./group-chats";
+import { Message, MessageCollection, TokenHandler } from "./openai";
+import { power_user } from "./power-user";
+import { debounce, waitUntilCondition, escapeHtml, uuidv4 } from "./utils";
+import { debounce_timeout } from "./constants";
+import { renderTemplateAsync } from "./templates";
+import { Popup } from "./popup";
+import { t } from "./i18n";
+import { isMobile } from "./RossAscends-mods";
 
 function debouncePromise(func: any, delay: any) {
   let timeoutId: any;
@@ -1762,7 +1762,7 @@ class PromptManager {
   /**
    * Setter for messages property
    *
-   * @param {import('./openai.js').MessageCollection} messages
+   * @param {import('./openai').MessageCollection} messages
    */
   setMessages(messages: any) {
     this.messages = messages;
@@ -1771,7 +1771,7 @@ class PromptManager {
   /**
    * Set and process a finished chat completion object
    *
-   * @param {import('./openai.js').ChatCompletion} chatCompletion
+   * @param {import('./openai').ChatCompletion} chatCompletion
    */
   setChatCompletion(chatCompletion: any) {
     const messages = chatCompletion.getMessages();
@@ -1784,7 +1784,7 @@ class PromptManager {
   /**
    * Populates the token handler
    *
-   * @param {import('./openai.js').MessageCollection} messages
+   * @param {import('./openai').MessageCollection} messages
    */
   populateTokenCounts(messages: any) {
     this.tokenHandler.resetCounts();

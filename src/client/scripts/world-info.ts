@@ -1,4 +1,4 @@
-import { Fuse } from "../lib.js";
+import { Fuse } from "../lib";
 
 import {
   saveSettings,
@@ -20,7 +20,7 @@ import {
   name1,
   getOneCharacter,
   select_selected_character,
-} from "../script.ts";
+} from "../script";
 import {
   download,
   debounce,
@@ -58,33 +58,33 @@ import {
   logSlashCommandWarn,
   addLongPressEvent,
   escapeHtml,
-} from "./utils.ts";
-import { extension_settings, getContext } from "./extensions.ts";
-import { NOTE_MODULE_NAME, metadata_keys, shouldWIAddPrompt } from "./authors-note.ts";
-import { isMobile } from "./RossAscends-mods.ts";
-import { FILTER_TYPES, FilterHelper } from "./filters.ts";
-import { getTokenCountAsync } from "./tokenizers.ts";
-import { power_user } from "./power-user.ts";
-import { getTagKeyForEntity } from "./tags.ts";
-import { debounce_timeout, GENERATION_TYPE_TRIGGERS } from "./constants.ts";
+} from "./utils";
+import { extension_settings, getContext } from "./extensions";
+import { NOTE_MODULE_NAME, metadata_keys, shouldWIAddPrompt } from "./authors-note";
+import { isMobile } from "./RossAscends-mods";
+import { FILTER_TYPES, FilterHelper } from "./filters";
+import { getTokenCountAsync } from "./tokenizers";
+import { power_user } from "./power-user";
+import { getTagKeyForEntity } from "./tags";
+import { debounce_timeout, GENERATION_TYPE_TRIGGERS } from "./constants";
 
-import { getRegexedString, regex_placement } from "./regex-engine.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import { getRegexedString, regex_placement } from "./regex-engine";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue.ts";
-import { commonEnumProviders, enumIcons, registerEnumData } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure.ts";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "./popup.ts";
-import { StructuredCloneMap } from "./util/StructuredCloneMap.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { t } from "./i18n.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { getOrCreatePersonaDescriptor, setPersonaDescription, user_avatar } from "./personas.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue";
+import { commonEnumProviders, enumIcons, registerEnumData } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "./popup";
+import { StructuredCloneMap } from "./util/StructuredCloneMap";
+import { renderTemplateAsync } from "./templates";
+import { t } from "./i18n";
+import { accountStorage } from "./util/AccountStorage";
+import { getOrCreatePersonaDescriptor, setPersonaDescription, user_avatar } from "./personas";
 
 export const world_info_insertion_strategy = {
   evenly: 0,
@@ -1169,7 +1169,7 @@ function registerWorldInfoSlashCommands() {
 
   /**
    * Gets the name of the persona-bound lorebook.
-   * @param {import('./slash-commands/SlashCommand.js').NamedArguments} args Named arguments
+   * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
    * @param {string} _unnamedArg not used
    * @returns {Promise<string>} The name of the persona-bound lorebook
    */
@@ -1198,7 +1198,7 @@ function registerWorldInfoSlashCommands() {
 
   /**
    * Gets the name of the character-bound lorebook.
-   * @param {import('./slash-commands/SlashCommand.js').NamedArguments} args Named arguments
+   * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
    * @param {string} characterIdentifier Character name
    * @returns {Promise<string>} The name of the character-bound lorebook, a JSON string of the character's lorebooks, or an empty string
    */
@@ -1253,7 +1253,7 @@ function registerWorldInfoSlashCommands() {
 
   /**
    * Gets the name of the chat-bound lorebook. Creates a new one if it doesn't exist.
-   * @param {import('./slash-commands/SlashCommand.js').NamedArguments} args Named arguments
+   * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
    * @returns {Promise<string>} The name of the chat-bound lorebook
    */
   async function getChatBookCallback(args: any) {
@@ -1688,7 +1688,7 @@ function registerWorldInfoSlashCommands() {
       ),
 
     /** All existing UIDs based on the file argument as world name */
-    wiUids: (/** @type {import('./slash-commands/SlashCommandExecutor.js').SlashCommandExecutor} */ executor: any) => {
+    wiUids: (/** @type {import('./slash-commands/SlashCommandExecutor').SlashCommandExecutor} */ executor: any) => {
       const file = executor.namedArgumentList.find((it: any) => it.name == "file")?.value;
       if (file instanceof SlashCommandClosure) throw new Error("Argument 'file' does not support closures");
       // Try find world from cache
@@ -2892,7 +2892,7 @@ export function deleteWIOriginalDataValue(data: any, uid: any) {
   }
 }
 
-/** @typedef {import('./utils.js').Select2Option} Select2Option */
+/** @typedef {import('./utils').Select2Option} Select2Option */
 
 /**
  * Splits a given input string that contains one or more keywords or regexes, separated by commas.

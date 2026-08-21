@@ -1,4 +1,4 @@
-import { moment } from "../lib.js";
+import { moment } from "../lib";
 import {
   chat,
   closeMessageEditor,
@@ -12,26 +12,26 @@ import {
   substituteParams,
   syncMesToSwipe,
   updateMessageBlock,
-} from "../script.ts";
+} from "../script";
 
-import { getRegexedString, regex_placement } from "./regex-engine.ts";
-import { getCurrentLocale, t, translate } from "./i18n.ts";
-import { macros, MacroCategory } from "./macros/macro-system.ts";
-import { chat_completion_sources, getChatCompletionModel, oai_settings } from "./openai.ts";
-import { Popup } from "./popup.ts";
-import { performFuzzySearch, power_user } from "./power-user.ts";
-import { getPresetManager } from "./preset-manager.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import { getRegexedString, regex_placement } from "./regex-engine";
+import { getCurrentLocale, t, translate } from "./i18n";
+import { macros, MacroCategory } from "./macros/macro-system";
+import { chat_completion_sources, getChatCompletionModel, oai_settings } from "./openai";
+import { Popup } from "./popup";
+import { performFuzzySearch, power_user } from "./power-user";
+import { getPresetManager } from "./preset-manager";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { commonEnumProviders, enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { textgen_types, textgenerationwebui_settings } from "./textgen-settings.ts";
-import { applyStreamFadeIn } from "./util/stream-fadein.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { commonEnumProviders, enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { textgen_types, textgenerationwebui_settings } from "./textgen-settings";
+import { applyStreamFadeIn } from "./util/stream-fadein";
 import {
   copyText,
   escapeRegex,
@@ -40,7 +40,7 @@ import {
   setDatasetProperty,
   stringToRange,
   trimSpaces,
-} from "./utils.ts";
+} from "./utils";
 
 /**
  * @typedef {object} ReasoningTemplate

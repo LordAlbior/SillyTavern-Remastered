@@ -9,15 +9,15 @@ import { sync as writeFileAtomicSync } from "write-file-atomic";
 import yaml from "yaml";
 import _ from "lodash";
 import mime from "mime-types";
-import { Jimp, JimpMime } from "../jimp.ts";
+import { Jimp, JimpMime } from "../jimp";
 import storage from "node-persist";
 
-import { AVATAR_WIDTH, AVATAR_HEIGHT, DEFAULT_AVATAR_PATH } from "../constants.ts";
+import { AVATAR_WIDTH, AVATAR_HEIGHT, DEFAULT_AVATAR_PATH } from "../constants";
 import {
   default as validateAvatarUrlMiddleware,
   getFileNameValidationFunction,
   forbiddenRegExp,
-} from "../middleware/validateFileName.ts";
+} from "../middleware/validateFileName";
 import {
   deepMerge,
   humanizedDateTime,
@@ -28,17 +28,17 @@ import {
   clientRelativePath,
   getUniqueName,
   sanitizeSafeCharacterReplacements,
-} from "../util.ts";
-import { TavernCardValidator } from "../validator/TavernCardValidator.ts";
-import { parse, read, write } from "../character-card-parser.ts";
-import { readWorldInfoFile } from "./worldinfo.ts";
-import { invalidateThumbnail } from "./thumbnails.ts";
-import { importRisuSprites } from "./sprites.ts";
-import { getUserDirectories } from "../users.ts";
-import { getChatInfo } from "./chats.ts";
-import { ByafParser } from "../byaf.ts";
-import { CharXParser, persistCharXAssets } from "../charx.ts";
-import cacheBuster from "../middleware/cacheBuster.ts";
+} from "../util";
+import { TavernCardValidator } from "../validator/TavernCardValidator";
+import { parse, read, write } from "../character-card-parser";
+import { readWorldInfoFile } from "./worldinfo";
+import { invalidateThumbnail } from "./thumbnails";
+import { importRisuSprites } from "./sprites";
+import { getUserDirectories } from "../users";
+import { getChatInfo } from "./chats";
+import { ByafParser } from "../byaf";
+import { CharXParser, persistCharXAssets } from "../charx";
+import cacheBuster from "../middleware/cacheBuster";
 
 // With 100 MB limit it would take roughly 3000 characters to reach this limit
 const memoryCacheCapacity = getConfigValue("performance.memoryCacheCapacity", "100mb");
@@ -132,10 +132,10 @@ class DiskCache {
 
   /**
    * Verifies disk cache size and prunes it if necessary.
-   * @param {import('../users.js').UserDirectoryList[]} directoriesList List of user directories
+   * @param {import('../users').UserDirectoryList[]} directoriesList List of user directories
    * @returns {Promise<void>}
    */
-  async verify(directoriesList: import("../users.js").UserDirectoryList[]) {
+  async verify(directoriesList: import("../users").UserDirectoryList[]) {
     try {
       if (!useDiskCache) {
         return;
@@ -421,7 +421,7 @@ const toShallow = (character: any) => {
  * processCharacter - Process a given character, read its data and calculate its statistics.
  *
  * @param  {string} item The name of the character.
- * @param  {import('../users.js').UserDirectoryList} directories User directories
+ * @param  {import('../users').UserDirectoryList} directories User directories
  * @param  {object} options Options for the character processing
  * @param  {boolean} options.shallow If true, only return the core character's metadata
  * @return {Promise<object>}     A Promise that resolves when the character processing is done.
@@ -466,7 +466,7 @@ const processCharacter = async (item: string, directories: any, { shallow }: { s
 /**
  * Convert a character object to Spec V2 format.
  * @param {object} jsonObject Character object
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @param {boolean} hoistDate Will set the chat and create_date fields to the current date if they are missing
  * @returns {object} Character object in Spec V2 format
  */
@@ -486,7 +486,7 @@ function getCharaCardV2(jsonObject: any, directories: any, hoistDate: boolean = 
 /**
  * Convert a character object to Spec V2 format.
  * @param {object} char Character object
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns {object} Character object in Spec V2 format
  */
 function convertToV2(char: any, directories: any) {
@@ -589,7 +589,7 @@ function readFromV2(char: any) {
 /**
  * Format character data to Spec V2 format.
  * @param {object} data Character data
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns
  */
 function charaFormatData(data: any, directories: any) {
@@ -1615,7 +1615,7 @@ router.post("/chats", validateAvatarUrlMiddleware, async (request, response) => 
 /**
  * Gets the name for the uploaded PNG file.
  * @param {string} file File name
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns {string} - The name for the uploaded PNG file
  */
 function getPngName(file: string, directories: any) {

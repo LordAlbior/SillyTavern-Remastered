@@ -1,4 +1,4 @@
-import { Fuse, lodash } from "../lib.js";
+import { Fuse, lodash } from "../lib";
 
 import {
   amount_gen,
@@ -17,28 +17,28 @@ import {
   saveSettings,
   saveSettingsDebounced,
   this_chid,
-} from "../script.ts";
-import { groups, selected_group } from "./group-chats.ts";
-import { t } from "./i18n.ts";
-import { instruct_presets } from "./instruct-mode.ts";
-import { kai_settings } from "./kai-settings.ts";
-import { convertNovelPreset } from "./nai-settings.ts";
-import { oai_settings, openai_setting_names, openai_settings } from "./openai.ts";
-import { POPUP_RESULT, POPUP_TYPE, Popup } from "./popup.ts";
-import { context_presets, getContextSettings, power_user } from "./power-user.ts";
-import { reasoning_templates } from "./reasoning.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
-import { ARGUMENT_TYPE, SlashCommandArgument } from "./slash-commands/SlashCommandArgument.ts";
-import { enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { checkForSystemPromptInInstructTemplate, system_prompts } from "./sysprompt.ts";
-import { renderTemplateAsync } from "./templates.ts";
+} from "../script";
+import { groups, selected_group } from "./group-chats";
+import { t } from "./i18n";
+import { instruct_presets } from "./instruct-mode";
+import { kai_settings } from "./kai-settings";
+import { convertNovelPreset } from "./nai-settings";
+import { oai_settings, openai_setting_names, openai_settings } from "./openai";
+import { POPUP_RESULT, POPUP_TYPE, Popup } from "./popup";
+import { context_presets, getContextSettings, power_user } from "./power-user";
+import { reasoning_templates } from "./reasoning";
+import { SlashCommand } from "./slash-commands/SlashCommand";
+import { ARGUMENT_TYPE, SlashCommandArgument } from "./slash-commands/SlashCommandArgument";
+import { enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { checkForSystemPromptInInstructTemplate, system_prompts } from "./sysprompt";
+import { renderTemplateAsync } from "./templates";
 import {
   textgenerationwebui_settings as textgen_settings,
   textgenerationwebui_preset_names,
   textgenerationwebui_presets,
-} from "./textgen-settings.ts";
+} from "./textgen-settings";
 import {
   download,
   ensurePlainObject,
@@ -46,7 +46,7 @@ import {
   getSanitizedFilename,
   parseJsonFile,
   waitUntilCondition,
-} from "./utils.ts";
+} from "./utils";
 
 const presetManagers = {};
 

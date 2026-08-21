@@ -19,11 +19,11 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 
 // local library imports
-import "./fetch-patch.js";
-import { serverDirectory, rootDirectory } from "./server-directory.ts";
+import "./fetch-patch";
+import { serverDirectory, rootDirectory } from "./server-directory";
 
-import { serverEvents, EVENT_NAMES } from "./server-events.ts";
-import { loadPlugins } from "./plugin-loader.ts";
+import { serverEvents, EVENT_NAMES } from "./server-events";
+import { loadPlugins } from "./plugin-loader";
 import {
   initUserStorage,
   getCookieSecret,
@@ -40,18 +40,18 @@ import {
   verifySecuritySettings,
   loginPageMiddleware,
   migratePublicOverrides,
-} from "./users.ts";
+} from "./users";
 
-import basicAuthMiddleware from "./middleware/basicAuth.ts";
-import getWhitelistMiddleware from "./middleware/whitelist.ts";
-import accessLoggerMiddleware, { getAccessLogPath, migrateAccessLog } from "./middleware/accessLogWriter.ts";
-import multerMonkeyPatch from "./middleware/multerMonkeyPatch.ts";
-import initRequestProxy from "./request-proxy.ts";
-import initPrivateRequestFilter from "./private-request-filter.ts";
-import cacheBuster from "./middleware/cacheBuster.ts";
-import corsProxyMiddleware from "./middleware/corsProxy.ts";
-import hostWhitelistMiddleware from "./middleware/hostWhitelist.ts";
-import userCssMiddleware from "./middleware/userCss.ts";
+import basicAuthMiddleware from "./middleware/basicAuth";
+import getWhitelistMiddleware from "./middleware/whitelist";
+import accessLoggerMiddleware, { getAccessLogPath, migrateAccessLog } from "./middleware/accessLogWriter";
+import multerMonkeyPatch from "./middleware/multerMonkeyPatch";
+import initRequestProxy from "./request-proxy";
+import initPrivateRequestFilter from "./private-request-filter";
+import cacheBuster from "./middleware/cacheBuster";
+import corsProxyMiddleware from "./middleware/corsProxy";
+import hostWhitelistMiddleware from "./middleware/hostWhitelist";
+import userCssMiddleware from "./middleware/userCss";
 import {
   getVersion,
   color,
@@ -61,18 +61,18 @@ import {
   setupLogLevel,
   setWindowTitle,
   getConfigValue,
-} from "./util.ts";
-import { UPLOADS_DIRECTORY } from "./constants.ts";
+} from "./util";
+import { UPLOADS_DIRECTORY } from "./constants";
 
 // Routers
-import { router as usersPublicRouter } from "./endpoints/users-public.ts";
-import { init as statsInit, onExit as statsOnExit } from "./endpoints/stats.ts";
-import { checkForNewContent } from "./endpoints/content-manager.ts";
-import { init as settingsInit } from "./endpoints/settings.ts";
-import { redirectDeprecatedEndpoints, ServerStartup, setupPrivateEndpoints } from "./server-startup.ts";
-import { diskCache } from "./endpoints/characters.ts";
-import { migrateFlatSecrets } from "./endpoints/secrets.ts";
-import { migrateGroupChatsMetadataFormat } from "./endpoints/groups.ts";
+import { router as usersPublicRouter } from "./endpoints/users-public";
+import { init as statsInit, onExit as statsOnExit } from "./endpoints/stats";
+import { checkForNewContent } from "./endpoints/content-manager";
+import { init as settingsInit } from "./endpoints/settings";
+import { redirectDeprecatedEndpoints, ServerStartup, setupPrivateEndpoints } from "./server-startup";
+import { diskCache } from "./endpoints/characters";
+import { migrateFlatSecrets } from "./endpoints/secrets";
+import { migrateGroupChatsMetadataFormat } from "./endpoints/groups";
 
 // Work around a node v20.0.0, v20.1.0, and v20.2.0 bug. The issue was fixed in v20.3.0.
 // https://github.com/nodejs/node/issues/47822#issuecomment-1564708870
@@ -87,7 +87,7 @@ util.inspect.defaultOptions.maxArrayLength = null;
 util.inspect.defaultOptions.maxStringLength = null;
 util.inspect.defaultOptions.depth = 4;
 
-/** @type {import('./command-line.js').CommandLineArguments} */
+/** @type {import('./command-line').CommandLineArguments} */
 const cliArgs = globalThis.COMMAND_LINE_ARGS;
 
 if (!cliArgs.enableIPv6 && !cliArgs.enableIPv4) {
@@ -414,7 +414,7 @@ async function preSetupTasks() {
 
 /**
  * Tasks that need to be run after the server starts listening.
- * @param {import('./server-startup.js').ServerStartupResult} result The result of the server startup
+ * @param {import('./server-startup').ServerStartupResult} result The result of the server startup
  * @returns {Promise<void>}
  */
 async function postSetupTasks(result: any) {

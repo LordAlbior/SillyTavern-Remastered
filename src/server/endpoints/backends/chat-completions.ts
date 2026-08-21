@@ -20,7 +20,7 @@ import {
   SILICONFLOW_ENDPOINT,
   MINIMAX_ENDPOINT,
   ZAI_ENDPOINT,
-} from "../../constants.ts";
+} from "../../constants";
 import {
   forwardFetchResponse,
   getConfigValue,
@@ -31,7 +31,7 @@ import {
   color,
   trimTrailingSlash,
   flattenSchema,
-} from "../../util.ts";
+} from "../../util";
 import {
   convertClaudeMessages,
   convertGooglePrompt,
@@ -52,9 +52,9 @@ import {
   addReasoningContentToToolCalls,
   cachingSystemPromptForOpenRouter,
   addOpenRouterSignatures,
-} from "../../prompt-converters.ts";
+} from "../../prompt-converters";
 
-import { readSecret, SECRET_KEYS } from "../secrets.ts";
+import { readSecret, SECRET_KEYS } from "../secrets";
 import {
   getTokenizerModel,
   getSentencepiceTokenizer,
@@ -63,8 +63,8 @@ import {
   TEXT_COMPLETION_MODELS,
   webTokenizers,
   getWebTokenizer,
-} from "../tokenizers.ts";
-import { getVertexAIAuth, getProjectIdFromServiceAccount } from "../google.ts";
+} from "../tokenizers";
+import { getVertexAIAuth, getProjectIdFromServiceAccount } from "../google";
 
 const API_OPENAI = "https://api.openai.com/v1";
 const API_CLAUDE = "https://api.anthropic.com/v1";

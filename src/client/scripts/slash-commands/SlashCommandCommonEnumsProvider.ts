@@ -1,5 +1,5 @@
-import { onlyUniqueJson, sortIgnoreCaseAndAccents } from "../constants.ts";
-import { SlashCommandEnumValue, enumTypes } from "./SlashCommandEnumValue.ts";
+import { onlyUniqueJson, sortIgnoreCaseAndAccents } from "../constants";
+import { SlashCommandEnumValue, enumTypes } from "./SlashCommandEnumValue";
 
 /**
  * Runtime data injected by owner modules via registerEnumData().
@@ -36,8 +36,8 @@ export function registerEnumData(data: any) {
   Object.assign(enumData, data);
 }
 
-/** @typedef {import('./SlashCommandExecutor.js').SlashCommandExecutor} SlashCommandExecutor */
-/** @typedef {import('./SlashCommandScope.js').SlashCommandScope} SlashCommandScope */
+/** @typedef {import('./SlashCommandExecutor').SlashCommandExecutor} SlashCommandExecutor */
+/** @typedef {import('./SlashCommandScope').SlashCommandScope} SlashCommandScope */
 
 /**
  * A collection of regularly used enum icons

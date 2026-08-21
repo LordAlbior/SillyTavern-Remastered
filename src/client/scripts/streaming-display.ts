@@ -18,9 +18,9 @@
  * display.complete('Generated Something'); // Mark as done (green LED, auto-hide if configured)
  */
 
-import { SVGInject } from "../lib.js";
-import { t } from "./i18n.ts";
-import { animation_duration, messageFormatting } from "../script.ts";
+import { SVGInject } from "../lib";
+import { t } from "./i18n";
+import { animation_duration, messageFormatting } from "../script";
 
 /** CSS class prefix */
 const CSS_PREFIX = "streaming-display";

@@ -1,6 +1,6 @@
-import { MacroCategory } from "../engine/MacroRegistry.ts";
-const MacroRegistry: any = (await import("../engine/MacroRegistry.ts" as string)).MacroRegistry;
-import { power_user } from "../../power-user.ts";
+import { MacroCategory } from "../engine/MacroRegistry";
+const MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
+import { power_user } from "../../power-user";
 
 /**
  * Registers instruct-mode related {{...}} macros (instruct* and system

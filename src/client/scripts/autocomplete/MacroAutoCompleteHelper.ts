@@ -6,7 +6,7 @@
  * consistent behavior across all contexts where macro autocomplete is used.
  */
 
-import { AutoCompleteNameResult } from "./AutoCompleteNameResult.ts";
+import { AutoCompleteNameResult } from "./AutoCompleteNameResult";
 import {
   EnhancedMacroAutoCompleteOption,
   MacroFlagAutoCompleteOption,
@@ -20,27 +20,27 @@ import {
   isValidVariableShorthandName,
   parseMacroContext,
   SimpleAutoCompleteOption,
-} from "./EnhancedMacroAutoCompleteOption.ts";
-import { macros as macroSystem } from "../macros/macro-system.ts";
-import { MacroFlagDefinitions, MacroFlagType } from "../macros/engine/MacroFlags.ts";
+} from "./EnhancedMacroAutoCompleteOption";
+import { macros as macroSystem } from "../macros/macro-system";
+import { MacroFlagDefinitions, MacroFlagType } from "../macros/engine/MacroFlags";
 // @ts-ignore - MacroParser has implicit any type from JS source
-import { MacroParser } from "../macros/engine/MacroParser.ts";
+import { MacroParser } from "../macros/engine/MacroParser";
 // @ts-ignore - MacroCstWalker has implicit any type from JS source
-import { MacroCstWalker } from "../macros/engine/MacroCstWalker.ts";
+import { MacroCstWalker } from "../macros/engine/MacroCstWalker";
 
 // @ts-ignore - Type assertions to suppress TS7005 errors on usage
 const MacroParserTyped = MacroParser;
 // @ts-ignore - Type assertions to suppress TS7005 errors on usage
 const MacroCstWalkerTyped = MacroCstWalker;
-import { onboardingExperimentalMacroEngine } from "../macros/engine/MacroDiagnostics.ts";
+import { onboardingExperimentalMacroEngine } from "../macros/engine/MacroDiagnostics";
 
 import { chat_metadata } from "/script.ts";
-import { extension_settings } from "../extensions.ts";
+import { extension_settings } from "../extensions";
 
-/** @typedef {import('./EnhancedMacroAutoCompleteOption.js').MacroAutoCompleteContext} MacroAutoCompleteContext */
-/** @typedef {import('./EnhancedMacroAutoCompleteOption.js').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */
-/** @typedef {import('./AutoCompleteOption.js').AutoCompleteOption} AutoCompleteOption */
-/*** @typedef {import('../macros/macro-system.js').MacroDefinition} MacroDefinition */
+/** @typedef {import('./EnhancedMacroAutoCompleteOption').MacroAutoCompleteContext} MacroAutoCompleteContext */
+/** @typedef {import('./EnhancedMacroAutoCompleteOption').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */
+/** @typedef {import('./AutoCompleteOption').AutoCompleteOption} AutoCompleteOption */
+/*** @typedef {import('../macros/macro-system').MacroDefinition} MacroDefinition */
 
 /**
  * @typedef {Object} MacroInfo

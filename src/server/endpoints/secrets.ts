@@ -3,7 +3,7 @@ import path from "node:path";
 
 import express from "express";
 import { sync as writeFileAtomicSync } from "write-file-atomic";
-import { color, getConfigValue, uuidv4 } from "../util.ts";
+import { color, getConfigValue, uuidv4 } from "../util";
 
 export const SECRETS_FILE = "secrets.json";
 export const SECRET_KEYS = {
@@ -130,14 +130,14 @@ export const allowKeysExposure = !!getConfigValue("allowKeysExposure", false, "b
  * SecretManager class to handle all secret operations
  */
 export class SecretManager {
-  directories: import("../users.js").UserDirectoryList;
+  directories: import("../users").UserDirectoryList;
   filePath: string;
   defaultSecrets: Record<string, never>;
 
   /**
-   * @param {import('../users.js').UserDirectoryList} directories
+   * @param {import('../users').UserDirectoryList} directories
    */
-  constructor(directories: import("../users.js").UserDirectoryList) {
+  constructor(directories: import("../users").UserDirectoryList) {
     this.directories = directories;
     this.filePath = path.join(directories.root, SECRETS_FILE);
     this.defaultSecrets = {};
@@ -436,12 +436,12 @@ export class SecretManager {
 //#region Backwards compatibility
 /**
  * Writes a secret to the secrets file
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @param {string} key Secret key
  * @param {string} value Secret value
  */
 export function writeSecret(
-  directories: import("../users.js").UserDirectoryList,
+  directories: import("../users").UserDirectoryList,
   key: string,
   value: string,
 ): string {
@@ -450,11 +450,11 @@ export function writeSecret(
 
 /**
  * Deletes a secret from the secrets file
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @param {string} key Secret key
  */
 export function deleteSecret(
-  directories: import("../users.js").UserDirectoryList,
+  directories: import("../users").UserDirectoryList,
   key: string,
 ): void {
   return new SecretManager(directories).deleteSecret(key, null);
@@ -462,13 +462,13 @@ export function deleteSecret(
 
 /**
  * Reads a secret from the secrets file
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @param {string} key Secret key
  * @param {string?} id Secret ID (optional)
  * @returns {string} Secret value
  */
 export function readSecret(
-  directories: import("../users.js").UserDirectoryList,
+  directories: import("../users").UserDirectoryList,
   key: string,
   id: string | null | undefined = null,
 ): string | null | undefined {
@@ -477,11 +477,11 @@ export function readSecret(
 
 /**
  * Reads the secret state from the secrets file
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns {Record<string, boolean>} Secret state
  */
 export function readSecretState(
-  directories: import("../users.js").UserDirectoryList,
+  directories: import("../users").UserDirectoryList,
 ): Record<string, boolean> {
   const state = new SecretManager(directories).getSecretState();
   const result: Record<string, boolean> = {};
@@ -498,11 +498,11 @@ export function readSecretState(
 
 /**
  * Reads all secrets from the secrets file
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns {Record<string, string>} Secrets
  */
 export function getAllSecrets(
-  directories: import("../users.js").UserDirectoryList,
+  directories: import("../users").UserDirectoryList,
 ): Record<string, string> {
   const secrets = new SecretManager(directories).getAllSecrets();
   const result: Record<string, string> = {};
@@ -524,10 +524,10 @@ export function getAllSecrets(
 
 /**
  * Migrates legacy flat secrets format to the new format for all user directories
- * @param {import('../users.js').UserDirectoryList[]} directoriesList User directories
+ * @param {import('../users').UserDirectoryList[]} directoriesList User directories
  */
 export function migrateFlatSecrets(
-  directoriesList: import("../users.js").UserDirectoryList[],
+  directoriesList: import("../users").UserDirectoryList[],
 ): void {
   for (const directories of directoriesList) {
     try {

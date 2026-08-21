@@ -1,6 +1,6 @@
-import { MacroCategory } from "../engine/MacroRegistry.ts";
-const MacroRegistry: any = (await import("../engine/MacroRegistry.ts" as string)).MacroRegistry;
-import { eventSource, event_types } from "../../events.ts";
+import { MacroCategory } from "../engine/MacroRegistry";
+const MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
+import { eventSource, event_types } from "../../events";
 
 import { findExtension } from "/scripts/extensions.ts";
 

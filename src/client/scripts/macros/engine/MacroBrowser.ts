@@ -3,15 +3,15 @@
  * Similar to SlashCommandBrowser but for the macro system.
  */
 
-import { MacroCategory } from "./MacroRegistry.ts";
-import * as MacroRegistryModule from "./MacroRegistry.ts";
+import { MacroCategory } from "./MacroRegistry";
+import * as MacroRegistryModule from "./MacroRegistry";
 const MacroRegistry: any = (MacroRegistryModule as any).MacroRegistry;
-import { performFuzzySearch } from "../../power-user.ts";
+import { performFuzzySearch } from "../../power-user";
 
 import { escapeRegex } from "/scripts/utils.ts";
 
-/** @typedef {import('./MacroRegistry.js').MacroDefinition} MacroDefinition */
-/** @typedef {import('./MacroRegistry.js').MacroValueType} MacroValueType */
+/** @typedef {import('./MacroRegistry').MacroDefinition} MacroDefinition */
+/** @typedef {import('./MacroRegistry').MacroValueType} MacroValueType */
 
 /**
  * Category display names and order for documentation.

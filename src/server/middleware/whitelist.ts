@@ -6,8 +6,8 @@ import Handlebars from "handlebars";
 import ipMatching from "ip-matching";
 import isDocker from "is-docker";
 
-import { filterValidIpPatterns, getIpFromRequest, getRealOrForwardedIp } from "../express-common.ts";
-import { color, getConfigValue, safeReadFileSync } from "../util.ts";
+import { filterValidIpPatterns, getIpFromRequest, getRealOrForwardedIp } from "../express-common";
+import { color, getConfigValue, safeReadFileSync } from "../util";
 
 const whitelistPath = path.join(process.cwd(), "./whitelist.txt");
 const enableForwardedWhitelist = !!getConfigValue("enableForwardedWhitelist", false, "boolean");

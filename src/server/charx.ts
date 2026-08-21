@@ -3,8 +3,8 @@ import path from "node:path";
 import _ from "lodash";
 import sanitize from "sanitize-filename";
 import { sync as writeFileAtomicSync } from "write-file-atomic";
-import { extractFileFromZipBuffer, extractFilesFromZipBuffer, normalizeZipEntryPath, ensureDirectory } from "./util.ts";
-import { DEFAULT_AVATAR_PATH } from "./constants.ts";
+import { extractFileFromZipBuffer, extractFilesFromZipBuffer, normalizeZipEntryPath, ensureDirectory } from "./util";
+import { DEFAULT_AVATAR_PATH } from "./constants";
 
 // 'embeded://' is intentional - RisuAI exports use this misspelling
 const CHARX_EMBEDDED_URI_PREFIXES = ["embeded://", "embedded://", "__asset:"];

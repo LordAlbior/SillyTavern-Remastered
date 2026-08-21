@@ -1,8 +1,8 @@
 import { getRequestHeaders } from "/script.js";
 import { getApiUrl } from "/scripts/extensions.js";
 import { doExtrasFetch, modules } from "/scripts/extensions.js";
-import { getPreviewString } from "./index.ts";
-import { saveTtsProviderSettings } from "./index.ts";
+import { getPreviewString } from "./index";
+import { saveTtsProviderSettings } from "./index";
 
 export { EdgeTtsProvider };
 

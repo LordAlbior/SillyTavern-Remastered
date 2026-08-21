@@ -1,19 +1,19 @@
-import { disableExtension, enableExtension, extensionNames, findExtension } from "./extensions.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import { disableExtension, enableExtension, extensionNames, findExtension } from "./extensions";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure.ts";
-import { commonEnumProviders } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { isFalseBoolean, isTrueBoolean } from "./utils.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure";
+import { commonEnumProviders } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { isFalseBoolean, isTrueBoolean } from "./utils";
 
 /**
  * @param {'enable' | 'disable' | 'toggle'} action - The action to perform on the extension
- * @typedef {import('./slash-commands/SlashCommand.js').NamedArguments | import('./slash-commands/SlashCommand.js').NamedArgumentsCapture} NamedArgumentsAssignment
+ * @typedef {import('./slash-commands/SlashCommand').NamedArguments | import('./slash-commands/SlashCommand').NamedArgumentsCapture} NamedArgumentsAssignment
  * @returns {(args: NamedArgumentsAssignment, extensionName: string | SlashCommandClosure) => Promise<string>}
  */
 function getExtensionActionCallback(action:any) {

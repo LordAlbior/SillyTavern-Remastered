@@ -1,4 +1,4 @@
-import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
+import { getPreviewString, saveTtsProviderSettings } from "./index";
 
 export { TtsWebuiProvider };
 

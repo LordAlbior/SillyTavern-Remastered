@@ -3,8 +3,8 @@ import { Popup, POPUP_RESULT, POPUP_TYPE } from "/scripts/popup.js";
 import { executeSlashCommandsOnChatInput, executeSlashCommandsWithOptions } from "/scripts/slash-commands.js";
 import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
 import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { debounceAsync, warn } from "../index.ts";
-import { QuickReply } from "./QuickReply.ts";
+import { debounceAsync, warn } from "../index";
+import { QuickReply } from "./QuickReply";
 
 export class QuickReplySet {
   /**@type {QuickReplySet[]}*/ static list: any[] = [];

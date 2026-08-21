@@ -4,8 +4,8 @@ import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
 import ipRegex from "ip-regex";
 import envPaths from "env-paths";
-import { color, getConfigValue, stringToBool } from "./util.ts";
-import { initConfig } from "./config-init.ts";
+import { color, getConfigValue, stringToBool } from "./util";
+import { initConfig } from "./config-init";
 
 /**
  * @typedef {object} CommandLineArguments Parsed command line arguments

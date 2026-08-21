@@ -1,8 +1,8 @@
-import { characters, saveSettingsDebounced, substituteParams, substituteParamsExtended, this_chid } from "../script.ts";
-import { extension_settings, writeExtensionField } from "./extensions.ts";
-import { getPresetManager } from "./preset-manager.ts";
-import { regexFromString } from "./utils.ts";
-import { lodash } from "../lib.ts";
+import { characters, saveSettingsDebounced, substituteParams, substituteParamsExtended, this_chid } from "../script";
+import { extension_settings, writeExtensionField } from "./extensions";
+import { getPresetManager } from "./preset-manager";
+import { regexFromString } from "./utils";
+import { lodash } from "../lib";
 
 /**
  * @readonly
@@ -21,7 +21,7 @@ export const SCRIPT_TYPES = {
 export const SCRIPT_TYPE_UNKNOWN = -1;
 
 /**
- * @typedef {import('./char-data.ts').RegexScriptData} RegexScript
+ * @typedef {import('./char-data').RegexScriptData} RegexScript
  */
 
 /**

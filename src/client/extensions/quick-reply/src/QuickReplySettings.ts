@@ -1,6 +1,6 @@
 import { chat_metadata, saveSettingsDebounced } from "/script.js";
 import { extension_settings, saveMetadataDebounced } from "/scripts/extensions.js";
-import { QuickReplyConfig } from "./QuickReplyConfig.ts";
+import { QuickReplyConfig } from "./QuickReplyConfig";
 
 export class QuickReplySettings {
   static from(props:any) {

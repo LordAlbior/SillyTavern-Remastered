@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-import "../server.ts";
+import "../server";
 
 export {};

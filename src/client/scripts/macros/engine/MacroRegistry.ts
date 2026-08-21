@@ -1,18 +1,18 @@
 /** @typedef {import('chevrotain').CstNode} CstNode */
-/** @typedef {import('./MacroEnv.types.js').MacroEnv} MacroEnv */
-/** @typedef {import('./MacroCstWalker.js').MacroCall} MacroCall */
-/** @typedef {import('./MacroFlags.js').MacroFlags} MacroFlags */
+/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('./MacroCstWalker').MacroCall} MacroCall */
+/** @typedef {import('./MacroFlags').MacroFlags} MacroFlags */
 
-import { MACRO_IDENTIFIER_PATTERN } from "./MacroLexer.ts";
+import { MACRO_IDENTIFIER_PATTERN } from "./MacroLexer";
 
-import { isFalseBoolean, isTrueBoolean } from "../../utils.ts";
-import { MacroEngine } from "./MacroEngine.ts";
+import { isFalseBoolean, isTrueBoolean } from "../../utils";
+import { MacroEngine } from "./MacroEngine";
 import {
   createMacroRuntimeError,
   logMacroRegisterError,
   logMacroRegisterWarning,
   logMacroRuntimeWarning,
-} from "./MacroDiagnostics.ts";
+} from "./MacroDiagnostics";
 
 /**
  * Enum of standard macro categories for grouping in documentation and autocomplete.

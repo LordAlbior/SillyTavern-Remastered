@@ -3,7 +3,7 @@ import { promises as fsPromises } from "node:fs";
 import storage from "node-persist";
 import express from "express";
 import lodash from "lodash";
-import { checkForNewContent, CONTENT_TYPES } from "./content-manager.ts";
+import { checkForNewContent, CONTENT_TYPES } from "./content-manager";
 import {
   KEY_PREFIX,
   toKey,
@@ -14,8 +14,8 @@ import {
   getPasswordHash,
   getUserDirectories,
   ensurePublicDirectoriesExist,
-} from "../users.ts";
-import { DEFAULT_USER } from "../constants.ts";
+} from "../users";
+import { DEFAULT_USER } from "../constants";
 
 export const router = express.Router();
 
@@ -42,10 +42,10 @@ function slugify(text: string) {
 
 router.post("/get", requireAdminMiddleware, async (_request, response) => {
   try {
-    /** @type {import('../users.js').User[]} */
+    /** @type {import('../users').User[]} */
     const users = await storage.values((x) => x.key.startsWith(KEY_PREFIX));
 
-    /** @type {Promise<import('../users.js').UserViewModel>[]} */
+    /** @type {Promise<import('../users').UserViewModel>[]} */
     const viewModelPromises = users.map(
       (user) =>
         new Promise((resolve) => {
@@ -84,7 +84,7 @@ router.post("/disable", requireAdminMiddleware, async (request, response) => {
       return response.status(400).json({ error: "Cannot disable yourself" });
     }
 
-    /** @type {import('../users.js').User} */
+    /** @type {import('../users').User} */
     const user = await storage.getItem(toKey(request.body.handle));
 
     if (!user) {
@@ -108,7 +108,7 @@ router.post("/enable", requireAdminMiddleware, async (request, response) => {
       return response.status(400).json({ error: "Missing required fields" });
     }
 
-    /** @type {import('../users.js').User} */
+    /** @type {import('../users').User} */
     const user = await storage.getItem(toKey(request.body.handle));
 
     if (!user) {
@@ -132,7 +132,7 @@ router.post("/promote", requireAdminMiddleware, async (request, response) => {
       return response.status(400).json({ error: "Missing required fields" });
     }
 
-    /** @type {import('../users.js').User} */
+    /** @type {import('../users').User} */
     const user = await storage.getItem(toKey(request.body.handle));
 
     if (!user) {
@@ -161,7 +161,7 @@ router.post("/demote", requireAdminMiddleware, async (request, response) => {
       return response.status(400).json({ error: "Cannot demote yourself" });
     }
 
-    /** @type {import('../users.js').User} */
+    /** @type {import('../users').User} */
     const user = await storage.getItem(toKey(request.body.handle));
 
     if (!user) {

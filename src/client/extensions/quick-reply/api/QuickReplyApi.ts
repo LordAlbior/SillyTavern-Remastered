@@ -1,8 +1,8 @@
-import { QuickReply } from "../src/QuickReply.ts";
-import { QuickReplyContextLink } from "../src/QuickReplyContextLink.ts";
-import { QuickReplySet } from "../src/QuickReplySet.ts";
-import { QuickReplySettings } from "../src/QuickReplySettings.ts";
-import { SettingsUi } from "../src/ui/SettingsUi.ts";
+import { QuickReply } from "../src/QuickReply";
+import { QuickReplyContextLink } from "../src/QuickReplyContextLink";
+import { QuickReplySet } from "../src/QuickReplySet";
+import { QuickReplySettings } from "../src/QuickReplySettings";
+import { SettingsUi } from "../src/ui/SettingsUi";
 import { onlyUnique } from "/scripts/utils.js";
 
 export class QuickReplyApi {

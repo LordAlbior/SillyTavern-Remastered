@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { getConfigValue, tryParse } from "./util.ts";
+import { getConfigValue, tryParse } from "./util";
 
 const PROMPT_PLACEHOLDER = getConfigValue("promptPlaceholder", "Let's get started.");
 

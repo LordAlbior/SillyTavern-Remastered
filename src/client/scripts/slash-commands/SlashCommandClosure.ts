@@ -1,17 +1,17 @@
-import { substituteParams } from "../../script.ts";
-import { power_user } from "../power-user.ts";
-import { delay, escapeRegex, uuidv4 } from "../utils.ts";
-import { SlashCommand } from "./SlashCommand.ts";
-import { SlashCommandAbortController } from "./SlashCommandAbortController.ts";
-import { SlashCommandBreak } from "./SlashCommandBreak.ts";
-import { SlashCommandBreakController } from "./SlashCommandBreakController.ts";
-import { SlashCommandBreakPoint } from "./SlashCommandBreakPoint.ts";
-import { SlashCommandClosureResult } from "./SlashCommandClosureResult.ts";
-import { SlashCommandDebugController } from "./SlashCommandDebugController.ts";
-import { SlashCommandExecutionError } from "./SlashCommandExecutionError.ts";
-import { SlashCommandExecutor } from "./SlashCommandExecutor.ts";
-import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgumentAssignment.ts";
-import { SlashCommandScope } from "./SlashCommandScope.ts";
+import { substituteParams } from "../../script";
+import { power_user } from "../power-user";
+import { delay, escapeRegex, uuidv4 } from "../utils";
+import { SlashCommand } from "./SlashCommand";
+import { SlashCommandAbortController } from "./SlashCommandAbortController";
+import { SlashCommandBreak } from "./SlashCommandBreak";
+import { SlashCommandBreakController } from "./SlashCommandBreakController";
+import { SlashCommandBreakPoint } from "./SlashCommandBreakPoint";
+import { SlashCommandClosureResult } from "./SlashCommandClosureResult";
+import { SlashCommandDebugController } from "./SlashCommandDebugController";
+import { SlashCommandExecutionError } from "./SlashCommandExecutionError";
+import { SlashCommandExecutor } from "./SlashCommandExecutor";
+import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgumentAssignment";
+import { SlashCommandScope } from "./SlashCommandScope";
 
 export class SlashCommandClosure {
   /** @type {SlashCommandScope} */ scope;
@@ -42,7 +42,7 @@ export class SlashCommandClosure {
     return this.executorList.map((executor) => executor.commandCount).reduce((sum, cur) => sum + cur, 0);
   }
 
-  constructor(parent?: import("./SlashCommandScope.js").SlashCommandScope) {
+  constructor(parent?: import("./SlashCommandScope").SlashCommandScope) {
     this.scope = new SlashCommandScope(parent);
   }
 
@@ -58,7 +58,7 @@ export class SlashCommandClosure {
    * @returns {string|SlashCommandClosure|(string|SlashCommandClosure)[]} Substituted text or list of strings/closures
    */
   substituteWithMacroEngine(text: any, scope: any, macroList: any) {
-    /** @type {Record<string, import('./../macros/engine/MacroEnv.types.js').DynamicMacroValue>} */
+    /** @type {Record<string, import('./../macros/engine/MacroEnv.types').DynamicMacroValue>} */
     const dynamicMacros: any = {
       pipe: () => scope.pipe,
       var: {
@@ -414,7 +414,7 @@ export class SlashCommandClosure {
       // something with it (e.g., breakpoint, immediate closures that need resolving
       // or stepping into)
       yield executor;
-      /**@type {import('./SlashCommand.js').NamedArguments} */
+      /**@type {import('./SlashCommand').NamedArguments} */
 
       const args = {
         _scope: this.scope,
@@ -507,7 +507,7 @@ export class SlashCommandClosure {
 
   /**
    * @param {SlashCommandExecutor} executor
-   * @param {import('./SlashCommand.js').NamedArguments} args
+   * @param {import('./SlashCommand').NamedArguments} args
    */
   async substituteNamedArguments(executor: any, args: any) {
     /**
@@ -578,7 +578,7 @@ export class SlashCommandClosure {
   /**
    * @param {SlashCommandExecutor} executor
    * @param {boolean} isFirst
-   * @param {import('./SlashCommand.js').NamedArguments} args
+   * @param {import('./SlashCommand').NamedArguments} args
    * @returns {Promise<string|SlashCommandClosure|(string|SlashCommandClosure)[]>}
    */
   async substituteUnnamedArgument(executor: any, isFirst: any, args: any) {

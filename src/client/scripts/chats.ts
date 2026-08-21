@@ -1,6 +1,6 @@
 // Move chat functions here from script.js (eventually)
 
-import { Popper, css, DOMPurify } from "../lib.js";
+import { Popper, css, DOMPurify } from "../lib";
 import {
   addCopyToCodeBlocks,
   appendMediaToMessage,
@@ -28,9 +28,9 @@ import {
   getMediaIndex,
   getMediaDisplay,
   chatElement,
-} from "../script.ts";
-import { selected_group } from "./group-chats.ts";
-import { power_user } from "./power-user.ts";
+} from "../script";
+import { selected_group } from "./group-chats";
+import { power_user } from "./power-user";
 import {
   extractTextFromHTML,
   extractTextFromMarkdown,
@@ -47,16 +47,16 @@ import {
   convertTextToBase64,
   isSameFile,
   clamp,
-} from "./utils.ts";
-import { extension_settings, renderExtensionTemplateAsync, saveMetadataDebounced } from "./extensions.ts";
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "./popup.ts";
-import { ScraperManager } from "./scrapers.ts";
-import { DragAndDropHandler } from "./dragdrop.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { t } from "./i18n.ts";
-import { humanizedDateTime } from "./RossAscends-mods.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR, SWIPE_DIRECTION } from "./constants.ts";
+} from "./utils";
+import { extension_settings, renderExtensionTemplateAsync, saveMetadataDebounced } from "./extensions";
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "./popup";
+import { ScraperManager } from "./scrapers";
+import { DragAndDropHandler } from "./dragdrop";
+import { renderTemplateAsync } from "./templates";
+import { t } from "./i18n";
+import { humanizedDateTime } from "./RossAscends-mods";
+import { accountStorage } from "./util/AccountStorage";
+import { MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR, SWIPE_DIRECTION } from "./constants";
 
 /**
  * @typedef {Object} FileAttachment

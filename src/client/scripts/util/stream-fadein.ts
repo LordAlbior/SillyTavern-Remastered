@@ -1,4 +1,4 @@
-import { morphdom } from "../../lib.js";
+import { morphdom } from "../../lib";
 
 /**
  * Check if the current browser supports native segmentation function.

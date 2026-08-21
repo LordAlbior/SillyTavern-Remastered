@@ -1,6 +1,6 @@
-import { AutoCompleteOption } from "../autocomplete/AutoCompleteOption.ts";
-import { SlashCommand } from "./SlashCommand.ts";
-import { SlashCommandNamedArgument } from "./SlashCommandArgument.ts";
+import { AutoCompleteOption } from "../autocomplete/AutoCompleteOption";
+import { SlashCommand } from "./SlashCommand";
+import { SlashCommandNamedArgument } from "./SlashCommandArgument";
 
 export class SlashCommandNamedArgumentAutoCompleteOption extends AutoCompleteOption {
   /** @type {SlashCommandNamedArgument} */ arg;

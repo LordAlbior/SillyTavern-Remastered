@@ -1,1 +1,1 @@
-export { loadPlugins } from "./loader.js";
+export { loadPlugins } from "./loader";

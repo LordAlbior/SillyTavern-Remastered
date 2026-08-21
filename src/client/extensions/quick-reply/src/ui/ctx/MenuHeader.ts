@@ -1,4 +1,4 @@
-import { MenuItem } from "./MenuItem.ts";
+import { MenuItem } from "./MenuItem";
 
 export class MenuHeader extends MenuItem {
   constructor(/**@type {String}*/ label: any) {

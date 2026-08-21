@@ -1,4 +1,4 @@
-import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
+import { getPreviewString, saveTtsProviderSettings } from "./index";
 import { getBase64Async } from "/scripts/utils.js";
 import { getRequestHeaders } from "/script.js";
 

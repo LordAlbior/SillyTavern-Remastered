@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
-import { setAdditionalHeadersByType } from "../additional-headers.ts";
-import { TEXTGEN_TYPES } from "../constants.ts";
+import { setAdditionalHeadersByType } from "../additional-headers";
+import { TEXTGEN_TYPES } from "../constants";
 
 /**
  * Gets the vector for the given text from Ollama
@@ -8,10 +8,10 @@ import { TEXTGEN_TYPES } from "../constants.ts";
  * @param {string} apiUrl - The API URL
  * @param {string} model - The model to use
  * @param {boolean} keep - Keep the model loaded in memory
- * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
+ * @param {import('../users').UserDirectoryList} directories - The directories object for the user
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getOllamaBatchVector(texts: string[], apiUrl: string, model: string, keep: boolean, directories: import('../users.js').UserDirectoryList) {
+export async function getOllamaBatchVector(texts: string[], apiUrl: string, model: string, keep: boolean, directories: import('../users').UserDirectoryList) {
   const url = new URL(apiUrl);
   url.pathname = "/api/embed";
 
@@ -52,10 +52,10 @@ export async function getOllamaBatchVector(texts: string[], apiUrl: string, mode
  * @param {string} apiUrl - The API URL
  * @param {string} model - The model to use
  * @param {boolean} keep - Keep the model loaded in memory
- * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
+ * @param {import('../users').UserDirectoryList} directories - The directories object for the user
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getOllamaVector(text: string, apiUrl: string, model: string, keep: boolean, directories: import('../users.js').UserDirectoryList) {
+export async function getOllamaVector(text: string, apiUrl: string, model: string, keep: boolean, directories: import('../users').UserDirectoryList) {
   const vectors = await getOllamaBatchVector([text], apiUrl, model, keep, directories);
   return vectors[0];
 }

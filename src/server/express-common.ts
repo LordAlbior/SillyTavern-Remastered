@@ -1,7 +1,7 @@
 import ipaddr from "ipaddr.js";
 import ipMatching from "ip-matching";
 import { RateLimiterRes } from "rate-limiter-flexible";
-import { getConfigValue } from "./util.ts";
+import { getConfigValue } from "./util";
 
 const noopMiddleware = (_req: any, _res: any, next: any) => next();
 /** @deprecated Do not use. A global middleware is provided at the application level. */

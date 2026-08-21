@@ -1,13 +1,13 @@
 // @ts-ignore - MacroRegistry export has implicit any due to circular class reference in source file
-import { MacroRegistry as _MacroRegistry, MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+import { MacroRegistry as _MacroRegistry, MacroCategory, MacroValueType } from "../engine/MacroRegistry";
 // @ts-ignore - see above
 const MacroRegistry: any = _MacroRegistry;
-import { isMobile } from "../../RossAscends-mods.ts";
-import { parseMesExamples, main_api } from "../../../script.ts";
-import { power_user } from "../../power-user.ts";
-import { formatInstructModeExamples } from "../../instruct-mode.ts";
+import { isMobile } from "../../RossAscends-mods";
+import { parseMesExamples, main_api } from "../../../script";
+import { power_user } from "../../power-user";
+import { formatInstructModeExamples } from "../../instruct-mode";
 
-/** @typedef {import('../engine/MacroEnv.types.js').MacroEnv} MacroEnv */
+/** @typedef {import('../engine/MacroEnv.types').MacroEnv} MacroEnv */
 
 /**
  * Registers macros that mostly act as simple accessors to MacroEnv fields

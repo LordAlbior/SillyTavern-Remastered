@@ -1,5 +1,5 @@
-import { SlashCommandClosure } from "./SlashCommandClosure.ts";
-import { convertValueType } from "../utils.ts";
+import { SlashCommandClosure } from "./SlashCommandClosure";
+import { convertValueType } from "../utils";
 
 export class SlashCommandScope {
   /** @type {string[]} */ variableNames = [];

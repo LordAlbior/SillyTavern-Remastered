@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { getGoogleApiConfig } from "../endpoints/google.ts";
+import { getGoogleApiConfig } from "../endpoints/google";
 
 /**
  * Gets the vector for the given text from Google AI Studio

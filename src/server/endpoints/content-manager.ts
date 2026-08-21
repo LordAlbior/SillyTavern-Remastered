@@ -8,11 +8,11 @@ import fetch from "node-fetch";
 import sanitize from "sanitize-filename";
 import { sync as writeFileAtomicSync } from "write-file-atomic";
 
-import { getConfigValue, color, setPermissionsSync, isValidUrl } from "../util.ts";
-import { write } from "../character-card-parser.ts";
-import { serverDirectory } from "../server-directory.ts";
-import { Jimp, JimpMime } from "../jimp.ts";
-import { DEFAULT_AVATAR_PATH } from "../constants.ts";
+import { getConfigValue, color, setPermissionsSync, isValidUrl } from "../util";
+import { write } from "../character-card-parser";
+import { serverDirectory } from "../server-directory";
+import { Jimp, JimpMime } from "../jimp";
+import { DEFAULT_AVATAR_PATH } from "../constants";
 
 const contentDirectory = path.join(serverDirectory, "default/content");
 const scaffoldDirectory = path.join(serverDirectory, "default/scaffold");
@@ -77,10 +77,10 @@ function getScopeByType(type: string) {
 
 /**
  * Gets the default presets from the content directory.
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns {object[]} Array of default presets
  */
-export function getDefaultPresets(directories: import("../users.js").UserDirectoryList) {
+export function getDefaultPresets(directories: import("../users").UserDirectoryList) {
   try {
     const contentIndex = getContentIndex(CONTENT_SCOPE.USER);
     const presets: any[] = [];
@@ -183,11 +183,11 @@ function seedContent(contentIndex: any[], contentLogPath: string, resolveTarget:
 /**
  * Seeds content for a user.
  * @param {ContentItem[]} contentIndex Content index
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @param {string[]} forceCategories List of categories to force check (even if content check is skipped)
  * @returns {Promise<boolean>} Whether any content was added
  */
-async function seedContentForUser(contentIndex: any[], directories: import("../users.js").UserDirectoryList, forceCategories: string[]) {
+async function seedContentForUser(contentIndex: any[], directories: import("../users").UserDirectoryList, forceCategories: string[]) {
   if (!fs.existsSync(directories.root)) {
     fs.mkdirSync(directories.root, { recursive: true });
   }
@@ -208,11 +208,11 @@ async function seedGlobalContent(contentIndex: any[]) {
 
 /**
  * Checks for new content and seeds it for all users.
- * @param {import('../users.js').UserDirectoryList[]} directoriesList List of user directories
+ * @param {import('../users').UserDirectoryList[]} directoriesList List of user directories
  * @param {string[]} forceCategories List of categories to force check (even if content check is skipped)
  * @returns {Promise<void>}
  */
-export async function checkForNewContent(directoriesList: import("../users.js").UserDirectoryList[], forceCategories: string[] = []) {
+export async function checkForNewContent(directoriesList: import("../users").UserDirectoryList[], forceCategories: string[] = []) {
   try {
     const contentCheckSkip = getConfigValue("skipContentCheck", false, "boolean");
     if (contentCheckSkip && forceCategories?.length === 0) {
@@ -322,10 +322,10 @@ export function getContentOfType(type: string, format: string, scope = CONTENT_S
 /**
  * Gets the target directory for the specified asset type.
  * @param {ContentType} type Asset type
- * @param {import('../users.js').UserDirectoryList} directories User directories
+ * @param {import('../users').UserDirectoryList} directories User directories
  * @returns {string | null} Target directory
  */
-export function getUserTargetByType(type: string, directories: import("../users.js").UserDirectoryList) {
+export function getUserTargetByType(type: string, directories: import("../users").UserDirectoryList) {
   switch (type) {
     case CONTENT_TYPES.SETTINGS:
       return directories.root;

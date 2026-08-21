@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
-import { SECRET_KEYS, readSecret } from "../endpoints/secrets.ts";
-import { OPENROUTER_HEADERS } from "../constants.ts";
+import { SECRET_KEYS, readSecret } from "../endpoints/secrets";
+import { OPENROUTER_HEADERS } from "../constants";
 
 const SOURCES = {
   togetherai: {
@@ -74,12 +74,12 @@ const SOURCES = {
  * Gets the vector for the given text batch from an OpenAI compatible endpoint.
  * @param {string[]} texts - The array of texts to get the vector for
  * @param {string} source - The source of the vector
- * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
+ * @param {import('../users').UserDirectoryList} directories - The directories object for the user
  * @param {string} model - The model to use for the embedding
  * @param {string|null} urlOverride - Optional URL override for the API endpoint
  * @returns {Promise<number[][]>} - The array of vectors for the texts
  */
-export async function getOpenAIBatchVector(texts: string[], source: string, directories: import('../users.js').UserDirectoryList, model: string = "", urlOverride: string | null = null) {
+export async function getOpenAIBatchVector(texts: string[], source: string, directories: import('../users').UserDirectoryList, model: string = "", urlOverride: string | null = null) {
   const config = (SOURCES as any)[source];
 
   if (!config) {
@@ -144,12 +144,12 @@ export async function getOpenAIBatchVector(texts: string[], source: string, dire
  * Gets the vector for the given text from an OpenAI compatible endpoint.
  * @param {string} text - The text to get the vector for
  * @param {string} source - The source of the vector
- * @param {import('../users.js').UserDirectoryList} directories - The directories object for the user
+ * @param {import('../users').UserDirectoryList} directories - The directories object for the user
  * @param {string} model - The model to use for the embedding
  * @param {string|null} urlOverride - Optional URL override for the API endpoint
  * @returns {Promise<number[]>} - The vector for the text
  */
-export async function getOpenAIVector(text: string, source: string, directories: import('../users.js').UserDirectoryList, model: string = "", urlOverride: string | null = null) {
+export async function getOpenAIVector(text: string, source: string, directories: import('../users').UserDirectoryList, model: string = "", urlOverride: string | null = null) {
   const vectors = await getOpenAIBatchVector([text], source, directories, model, urlOverride);
   return vectors[0];
 }

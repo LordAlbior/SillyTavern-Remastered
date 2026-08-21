@@ -1,7 +1,7 @@
-import { App } from "./types.js";
-import { loadConfig } from "./config.js";
-import { initBus } from "./events.js";
-import { loadPlugins } from "./plugins/loader.js";
+import { App } from "./types";
+import { loadConfig } from "./config";
+import { initBus } from "./events";
+import { loadPlugins } from "./plugins/loader";
 
 export async function createKernel(): Promise<App> {
   const config = await loadConfig();

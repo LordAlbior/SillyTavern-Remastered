@@ -12,10 +12,10 @@ import { SlashCommandParserError } from "/scripts/slash-commands/SlashCommandPar
 import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
 import { accountStorage } from "/scripts/util/AccountStorage.js";
 import { debounce, delay, getSortableDelay, showFontAwesomePicker } from "/scripts/utils.js";
-import { log, quickReplyApi, warn } from "../index.ts";
-import { QuickReplyContextLink } from "./QuickReplyContextLink.ts";
-import { QuickReplySet } from "./QuickReplySet.ts";
-import { ContextMenu } from "./ui/ctx/ContextMenu.ts";
+import { log, quickReplyApi, warn } from "../index";
+import { QuickReplyContextLink } from "./QuickReplyContextLink";
+import { QuickReplySet } from "./QuickReplySet";
+import { ContextMenu } from "./ui/ctx/ContextMenu";
 
 export class QuickReply {
   /**

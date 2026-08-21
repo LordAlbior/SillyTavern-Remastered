@@ -1,21 +1,21 @@
-import { getCurrentChatId, saveSettingsDebounced, chat_metadata } from '../script.ts';
-import { extension_settings, saveMetadataDebounced } from './extensions.ts';
-import { executeSlashCommandsWithOptions } from './slash-commands.ts';
-import { SlashCommand } from './slash-commands/SlashCommand.ts';
-import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController.ts';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
-import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController.ts';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
-import { SlashCommandClosureResult } from './slash-commands/SlashCommandClosureResult.ts';
-import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
-import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper.ts';
-import { SlashCommandScope } from './slash-commands/SlashCommandScope.ts';
-import { isFalseBoolean, convertValueType, isTrueBoolean } from './utils.ts';
+import { getCurrentChatId, saveSettingsDebounced, chat_metadata } from '../script';
+import { extension_settings, saveMetadataDebounced } from './extensions';
+import { executeSlashCommandsWithOptions } from './slash-commands';
+import { SlashCommand } from './slash-commands/SlashCommand';
+import { SlashCommandAbortController } from './slash-commands/SlashCommandAbortController';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument';
+import { SlashCommandBreakController } from './slash-commands/SlashCommandBreakController';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure';
+import { SlashCommandClosureResult } from './slash-commands/SlashCommandClosureResult';
+import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser';
+import { slashCommandReturnHelper } from './slash-commands/SlashCommandReturnHelper';
+import { SlashCommandScope } from './slash-commands/SlashCommandScope';
+import { isFalseBoolean, convertValueType, isTrueBoolean } from './utils';
 
-/** @typedef {import('./slash-commands/SlashCommandParser.js').NamedArguments} NamedArguments */
-/** @typedef {import('./slash-commands/SlashCommand.js').UnnamedArguments} UnnamedArguments */
+/** @typedef {import('./slash-commands/SlashCommandParser').NamedArguments} NamedArguments */
+/** @typedef {import('./slash-commands/SlashCommand').UnnamedArguments} UnnamedArguments */
 
 const MAX_LOOPS = 100;
 
@@ -233,7 +233,7 @@ export function resolveVariable(name: any, scope: any = null) {
 
 /**
  * Returns built-in variable macros.
- * @returns {import('./macros.js').Macro[]}
+ * @returns {import('./macros').Macro[]}
  */
 export function getVariableMacros() {
     return [
@@ -261,7 +261,7 @@ export function getVariableMacros() {
 }
 
 async function listVariablesCallback(args: any) {
-    /** @type {import('./slash-commands/SlashCommandReturnHelper.js').SlashCommandReturnType} */
+    /** @type {import('./slash-commands/SlashCommandReturnHelper').SlashCommandReturnType} */
     let returnType = args.return;
 
     // Now the actual new return type handling
@@ -564,7 +564,7 @@ export function evalBoolean(rule: any, a: any, b: any) {
  * Executes a slash command from a string (may be enclosed in quotes) and returns the result.
  * @param {string} command Command to execute. May contain escaped macro and batch separators.
  * @param {SlashCommandScope} [scope] The scope to use.
- * @param {import('./slash-commands/SlashCommandParser.js').ParserFlags} [parserFlags] The parser flags to use.
+ * @param {import('./slash-commands/SlashCommandParser').ParserFlags} [parserFlags] The parser flags to use.
  * @param {SlashCommandAbortController} [abortController] The abort controller to use.
  * @returns {Promise<SlashCommandClosureResult>} Closure execution result
  */

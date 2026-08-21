@@ -1,8 +1,8 @@
 import express from "express";
 import fetch from "node-fetch";
 import mime from "mime-types";
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
-import { OPENROUTER_HEADERS } from "../constants.ts";
+import { readSecret, SECRET_KEYS } from "./secrets";
+import { OPENROUTER_HEADERS } from "../constants";
 
 export const router = express.Router();
 const API_OPENROUTER = "https://openrouter.ai/api/v1";

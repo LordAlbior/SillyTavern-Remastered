@@ -8,20 +8,20 @@ import {
   extension_prompt_types,
   saveSettingsDebounced,
   this_chid,
-} from "../script.ts";
-import { selected_group } from "./group-chats.ts";
-import { extension_settings, getContext, saveMetadataDebounced } from "./extensions.ts";
-import { getCharaFilename, debounce, delay } from "./utils.ts";
-import { getTokenCountAsync } from "./tokenizers.ts";
-import { debounce_timeout } from "./constants.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
-import { ARGUMENT_TYPE, SlashCommandArgument } from "./slash-commands/SlashCommandArgument.ts";
+} from "../script";
+import { selected_group } from "./group-chats";
+import { extension_settings, getContext, saveMetadataDebounced } from "./extensions";
+import { getCharaFilename, debounce, delay } from "./utils";
+import { getTokenCountAsync } from "./tokenizers";
+import { debounce_timeout } from "./constants";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { SlashCommand } from "./slash-commands/SlashCommand";
+import { ARGUMENT_TYPE, SlashCommandArgument } from "./slash-commands/SlashCommandArgument";
 export { MODULE_NAME as NOTE_MODULE_NAME };
-import { t } from "./i18n.ts";
-import { macros, MacroCategory } from "./macros/macro-system.ts";
-import { MacrosParser } from "./macros.ts";
-import { power_user } from "./power-user.ts";
+import { t } from "./i18n";
+import { macros, MacroCategory } from "./macros/macro-system";
+import { MacrosParser } from "./macros";
+import { power_user } from "./power-user";
 
 const MODULE_NAME = "2_floating_prompt"; // <= Deliberate, for sorting lower than memory
 

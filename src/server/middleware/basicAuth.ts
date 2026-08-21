@@ -6,9 +6,9 @@ import { Buffer } from "node:buffer";
 import path from "node:path";
 import storage from "node-persist";
 import { RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible";
-import { getAllUserHandles, toKey, getPasswordHash } from "../users.ts";
-import { getConfigValue, safeReadFileSync } from "../util.ts";
-import { getIpAddress, retryAfter } from "../express-common.ts";
+import { getAllUserHandles, toKey, getPasswordHash } from "../users";
+import { getConfigValue, safeReadFileSync } from "../util";
+import { getIpAddress, retryAfter } from "../express-common";
 
 const PER_USER_BASIC_AUTH = !!getConfigValue("perUserBasicAuth", false, "boolean");
 const ENABLE_ACCOUNTS = !!getConfigValue("enableUserAccounts", false, "boolean");

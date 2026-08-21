@@ -3,19 +3,19 @@
  * Reuses rendering logic from MacroBrowser for consistency and DRY.
  */
 
-import { AutoCompleteOption } from "./AutoCompleteOption.ts";
+import { AutoCompleteOption } from "./AutoCompleteOption";
 import {
   formatMacroSignature,
   createSourceIndicator,
   createAliasIndicator,
   renderMacroDetails,
-} from "../macros/engine/MacroBrowser.ts";
-import { enumIcons } from "../slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { ValidFlagSymbols } from "../macros/engine/MacroFlags.ts";
-import { MACRO_VARIABLE_SHORTHAND_PATTERN } from "../macros/engine/MacroLexer.ts";
-import { onboardingExperimentalMacroEngine } from "../macros/engine/MacroDiagnostics.ts";
+} from "../macros/engine/MacroBrowser";
+import { enumIcons } from "../slash-commands/SlashCommandCommonEnumsProvider";
+import { ValidFlagSymbols } from "../macros/engine/MacroFlags";
+import { MACRO_VARIABLE_SHORTHAND_PATTERN } from "../macros/engine/MacroLexer";
+import { onboardingExperimentalMacroEngine } from "../macros/engine/MacroDiagnostics";
 
-/** @typedef {import('../macros/engine/MacroRegistry.js').MacroDefinition} MacroDefinition */
+/** @typedef {import('../macros/engine/MacroRegistry').MacroDefinition} MacroDefinition */
 
 /**
  * Macro context passed from the parser to provide cursor position info.
@@ -447,11 +447,11 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
  * Uses default AutoCompleteOption rendering for consistent styling.
  */
 export class MacroFlagAutoCompleteOption extends AutoCompleteOption {
-  /** @type {import('../macros/engine/MacroFlags.js').MacroFlagDefinition} */
+  /** @type {import('../macros/engine/MacroFlags').MacroFlagDefinition} */
   #flagDef;
 
   /**
-   * @param {import('../macros/engine/MacroFlags.js').MacroFlagDefinition} flagDef - The flag definition.
+   * @param {import('../macros/engine/MacroFlags').MacroFlagDefinition} flagDef - The flag definition.
    */
   constructor(flagDef: any) {
     // Use the flag symbol as the name, with a flag icon
@@ -460,7 +460,7 @@ export class MacroFlagAutoCompleteOption extends AutoCompleteOption {
     this.#flagDef = flagDef;
   }
 
-  /** @returns {import('../macros/engine/MacroFlags.js').MacroFlagDefinition} */
+  /** @returns {import('../macros/engine/MacroFlags').MacroFlagDefinition} */
   get flagDefinition() {
     return this.#flagDef;
   }
