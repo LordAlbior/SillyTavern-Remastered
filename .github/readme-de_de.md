@@ -9,34 +9,37 @@
 
 [English](readme.md) | German | [中文](readme-zh_cn.md) | [繁體中文](readme-zh_tw.md) | [日本語](readme-ja_jp.md) | [Русский](readme-ru_ru.md) | [한국어](readme-ko_kr.md)
 
-[![GitHub Stars](https://img.shields.io/github/stars/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/forks)
-[![GitHub Issues](https://img.shields.io/github/issues/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/pulls)
+[![GitHub Stars](https://img.shields.io/github/stars/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/forks)
+[![GitHub Issues](https://img.shields.io/github/issues/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/pulls)
 
 </div>
 
+> [!NOTE]
+> **Work in Progress.** Dieses Projekt ist in Bearbeitung. Eine Liste neuer Funktionen wird ergänzt, sobald die Überarbeitung abgeschlossen ist.
+
 ---
 
-SillyTavern bietet eine einheitliche Benutzeroberfläche für viele LLM-APIs (KoboldAI/CPP, Horde, NovelAI, Ooba, Tabby, OpenAI, OpenRouter, Claude, Mistral und mehr), ein mobilfreundliches Layout, einen Visual-Novel-Modus, die Integration von Automatic1111 & ComfyUI API zur Bilderzeugung, TTS, WorldInfo (Lorebooks), anpassbare UI, automatische Übersetzung, mehr Eingabeaufforderungsoptionen, als du jemals wolltest oder brauchst, und unendliches Wachstumspotenzial durch Drittanbietererweiterungen.
+SillyTavern: Remastered bietet eine einheitliche Benutzeroberfläche für viele LLM-APIs (KoboldAI/CPP, Horde, NovelAI, Ooba, Tabby, OpenAI, OpenRouter, Claude, Mistral und mehr), ein mobilfreundliches Layout, einen Visual-Novel-Modus, die Integration von Automatic1111 & ComfyUI API zur Bilderzeugung, TTS, WorldInfo (Lorebooks), anpassbare UI, automatische Übersetzung, mehr Eingabeaufforderungsoptionen, als du jemals wolltest oder brauchst, und unendliches Wachstumspotenzial durch Drittanbietererweiterungen.
 
 Wir haben eine [Dokumentationswebsite](https://docs.sillytavern.app/), um die meisten deiner Fragen zu beantworten und dir den Einstieg zu erleichtern.
 
-## Was ist SillyTavern?
+## Was ist SillyTavern: Remastered?
 
-SillyTavern (oder ST abgekürtz) ist eine lokal installierte Benutzeroberfläche, die es dir ermöglicht, mit Textgenerations-LLMs, Bildgenerierungsmaschinen und TTS-Sprachmodellen zu interagieren.
+SillyTavern: Remastered (oder ST abgekürtz) ist eine lokal installierte Benutzeroberfläche, die es dir ermöglicht, mit Textgenerations-LLMs, Bildgenerierungsmaschinen und TTS-Sprachmodellen zu interagieren.
 
-Angefangen im Februar 2023 als Fork von TavernAI 1.2.8 hat SillyTavern nun über 200 Mitwirkende und 2 Jahre unabhängiger Entwicklung hinter sich und dient weiterhin als führende Software für versierte KI-Hobbyisten.
+Angefangen im Februar 2023 als Fork von TavernAI 1.2.8 hat SillyTavern: Remastered nun über 200 Mitwirkende und 2 Jahre unabhängiger Entwicklung hinter sich und dient weiterhin als führende Software für versierte KI-Hobbyisten.
 
 ## Unsere Vision
 
 1. Wir möchten die Nutzer mit so viel Nutzen und Kontrolle über ihre LLM-Prompts wie möglich ausstatten. Die steile Lernkurve ist Teil des Spaßes!
 2. Wir bieten weder Online- oder gehosteten Dienste an, noch verfolgen wir programmgesteuert Benutzerdaten.
-3. SillyTavern ist ein Herzensprojekt, das von einer engagierten Community von LLM-Enthusiasten unterstützt wird, und wird immer kostenlos und Open Source sein.
+3. SillyTavern: Remastered ist ein Herzensprojekt, das von einer engagierten Community von LLM-Enthusiasten unterstützt wird, und wird immer kostenlos und Open Source sein.
 
-## Brauche ich einen leistungsstarken PC, um SillyTavern auszuführen?
+## Brauche ich einen leistungsstarken PC, um SillyTavern: Remastered auszuführen?
 
-Die Hardwareanforderungen sind minimal: Es läuft auf allem, was NodeJS 20 oder höher ausführen kann. Wenn du LLM-Inferenz auf deinem lokalen Rechner durchführen möchtest, empfehlen wir eine NVIDIA-Grafikkarte der 3000er-Serie mit mindestens 6 GB VRAM, aber die tatsächlichen Anforderungen können je nach Modell und Backend, das du verwendest, variieren.
+Die Hardwareanforderungen sind minimal: Es läuft auf allem, was Bun ausführen kann. Wenn du LLM-Inferenz auf deinem lokalen Rechner durchführen möchtest, empfehlen wir eine NVIDIA-Grafikkarte der 3000er-Serie mit mindestens 6 GB VRAM, aber die tatsächlichen Anforderungen können je nach Modell und Backend, das du verwendest, variieren.
 
 ## Fragen oder Vorschläge?
 
@@ -49,7 +52,7 @@ Oder nimm direkt Kontakt mit den Entwicklern auf:
 
 * Discord: cohee, rossascends, wolfsblvt
 * Reddit: [/u/RossAscends](https://www.reddit.com/user/RossAscends/), [/u/sillylossy](https://www.reddit.com/user/sillylossy/), [u/Wolfsblvt](https://www.reddit.com/user/Wolfsblvt/)
-* [Erstelle ein GitHub-Issue](https://github.com/SillyTavern/SillyTavern/issues)
+* [Erstelle ein GitHub-Issue](https://github.com/LordAlbior/SillyTavern-Remastered/issues)
 
 ### Ich mag dieses Projekt! Wie kann ich beitragen?
 
@@ -86,7 +89,7 @@ Für detaillierte Installationsanweisungen besuche bitte unsere Dokumentation:
 
 ## Top Contributors
 
-[![Contributors](https://contrib.rocks/image?repo=SillyTavern/SillyTavern)](https://github.com/SillyTavern/SillyTavern/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=LordAlbior/SillyTavern-Remastered)](https://github.com/LordAlbior/SillyTavern-Remastered/graphs/contributors)
 
 <!-- LINK GROUP -->
 [cover]: https://github.com/user-attachments/assets/01a6ae9a-16aa-45f2-8bff-32b5dc587e44

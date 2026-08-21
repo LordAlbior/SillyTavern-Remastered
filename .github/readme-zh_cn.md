@@ -9,34 +9,37 @@
 
 [English](readme.md) | [German](readme-de_de.md) | 中文 | [繁體中文](readme-zh_tw.md) | [日本語](readme-ja_jp.md) | [Русский](readme-ru_ru.md) | [한국어](readme-ko_kr.md)
 
-[![GitHub Stars](https://img.shields.io/github/stars/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/forks)
-[![GitHub Issues](https://img.shields.io/github/issues/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/pulls)
+[![GitHub Stars](https://img.shields.io/github/stars/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/forks)
+[![GitHub Issues](https://img.shields.io/github/issues/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/pulls)
 
 </div>
 
+> [!NOTE]
+> **Work in Progress.** 本项目仍在开发中。重写完成后，此处将补充全新功能的列表。
+
 ---
 
-SillyTavern 为众多 LLM API（KoboldAI/CPP、Horde、NovelAI、Ooba、Tabby、OpenAI、OpenRouter、Claude、Mistral 等）提供统一界面，拥有移动设备友好的布局、视觉小说模式、Automatic1111 & ComfyUI API 图像生成集成、TTS、世界书（lorebooks）、可自定义的 UI、自动翻译、超乎您想象的丰富 Prompt 选项，以及通过第三方扩展实现的无限增长潜力。
+SillyTavern: Remastered 为众多 LLM API（KoboldAI/CPP、Horde、NovelAI、Ooba、Tabby、OpenAI、OpenRouter、Claude、Mistral 等）提供统一界面，拥有移动设备友好的布局、视觉小说模式、Automatic1111 & ComfyUI API 图像生成集成、TTS、世界书（lorebooks）、可自定义的 UI、自动翻译、超乎您想象的丰富 Prompt 选项，以及通过第三方扩展实现的无限增长潜力。
 
 我们有一个[文档网站](https://docs.sillytavern.app/)来回答您的大部分问题并帮助您入门。
 
-## SillyTavern 是什么？
+## SillyTavern: Remastered 是什么？
 
-SillyTavern（简称 ST）是一个本地安装的用户界面，允许您与文本生成 LLM、图像生成引擎和 TTS 语音模型进行交互。
+SillyTavern: Remastered（简称 ST）是一个本地安装的用户界面，允许您与文本生成 LLM、图像生成引擎和 TTS 语音模型进行交互。
 
-SillyTavern 于 2023 年 2 月作为 TavernAI 1.2.8 的一个分支开始，如今已拥有超过 200 名贡献者和 2 年的独立开发经验，并继续作为资深 AI 爱好者领先的软件。
+SillyTavern: Remastered 于 2023 年 2 月作为 TavernAI 1.2.8 的一个分支开始，如今已拥有超过 200 名贡献者和 2 年的独立开发经验，并继续作为资深 AI 爱好者领先的软件。
 
 ## 我们的愿景
 
 1.  我们的目标是尽可能为用户提供 LLM Prompt 的最大效用和控制权。陡峭的学习曲线是乐趣的一部分！
 2.  我们不提供任何在线或托管服务，也不会以编程方式跟踪任何用户数据。
-3.  SillyTavern 是一个由专注的 LLM 爱好者社区为您带来的充满激情的项目，并且将永远是免费和开源的。
+3.  SillyTavern: Remastered 是一个由专注的 LLM 爱好者社区为您带来的充满激情的项目，并且将永远是免费和开源的。
 
-## 我需要一台性能强大的电脑来运行 SillyTavern 吗？
+## 我需要一台性能强大的电脑来运行 SillyTavern: Remastered 吗？
 
-硬件要求很低：任何可以运行 NodeJS 20 或更高版本的设备都可以运行它。如果您打算在本地计算机上进行 LLM 推理，我们建议使用至少具有 6GB VRAM 的 3000 系列 NVIDIA 显卡，但实际要求可能会根据模型和您使用的后端而有所不同。
+硬件要求很低：任何可以运行 Bun 的设备都可以运行它。如果您打算在本地计算机上进行 LLM 推理，我们建议使用至少具有 6GB VRAM 的 3000 系列 NVIDIA 显卡，但实际要求可能会根据模型和您使用的后端而有所不同。
 
 ## 有问题或建议？
 
@@ -49,7 +52,7 @@ SillyTavern 于 2023 年 2 月作为 TavernAI 1.2.8 的一个分支开始，如�
 
 * Discord: cohee, rossascends, wolfsblvt
 * Reddit: [/u/RossAscends](https://www.reddit.com/user/RossAscends/), [/u/sillylossy](https://www.reddit.com/user/sillylossy/), [u/Wolfsblvt](https://www.reddit.com/user/Wolfsblvt/)
-* [提交 GitHub 问题](https://github.com/SillyTavern/SillyTavern/issues)
+* [提交 GitHub 问题](https://github.com/LordAlbior/SillyTavern-Remastered/issues)
 
 ### 我喜欢你的项目！我该如何贡献自己的力量？
 
@@ -86,7 +89,7 @@ SillyTavern 于 2023 年 2 月作为 TavernAI 1.2.8 的一个分支开始，如�
 
 ## 主要贡献者
 
-[![Contributors](https://contrib.rocks/image?repo=SillyTavern/SillyTavern)](https://github.com/SillyTavern/SillyTavern/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=LordAlbior/SillyTavern-Remastered)](https://github.com/LordAlbior/SillyTavern-Remastered/graphs/contributors)
 
 <!-- LINK GROUP -->
 [cover]: https://github.com/user-attachments/assets/01a6ae9a-16aa-45f2-8bff-32b5dc587e44
