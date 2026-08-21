@@ -689,7 +689,7 @@ export async function pingServer() {
 }
 
 //MARK: firstLoadInit
-async function firstLoadInit() {
+export async function firstLoadInit() {
     try {
         const tokenResponse = await fetch('/csrf-token');
         const tokenData = await tokenResponse.json();
@@ -12674,7 +12674,7 @@ export * from "./scripts/sse-stream";
 // Third-party extensions import /scripts/sse-stream.js as a default export;
 // `export *` above drops the default, so re-export it explicitly.
 export { default } from "./scripts/sse-stream";
-export * from "./scripts/st-context";
+export * from "./app/kernel/context";
 export * from "./scripts/stats";
 export * from "./scripts/streaming-display";
 export * from "./scripts/swipe-picker";
@@ -12705,10 +12705,10 @@ export { ELSE_MARKER } from "./scripts/constants";
 export { onlyUniqueJson } from "./scripts/constants";
 export { compareIgnoreCaseAndAccents } from "./scripts/constants";
 export { sortIgnoreCaseAndAccents } from "./scripts/constants";
-export { getContext } from "./scripts/st-context";
 export { SimpleMutex } from "./scripts/util/SimpleMutex";
 export { MacroCategory } from "./scripts/macros/engine/MacroRegistry";
 export { MacroValueType } from "./scripts/macros/engine/MacroRegistry";
 export { persona_description_positions } from "./scripts/personas";
 export { BYTES_PER_TOKEN } from "./scripts/tokenizers";
+export * from "./app/kernel/app";
 
