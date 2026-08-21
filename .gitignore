@@ -80,7 +80,6 @@ cloudflared.exe
 
 # AI and project scaffolding
 .aider*
-AGENTS.md
 DEBT.md
 IDEA.md
 
@@ -95,6 +94,8 @@ IDEA.md
 /openspec
 /.llm-wiki
 /specs
+# Agent scratch workspace (git-ignored; see AGENTS.md §0.3)
+.agents/
 
 # Dev shortcuts
 /StartDev.bat
