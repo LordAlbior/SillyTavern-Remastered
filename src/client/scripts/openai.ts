@@ -3,7 +3,7 @@
  * By CncAnon (@CncAnon1)
  * https://github.com/CncAnon1/TavernAITurbo
  */
-import { Fuse, DOMPurify } from "../lib.js";
+import { Fuse, DOMPurify } from "../lib";
 
 import {
   abortStatusCheck,
@@ -31,8 +31,8 @@ import {
   substituteParamsExtended,
   system_message_types,
   this_chid,
-} from "../script.ts";
-import { getGroupNames, selected_group } from "./group-chats.ts";
+} from "../script";
+import { getGroupNames, selected_group } from "./group-chats";
 
 import {
   chatCompletionDefaultPrompts,
@@ -40,17 +40,17 @@ import {
   Prompt,
   PromptManager,
   promptManagerDefaultPromptOrders,
-} from "./PromptManager.ts";
+} from "./PromptManager";
 
 import {
   forceCharacterEditorTokenize,
   getCustomStoppingStrings,
   persona_description_positions,
   power_user,
-} from "./power-user.ts";
-import { SECRET_KEYS, secret_state, writeSecret } from "./secrets.ts";
+} from "./power-user";
+import { SECRET_KEYS, secret_state, writeSecret } from "./secrets";
 
-import { getEventSourceStream } from "./sse-stream.ts";
+import { getEventSourceStream } from "./sse-stream";
 import {
   clamp,
   createThumbnail,
@@ -71,26 +71,26 @@ import {
   stringFormat,
   textValueMatcher,
   uuidv4,
-} from "./utils.ts";
-import { countTokensOpenAIAsync, getTokenizerModel } from "./tokenizers.ts";
-import { isMobile } from "./RossAscends-mods.ts";
-import { saveLogprobsForActiveMessage } from "./logprobs.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
-import { ARGUMENT_TYPE, SlashCommandArgument } from "./slash-commands/SlashCommandArgument.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "./popup.ts";
-import { t } from "./i18n.ts";
-import { ToolManager } from "./tool-calling.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { COMETAPI_IGNORE_PATTERNS, IGNORE_SYMBOL, MEDIA_DISPLAY, MEDIA_TYPE } from "./constants.ts";
+} from "./utils";
+import { countTokensOpenAIAsync, getTokenizerModel } from "./tokenizers";
+import { isMobile } from "./RossAscends-mods";
+import { saveLogprobsForActiveMessage } from "./logprobs";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { SlashCommand } from "./slash-commands/SlashCommand";
+import { ARGUMENT_TYPE, SlashCommandArgument } from "./slash-commands/SlashCommandArgument";
+import { renderTemplateAsync } from "./templates";
+import { SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "./popup";
+import { t } from "./i18n";
+import { ToolManager } from "./tool-calling";
+import { accountStorage } from "./util/AccountStorage";
+import { COMETAPI_IGNORE_PATTERNS, IGNORE_SYMBOL, MEDIA_DISPLAY, MEDIA_TYPE } from "./constants";
 import {
   syncNanoGptProvidersForModel,
   syncOpenRouterProvidersForModel,
   updateNanoGptProvidersWarning,
   updateOpenRouterProvidersWarning,
-} from "./textgen-models.ts";
+} from "./textgen-models";
 
 export {
   openai_messages_count,
@@ -531,7 +531,7 @@ export let selected_proxy = proxies[0];
 export let openai_setting_names: any;
 export let openai_settings: any;
 
-/** @type {import('./PromptManager.js').PromptManager} */
+/** @type {import('./PromptManager').PromptManager} */
 export let promptManager: any = null;
 
 async function validateReverseProxy() {
@@ -1070,7 +1070,7 @@ async function populateChatHistory(messages: any, prompts: any, chatCompletion: 
           }
         }
       }
-      /** @type {import('./tool-calling.js').ToolInvocation[]} */
+      /** @type {import('./tool-calling').ToolInvocation[]} */
       const invocations = chatPrompt.invocations.map((invocation: any) => {
         const clone = structuredClone(invocation);
         if (!reasoningIsEligible) {
@@ -1216,7 +1216,7 @@ export function getPromptRole(role: any) {
 /**
  * Populate a chat conversation by adding prompts to the conversation and managing system and user prompts.
  *
- * @param {import('./PromptManager.js').PromptCollection} prompts - PromptCollection containing all prompts where the key is the prompt identifier and the value is the prompt object.
+ * @param {import('./PromptManager').PromptCollection} prompts - PromptCollection containing all prompts where the key is the prompt identifier and the value is the prompt object.
  * @param {ChatCompletion} chatCompletion - An instance of ChatCompletion class that will be populated with the prompts.
  * @param {Object} options - An object with optional settings.
  * @param {string} options.bias - A bias to be added in the conversation.
@@ -2783,7 +2783,7 @@ function getVerbosity(settings: any = null) {
  * @param {string} model Model name
  * @param {string} type Request type (impersonate, quiet, continue, etc)
  * @param {ChatCompletionMessage[]} messages Array of chat completion messages
- * @param {import('../script.js').AdditionalRequestOptions} options Additional request options
+ * @param {import('../script').AdditionalRequestOptions} options Additional request options
  * @returns {Promise<object>} Final generation parameters object appropriate for the chat completion source
  */
 export async function createGenerationParameters(settings: any, model: any, type: any, messages: any, { jsonSchema = null }: any = {}) {
@@ -3192,7 +3192,7 @@ export async function createGenerationParameters(settings: any, model: any, type
  * @param {string} type Request type (impersonate, quiet, continue, etc)
  * @param {ChatCompletionMessage[]} messages Array of chat completion messages
  * @param {AbortSignal?} signal Abort signal for request cancellation
- * @param {import('../script.js').AdditionalRequestOptions} options Additional request options
+ * @param {import('../script').AdditionalRequestOptions} options Additional request options
  * @returns {Promise<unknown>}
  * @throws {Error}
  */
@@ -3407,7 +3407,7 @@ export function getStreamingReply(data: any, state: any, { chatCompletionSource 
  * parseChatCompletionLogprobs converts the response data returned from a chat
  * completions-like source into an array of TokenLogprobs found in the response.
  * @param {Object} data - response data from a chat completions-like source
- * @returns {import('./logprobs.js').TokenLogprobs[] | null} converted logprobs
+ * @returns {import('./logprobs').TokenLogprobs[] | null} converted logprobs
  */
 function parseChatCompletionLogprobs(data: any) {
   if (!data) {
@@ -3444,7 +3444,7 @@ function parseChatCompletionLogprobs(data: any) {
  * completion API and converts into the structure used by the Token Probabilities
  * view.
  * @param {{content: { token: string, logprob: number, top_logprobs: { token: string, logprob: number }[] }[]}} logprobs
- * @returns {import('./logprobs.js').TokenLogprobs[] | null} converted logprobs
+ * @returns {import('./logprobs').TokenLogprobs[] | null} converted logprobs
  */
 function parseOpenAIChatLogprobs(logprobs: any) {
   const { content } = logprobs ?? {};
@@ -3460,7 +3460,7 @@ function parseOpenAIChatLogprobs(logprobs: any) {
     // Add the chosen token to top_logprobs if it's not already there, then
     // convert to a list of [token, logprob] pairs
     const chosenTopToken = top_logprobs.some((top: any) => token === top.token);
-    /** @type {import('./logprobs.js').Candidate[]} */
+    /** @type {import('./logprobs').Candidate[]} */
     const topLogprobs = chosenTopToken ? top_logprobs.map(toTuple) : [...top_logprobs.map(toTuple), [token, logprob]];
     return { token, topLogprobs };
   });
@@ -3471,7 +3471,7 @@ function parseOpenAIChatLogprobs(logprobs: any) {
  * completion API and converts into the structure used by the Token Probabilities
  * view.
  * @param {{tokens: string[], token_logprobs: number[], top_logprobs: { token: string, logprob: number }[][]}} logprobs
- * @returns {import('./logprobs.js').TokenLogprobs[] | null} converted logprobs
+ * @returns {import('./logprobs').TokenLogprobs[] | null} converted logprobs
  */
 function parseOpenAITextLogprobs(logprobs: any) {
   const { tokens, token_logprobs, top_logprobs } = logprobs ?? {};
@@ -3668,7 +3668,7 @@ class Message {
 
   /**
    * Reconstruct the message from a tool invocation.
-   * @param {import('./tool-calling.js').ToolInvocation[]} invocations - The tool invocations to reconstruct the message from.
+   * @param {import('./tool-calling').ToolInvocation[]} invocations - The tool invocations to reconstruct the message from.
    * @param {boolean} includeSignature Whether to include the signature in the tool calls.
    * @param {boolean} includeReasoning Whether to include plaintext reasoning fallback.
    * @returns {Promise<void>}

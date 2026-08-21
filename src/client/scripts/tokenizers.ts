@@ -1,21 +1,21 @@
-import { localforage } from "../lib.js";
-import { characters, event_types, eventSource, main_api, nai_settings, online_status, this_chid } from "../script.ts";
-import { power_user, registerDebugFunction } from "./power-user.ts";
-import { chat_completion_sources, model_list, oai_settings } from "./openai.ts";
-import { groups, selected_group } from "./group-chats.ts";
-import { getStringHash } from "./utils.ts";
-import { kai_flags, kai_settings } from "./kai-settings.ts";
+import { localforage } from "../lib";
+import { characters, event_types, eventSource, main_api, nai_settings, online_status, this_chid } from "../script";
+import { power_user, registerDebugFunction } from "./power-user";
+import { chat_completion_sources, model_list, oai_settings } from "./openai";
+import { groups, selected_group } from "./group-chats";
+import { getStringHash } from "./utils";
+import { kai_flags, kai_settings } from "./kai-settings";
 import {
   textgen_types,
   textgenerationwebui_settings as textgen_settings,
   getTextGenServer,
   getTextGenModel,
-} from "./textgen-settings.ts";
+} from "./textgen-settings";
 import {
   getCurrentDreamGenModelTokenizer,
   getCurrentOpenRouterModelTokenizer,
   openRouterModels,
-} from "./textgen-models.ts";
+} from "./textgen-models";
 export { BYTES_PER_TOKEN as CHARACTERS_PER_TOKEN_RATIO };
 
 export const BYTES_PER_TOKEN = 3.35;

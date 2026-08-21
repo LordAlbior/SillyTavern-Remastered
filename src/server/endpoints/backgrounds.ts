@@ -4,16 +4,16 @@ import path from "node:path";
 import express from "express";
 import sanitize from "sanitize-filename";
 
-import { invalidateThumbnail } from "./thumbnails.ts";
+import { invalidateThumbnail } from "./thumbnails";
 import {
   thumbnailDimensions,
   readMetadataIndex,
   renameMetadata,
   removeMetadata,
   getOrGenerateMetadataBatch,
-} from "./image-metadata.ts";
-import { getImages } from "../util.ts";
-import { getFileNameValidationFunction } from "../middleware/validateFileName.ts";
+} from "./image-metadata";
+import { getImages } from "../util";
+import { getFileNameValidationFunction } from "../middleware/validateFileName";
 
 export const router = express.Router();
 

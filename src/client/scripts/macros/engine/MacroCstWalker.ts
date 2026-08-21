@@ -1,15 +1,15 @@
 /** @typedef {import('chevrotain').CstNode} CstNode */
 /** @typedef {import('chevrotain').IToken} IToken */
-/** @typedef {import('./MacroEnv.types.js').MacroEnv} MacroEnv */
-/** @typedef {import('./MacroFlags.js').MacroFlags} MacroFlags */
+/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('./MacroFlags').MacroFlags} MacroFlags */
 
-import { logMacroInternalError, logMacroRuntimeWarning } from "./MacroDiagnostics.ts";
-import { MacroEngine } from "./MacroEngine.ts";
-import { parseFlags, createEmptyFlags, MacroFlagType } from "./MacroFlags.ts";
+import { logMacroInternalError, logMacroRuntimeWarning } from "./MacroDiagnostics";
+import { MacroEngine } from "./MacroEngine";
+import { parseFlags, createEmptyFlags, MacroFlagType } from "./MacroFlags";
 // @ts-expect-error - MacroParser module has implicit any types
-import { MacroParser } from "./MacroParser.ts";
+import { MacroParser } from "./MacroParser";
 // @ts-expect-error - MacroRegistry module has implicit any types
-import { MacroRegistry } from "./MacroRegistry.ts";
+import { MacroRegistry } from "./MacroRegistry";
 
 import { isFalseBoolean } from "/scripts/utils.ts";
 

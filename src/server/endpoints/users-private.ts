@@ -14,10 +14,10 @@ import {
   ensurePublicDirectoriesExist,
   toAvatarKey,
   getAccountVersion,
-} from "../users.ts";
-import { SETTINGS_FILE } from "../constants.ts";
-import { checkForNewContent, CONTENT_TYPES } from "./content-manager.ts";
-import { color, Cache, getConfigValue } from "../util.ts";
+} from "../users";
+import { SETTINGS_FILE } from "../constants";
+import { checkForNewContent, CONTENT_TYPES } from "./content-manager";
+import { color, Cache, getConfigValue } from "../util";
 
 const RESET_CACHE = new Cache(5 * 60 * 1000);
 

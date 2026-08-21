@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { Router } from "express";
 
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
+import { readSecret, SECRET_KEYS } from "./secrets";
 
 export const router = Router();
 

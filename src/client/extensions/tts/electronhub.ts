@@ -1,6 +1,6 @@
 import { event_types, eventSource, getRequestHeaders } from "/script.js";
 import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
-import { getPreviewString, saveTtsProviderSettings, initVoiceMap } from "./index.ts";
+import { getPreviewString, saveTtsProviderSettings, initVoiceMap } from "./index";
 
 export { ElectronHubTtsProvider };
 

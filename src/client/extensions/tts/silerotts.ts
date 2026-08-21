@@ -1,5 +1,5 @@
 import { doExtrasFetch, getApiUrl, modules } from "/scripts/extensions.js";
-import { saveTtsProviderSettings } from "./index.ts";
+import { saveTtsProviderSettings } from "./index";
 
 export { SileroTtsProvider };
 

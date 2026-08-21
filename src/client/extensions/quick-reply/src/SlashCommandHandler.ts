@@ -12,8 +12,8 @@ import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashC
 import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
 import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
 import { isTrueBoolean } from "/scripts/utils.js";
-import { QuickReplyApi } from "../api/QuickReplyApi.ts";
-import { QuickReplySet } from "./QuickReplySet.ts";
+import { QuickReplyApi } from "../api/QuickReplyApi";
+import { QuickReplySet } from "./QuickReplySet";
 
 export class SlashCommandHandler {
   /** @type {QuickReplyApi} */ api;

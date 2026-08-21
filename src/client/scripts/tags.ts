@@ -1,4 +1,4 @@
-import { DOMPurify } from '../lib.js';
+import { DOMPurify } from '../lib';
 
 import {
     characters,
@@ -12,24 +12,24 @@ import {
     event_types,
     DEFAULT_PRINT_TIMEOUT,
     printCharacters,
-} from '../script.ts';
-import { FILTER_TYPES, FILTER_STATES, DEFAULT_FILTER_STATE, isFilterState, FilterHelper } from './filters.ts';
+} from '../script';
+import { FILTER_TYPES, FILTER_STATES, DEFAULT_FILTER_STATE, isFilterState, FilterHelper } from './filters';
 
-import { groupCandidatesFilter, groupMembersFilter, groups, selected_group } from './group-chats.ts';
-import { download, onlyUnique, parseJsonFile, uuidv4, getSortableDelay, flashHighlight, equalsIgnoreCaseAndAccents, includesIgnoreCaseAndAccents, removeFromArray, getFreeName, debounce, findChar, escapeHtml } from './utils.ts';
-import { power_user } from './power-user.ts';
-import { SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
-import { SlashCommand } from './slash-commands/SlashCommand.ts';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
-import { isMobile } from './RossAscends-mods.ts';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup.ts';
-import { debounce_timeout } from './constants.ts';
-import { INTERACTABLE_CONTROL_CLASS } from './keyboard.ts';
-import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
-import { renderTemplateAsync } from './templates.ts';
-import { t, translate } from './i18n.ts';
-import { accountStorage } from './util/AccountStorage.ts';
-import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue.ts';
+import { groupCandidatesFilter, groupMembersFilter, groups, selected_group } from './group-chats';
+import { download, onlyUnique, parseJsonFile, uuidv4, getSortableDelay, flashHighlight, equalsIgnoreCaseAndAccents, includesIgnoreCaseAndAccents, removeFromArray, getFreeName, debounce, findChar, escapeHtml } from './utils';
+import { power_user } from './power-user';
+import { SlashCommandParser } from './slash-commands/SlashCommandParser';
+import { SlashCommand } from './slash-commands/SlashCommand';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument';
+import { isMobile } from './RossAscends-mods';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from './popup';
+import { debounce_timeout } from './constants';
+import { INTERACTABLE_CONTROL_CLASS } from './keyboard';
+import { commonEnumProviders } from './slash-commands/SlashCommandCommonEnumsProvider';
+import { renderTemplateAsync } from './templates';
+import { t, translate } from './i18n';
+import { accountStorage } from './util/AccountStorage';
+import { enumTypes, SlashCommandEnumValue } from './slash-commands/SlashCommandEnumValue';
 
 export {
     TAG_FOLDER_TYPES,
@@ -1049,7 +1049,7 @@ async function handleTagImport(character: any, { importSetting = null } = {}) {
  * @returns {Promise<string[]>} Array of strings representing the tags to import
  */
 async function showTagImportPopup(character: any, existingTags: any, newTags: any, folderTags: any) {
-    /** @type {{[key: string]: import('./popup.js').CustomPopupButton}} */
+    /** @type {{[key: string]: import('./popup').CustomPopupButton}} */
     const importButtons = {
         NONE: { result: 2, text: 'Import None' },
         ALL: { result: 3, text: 'Import All' },
@@ -1450,7 +1450,7 @@ function loadFilterStatesForContext(filterHelper: any, storagePrefix: any) {
  *
  * @param {JQuery<HTMLElement>} element - The jquery element representing the tag for which the state should be toggled
  * @param {object} param1 - Optional parameters
- * @param {import('./filters.js').FilterState|string} [param1.stateOverride] - Optional state override to which the state should be toggled to. If not set, the state will move to the next one in the chain.
+ * @param {import('./filters').FilterState|string} [param1.stateOverride] - Optional state override to which the state should be toggled to. If not set, the state will move to the next one in the chain.
  * @param {boolean} [param1.simulateClick] - Optionally specify that the state should not just be set on the html element, but actually achieved via triggering the "click" on it, which follows up with the general click handlers and reprinting
  * @returns {string} The string representing the new state
  */

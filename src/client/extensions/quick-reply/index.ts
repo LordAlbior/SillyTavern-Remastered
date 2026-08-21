@@ -8,15 +8,15 @@ import {
   characters,
 } from "/script.js";
 import { extension_settings } from "/scripts/extensions.js";
-import { QuickReplyApi } from "./api/QuickReplyApi.ts";
-import { AutoExecuteHandler } from "./src/AutoExecuteHandler.ts";
-import { QuickReply } from "./src/QuickReply.ts";
-import { QuickReplyConfig } from "./src/QuickReplyConfig.ts";
-import { QuickReplySet } from "./src/QuickReplySet.ts";
-import { QuickReplySettings } from "./src/QuickReplySettings.ts";
-import { SlashCommandHandler } from "./src/SlashCommandHandler.ts";
-import { ButtonUi } from "./src/ui/ButtonUi.ts";
-import { SettingsUi } from "./src/ui/SettingsUi.ts";
+import { QuickReplyApi } from "./api/QuickReplyApi";
+import { AutoExecuteHandler } from "./src/AutoExecuteHandler";
+import { QuickReply } from "./src/QuickReply";
+import { QuickReplyConfig } from "./src/QuickReplyConfig";
+import { QuickReplySet } from "./src/QuickReplySet";
+import { QuickReplySettings } from "./src/QuickReplySettings";
+import { SlashCommandHandler } from "./src/SlashCommandHandler";
+import { ButtonUi } from "./src/ui/ButtonUi";
+import { SettingsUi } from "./src/ui/SettingsUi";
 import { debounceAsync } from "/scripts/utils.js";
 import { selected_group } from "/scripts/group-chats.js";
 export { debounceAsync };

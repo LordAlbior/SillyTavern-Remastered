@@ -1,9 +1,9 @@
 import { Popup } from "/scripts/popup.js";
 import { getSortableDelay } from "/scripts/utils.js";
-import { log, warn } from "../../index.ts";
-import { QuickReply } from "../QuickReply.ts";
-import { QuickReplySet } from "../QuickReplySet.ts";
-import { QuickReplySettings } from "../QuickReplySettings.ts";
+import { log, warn } from "../../index";
+import { QuickReply } from "../QuickReply";
+import { QuickReplySet } from "../QuickReplySet";
+import { QuickReplySettings } from "../QuickReplySettings";
 
 export class SettingsUi {
   /** @type {QuickReplySettings} */ settings: any;

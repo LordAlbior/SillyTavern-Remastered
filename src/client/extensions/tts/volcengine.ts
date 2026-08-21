@@ -1,6 +1,6 @@
 import { event_types, eventSource, getRequestHeaders } from "/script.js";
 import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
-import { saveTtsProviderSettings, initVoiceMap } from "./index.ts";
+import { saveTtsProviderSettings, initVoiceMap } from "./index";
 import { Popup } from "/scripts/popup.js";
 export { VolcengineTtsProvider };
 

@@ -1,4 +1,4 @@
-import { Fuse, localforage } from "../lib.js";
+import { Fuse, localforage } from "../lib";
 import {
   characters,
   chat_metadata,
@@ -11,10 +11,10 @@ import {
   saveMetadata,
   saveSettingsDebounced,
   this_chid,
-} from "../script.ts";
-import { openThirdPartyExtensionMenu, saveMetadataDebounced } from "./extensions.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
+} from "../script";
+import { openThirdPartyExtensionMenu, saveMetadataDebounced } from "./extensions";
+import { SlashCommand } from "./slash-commands/SlashCommand";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
 import {
   createThumbnail,
   flashHighlight,
@@ -25,13 +25,13 @@ import {
   saveBase64AsFile,
   getFileExtension,
   sortIgnoreCaseAndAccents,
-} from "./utils.ts";
-import { debounce_timeout } from "./constants.ts";
-import { t } from "./i18n.ts";
-import { callGenericPopup, Popup, POPUP_TYPE } from "./popup.ts";
-import { groups, selected_group } from "./group-chats.ts";
-import { humanizedDateTime } from "./RossAscends-mods.ts";
-import { deleteMediaFromServer } from "./chats.ts";
+} from "./utils";
+import { debounce_timeout } from "./constants";
+import { t } from "./i18n";
+import { callGenericPopup, Popup, POPUP_TYPE } from "./popup";
+import { groups, selected_group } from "./group-chats";
+import { humanizedDateTime } from "./RossAscends-mods";
+import { deleteMediaFromServer } from "./chats";
 
 const BG_METADATA_KEY = "custom_background";
 const LIST_METADATA_KEY = "chat_backgrounds";
@@ -555,7 +555,7 @@ async function onDeleteBackgroundClick(this: any, e: any) {
   const url = bgToDelete.data("url");
   const isCustom = bgToDelete.attr("custom") === "true";
   const deleteFromServerId = "delete_bg_from_server";
-  /** @type {import('./popup.js').CustomPopupInput[]} */
+  /** @type {import('./popup').CustomPopupInput[]} */
   const customInputs = [
     {
       type: "checkbox",

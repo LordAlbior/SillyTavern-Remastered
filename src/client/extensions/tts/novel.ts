@@ -1,8 +1,8 @@
 import { getRequestHeaders } from "/script.js";
 import { POPUP_TYPE, callGenericPopup } from "/scripts/popup.js";
 import { splitRecursive } from "/scripts/utils.js";
-import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
-import { initVoiceMap } from "./index.ts";
+import { getPreviewString, saveTtsProviderSettings } from "./index";
+import { initVoiceMap } from "./index";
 
 export { NovelTtsProvider };
 

@@ -1,4 +1,4 @@
-import { SubMenu } from "./SubMenu.ts";
+import { SubMenu } from "./SubMenu";
 
 export class MenuItem {
   /**@type {string}*/ icon;

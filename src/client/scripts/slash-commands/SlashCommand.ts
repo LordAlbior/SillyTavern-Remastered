@@ -1,15 +1,15 @@
-import { hljs } from "../../lib.js";
-import { t } from "../i18n.ts";
-import { SlashCommandAbortController } from "./SlashCommandAbortController.ts";
-import { SlashCommandArgument, SlashCommandNamedArgument } from "./SlashCommandArgument.ts";
-import { SlashCommandClosure } from "./SlashCommandClosure.ts";
-import { SlashCommandDebugController } from "./SlashCommandDebugController.ts";
-import { SlashCommandScope } from "./SlashCommandScope.ts";
+import { hljs } from "../../lib";
+import { t } from "../i18n";
+import { SlashCommandAbortController } from "./SlashCommandAbortController";
+import { SlashCommandArgument, SlashCommandNamedArgument } from "./SlashCommandArgument";
+import { SlashCommandClosure } from "./SlashCommandClosure";
+import { SlashCommandDebugController } from "./SlashCommandDebugController";
+import { SlashCommandScope } from "./SlashCommandScope";
 
 /**
  * @typedef {NamedArgumentsCapture & {
  * _scope:SlashCommandScope,
- * _parserFlags:import('./SlashCommandParser.js').ParserFlags,
+ * _parserFlags:import('./SlashCommandParser').ParserFlags,
  * _abortController:SlashCommandAbortController,
  * _debugController:SlashCommandDebugController,
  * _hasUnnamedArgument:boolean,

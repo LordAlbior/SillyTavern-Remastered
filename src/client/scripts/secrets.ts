@@ -1,22 +1,22 @@
-import { DOMPurify, moment, sha256 } from "../lib.js";
-import { event_types, eventSource, getRequestHeaders, saveSettings } from "../script.ts";
-import { t, registerSecretDisplayHook } from "./i18n.ts";
-import { chat_completion_sources } from "./openai.ts";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "./popup.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import { DOMPurify, moment, sha256 } from "../lib";
+import { event_types, eventSource, getRequestHeaders, saveSettings } from "../script";
+import { t, registerSecretDisplayHook } from "./i18n";
+import { chat_completion_sources } from "./openai";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "./popup";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { textgen_types } from "./textgen-settings.ts";
-import { getCurrentUserHandle } from "./user.ts";
-import { copyText, isTrueBoolean, uuidv4 } from "./utils.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { renderTemplateAsync } from "./templates";
+import { textgen_types } from "./textgen-settings";
+import { getCurrentUserHandle } from "./user";
+import { copyText, isTrueBoolean, uuidv4 } from "./utils";
+import { accountStorage } from "./util/AccountStorage";
 
 export const SECRET_KEYS = {
   HORDE: "api_key_horde",

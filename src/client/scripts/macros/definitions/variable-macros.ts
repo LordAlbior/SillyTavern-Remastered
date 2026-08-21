@@ -1,6 +1,6 @@
-import { MacroCategory, MacroValueType } from "../engine/MacroRegistry.ts";
+import { MacroCategory, MacroValueType } from "../engine/MacroRegistry";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-import * as MacroRegistryModule from "../engine/MacroRegistry.ts";
+import * as MacroRegistryModule from "../engine/MacroRegistry";
 const MacroRegistry: any = MacroRegistryModule.MacroRegistry;
 
 /**

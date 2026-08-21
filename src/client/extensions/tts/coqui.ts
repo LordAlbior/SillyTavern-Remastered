@@ -5,7 +5,7 @@ TODO:
 */
 
 import { doExtrasFetch, extension_settings, getApiUrl, modules } from "/scripts/extensions.js";
-import { initVoiceMap } from "./index.ts";
+import { initVoiceMap } from "./index";
 import { POPUP_TYPE, callGenericPopup } from "/scripts/popup.js";
 
 export { CoquiTtsProvider };

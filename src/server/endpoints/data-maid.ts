@@ -3,10 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import express from "express";
 import mime from "mime-types";
-import { getSettingsBackupFilePrefix } from "./settings.ts";
-import { CHAT_BACKUPS_PREFIX } from "./chats.ts";
-import { isPathUnderParent, tryParse } from "../util.ts";
-import { SETTINGS_FILE } from "../constants.ts";
+import { getSettingsBackupFilePrefix } from "./settings";
+import { CHAT_BACKUPS_PREFIX } from "./chats";
+import { isPathUnderParent, tryParse } from "../util";
+import { SETTINGS_FILE } from "../constants";
 
 const sha256 = (str: string): string => crypto.createHash("sha256").update(str).digest("hex");
 
@@ -91,14 +91,14 @@ export class DataMaidService {
   static TOKENS = new Map();
 
   handle: string;
-  directories: import("../users.ts").UserDirectoryList;
+  directories: import("../users").UserDirectoryList;
 
   /**
    * Creates a new DataMaidService instance for a specific user.
    * @param {string} handle - The user's handle.
-   * @param {import('../users.ts').UserDirectoryList} directories - List of user directories to scan for loose data.
+   * @param {import('../users').UserDirectoryList} directories - List of user directories to scan for loose data.
    */
-  constructor(handle: string, directories: import("../users.ts").UserDirectoryList) {
+  constructor(handle: string, directories: import("../users").UserDirectoryList) {
     this.handle = handle;
     this.directories = directories;
   }

@@ -1,4 +1,4 @@
-import { DOMPurify, Bowser } from "../lib.js";
+import { DOMPurify, Bowser } from "../lib";
 
 import {
   characters,
@@ -20,27 +20,27 @@ import {
   sendTextareaMessage,
   doNavbarIconClick,
   isSwipingAllowed,
-} from "../script.ts";
+} from "../script";
 
-import { power_user, send_on_enter_options } from "./power-user.ts";
+import { power_user, send_on_enter_options } from "./power-user";
 
-import { selected_group, is_group_generating, openGroupById } from "./group-chats.ts";
-import { getTagKeyForEntity, applyTagsOnCharacterSelect } from "./tags.ts";
-import { SECRET_KEYS, secret_state } from "./secrets.ts";
-import { debounce, getStringHash, isValidUrl } from "./utils.ts";
-import { chat_completion_sources, oai_settings } from "./openai.ts";
-import { getTokenCountAsync } from "./tokenizers.ts";
+import { selected_group, is_group_generating, openGroupById } from "./group-chats";
+import { getTagKeyForEntity, applyTagsOnCharacterSelect } from "./tags";
+import { SECRET_KEYS, secret_state } from "./secrets";
+import { debounce, getStringHash, isValidUrl } from "./utils";
+import { chat_completion_sources, oai_settings } from "./openai";
+import { getTokenCountAsync } from "./tokenizers";
 import {
   textgen_types,
   textgenerationwebui_settings as textgen_settings,
   getTextGenServer,
-} from "./textgen-settings.ts";
-import { debounce_timeout, SWIPE_SOURCE } from "./constants.ts";
+} from "./textgen-settings";
+import { debounce_timeout, SWIPE_SOURCE } from "./constants";
 
-import { Popup } from "./popup.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { getCurrentUserHandle } from "./user.ts";
-import { kai_settings } from "./kai-settings.ts";
+import { Popup } from "./popup";
+import { accountStorage } from "./util/AccountStorage";
+import { getCurrentUserHandle } from "./user";
+import { kai_settings } from "./kai-settings";
 
 var RPanelPin: any = document.getElementById("rm_button_panel_pin");
 var LPanelPin: any = document.getElementById("lm_button_panel_pin");

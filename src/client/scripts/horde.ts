@@ -7,14 +7,14 @@ import {
   saveSettingsDebounced,
   setGenerationProgress,
   setOnlineStatus,
-} from "../script.ts";
-import { SECRET_KEYS, writeSecret } from "./secrets.ts";
-import { delay } from "./utils.ts";
-import { isMobile } from "./RossAscends-mods.ts";
-import { autoSelectInstructPreset } from "./instruct-mode.ts";
-import { t } from "./i18n.ts";
-import { callGenericPopup, POPUP_TYPE } from "./popup.ts";
-import { kai_settings } from "./kai-settings.ts";
+} from "../script";
+import { SECRET_KEYS, writeSecret } from "./secrets";
+import { delay } from "./utils";
+import { isMobile } from "./RossAscends-mods";
+import { autoSelectInstructPreset } from "./instruct-mode";
+import { t } from "./i18n";
+import { callGenericPopup, POPUP_TYPE } from "./popup";
+import { kai_settings } from "./kai-settings";
 
 export { MIN_LENGTH };
 

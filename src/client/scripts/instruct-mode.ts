@@ -5,11 +5,11 @@ import {
   online_status,
   saveSettingsDebounced,
   substituteParams,
-} from "../script.ts";
-import { selected_group } from "./group-chats.ts";
-import { parseExampleIntoIndividual } from "./openai.ts";
-import { power_user, context_presets } from "./power-user.ts";
-import { onlyUnique, regexFromString, resetScrollHeight } from "./utils.ts";
+} from "../script";
+import { selected_group } from "./group-chats";
+import { parseExampleIntoIndividual } from "./openai";
+import { power_user, context_presets } from "./power-user";
+import { onlyUnique, regexFromString, resetScrollHeight } from "./utils";
 
 /**
  * @type {InstructSettings[]} Instruct mode presets.
@@ -705,7 +705,7 @@ function selectMatchingContextTemplate(name: any) {
  * Replaces instruct mode macros in the given input string.
  * @param {Object<string, *>} env - Map of macro names to the values they'll be substituted with. If the param
  * values are functions, those functions will be called and their return values are used.
- * @returns {import('./macros.js').Macro[]} Macro objects.
+ * @returns {import('./macros').Macro[]} Macro objects.
  */
 export function getInstructMacros(env: any) {
   /** @type {{ key: string,value: string, enabled: boolean }[]} */

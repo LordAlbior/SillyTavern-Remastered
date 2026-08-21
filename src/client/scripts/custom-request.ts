@@ -1,4 +1,4 @@
-import { getPresetManager } from "./preset-manager.ts";
+import { getPresetManager } from "./preset-manager";
 import {
   extractJsonFromData,
   extractMessageFromData,
@@ -6,23 +6,23 @@ import {
   getRequestHeaders,
   name1,
   name2,
-} from "../script.ts";
+} from "../script";
 import {
   getTextGenServer,
   createTextGenGenerationData,
   setting_names,
   textgenerationwebui_settings,
-} from "./textgen-settings.ts";
-import { extractReasoningFromData } from "./reasoning.ts";
-import { formatInstructModeChat, formatInstructModePrompt, getInstructStoppingSequences } from "./instruct-mode.ts";
+} from "./textgen-settings";
+import { extractReasoningFromData } from "./reasoning";
+import { formatInstructModeChat, formatInstructModePrompt, getInstructStoppingSequences } from "./instruct-mode";
 import {
   getStreamingReply,
   tryParseStreamingError,
   createGenerationParameters,
   settingsToUpdate,
   oai_settings,
-} from "./openai.ts";
-import EventSourceStream from "./sse-stream.ts";
+} from "./openai";
+import EventSourceStream from "./sse-stream";
 
 // #region Type Definitions
 /**
@@ -69,7 +69,7 @@ import EventSourceStream from "./sse-stream.ts";
  * @property {string} [reverse_proxy] - Optional reverse proxy URL
  * @property {string} [proxy_password] - Optional proxy password
  * @property {string} [custom_prompt_post_processing] - Optional custom prompt post-processing
- * @property {import('../script.js').JsonSchema} [json_schema] - Optional JSON schema for structured generation
+ * @property {import('../script').JsonSchema} [json_schema] - Optional JSON schema for structured generation
  */
 
 /** @typedef {Record<string, any> & ChatCompletionPayloadBase} ChatCompletionPayload */

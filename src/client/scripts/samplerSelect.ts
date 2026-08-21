@@ -1,16 +1,16 @@
-import { main_api, saveSettingsDebounced } from "../script.ts";
-//import { BIAS_CACHE, displayLogitBias, getLogitBiasListResult } from './logit-bias.ts';
-//import { getEventSourceStream } from './sse-stream.ts';
-//import { getSortableDelay, onlyUnique } from './utils.ts';
-//import { getCfgPrompt } from './cfg-scale.ts';
+import { main_api, saveSettingsDebounced } from "../script";
+//import { BIAS_CACHE, displayLogitBias, getLogitBiasListResult } from './logit-bias';
+//import { getEventSourceStream } from './sse-stream';
+//import { getSortableDelay, onlyUnique } from './utils';
+//import { getCfgPrompt } from './cfg-scale';
 import {
   setting_names as TGsamplerNames,
   showTGSamplerControls,
   textgenerationwebui_settings,
-} from "./textgen-settings.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { Popup, POPUP_TYPE } from "./popup.ts";
-import { localforage } from "../lib.js";
+} from "./textgen-settings";
+import { renderTemplateAsync } from "./templates";
+import { Popup, POPUP_TYPE } from "./popup";
+import { localforage } from "../lib";
 
 const forcedOnColoring = "color: #89db35;";
 const forcedOffColoring = "color: #e84f62;";

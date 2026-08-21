@@ -5,9 +5,9 @@ import {
   fuzzySearchTags,
   fuzzySearchWorldInfo,
   power_user,
-} from "./power-user.ts";
-import { tag_map } from "./tags.ts";
-import { includesIgnoreCaseAndAccents } from "./utils.ts";
+} from "./power-user";
+import { tag_map } from "./tags";
+import { includesIgnoreCaseAndAccents } from "./utils";
 
 /**
  * @typedef FilterType The filter type possible for this filter helper

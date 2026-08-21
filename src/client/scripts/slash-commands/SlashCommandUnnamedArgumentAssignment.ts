@@ -1,4 +1,4 @@
-import { SlashCommandClosure } from "./SlashCommandClosure.ts";
+import { SlashCommandClosure } from "./SlashCommandClosure";
 
 export class SlashCommandUnnamedArgumentAssignment {
   /** @type {number} */ start: any;

@@ -6,10 +6,10 @@ import _ from "lodash";
 import { sync as writeFileAtomicSync } from "write-file-atomic";
 import bytes from "bytes";
 
-import { SETTINGS_FILE } from "../constants.ts";
-import { getConfigValue, generateTimestamp, removeOldBackups } from "../util.ts";
-import { getAllUserHandles, getUserDirectories } from "../users.ts";
-import { getFileNameValidationFunction } from "../middleware/validateFileName.ts";
+import { SETTINGS_FILE } from "../constants";
+import { getConfigValue, generateTimestamp, removeOldBackups } from "../util";
+import { getAllUserHandles, getUserDirectories } from "../users";
+import { getFileNameValidationFunction } from "../middleware/validateFileName";
 
 const ENABLE_EXTENSIONS = !!getConfigValue("extensions.enabled", true, "boolean");
 const ENABLE_EXTENSIONS_AUTO_UPDATE = !!getConfigValue("extensions.autoUpdate", true, "boolean");

@@ -1,4 +1,4 @@
-import { Handlebars, moment, seedrandom, droll } from "../lib.js";
+import { Handlebars, moment, seedrandom, droll } from "../lib";
 import {
   chat,
   chat_metadata,
@@ -11,15 +11,15 @@ import {
   eventSource,
   event_types,
   extension_prompts,
-} from "../script.ts";
-import { timestampToMoment, isDigitsOnly, getStringHash, escapeRegex, uuidv4 } from "./utils.ts";
-import { textgenerationwebui_banned_in_macros } from "./textgen-settings.ts";
-import { getInstructMacros } from "./instruct-mode.ts";
-import { getVariableMacros } from "./variables.ts";
-import { isMobile } from "./RossAscends-mods.ts";
-import { inject_ids } from "./constants.ts";
-import { initRegisterMacros, macros as macroSystem } from "./macros/macro-system.ts";
-import { power_user } from "./power-user.ts";
+} from "../script";
+import { timestampToMoment, isDigitsOnly, getStringHash, escapeRegex, uuidv4 } from "./utils";
+import { textgenerationwebui_banned_in_macros } from "./textgen-settings";
+import { getInstructMacros } from "./instruct-mode";
+import { getVariableMacros } from "./variables";
+import { isMobile } from "./RossAscends-mods";
+import { inject_ids } from "./constants";
+import { initRegisterMacros, macros as macroSystem } from "./macros/macro-system";
+import { power_user } from "./power-user";
 
 /**
  * @typedef Macro

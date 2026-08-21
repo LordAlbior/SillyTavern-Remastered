@@ -6,8 +6,8 @@ import express from "express";
 import sanitize from "sanitize-filename";
 import { sync as writeFileAtomicSync, default as writeFileAtomic } from "write-file-atomic";
 
-import { color, tryParse } from "../util.ts";
-import { getFileNameValidationFunction } from "../middleware/validateFileName.ts";
+import { color, tryParse } from "../util";
+import { getFileNameValidationFunction } from "../middleware/validateFileName";
 
 export const router = express.Router();
 
@@ -29,9 +29,9 @@ function warnOnGroupMetadata(groupData: any) {
 
 /**
  * Migrates group metadata to include chat metadata for each group chat instead of the group itself.
- * @param {import('../users.js').UserDirectoryList[]} userDirectories Listing of all users' directories
+ * @param {import('../users').UserDirectoryList[]} userDirectories Listing of all users' directories
  */
-export async function migrateGroupChatsMetadataFormat(userDirectories: import("../users.js").UserDirectoryList[]) {
+export async function migrateGroupChatsMetadataFormat(userDirectories: import("../users").UserDirectoryList[]) {
   for (const userDirs of userDirectories) {
     try {
       let anyDataMigrated = false;

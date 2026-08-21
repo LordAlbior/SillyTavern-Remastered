@@ -1,4 +1,4 @@
-import { SlashCommandExecutor } from "./SlashCommandExecutor.ts";
+import { SlashCommandExecutor } from "./SlashCommandExecutor";
 
 export class SlashCommandBreak extends SlashCommandExecutor {
   get value() {

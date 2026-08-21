@@ -1,14 +1,14 @@
-import { getRequestHeaders } from "../script.ts";
-import { renderExtensionTemplateAsync } from "./extensions.ts";
-import { POPUP_RESULT, POPUP_TYPE, callGenericPopup } from "./popup.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import { getRequestHeaders } from "../script";
+import { renderExtensionTemplateAsync } from "./extensions";
+import { POPUP_RESULT, POPUP_TYPE, callGenericPopup } from "./popup";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { isValidUrl } from "./utils.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { isValidUrl } from "./utils";
 
 interface Scraper {
   id: string;

@@ -1,7 +1,7 @@
-import { QuickReply } from "../../QuickReply.ts";
-import { QuickReplySet } from "../../QuickReplySet.ts";
-import { MenuHeader } from "./MenuHeader.ts";
-import { MenuItem } from "./MenuItem.ts";
+import { QuickReply } from "../../QuickReply";
+import { QuickReplySet } from "../../QuickReplySet";
+import { MenuHeader } from "./MenuHeader";
+import { MenuItem } from "./MenuItem";
 
 export class ContextMenu {
   /**@type {MenuItem[]}*/ itemList: any[] = [];

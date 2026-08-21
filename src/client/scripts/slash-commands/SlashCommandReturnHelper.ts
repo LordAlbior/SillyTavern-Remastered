@@ -1,9 +1,9 @@
-import { DOMPurify, showdown } from "../../lib.js";
-import { sendSystemMessage, system_message_types } from "../../script.ts";
-import { callGenericPopup, POPUP_TYPE } from "../popup.ts";
-import { escapeHtml } from "../utils.ts";
-import { enumIcons } from "./SlashCommandCommonEnumsProvider.ts";
-import { enumTypes, SlashCommandEnumValue } from "./SlashCommandEnumValue.ts";
+import { DOMPurify, showdown } from "../../lib";
+import { sendSystemMessage, system_message_types } from "../../script";
+import { callGenericPopup, POPUP_TYPE } from "../popup";
+import { escapeHtml } from "../utils";
+import { enumIcons } from "./SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "./SlashCommandEnumValue";
 
 /** @typedef {'pipe'|'object'|'chat-html'|'chat-text'|'popup-html'|'popup-text'|'toast-html'|'toast-text'|'console'|'none'} SlashCommandReturnType */
 

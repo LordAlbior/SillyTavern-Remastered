@@ -1,11 +1,11 @@
-import { AutoCompleteNameResult } from "../autocomplete/AutoCompleteNameResult.ts";
-import { AutoCompleteSecondaryNameResult } from "../autocomplete/AutoCompleteSecondaryNameResult.ts";
-import { SlashCommand } from "./SlashCommand.ts";
-import { SlashCommandCommandAutoCompleteOption } from "./SlashCommandCommandAutoCompleteOption.ts";
-import { SlashCommandEnumAutoCompleteOption } from "./SlashCommandEnumAutoCompleteOption.ts";
-import { SlashCommandExecutor } from "./SlashCommandExecutor.ts";
-import { SlashCommandNamedArgumentAutoCompleteOption } from "./SlashCommandNamedArgumentAutoCompleteOption.ts";
-import { SlashCommandScope } from "./SlashCommandScope.ts";
+import { AutoCompleteNameResult } from "../autocomplete/AutoCompleteNameResult";
+import { AutoCompleteSecondaryNameResult } from "../autocomplete/AutoCompleteSecondaryNameResult";
+import { SlashCommand } from "./SlashCommand";
+import { SlashCommandCommandAutoCompleteOption } from "./SlashCommandCommandAutoCompleteOption";
+import { SlashCommandEnumAutoCompleteOption } from "./SlashCommandEnumAutoCompleteOption";
+import { SlashCommandExecutor } from "./SlashCommandExecutor";
+import { SlashCommandNamedArgumentAutoCompleteOption } from "./SlashCommandNamedArgumentAutoCompleteOption";
+import { SlashCommandScope } from "./SlashCommandScope";
 
 export class SlashCommandAutoCompleteNameResult extends AutoCompleteNameResult {
   /**@type {SlashCommandExecutor}*/ executor;

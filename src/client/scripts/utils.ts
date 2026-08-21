@@ -4,19 +4,19 @@ import {
     Readability,
     isProbablyReaderable,
     lodash,
-} from '../lib.js';
+} from '../lib';
 
-import { getContext } from './extensions.ts';
-import { characters, getRequestHeaders, processDroppedFiles, this_chid, user_avatar } from '../script.ts';
-import { isMobile } from './RossAscends-mods.ts';
-import { collapseNewlines, power_user } from './power-user.ts';
-import { compareIgnoreCaseAndAccents, debounce_timeout, sortIgnoreCaseAndAccents } from './constants.ts';
-import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup.ts';
-import { SlashCommandClosure } from './slash-commands/SlashCommandClosure.ts';
-import { getTagsList } from './tags.ts';
-import { groups, selected_group } from './group-chats.ts';
-import { getCurrentLocale, t } from './i18n.ts';
-import { importWorldInfo } from './world-info.ts';
+import { getContext } from './extensions';
+import { characters, getRequestHeaders, processDroppedFiles, this_chid, user_avatar } from '../script';
+import { isMobile } from './RossAscends-mods';
+import { collapseNewlines, power_user } from './power-user';
+import { compareIgnoreCaseAndAccents, debounce_timeout, sortIgnoreCaseAndAccents } from './constants';
+import { Popup, POPUP_RESULT, POPUP_TYPE } from './popup';
+import { SlashCommandClosure } from './slash-commands/SlashCommandClosure';
+import { getTagsList } from './tags';
+import { groups, selected_group } from './group-chats';
+import { getCurrentLocale, t } from './i18n';
+import { importWorldInfo } from './world-info';
 
 export const shiftUpByOne = (e: any, i: any, a: any) => a[i] = e + 1;
 export const shiftDownByOne = (e: any, i: any, a: any) => a[i] = e - 1;
@@ -316,7 +316,7 @@ export function onlyUnique(value: any, index: any, array: any) {
  * @param {any[]} array The array being processed.
  * @returns {boolean} True if the value is unique, false otherwise.
  */
-export { onlyUniqueJson } from "./constants.ts";
+export { onlyUniqueJson } from "./constants";
 
 /**
  * Removes the first occurrence of a specified item from an array

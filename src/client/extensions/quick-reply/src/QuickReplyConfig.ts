@@ -1,6 +1,6 @@
 import { getSortableDelay } from "/scripts/utils.js";
-import { QuickReplySetLink } from "./QuickReplySetLink.ts";
-import { QuickReplySet } from "./QuickReplySet.ts";
+import { QuickReplySetLink } from "./QuickReplySetLink";
+import { QuickReplySet } from "./QuickReplySet";
 
 export class QuickReplyConfig {
   setList: any[] = [];

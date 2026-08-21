@@ -2,56 +2,56 @@ import https from "node:https";
 import http from "node:http";
 import fs from "node:fs";
 import type { Request, Response } from "express";
-import { color, urlHostnameToIPv6, getHasIP } from "./util.ts";
+import { color, urlHostnameToIPv6, getHasIP } from "./util";
 
 // Express routers
-import { router as userDataRouter } from "./users.ts";
-import { router as usersPrivateRouter } from "./endpoints/users-private.ts";
-import { router as usersAdminRouter } from "./endpoints/users-admin.ts";
-import { router as movingUIRouter } from "./endpoints/moving-ui.ts";
-import { router as imagesRouter } from "./endpoints/images.ts";
-import { router as quickRepliesRouter } from "./endpoints/quick-replies.ts";
-import { router as avatarsRouter } from "./endpoints/avatars.ts";
-import { router as themesRouter } from "./endpoints/themes.ts";
-import { router as openAiRouter } from "./endpoints/openai.ts";
-import { router as googleRouter } from "./endpoints/google.ts";
-import { router as anthropicRouter } from "./endpoints/anthropic.ts";
-import { router as tokenizersRouter } from "./endpoints/tokenizers.ts";
-import { router as presetsRouter } from "./endpoints/presets.ts";
-import { router as secretsRouter } from "./endpoints/secrets.ts";
-import { router as thumbnailRouter } from "./endpoints/thumbnails.ts";
-import { router as novelAiRouter } from "./endpoints/novelai.ts";
-import { router as extensionsRouter } from "./endpoints/extensions.ts";
-import { router as assetsRouter } from "./endpoints/assets.ts";
-import { router as filesRouter } from "./endpoints/files.ts";
-import { router as charactersRouter } from "./endpoints/characters.ts";
-import { router as chatsRouter } from "./endpoints/chats.ts";
-import { router as groupsRouter } from "./endpoints/groups.ts";
-import { router as worldInfoRouter } from "./endpoints/worldinfo.ts";
-import { router as statsRouter } from "./endpoints/stats.ts";
-import { router as contentManagerRouter } from "./endpoints/content-manager.ts";
-import { router as settingsRouter } from "./endpoints/settings.ts";
-import { router as backgroundsRouter } from "./endpoints/backgrounds.ts";
-import { router as spritesRouter } from "./endpoints/sprites.ts";
-import { router as stableDiffusionRouter } from "./endpoints/stable-diffusion.ts";
-import { router as hordeRouter } from "./endpoints/horde.ts";
-import { router as vectorsRouter } from "./endpoints/vectors.ts";
-import { router as translateRouter } from "./endpoints/translate.ts";
-import { router as classifyRouter } from "./endpoints/classify.ts";
-import { router as captionRouter } from "./endpoints/caption.ts";
-import { router as searchRouter } from "./endpoints/search.ts";
-import { router as openRouterRouter } from "./endpoints/openrouter.ts";
-import { router as nanogptRouter } from "./endpoints/nanogpt.ts";
-import { router as chatCompletionsRouter } from "./endpoints/backends/chat-completions.ts";
-import { router as koboldRouter } from "./endpoints/backends/kobold.ts";
-import { router as textCompletionsRouter } from "./endpoints/backends/text-completions.ts";
-import { router as speechRouter } from "./endpoints/speech.ts";
-import { router as azureRouter } from "./endpoints/azure.ts";
-import { router as minimaxRouter } from "./endpoints/minimax.ts";
-import { router as dataMaidRouter } from "./endpoints/data-maid.ts";
-import { router as backupsRouter } from "./endpoints/backups.ts";
-import { router as imageMetadataRouter } from "./endpoints/image-metadata.ts";
-import { router as volcengineRouter } from "./endpoints/volcengine.ts";
+import { router as userDataRouter } from "./users";
+import { router as usersPrivateRouter } from "./endpoints/users-private";
+import { router as usersAdminRouter } from "./endpoints/users-admin";
+import { router as movingUIRouter } from "./endpoints/moving-ui";
+import { router as imagesRouter } from "./endpoints/images";
+import { router as quickRepliesRouter } from "./endpoints/quick-replies";
+import { router as avatarsRouter } from "./endpoints/avatars";
+import { router as themesRouter } from "./endpoints/themes";
+import { router as openAiRouter } from "./endpoints/openai";
+import { router as googleRouter } from "./endpoints/google";
+import { router as anthropicRouter } from "./endpoints/anthropic";
+import { router as tokenizersRouter } from "./endpoints/tokenizers";
+import { router as presetsRouter } from "./endpoints/presets";
+import { router as secretsRouter } from "./endpoints/secrets";
+import { router as thumbnailRouter } from "./endpoints/thumbnails";
+import { router as novelAiRouter } from "./endpoints/novelai";
+import { router as extensionsRouter } from "./endpoints/extensions";
+import { router as assetsRouter } from "./endpoints/assets";
+import { router as filesRouter } from "./endpoints/files";
+import { router as charactersRouter } from "./endpoints/characters";
+import { router as chatsRouter } from "./endpoints/chats";
+import { router as groupsRouter } from "./endpoints/groups";
+import { router as worldInfoRouter } from "./endpoints/worldinfo";
+import { router as statsRouter } from "./endpoints/stats";
+import { router as contentManagerRouter } from "./endpoints/content-manager";
+import { router as settingsRouter } from "./endpoints/settings";
+import { router as backgroundsRouter } from "./endpoints/backgrounds";
+import { router as spritesRouter } from "./endpoints/sprites";
+import { router as stableDiffusionRouter } from "./endpoints/stable-diffusion";
+import { router as hordeRouter } from "./endpoints/horde";
+import { router as vectorsRouter } from "./endpoints/vectors";
+import { router as translateRouter } from "./endpoints/translate";
+import { router as classifyRouter } from "./endpoints/classify";
+import { router as captionRouter } from "./endpoints/caption";
+import { router as searchRouter } from "./endpoints/search";
+import { router as openRouterRouter } from "./endpoints/openrouter";
+import { router as nanogptRouter } from "./endpoints/nanogpt";
+import { router as chatCompletionsRouter } from "./endpoints/backends/chat-completions";
+import { router as koboldRouter } from "./endpoints/backends/kobold";
+import { router as textCompletionsRouter } from "./endpoints/backends/text-completions";
+import { router as speechRouter } from "./endpoints/speech";
+import { router as azureRouter } from "./endpoints/azure";
+import { router as minimaxRouter } from "./endpoints/minimax";
+import { router as dataMaidRouter } from "./endpoints/data-maid";
+import { router as backupsRouter } from "./endpoints/backups";
+import { router as imageMetadataRouter } from "./endpoints/image-metadata";
+import { router as volcengineRouter } from "./endpoints/volcengine";
 
 /**
  * @typedef {object} ServerStartupResult
@@ -198,7 +198,7 @@ export class ServerStartup {
   /**
    * Creates a new ServerStartup instance.
    * @param {import('express').Express} app The Express app to use
-   * @param {import('./command-line.js').CommandLineArguments} cliArgs The command-line arguments
+   * @param {import('./command-line').CommandLineArguments} cliArgs The command-line arguments
    */
   constructor(app: import("express").Express, cliArgs: any) {
     this.app = app;

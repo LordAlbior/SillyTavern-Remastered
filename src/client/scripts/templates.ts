@@ -1,5 +1,5 @@
-import { DOMPurify, Handlebars } from "../lib.js";
-import { applyLocale } from "./i18n.ts";
+import { DOMPurify, Handlebars } from "../lib";
+import { applyLocale } from "./i18n";
 
 /**
  * @type {Map<string, function>}

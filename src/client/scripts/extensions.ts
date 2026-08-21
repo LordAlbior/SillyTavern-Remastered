@@ -1,4 +1,4 @@
-import { Popper } from "../lib.js";
+import { Popper } from "../lib";
 
 import {
   eventSource,
@@ -8,9 +8,9 @@ import {
   getRequestHeaders,
   animation_duration,
   CLIENT_VERSION,
-} from "../script.ts";
-import { POPUP_RESULT, POPUP_TYPE, Popup } from "./popup.ts";
-import { renderTemplate, renderTemplateAsync } from "./templates.ts";
+} from "../script";
+import { POPUP_RESULT, POPUP_TYPE, Popup } from "./popup";
+import { renderTemplate, renderTemplateAsync } from "./templates";
 import {
   delay,
   deleteValueByPath,
@@ -20,14 +20,14 @@ import {
   sanitizeSelector,
   setValueByPath,
   versionCompare,
-} from "./utils.ts";
-import { getContext } from "./st-context.ts";
-import { isAdmin } from "./user.ts";
-import { addLocaleData, getCurrentLocale, t } from "./i18n.ts";
-import { debounce_timeout } from "./constants.ts";
-import { registerEnumData } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { SimpleMutex } from "./util/SimpleMutex.ts";
+} from "./utils";
+import { getContext } from "./st-context";
+import { isAdmin } from "./user";
+import { addLocaleData, getCurrentLocale, t } from "./i18n";
+import { debounce_timeout } from "./constants";
+import { registerEnumData } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { accountStorage } from "./util/AccountStorage";
+import { SimpleMutex } from "./util/SimpleMutex";
 
 export { getContext, getApiUrl, SimpleMutex as ModuleWorkerWrapper };
 
@@ -214,7 +214,7 @@ export const extension_settings: Record<string, any> = {
     profiles: [],
   },
   dice: {},
-  /** @type {import('./char-data.js').RegexScriptData[]} */
+  /** @type {import('./char-data').RegexScriptData[]} */
   regex: [],
   /** @type {import('./extensions/regex/index.js').RegexPreset[]} */
   regex_presets: [],
@@ -245,11 +245,11 @@ export const extension_settings: Record<string, any> = {
     global: {},
   },
   /**
-   * @type {import('./chats.js').FileAttachment[]}
+   * @type {import('./chats').FileAttachment[]}
    */
   attachments: [],
   /**
-   * @type {Record<string, import('./chats.js').FileAttachment[]>}
+   * @type {Record<string, import('./chats').FileAttachment[]>}
    */
   character_attachments: {},
   /**
@@ -1544,7 +1544,7 @@ async function onDeleteClick(this: any) {
 
   const hasCleanHook = hasExtensionHook(extensionName, "clean");
 
-  /** @type {import('./popup.js').CustomPopupInput[]} */
+  /** @type {import('./popup').CustomPopupInput[]} */
   const customInputs = hasCleanHook
     ? [{ id: "extension_delete_cleanup", label: t`Also clean up extension data`, defaultState: false }]
     : null;
@@ -2387,7 +2387,7 @@ export async function openThirdPartyExtensionMenu(suggestUrl = "") {
       await popup.complete(POPUP_RESULT.AFFIRMATIVE);
     },
   };
-  /** @type {import('./popup.js').CustomPopupInput} */
+  /** @type {import('./popup').CustomPopupInput} */
   const branchNameInput = {
     id: "extension_branch_name",
     label: t`Branch or tag name (optional)`,

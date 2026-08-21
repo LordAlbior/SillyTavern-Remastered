@@ -1,20 +1,20 @@
-import { Fuse } from "../lib.js";
+import { Fuse } from "../lib";
 
-import { saveSettingsDebounced } from "../script.ts";
-import { callGenericPopup, POPUP_TYPE } from "./popup.ts";
-import { power_user } from "./power-user.ts";
-import { getPresetManager } from "./preset-manager.ts";
-import { SlashCommand } from "./slash-commands/SlashCommand.ts";
+import { saveSettingsDebounced } from "../script";
+import { callGenericPopup, POPUP_TYPE } from "./popup";
+import { power_user } from "./power-user";
+import { getPresetManager } from "./preset-manager";
+import { SlashCommand } from "./slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument.ts";
-import { commonEnumProviders, enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider.ts";
-import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue.ts";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { isTrueBoolean, resetScrollHeight } from "./utils.ts";
+} from "./slash-commands/SlashCommandArgument";
+import { commonEnumProviders, enumIcons } from "./slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "./slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
+import { renderTemplateAsync } from "./templates";
+import { isTrueBoolean, resetScrollHeight } from "./utils";
 
 export let system_prompts: any[] = [];
 

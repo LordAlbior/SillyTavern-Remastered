@@ -5,10 +5,10 @@ import fetch from "node-fetch";
 import FormData from "form-data";
 import express from "express";
 
-import { getConfigValue, mergeObjectWithYaml, excludeKeysByYaml, trimV1, delay } from "../util.ts";
-import { setAdditionalHeaders } from "../additional-headers.ts";
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
-import { AIMLAPI_HEADERS, OPENROUTER_HEADERS, SILICONFLOW_ENDPOINT, ZAI_ENDPOINT } from "../constants.ts";
+import { getConfigValue, mergeObjectWithYaml, excludeKeysByYaml, trimV1, delay } from "../util";
+import { setAdditionalHeaders } from "../additional-headers";
+import { readSecret, SECRET_KEYS } from "./secrets";
+import { AIMLAPI_HEADERS, OPENROUTER_HEADERS, SILICONFLOW_ENDPOINT, ZAI_ENDPOINT } from "../constants";
 
 export const router = express.Router();
 

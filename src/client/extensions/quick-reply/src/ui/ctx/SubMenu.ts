@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./MenuItem.ts").MenuItem} MenuItem
+ * @typedef {import("./MenuItem").MenuItem} MenuItem
  */
 
 export class SubMenu {

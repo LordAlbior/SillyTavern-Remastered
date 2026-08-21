@@ -12,9 +12,9 @@ import {
   VLLM_KEYS,
   FEATHERLESS_KEYS,
   OPENAI_KEYS,
-} from "../../constants.ts";
-import { forwardFetchResponse, trimV1, getConfigValue } from "../../util.ts";
-import { setAdditionalHeaders } from "../../additional-headers.ts";
+} from "../../constants";
+import { forwardFetchResponse, trimV1, getConfigValue } from "../../util";
+import { setAdditionalHeaders } from "../../additional-headers";
 import { createHash } from "node:crypto";
 
 export const router = express.Router();

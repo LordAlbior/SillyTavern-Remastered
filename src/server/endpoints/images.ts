@@ -5,8 +5,8 @@ import { Buffer } from "node:buffer";
 import express from "express";
 import sanitize from "sanitize-filename";
 
-import { clientRelativePath, removeFileExtension, getImages, isPathUnderParent } from "../util.ts";
-import { MEDIA_EXTENSIONS, MEDIA_REQUEST_TYPE } from "../constants.ts";
+import { clientRelativePath, removeFileExtension, getImages, isPathUnderParent } from "../util";
+import { MEDIA_EXTENSIONS, MEDIA_REQUEST_TYPE } from "../constants";
 
 /**
  * Ensure the directory for the provided file path exists.

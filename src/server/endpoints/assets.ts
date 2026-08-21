@@ -7,9 +7,9 @@ import express from "express";
 import sanitize from "sanitize-filename";
 import fetch from "node-fetch";
 
-import { UNSAFE_EXTENSIONS } from "../constants.ts";
-import { clientRelativePath, isValidUrl } from "../util.ts";
-import { getHostFromUrl, isHostWhitelisted } from "./content-manager.ts";
+import { UNSAFE_EXTENSIONS } from "../constants";
+import { clientRelativePath, isValidUrl } from "../util";
+import { getHostFromUrl, isHostWhitelisted } from "./content-manager";
 
 const VALID_CATEGORIES = ["bgm", "ambient", "blip", "live2d", "vrm", "character", "temp"];
 
@@ -79,9 +79,9 @@ function getFiles(dir: string, files: string[] = []) {
 
 /**
  * Ensure that the asset folders exist.
- * @param {import('../users.js').UserDirectoryList} directories - The user's directories
+ * @param {import('../users').UserDirectoryList} directories - The user's directories
  */
-function ensureFoldersExist(directories: import("../users.js").UserDirectoryList) {
+function ensureFoldersExist(directories: import("../users").UserDirectoryList) {
   const folderPath = path.join(directories.assets);
 
   for (const category of VALID_CATEGORIES) {

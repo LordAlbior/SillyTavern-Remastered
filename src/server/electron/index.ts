@@ -3,7 +3,7 @@ import { app, BrowserWindow } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import yargs from "yargs";
-import { serverEvents, EVENT_NAMES } from "../server-events.ts";
+import { serverEvents, EVENT_NAMES } from "../server-events";
 
 const cliArguments = yargs(process.argv)
   .usage("Usage: <your-start-script> [options]")
@@ -42,7 +42,7 @@ function startServer() {
     const sillyTavernRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
     process.chdir(sillyTavernRoot);
 
-    import("../server-global.js");
+    import("../server-global");
   });
 }
 

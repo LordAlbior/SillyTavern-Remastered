@@ -1,4 +1,4 @@
-import { Fuse, Handlebars } from '../lib.js';
+import { Fuse, Handlebars } from '../lib';
 
 import {
     saveSettingsDebounced,
@@ -31,44 +31,44 @@ import {
     extension_prompt_roles,
     deleteMessage,
     settingsReady,
-} from '../script.ts';
-import { isMobile, initMovingUI, favsToHotswap } from './RossAscends-mods.ts';
+} from '../script';
+import { isMobile, initMovingUI, favsToHotswap } from './RossAscends-mods';
 import {
     groups,
     resetSelectedGroup,
-} from './group-chats.ts';
+} from './group-chats';
 import {
     instruct_presets,
     loadInstructMode,
     names_behavior_types,
     selectInstructPreset,
     updateBindModelTemplatesState,
-} from './instruct-mode.ts';
+} from './instruct-mode';
 
-import { getTagsList, tag_import_setting, tag_map, tag_sort_mode, tags } from './tags.ts';
-import { tokenizers } from './tokenizers.ts';
-import { BIAS_CACHE } from './logit-bias.ts';
-import { renderTemplateAsync } from './templates.ts';
+import { getTagsList, tag_import_setting, tag_map, tag_sort_mode, tags } from './tags';
+import { tokenizers } from './tokenizers';
+import { BIAS_CACHE } from './logit-bias';
+import { renderTemplateAsync } from './templates';
 
-import { countOccurrences, debounce, delay, download, getFileText, getSanitizedFilename, getStringHash, isOdd, isTrueBoolean, onlyUnique, resetScrollHeight, shuffle, sortMoments, stringToRange, timestampToMoment } from './utils.ts';
-import { FILTER_TYPES } from './filters.ts';
-import { PARSER_FLAG, SlashCommandParser } from './slash-commands/SlashCommandParser.ts';
-import { SlashCommand } from './slash-commands/SlashCommand.ts';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument.ts';
-import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from './autocomplete/AutoComplete.ts';
-import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue.ts';
-import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider.ts';
-import { POPUP_TYPE, callGenericPopup, fixToastrForDialogs } from './popup.ts';
-import { loadSystemPrompts } from './sysprompt.ts';
-import { fuzzySearchCategories } from './filters.ts';
-import { accountStorage } from './util/AccountStorage.ts';
-import { extractDominantColor, generateThemePalette, deriveBackgroundName } from './util/ThemeGenerator.ts';
-import { DEFAULT_REASONING_TEMPLATE, loadReasoningTemplates } from './reasoning.ts';
-import { bindModelTemplates } from './chat-templates.ts';
-import { IMAGE_OVERSWIPE, MEDIA_DISPLAY } from './constants.ts';
-import { t } from './i18n.ts';
-import { getBackgroundPath, isCustomBackgroundUrl } from './backgrounds.ts';
-import { persona_description_positions as _persona_description_positions } from './personas.ts';
+import { countOccurrences, debounce, delay, download, getFileText, getSanitizedFilename, getStringHash, isOdd, isTrueBoolean, onlyUnique, resetScrollHeight, shuffle, sortMoments, stringToRange, timestampToMoment } from './utils';
+import { FILTER_TYPES } from './filters';
+import { PARSER_FLAG, SlashCommandParser } from './slash-commands/SlashCommandParser';
+import { SlashCommand } from './slash-commands/SlashCommand';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from './slash-commands/SlashCommandArgument';
+import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from './autocomplete/AutoComplete';
+import { SlashCommandEnumValue, enumTypes } from './slash-commands/SlashCommandEnumValue';
+import { commonEnumProviders, enumIcons } from './slash-commands/SlashCommandCommonEnumsProvider';
+import { POPUP_TYPE, callGenericPopup, fixToastrForDialogs } from './popup';
+import { loadSystemPrompts } from './sysprompt';
+import { fuzzySearchCategories } from './filters';
+import { accountStorage } from './util/AccountStorage';
+import { extractDominantColor, generateThemePalette, deriveBackgroundName } from './util/ThemeGenerator';
+import { DEFAULT_REASONING_TEMPLATE, loadReasoningTemplates } from './reasoning';
+import { bindModelTemplates } from './chat-templates';
+import { IMAGE_OVERSWIPE, MEDIA_DISPLAY } from './constants';
+import { t } from './i18n';
+import { getBackgroundPath, isCustomBackgroundUrl } from './backgrounds';
+import { persona_description_positions as _persona_description_positions } from './personas';
 
 export const toastPositionClasses = [
     'toast-top-left',
@@ -2345,7 +2345,7 @@ const compareFunc = (first: any, second: any) => {
  * Sorts an array of entities based on the current sort settings
  * @param {any[]} entities An array of objects with an `item` property
  * @param {boolean} forceSearch Whether to force search sorting
- * @param {import('./filters.js').FilterHelper} [filterHelper=null] Filter helper to use
+ * @param {import('./filters').FilterHelper} [filterHelper=null] Filter helper to use
  */
 export function sortEntitiesList(entities: any, forceSearch: any, filterHelper: any = null) {
     filterHelper = filterHelper ?? entitiesFilter;

@@ -1,4 +1,4 @@
-import { AutoCompleteOption } from "./AutoCompleteOption.ts";
+import { AutoCompleteOption } from "./AutoCompleteOption";
 
 export class BlankAutoCompleteOption extends AutoCompleteOption {
   /**

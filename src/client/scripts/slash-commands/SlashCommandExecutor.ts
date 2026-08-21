@@ -1,8 +1,8 @@
-import { uuidv4 } from "../utils.ts";
-import { SlashCommand } from "./SlashCommand.ts";
-import { SlashCommandClosure } from "./SlashCommandClosure.ts";
-import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgumentAssignment.ts";
-import { SlashCommandUnnamedArgumentAssignment } from "./SlashCommandUnnamedArgumentAssignment.ts";
+import { uuidv4 } from "../utils";
+import { SlashCommand } from "./SlashCommand";
+import { SlashCommandClosure } from "./SlashCommandClosure";
+import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgumentAssignment";
+import { SlashCommandUnnamedArgumentAssignment } from "./SlashCommandUnnamedArgumentAssignment";
 
 export class SlashCommandExecutor {
   /**@type {Boolean}*/ injectPipe: boolean = true;
@@ -29,7 +29,7 @@ export class SlashCommandExecutor {
   /** @type {SlashCommand} */ command!: SlashCommand;
   /** @type {SlashCommandNamedArgumentAssignment[]} */ namedArgumentList: SlashCommandNamedArgumentAssignment[] = [];
   /** @type {SlashCommandUnnamedArgumentAssignment[]} */ unnamedArgumentList: SlashCommandUnnamedArgumentAssignment[] = [];
-  /** @type {import('./SlashCommandParser.js').ParserFlags} */ parserFlags: any;
+  /** @type {import('./SlashCommandParser').ParserFlags} */ parserFlags: any;
 
   get commandCount() {
     return (

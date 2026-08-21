@@ -5,9 +5,9 @@ import wavefile from "wavefile";
 import fetch from "node-fetch";
 import FormData from "form-data";
 import mime from "mime-types";
-import { getPipeline } from "../transformers.ts";
-import { forwardFetchResponse } from "../util.ts";
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
+import { getPipeline } from "../transformers";
+import { forwardFetchResponse } from "../util";
+import { readSecret, SECRET_KEYS } from "./secrets";
 
 export const router = express.Router();
 

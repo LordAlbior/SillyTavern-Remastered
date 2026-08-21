@@ -1,5 +1,5 @@
 import path from "node:path";
-import { color, getConfigValue, safeReadFileSync } from "../util.ts";
+import { color, getConfigValue, safeReadFileSync } from "../util";
 // @ts-expect-error - host-validation-middleware named exports
 import { isHostAllowed, hostValidationMiddleware } from "host-validation-middleware";
 

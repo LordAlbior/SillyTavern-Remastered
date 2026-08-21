@@ -3,8 +3,8 @@ import path from "node:path";
 import yaml from "yaml";
 import color from "chalk";
 import _ from "lodash";
-import { serverDirectory } from "./server-directory.ts";
-import { keyToEnv, setConfigFilePath } from "./util.ts";
+import { serverDirectory } from "./server-directory";
+import { keyToEnv, setConfigFilePath } from "./util";
 
 const keyMigrationMap: { oldKey: string; newKey: string; migrate: (value: any) => any; remove?: boolean }[] = [
   {

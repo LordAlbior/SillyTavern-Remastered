@@ -5,8 +5,8 @@ import { Buffer } from "node:buffer";
 
 // @ts-expect-error - type declarations differ from runtime exports
 import { pipeline, env, RawImage } from "sillytavern-transformers";
-import { getConfigValue } from "./util.ts";
-import { serverDirectory } from "./server-directory.ts";
+import { getConfigValue } from "./util";
+import { serverDirectory } from "./server-directory";
 
 configureTransformers();
 

@@ -9,17 +9,17 @@ import urlJoin from "url-join";
 import _ from "lodash";
 import mime from "mime-types";
 
-import { delay, getBasicAuthHeader, isValidUrl, tryParse } from "../util.ts";
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
-import { getFileNameValidationFunction } from "../middleware/validateFileName.ts";
-import { AIMLAPI_HEADERS } from "../constants.ts";
+import { delay, getBasicAuthHeader, isValidUrl, tryParse } from "../util";
+import { readSecret, SECRET_KEYS } from "./secrets";
+import { getFileNameValidationFunction } from "../middleware/validateFileName";
+import { AIMLAPI_HEADERS } from "../constants";
 
 /**
  * Gets the comfy workflows.
- * @param {import('../users.js').UserDirectoryList} directories
+ * @param {import('../users').UserDirectoryList} directories
  * @returns {string[]} List of comfy workflows
  */
-function getComfyWorkflows(directories: import("../users.js").UserDirectoryList): string[] {
+function getComfyWorkflows(directories: import("../users").UserDirectoryList): string[] {
   return fs
     .readdirSync(directories.comfyWorkflows)
     .filter((file) => file[0] !== "." && file.toLowerCase().endsWith(".json"))

@@ -5,7 +5,7 @@ import url from "node:url";
 import express from "express";
 import { default as git, CheckRepoActions } from "simple-git";
 import { sync as commandExistsSync } from "command-exists";
-import { getConfigValue, color } from "./util.ts";
+import { getConfigValue, color } from "./util";
 
 const enableServerPlugins = !!getConfigValue("enableServerPlugins", false, "boolean");
 const enableServerPluginsAutoUpdate = !!getConfigValue("enableServerPluginsAutoUpdate", true, "boolean");

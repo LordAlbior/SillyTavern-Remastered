@@ -1,4 +1,4 @@
-import { initAccessibility } from "./a11y.ts";
+import { initAccessibility } from "./a11y";
 
 /**
  * CRSF token for requests.

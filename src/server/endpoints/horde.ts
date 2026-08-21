@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
 import express from "express";
 import { AIHorde } from "@zeldafan0225/ai_horde";
-import { getVersion, delay, Cache } from "../util.ts";
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
+import { getVersion, delay, Cache } from "../util";
+import { readSecret, SECRET_KEYS } from "./secrets";
 
 // ponytail: inline enums cast as any — module types don't resolve these exports
 const ModelGenerationInputStableSamplers: any = Object.freeze({

@@ -1,5 +1,5 @@
-import { saveTtsProviderSettings } from "./index.ts";
-import { getCharacters, getPreviewString } from "./index.ts";
+import { saveTtsProviderSettings } from "./index";
+import { getCharacters, getPreviewString } from "./index";
 
 export { GptSoVITSAdapterProvider };
 

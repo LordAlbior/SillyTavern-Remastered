@@ -27,8 +27,8 @@ import {
   this_chid,
   unshallowCharacter,
   updateRemoteChatName,
-} from "../script.ts";
-import { getRegexedString, regex_placement } from "./regex-engine.ts";
+} from "../script";
+import { getRegexedString, regex_placement } from "./regex-engine";
 import {
   deleteGroupChatByName,
   getGroupAvatar,
@@ -36,13 +36,13 @@ import {
   is_group_generating,
   openGroupById,
   openGroupChat,
-} from "./group-chats.ts";
-import { t } from "./i18n.ts";
-import { callGenericPopup, POPUP_TYPE } from "./popup.ts";
-import { getMessageTimeStamp } from "./RossAscends-mods.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { clamp, flashHighlight, isElementInViewport, sortMoments, timestampToMoment } from "./utils.ts";
+} from "./group-chats";
+import { t } from "./i18n";
+import { callGenericPopup, POPUP_TYPE } from "./popup";
+import { getMessageTimeStamp } from "./RossAscends-mods";
+import { renderTemplateAsync } from "./templates";
+import { accountStorage } from "./util/AccountStorage";
+import { clamp, flashHighlight, isElementInViewport, sortMoments, timestampToMoment } from "./utils";
 
 const assistantAvatarKey = "assistant";
 const pinnedChatsKey = "pinnedChats";
@@ -709,7 +709,7 @@ async function openRecentChatsSettingsPopup() {
   const MIN_CHATS = 1;
   const MAX_CHATS = 1000;
 
-  /** @type {import('./popup.js').CustomPopupInput} */
+  /** @type {import('./popup').CustomPopupInput} */
   const maxRecentChatsInput = {
     id: "maxRecentChats",
     type: "number",
@@ -721,7 +721,7 @@ async function openRecentChatsSettingsPopup() {
     step: 1,
   };
 
-  /** @type {import('./popup.js').CustomPopupInput} */
+  /** @type {import('./popup').CustomPopupInput} */
   const collapsedRecentChatsInput = {
     id: "collapsedRecentChats",
     type: "number",

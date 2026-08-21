@@ -1,5 +1,5 @@
-import { warn } from "../index.ts";
-import { QuickReplySettings } from "./QuickReplySettings.ts";
+import { warn } from "../index";
+import { QuickReplySettings } from "./QuickReplySettings";
 
 export class AutoExecuteHandler {
   /** @type {QuickReplySettings} */ settings;

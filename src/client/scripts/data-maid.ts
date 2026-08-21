@@ -1,9 +1,9 @@
-import { getRequestHeaders } from "../script.ts";
-import { VIDEO_EXTENSIONS } from "./constants.ts";
-import { t } from "./i18n.ts";
-import { callGenericPopup, Popup, POPUP_TYPE } from "./popup.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { humanFileSize, timestampToMoment } from "./utils.ts";
+import { getRequestHeaders } from "../script";
+import { VIDEO_EXTENSIONS } from "./constants";
+import { t } from "./i18n";
+import { callGenericPopup, Popup, POPUP_TYPE } from "./popup";
+import { renderTemplateAsync } from "./templates";
+import { humanFileSize, timestampToMoment } from "./utils";
 
 /**
  * @typedef {object} DataMaidReportResult

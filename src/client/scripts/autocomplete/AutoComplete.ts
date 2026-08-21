@@ -1,11 +1,11 @@
-import { power_user } from "../power-user.ts";
-import { debounce, escapeRegex } from "../utils.ts";
-import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from "../constants.ts";
-import { AutoCompleteOption } from "./AutoCompleteOption.ts";
-import { AutoCompleteFuzzyScore } from "./AutoCompleteFuzzyScore.ts";
-import { BlankAutoCompleteOption } from "./BlankAutoCompleteOption.ts";
-import { AutoCompleteNameResult } from "./AutoCompleteNameResult.ts";
-import { AutoCompleteSecondaryNameResult } from "./AutoCompleteSecondaryNameResult.ts";
+import { power_user } from "../power-user";
+import { debounce, escapeRegex } from "../utils";
+import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from "../constants";
+import { AutoCompleteOption } from "./AutoCompleteOption";
+import { AutoCompleteFuzzyScore } from "./AutoCompleteFuzzyScore";
+import { BlankAutoCompleteOption } from "./BlankAutoCompleteOption";
+import { AutoCompleteNameResult } from "./AutoCompleteNameResult";
+import { AutoCompleteSecondaryNameResult } from "./AutoCompleteSecondaryNameResult";
 
 export { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH };
 

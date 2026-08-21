@@ -5,8 +5,8 @@ import urlJoin from "url-join";
 import * as googleTranslate from "google-translate-api-x";
 const Translator: any = (googleTranslate as any).Translator;
 
-import { readSecret, SECRET_KEYS } from "./secrets.ts";
-import { getConfigValue, uuidv4 } from "../util.ts";
+import { readSecret, SECRET_KEYS } from "./secrets";
+import { getConfigValue, uuidv4 } from "../util";
 
 const DEEPLX_URL_DEFAULT = "http://127.0.0.1:1188/translate";
 const ONERING_URL_DEFAULT = "http://127.0.0.1:4990/translate";

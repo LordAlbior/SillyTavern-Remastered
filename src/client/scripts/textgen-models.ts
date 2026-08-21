@@ -1,5 +1,5 @@
-import { DOMPurify } from "../lib.js";
-import { isMobile } from "./RossAscends-mods.ts";
+import { DOMPurify } from "../lib";
+import { isMobile } from "./RossAscends-mods";
 import {
   amount_gen,
   eventSource,
@@ -8,14 +8,14 @@ import {
   max_context,
   online_status,
   setGenerationParamsFromPreset,
-} from "../script.ts";
-import { textgenerationwebui_settings as textgen_settings, textgen_types } from "./textgen-settings.ts";
-import { tokenizers } from "./tokenizers.ts";
-import { renderTemplateAsync } from "./templates.ts";
-import { POPUP_TYPE, callGenericPopup } from "./popup.ts";
-import { t } from "./i18n.ts";
-import { accountStorage } from "./util/AccountStorage.ts";
-import { localizePagination, PAGINATION_TEMPLATE, textValueMatcher } from "./utils.ts";
+} from "../script";
+import { textgenerationwebui_settings as textgen_settings, textgen_types } from "./textgen-settings";
+import { tokenizers } from "./tokenizers";
+import { renderTemplateAsync } from "./templates";
+import { POPUP_TYPE, callGenericPopup } from "./popup";
+import { t } from "./i18n";
+import { accountStorage } from "./util/AccountStorage";
+import { localizePagination, PAGINATION_TEMPLATE, textValueMatcher } from "./utils";
 
 let mancerModels: any[] = [];
 let togetherModels: any[] = [];

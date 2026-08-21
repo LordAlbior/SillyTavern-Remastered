@@ -1,7 +1,7 @@
-import { TEXTGEN_TYPES, OPENROUTER_HEADERS, FEATHERLESS_HEADERS } from "./constants.ts";
-import { SECRET_KEYS, readSecret } from "./endpoints/secrets.ts";
-import { getConfigValue } from "./util.ts";
-import type { UserDirectoryList } from "./users.ts";
+import { TEXTGEN_TYPES, OPENROUTER_HEADERS, FEATHERLESS_HEADERS } from "./constants";
+import { SECRET_KEYS, readSecret } from "./endpoints/secrets";
+import { getConfigValue } from "./util";
+import type { UserDirectoryList } from "./users";
 
 /**
  * Gets the headers for the Mancer API.

@@ -6,8 +6,8 @@
  * without creating runtime dependencies.
  */
 
-/** @typedef {import('./MacroRegistry.js').MacroHandler} MacroHandler */
-/** @typedef {import('./MacroRegistry.js').MacroDefinitionOptions} MacroDefinitionOptions */
+/** @typedef {import('./MacroRegistry').MacroHandler} MacroHandler */
+/** @typedef {import('./MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
 
 /**
  * A dynamic macro value can be:

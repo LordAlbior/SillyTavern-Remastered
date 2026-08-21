@@ -1,7 +1,7 @@
 import path from "node:path";
-import { CommandLineParser } from "./server/command-line.ts";
-import { serverDirectory } from "./server/server-directory.ts";
-import { createServer } from "./server/server-main.ts";
+import { CommandLineParser } from "./server/command-line";
+import { serverDirectory } from "./server/server-directory";
+import { createServer } from "./server/server-main";
 
 const runtimeLabel = process.versions.bun ? `Bun version: ${process.versions.bun}` : `Node version: ${process.version}`;
 const envLabel = process.env.NODE_ENV || "development";
@@ -16,7 +16,7 @@ globalThis.COMMAND_LINE_ARGS = cliArgs;
 process.chdir(path.dirname(serverDirectory));
 
 try {
-  await import("./server/server-main.ts");
+  await import("./server/server-main");
 } catch (error) {
   console.error("A critical error has occurred while starting the server:", error);
 }

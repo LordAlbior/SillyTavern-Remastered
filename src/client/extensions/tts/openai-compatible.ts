@@ -1,6 +1,6 @@
 import { event_types, eventSource, getRequestHeaders } from "/script.js";
 import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
-import { getPreviewString, saveTtsProviderSettings } from "./index.ts";
+import { getPreviewString, saveTtsProviderSettings } from "./index";
 
 export { OpenAICompatibleTtsProvider };
 
