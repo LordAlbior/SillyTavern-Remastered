@@ -519,6 +519,45 @@ async function callExtensionHook(name: any, hookName: any) {
 }
 
 /**
+ * Initializes a legacy extension and injects its settings into the extensions panel.
+ * Mirrors the standard SillyTavern loader: runs `init()` (for extensions that don't
+ * declare an `activate` hook) and calls `onSettingsRender(container)` to render the
+ * extension's settings into `#extensions_settings`.
+ */
+async function callExtensionInitAndRender(name: any, manifest: any) {
+  if (!manifest.js) {
+    return;
+  }
+
+  const url = `/scripts/extensions/${name}/${manifest.js}`;
+
+  try {
+    const module = await import(url);
+
+    // Built-ins run `init` through the `activate` hook; only invoke it directly for
+    // extensions that don't declare one, to avoid double-initialization.
+    const hasActivateHook = manifest.hooks && typeof manifest.hooks === "object" && !!manifest.hooks.activate;
+    if (typeof module.init === "function" && !hasActivateHook) {
+      await module.init();
+    }
+
+    if (typeof module.onSettingsRender === "function") {
+      const containerId = `${name.replace(/\//g, "_")}_settings`;
+      if (!document.getElementById(containerId)) {
+        const container = document.createElement("div");
+        container.id = containerId;
+        container.classList.add("extension_container");
+        $("#extensions_settings").append(container);
+      }
+      // Original ST passes the raw DOM node, not a jQuery wrapper.
+      await module.onSettingsRender(document.getElementById(containerId));
+    }
+  } catch (error) {
+    console.error(`callExtensionInitAndRender: Error initializing extension "${name}":`, error);
+  }
+}
+
+/**
  * Enables an extension by name.
  * @param {string} name Extension name
  * @param {boolean} [reload=true] If true, reload the page after enabling the extension
@@ -698,6 +737,7 @@ async function activateExtensions() {
             activeExtensions.add(name);
             return callExtensionHook(name, "activate");
           })
+          .then(() => callExtensionInitAndRender(name, manifest))
           .catch((err) => {
             console.log("Could not activate extension", name, err);
             extensionLoadErrors.add(t`Extension "${displayName}" failed to load: ${err}`);

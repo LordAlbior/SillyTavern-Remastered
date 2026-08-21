@@ -268,6 +268,11 @@ app.get(/^\/(scripts(\/[A-Za-z0-9_\-]+)+\.js|\/?[A-Za-z0-9_\-]+\.js)$/, (request
   if (p.startsWith("/scripts/extensions/")) {
     const diskPath = path.join(rootDirectory, "src", "client", "extensions", p.slice("/scripts/extensions/".length));
     if (fs.existsSync(diskPath)) return next();
+    // User-installed third-party extensions live in the user's data directory,
+    // not in src/client/extensions. Defer to the authenticated user router
+    // (serves req.user.directories.extensions) instead of returning a stub,
+    // otherwise the extension module loads empty and never renders.
+    if (p.startsWith("/scripts/extensions/third-party/")) return next();
   }
   response.type("application/javascript");
   response.send("export * from '/script.js';\nexport { default } from '/script.js';\n");
