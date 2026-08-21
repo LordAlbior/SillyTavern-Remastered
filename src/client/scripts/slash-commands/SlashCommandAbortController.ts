@@ -1,33 +1,3 @@
-import { AbstractEventTarget } from "./AbstractEventTarget";
-
-export class SlashCommandAbortController extends AbstractEventTarget {
-  /**@type {SlashCommandAbortSignal}*/ signal;
-
-  constructor() {
-    super();
-    this.signal = new SlashCommandAbortSignal();
-  }
-  abort(reason = "No reason.", isQuiet = false) {
-    this.signal.isQuiet = isQuiet;
-    this.signal.aborted = true;
-    this.signal.reason = reason as any;
-    this.dispatchEvent(new Event("abort"));
-  }
-  pause(reason = "No reason.") {
-    this.signal.paused = true;
-    this.signal.reason = reason as any;
-    this.dispatchEvent(new Event("pause"));
-  }
-  continue(reason = "No reason.") {
-    this.signal.paused = false;
-    this.signal.reason = reason as any;
-    this.dispatchEvent(new Event("continue"));
-  }
-}
-
-export class SlashCommandAbortSignal {
-  /**@type {boolean}*/ isQuiet = false;
-  /**@type {boolean}*/ paused = false;
-  /**@type {boolean}*/ aborted = false;
-  /**@type {string}*/ reason = null;
-}
+// Re-export shim for the legacy global script class.
+// Real implementation moved during client-monolith-decomposition.
+export * from "../../app/systems/slash-commands/slash-commands/SlashCommandAbortController";

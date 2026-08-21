@@ -1,9 +1,3 @@
-import { SlashCommandClosure } from "./SlashCommandClosure";
-
-export class SlashCommandUnnamedArgumentAssignment {
-  /** @type {number} */ start: any;
-  /** @type {number} */ end: any;
-  /** @type {string|SlashCommandClosure} */ value: any;
-
-  constructor() {}
-}
+// Re-export shim for the legacy global script class.
+// Real implementation moved during client-monolith-decomposition.
+export * from "../../app/systems/slash-commands/slash-commands/SlashCommandUnnamedArgumentAssignment";
