@@ -7,19 +7,19 @@ import {
   reloadCurrentChat,
   saveSettingsDebounced,
   this_chid,
-} from "/script.js";
-import { extension_settings, renderExtensionTemplateAsync } from "/scripts/extensions.js";
-import { selected_group } from "/scripts/group-chats.js";
-import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/script";
+import { extension_settings, renderExtensionTemplateAsync } from "/scripts/extensions";
+import { selected_group } from "/scripts/group-chats";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { commonEnumProviders, enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { commonEnumProviders, enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
 import {
   download,
   equalsIgnoreCaseAndAccents,
@@ -31,7 +31,7 @@ import {
   regexFromString,
   setInfoBlock,
   uuidv4,
-} from "/scripts/utils.js";
+} from "/scripts/utils";
 import {
   allowPresetScripts,
   allowScopedScripts,
@@ -50,10 +50,10 @@ import {
   SCRIPT_TYPE_UNKNOWN,
   SCRIPT_TYPES,
   substitute_find_regex,
-} from "/scripts/regex-engine.js";
-import { t } from "/scripts/i18n.js";
-import { accountStorage } from "/scripts/util/AccountStorage.js";
-import { getPresetManager } from "/scripts/preset-manager.js";
+} from "/scripts/regex-engine";
+import { t } from "/scripts/i18n";
+import { accountStorage } from "/scripts/util/AccountStorage";
+import { getPresetManager } from "/scripts/preset-manager";
 
 // Re-exports for legacy extensions
 export { getRegexScripts };
@@ -61,7 +61,7 @@ export { getRegexScripts };
 const sanitizeFileName = (name: any) => name.replace(/[\s.<>:"/\\|?*\x00-\x1F\x7F]/g, "_").toLowerCase();
 
 /**
- * @typedef {import("/scripts/char-data.js").RegexScriptData} RegexScript
+ * @typedef {import("/scripts/char-data").RegexScriptData} RegexScript
  */
 
 /**
@@ -560,7 +560,7 @@ function setMoveButtonsVisibility() {
 
 /**
  * Saves a regex script to the extension settings or character data.
- * @param {import("/scripts/char-data.js").RegexScriptData} regexScript
+ * @param {import("/scripts/char-data").RegexScriptData} regexScript
  * @param {number} existingScriptIndex Index of the existing script
  * @param {SCRIPT_TYPES} scriptType Type of the script
  * @param {boolean} [saveSettings=true] Whether to save the settings immediately
@@ -660,7 +660,7 @@ async function deleteRegexScript(id: any, scriptType: any, saveSettings = true) 
 
 /**
  * Move a regex script from one type to another
- * @param {import("/scripts/char-data.js").RegexScriptData} script The script to move
+ * @param {import("/scripts/char-data").RegexScriptData} script The script to move
  * @param {SCRIPT_TYPES} toType Target type
  * @param {SCRIPT_TYPES|null} fromType Source type, if null it will be determined automatically
  * @param {boolean} saveSettings Whether to save the settings immediately
@@ -692,7 +692,7 @@ async function loadRegexScripts() {
   /**
    * Renders a script to the UI.
    * @param {string} container Container to render the script to
-   * @param {import("/scripts/char-data.js").RegexScriptData} script Script data
+   * @param {import("/scripts/char-data").RegexScriptData} script Script data
    * @param {SCRIPT_TYPES} scriptType Type of the script
    * @param {number} index Index of the script in the array
    */
@@ -2138,7 +2138,7 @@ export async function init() {
   /**
    * @typedef {object} ScriptDecorators
    * @property {string} typename
-   * @property {import("/scripts/slash-commands/SlashCommandEnumValue.js").EnumType} color
+   * @property {import("/scripts/slash-commands/SlashCommandEnumValue").EnumType} color
    * @property {string} icon
    */
 

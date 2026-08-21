@@ -1,4 +1,4 @@
-import { Fuse } from "/lib.js";
+import { Fuse } from "/lib";
 
 import {
   characters,
@@ -13,8 +13,8 @@ import {
   substituteParamsExtended,
   system_message_types,
   this_chid,
-} from "/script.js";
-import { dragElement, isMobile } from "/scripts/RossAscends-mods.js";
+} from "/script";
+import { dragElement, isMobile } from "/scripts/RossAscends-mods";
 import {
   getContext,
   getApiUrl,
@@ -23,8 +23,8 @@ import {
   ModuleWorkerWrapper,
   doExtrasFetch,
   renderExtensionTemplateAsync,
-} from "/scripts/extensions.js";
-import { loadMovingUIState, performFuzzySearch, power_user } from "/scripts/power-user.js";
+} from "/scripts/extensions";
+import { loadMovingUIState, performFuzzySearch, power_user } from "/scripts/power-user";
 import {
   onlyUnique,
   debounce,
@@ -35,24 +35,24 @@ import {
   findChar,
   isFalseBoolean,
   includesIgnoreCaseAndAccents,
-} from "/scripts/utils.js";
-import { hideMutedSprites, selected_group } from "/scripts/group-chats.js";
-import { isJsonSchemaSupported } from "/scripts/textgen-settings.js";
-import { debounce_timeout } from "/scripts/constants.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/scripts/utils";
+import { hideMutedSprites, selected_group } from "/scripts/group-chats";
+import { isJsonSchemaSupported } from "/scripts/textgen-settings";
+import { debounce_timeout } from "/scripts/constants";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { slashCommandReturnHelper } from "/scripts/slash-commands/SlashCommandReturnHelper.js";
-import { generateWebLlmChatPrompt, isWebLlmSupported } from "/scripts/extensions/shared.js";
-import { Popup, POPUP_RESULT } from "/scripts/popup.js";
-import { t } from "/scripts/i18n.js";
-import { removeReasoningFromString } from "/scripts/reasoning.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { slashCommandReturnHelper } from "/scripts/slash-commands/SlashCommandReturnHelper";
+import { generateWebLlmChatPrompt, isWebLlmSupported } from "/scripts/extensions/shared";
+import { Popup, POPUP_RESULT } from "/scripts/popup";
+import { t } from "/scripts/i18n";
+import { removeReasoningFromString } from "/scripts/reasoning";
 export { MODULE_NAME };
 
 /**
@@ -2028,7 +2028,7 @@ async function onClickExpressionUpload(this: any, event: any) {
         // If it's a valid filename and there's no existing file with the same name, we just take it
         spriteName = fileNameWithoutExtension;
       } else {
-        /** @type {import("/scripts/popup.js").CustomPopupButton[]} */
+        /** @type {import("/scripts/popup").CustomPopupButton[]} */
         const customButtons = [];
         if (clickedFileName) {
           customButtons.push({
@@ -2640,7 +2640,7 @@ export async function init() {
       /** @type {(args: {return: string, filter: string}) => Promise<string>} */
       callback: async (args: any) => {
         const returnType =
-          /** @type {import("/scripts/slash-commands/SlashCommandReturnHelper.js").SlashCommandReturnType} */
+          /** @type {import("/scripts/slash-commands/SlashCommandReturnHelper").SlashCommandReturnType} */
           (args.return);
 
         const list = await getExpressionsList({ filterAvailable: !isFalseBoolean(args.filter) });

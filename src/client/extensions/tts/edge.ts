@@ -1,6 +1,6 @@
-import { getRequestHeaders } from "/script.js";
-import { getApiUrl } from "/scripts/extensions.js";
-import { doExtrasFetch, modules } from "/scripts/extensions.js";
+import { getRequestHeaders } from "/script";
+import { getApiUrl } from "/scripts/extensions";
+import { doExtrasFetch, modules } from "/scripts/extensions";
 import { getPreviewString } from "./index";
 import { saveTtsProviderSettings } from "./index";
 

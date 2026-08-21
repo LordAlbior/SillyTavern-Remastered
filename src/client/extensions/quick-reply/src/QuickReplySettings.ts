@@ -1,5 +1,5 @@
-import { chat_metadata, saveSettingsDebounced } from "/script.js";
-import { extension_settings, saveMetadataDebounced } from "/scripts/extensions.js";
+import { chat_metadata, saveSettingsDebounced } from "/script";
+import { extension_settings, saveMetadataDebounced } from "/scripts/extensions";
 import { QuickReplyConfig } from "./QuickReplyConfig";
 
 export class QuickReplySettings {

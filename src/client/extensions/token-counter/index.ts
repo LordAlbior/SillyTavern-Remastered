@@ -1,13 +1,13 @@
-import { main_api } from "/script.js";
-import { getContext } from "/scripts/extensions.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { getFriendlyTokenizerName, getTextTokens, getTokenCountAsync, tokenizers } from "/scripts/tokenizers.js";
-import { resetScrollHeight, debounce } from "/scripts/utils.js";
-import { debounce_timeout } from "/scripts/constants.js";
-import { POPUP_TYPE, callGenericPopup } from "/scripts/popup.js";
-import { renderExtensionTemplateAsync } from "/scripts/extensions.js";
-import { t } from "/scripts/i18n.js";
+import { main_api } from "/script";
+import { getContext } from "/scripts/extensions";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { getFriendlyTokenizerName, getTextTokens, getTokenCountAsync, tokenizers } from "/scripts/tokenizers";
+import { resetScrollHeight, debounce } from "/scripts/utils";
+import { debounce_timeout } from "/scripts/constants";
+import { POPUP_TYPE, callGenericPopup } from "/scripts/popup";
+import { renderExtensionTemplateAsync } from "/scripts/extensions";
+import { t } from "/scripts/i18n";
 
 async function doTokenCounter() {
   const { tokenizerName, tokenizerId } = getFriendlyTokenizerName(main_api);

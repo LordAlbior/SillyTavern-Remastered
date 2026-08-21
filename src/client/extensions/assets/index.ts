@@ -3,8 +3,8 @@ TODO:
 */
 //const DEBUG_TONY_SAMA_FORK_MODE = true
 
-import { DOMPurify } from "/lib.js";
-import { getRequestHeaders, processDroppedFiles, eventSource, event_types } from "/script.js";
+import { DOMPurify } from "/lib";
+import { getRequestHeaders, processDroppedFiles, eventSource, event_types } from "/script";
 import {
   deleteExtension,
   EMPTY_AUTHOR,
@@ -14,12 +14,12 @@ import {
   installExtension,
   renderExtensionTemplateAsync,
   isOfficialExtension,
-} from "/scripts/extensions.js";
-import { POPUP_TYPE, Popup, callGenericPopup } from "/scripts/popup.js";
-import { accountStorage } from "/scripts/util/AccountStorage.js";
-import { escapeHtml, flashHighlight, getStringHash, isValidUrl } from "/scripts/utils.js";
-import { t, translate } from "/scripts/i18n.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+} from "/scripts/extensions";
+import { POPUP_TYPE, Popup, callGenericPopup } from "/scripts/popup";
+import { accountStorage } from "/scripts/util/AccountStorage";
+import { escapeHtml, flashHighlight, getStringHash, isValidUrl } from "/scripts/utils";
+import { t, translate } from "/scripts/i18n";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
 export { MODULE_NAME };
 
 const MODULE_NAME = "assets";

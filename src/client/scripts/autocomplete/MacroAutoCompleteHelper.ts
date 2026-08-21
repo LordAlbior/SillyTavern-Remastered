@@ -34,7 +34,7 @@ const MacroParserTyped = MacroParser;
 const MacroCstWalkerTyped = MacroCstWalker;
 import { onboardingExperimentalMacroEngine } from "../macros/engine/MacroDiagnostics";
 
-import { chat_metadata } from "/script.ts";
+import { chat_metadata } from "/script";
 import { extension_settings } from "../extensions";
 
 /** @typedef {import('./EnhancedMacroAutoCompleteOption').MacroAutoCompleteContext} MacroAutoCompleteContext */

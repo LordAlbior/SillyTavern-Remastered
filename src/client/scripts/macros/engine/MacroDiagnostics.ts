@@ -3,11 +3,11 @@
 /** @typedef {import('chevrotain').ILexingError} ILexingError */
 /** @typedef {import('chevrotain').IRecognitionException} IRecognitionException */
 
-import { t } from "/scripts/i18n.ts";
-import { Popup, POPUP_RESULT } from "/scripts/popup.ts";
-import { power_user } from "/scripts/power-user.ts";
-import { accountStorage } from "/scripts/util/AccountStorage.ts";
-import { SimpleMutex } from "/scripts/util/SimpleMutex.ts";
+import { t } from "/scripts/i18n";
+import { Popup, POPUP_RESULT } from "/scripts/popup";
+import { power_user } from "/scripts/power-user";
+import { accountStorage } from "/scripts/util/AccountStorage";
+import { SimpleMutex } from "/scripts/util/SimpleMutex";
 
 /**
  * @typedef {Object} MacroErrorContext

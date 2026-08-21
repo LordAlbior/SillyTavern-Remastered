@@ -1,5 +1,5 @@
-import { debounce_timeout } from "/scripts/constants.js";
-import { debounceAsync, splitRecursive } from "/scripts/utils.js";
+import { debounce_timeout } from "/scripts/constants";
+import { debounceAsync, splitRecursive } from "/scripts/utils";
 import { getPreviewString, saveTtsProviderSettings } from "./index";
 
 export class KokoroTtsProvider {

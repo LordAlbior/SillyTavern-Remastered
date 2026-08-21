@@ -1,8 +1,8 @@
-import { getRequestHeaders, substituteParams } from "/script.js";
-import { Popup, POPUP_RESULT, POPUP_TYPE } from "/scripts/popup.js";
-import { executeSlashCommandsOnChatInput, executeSlashCommandsWithOptions } from "/scripts/slash-commands.js";
-import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+import { getRequestHeaders, substituteParams } from "/script";
+import { Popup, POPUP_RESULT, POPUP_TYPE } from "/scripts/popup";
+import { executeSlashCommandsOnChatInput, executeSlashCommandsWithOptions } from "/scripts/slash-commands";
+import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
 import { debounceAsync, warn } from "../index";
 import { QuickReply } from "./QuickReply";
 
@@ -135,7 +135,7 @@ export class QuickReplySet {
    * @param {boolean} [options.isEditor] (false) whether the execution is triggered by the QR editor
    * @param {boolean} [options.isRun] (false) whether the execution is triggered by /run or /: (window.executeQuickReplyByName)
    * @param {SlashCommandScope} [options.scope] (null) scope to be used when running the command
-   * @param {import("/scripts/slash-commands.js").ExecuteSlashCommandsOptions} [options.executionOptions] ({}) further execution options
+   * @param {import("/scripts/slash-commands").ExecuteSlashCommandsOptions} [options.executionOptions] ({}) further execution options
    * @returns
    */
   async executeWithOptions(qr: any, options = {} as any) {

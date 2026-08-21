@@ -8,7 +8,7 @@ import * as MacroRegistryModule from "./MacroRegistry";
 const MacroRegistry: any = (MacroRegistryModule as any).MacroRegistry;
 import { performFuzzySearch } from "../../power-user";
 
-import { escapeRegex } from "/scripts/utils.ts";
+import { escapeRegex } from "/scripts/utils";
 
 /** @typedef {import('./MacroRegistry').MacroDefinition} MacroDefinition */
 /** @typedef {import('./MacroRegistry').MacroValueType} MacroValueType */

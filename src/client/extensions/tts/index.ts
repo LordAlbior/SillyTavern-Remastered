@@ -7,10 +7,10 @@ import {
   name2,
   saveSettingsDebounced,
   substituteParams,
-} from "/script.js";
-import { ModuleWorkerWrapper, extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions.js";
-import { delay, escapeRegex, getBase64Async, getStringHash, onlyUnique, regexFromString } from "/scripts/utils.js";
-import { accountStorage } from "/scripts/util/AccountStorage.js";
+} from "/script";
+import { ModuleWorkerWrapper, extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions";
+import { delay, escapeRegex, getBase64Async, getStringHash, onlyUnique, regexFromString } from "/scripts/utils";
+import { accountStorage } from "/scripts/util/AccountStorage";
 import { EdgeTtsProvider } from "./edge";
 import { ElevenLabsTtsProvider } from "./elevenlabs";
 import { SileroTtsProvider } from "./silerotts";
@@ -19,7 +19,7 @@ import { GptSoVITSAdapterProvider } from "./gpt-sovits-adapter";
 import { CoquiTtsProvider } from "./coqui";
 import { SystemTtsProvider } from "./system";
 import { NovelTtsProvider } from "./novel";
-import { power_user } from "/scripts/power-user.js";
+import { power_user } from "/scripts/power-user";
 import { OpenAITtsProvider } from "./openai";
 import { OpenAICompatibleTtsProvider } from "./openai-compatible";
 import { XTTSTtsProvider } from "./xtts";
@@ -30,17 +30,17 @@ import { AllTalkTtsProvider } from "./alltalk";
 import { CosyVoiceProvider } from "./cosyvoice";
 import { SpeechT5TtsProvider } from "./speecht5";
 import { AzureTtsProvider } from "./azure";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { debounce_timeout } from "/scripts/constants.js";
-import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { POPUP_TYPE, callGenericPopup } from "/scripts/popup.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { debounce_timeout } from "/scripts/constants";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { POPUP_TYPE, callGenericPopup } from "/scripts/popup";
 import { GoogleTranslateTtsProvider } from "./google-translate";
 import { GoogleNativeTtsProvider } from "./google-native";
 import { ChatterboxTtsProvider } from "./chatterbox";
@@ -51,7 +51,7 @@ import { MiniMaxTtsProvider } from "./minimax";
 import { ElectronHubTtsProvider } from "./electronhub";
 import { ChutesTtsProvider } from "./chutes";
 import { VolcengineTtsProvider } from "./volcengine";
-import { applyLocale, t } from "/scripts/i18n.js";
+import { applyLocale, t } from "/scripts/i18n";
 
 const UPDATE_INTERVAL = 1000;
 const wrapper = new ModuleWorkerWrapper(moduleWorker);

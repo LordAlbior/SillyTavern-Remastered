@@ -1,4 +1,4 @@
-import { getStringHash, debounce, waitUntilCondition, extractAllWords, isTrueBoolean } from "/scripts/utils.js";
+import { getStringHash, debounce, waitUntilCondition, extractAllWords, isTrueBoolean } from "/scripts/utils";
 import {
   getContext,
   getApiUrl,
@@ -6,7 +6,7 @@ import {
   doExtrasFetch,
   modules,
   renderExtensionTemplateAsync,
-} from "/scripts/extensions.js";
+} from "/scripts/extensions";
 import {
   activateSendButtons,
   deactivateSendButtons,
@@ -24,24 +24,24 @@ import {
   setExtensionPrompt,
   streamingProcessor,
   animation_easing,
-} from "/script.js";
-import { is_group_generating, selected_group } from "/scripts/group-chats.js";
-import { loadMovingUIState, power_user } from "/scripts/power-user.js";
-import { dragElement } from "/scripts/RossAscends-mods.js";
-import { getTextTokens, getTokenCountAsync, tokenizers } from "/scripts/tokenizers.js";
-import { debounce_timeout } from "/scripts/constants.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/script";
+import { is_group_generating, selected_group } from "/scripts/group-chats";
+import { loadMovingUIState, power_user } from "/scripts/power-user";
+import { dragElement } from "/scripts/RossAscends-mods";
+import { getTextTokens, getTokenCountAsync, tokenizers } from "/scripts/tokenizers";
+import { debounce_timeout } from "/scripts/constants";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { macros, MacroCategory } from "/scripts/macros/macro-system.js";
-import { countWebLlmTokens, generateWebLlmChatPrompt, getWebLlmContextSize, isWebLlmSupported } from "/scripts/extensions/shared.js";
-import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { removeReasoningFromString } from "/scripts/reasoning.js";
-import { MacrosParser } from "/scripts/macros.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { macros, MacroCategory } from "/scripts/macros/macro-system";
+import { countWebLlmTokens, generateWebLlmChatPrompt, getWebLlmContextSize, isWebLlmSupported } from "/scripts/extensions/shared";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { removeReasoningFromString } from "/scripts/reasoning";
+import { MacrosParser } from "/scripts/macros";
 export { MODULE_NAME };
 
 const MODULE_NAME = "1_memory";
@@ -749,7 +749,7 @@ async function summarizeChatMain(context: any, force: any, skipWIAN: any) {
   if (prompt_builders.DEFAULT === extension_settings.memory.prompt_builder) {
     try {
       inApiCall = true;
-      /** @type {import("/script.js").GenerateQuietPromptParams} */
+      /** @type {import("/script").GenerateQuietPromptParams} */
       const params = {
         quietPrompt: prompt,
         skipWIAN: skipWIAN,
@@ -781,7 +781,7 @@ async function summarizeChatMain(context: any, force: any, skipWIAN: any) {
         return null;
       }
 
-      /** @type {import("/script.js").GenerateRawParams} */
+      /** @type {import("/script").GenerateRawParams} */
       const params = {
         prompt: rawPrompt,
         systemPrompt: prompt,

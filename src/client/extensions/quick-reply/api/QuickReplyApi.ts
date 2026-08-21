@@ -3,7 +3,7 @@ import { QuickReplyContextLink } from "../src/QuickReplyContextLink";
 import { QuickReplySet } from "../src/QuickReplySet";
 import { QuickReplySettings } from "../src/QuickReplySettings";
 import { SettingsUi } from "../src/ui/SettingsUi";
-import { onlyUnique } from "/scripts/utils.js";
+import { onlyUnique } from "/scripts/utils";
 
 export class QuickReplyApi {
   /** @type {QuickReplySettings} */ settings;
@@ -69,7 +69,7 @@ export class QuickReplyApi {
    * @param {string} setName name of the existing quick reply set
    * @param {string|number} label label of the existing quick reply (text on the button) or its numeric ID
    * @param {object} [args] optional arguments
-   * @param {import("/scripts/slash-commands.js").ExecuteSlashCommandsOptions} [options] optional execution options
+   * @param {import("/scripts/slash-commands").ExecuteSlashCommandsOptions} [options] optional execution options
    */
   async executeQuickReply(setName: any, label: any, args: any = {}, options: any = {}) {
     const qr = this.getQrByLabel(setName, label);

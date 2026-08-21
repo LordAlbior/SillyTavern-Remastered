@@ -1,4 +1,4 @@
-import { Popper } from "/lib.js";
+import { Popper } from "/lib";
 import {
   animation_duration,
   appendMediaToMessage,
@@ -16,7 +16,7 @@ import {
   systemUserName,
   this_chid,
   user_avatar,
-} from "/script.js";
+} from "/script";
 import {
   doExtrasFetch,
   extension_settings,
@@ -25,8 +25,8 @@ import {
   modules,
   renderExtensionTemplateAsync,
   writeExtensionField,
-} from "/scripts/extensions.js";
-import { selected_group } from "/scripts/group-chats.js";
+} from "/scripts/extensions";
+import { selected_group } from "/scripts/group-chats";
 import {
   clamp,
   debounce,
@@ -40,18 +40,18 @@ import {
   resetScrollHeight,
   saveBase64AsFile,
   stringFormat,
-} from "/scripts/utils.js";
-import { getMessageTimeStamp, humanizedDateTime } from "/scripts/RossAscends-mods.js";
-import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
-import { getNovelAnlas, getNovelUnlimitedImageGeneration, loadNovelSubscriptionData } from "/scripts/nai-settings.js";
-import { getMultimodalCaption } from "/scripts/extensions/shared.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/scripts/utils";
+import { getMessageTimeStamp, humanizedDateTime } from "/scripts/RossAscends-mods";
+import { SECRET_KEYS, secret_state } from "/scripts/secrets";
+import { getNovelAnlas, getNovelUnlimitedImageGeneration, loadNovelSubscriptionData } from "/scripts/nai-settings";
+import { getMultimodalCaption } from "/scripts/extensions/shared";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
 import {
   debounce_timeout,
   IMAGE_OVERSWIPE,
@@ -61,17 +61,17 @@ import {
   SCROLL_BEHAVIOR,
   SWIPE_DIRECTION,
   VIDEO_EXTENSIONS,
-} from "/scripts/constants.js";
-import { SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup.js";
-import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { ToolManager } from "/scripts/tool-calling.js";
-import { macros, MacroCategory } from "/scripts/macros/macro-system.js";
-import { t, translate } from "/scripts/i18n.js";
-import { oai_settings } from "/scripts/openai.js";
-import { power_user } from "/scripts/power-user.js";
-import { MacrosParser } from "/scripts/macros.js";
-import { ActionLoaderHandle, loader } from "/scripts/action-loader.js";
+} from "/scripts/constants";
+import { SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { ToolManager } from "/scripts/tool-calling";
+import { macros, MacroCategory } from "/scripts/macros/macro-system";
+import { t, translate } from "/scripts/i18n";
+import { oai_settings } from "/scripts/openai";
+import { power_user } from "/scripts/power-user";
+import { MacrosParser } from "/scripts/macros";
+import { ActionLoaderHandle, loader } from "/scripts/action-loader";
 
 export { MODULE_NAME };
 
@@ -838,7 +838,7 @@ async function onRenameStyleClick() {
  */
 async function refinePrompt(prompt: any, args: any = null) {
   if (extension_settings.sd.refine_mode) {
-    /** @type {import("/scripts/popup.js").CustomPopupInput[]} */
+    /** @type {import("/scripts/popup").CustomPopupInput[]} */
     const customInputs: any[] = [];
 
     if (args?.negative) {
@@ -5559,8 +5559,8 @@ async function onImageSwiped({ message, element, direction }: any) {
 
 /**
  * Applies the command arguments to the extension settings.
- * @typedef {import("/scripts/slash-commands/SlashCommand.js").NamedArguments} NamedArguments
- * @typedef {import("/scripts/slash-commands/SlashCommand.js").NamedArgumentsCapture} NamedArgumentsCapture
+ * @typedef {import("/scripts/slash-commands/SlashCommand").NamedArguments} NamedArguments
+ * @typedef {import("/scripts/slash-commands/SlashCommand").NamedArgumentsCapture} NamedArgumentsCapture
  * @param {NamedArguments | NamedArgumentsCapture} args - Command arguments
  * @returns {Record<string, any>} - Current settings before applying the command arguments
  */

@@ -14,7 +14,7 @@ import {
   isSwipingAllowed,
   swipe,
   syncMesToSwipe,
-} from "/script.ts";
+} from "/script";
 
 /**
  * Returns whether a swipe picker can be opened for the message.

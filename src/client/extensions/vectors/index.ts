@@ -11,7 +11,7 @@ import {
   substituteParams,
   generateRaw,
   substituteParamsExtended,
-} from "/script.js";
+} from "/script";
 import {
   ModuleWorkerWrapper,
   extension_settings,
@@ -21,10 +21,10 @@ import {
   doExtrasFetch,
   getApiUrl,
   openThirdPartyExtensionMenu,
-} from "/scripts/extensions.js";
-import { collapseNewlines, registerDebugFunction } from "/scripts/power-user.js";
-import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
-import { getDataBankAttachments, getDataBankAttachmentsForSource, getFileAttachment } from "/scripts/chats.js";
+} from "/scripts/extensions";
+import { collapseNewlines, registerDebugFunction } from "/scripts/power-user";
+import { SECRET_KEYS, secret_state } from "/scripts/secrets";
+import { getDataBankAttachments, getDataBankAttachmentsForSource, getFileAttachment } from "/scripts/chats";
 import {
   debounce,
   getStringHash as calculateHash,
@@ -35,24 +35,24 @@ import {
   trimToEndSentence,
   escapeHtml,
   isTrueBoolean,
-} from "/scripts/utils.js";
-import { debounce_timeout } from "/scripts/constants.js";
-import { getSortedEntries } from "/scripts/world-info.js";
-import { textgen_types, textgenerationwebui_settings } from "/scripts/textgen-settings.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/scripts/utils";
+import { debounce_timeout } from "/scripts/constants";
+import { getSortedEntries } from "/scripts/world-info";
+import { textgen_types, textgenerationwebui_settings } from "/scripts/textgen-settings";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { slashCommandReturnHelper } from "/scripts/slash-commands/SlashCommandReturnHelper.js";
-import { generateWebLlmChatPrompt, isWebLlmSupported } from "/scripts/extensions/shared.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { slashCommandReturnHelper } from "/scripts/slash-commands/SlashCommandReturnHelper";
+import { generateWebLlmChatPrompt, isWebLlmSupported } from "/scripts/extensions/shared";
 import { WebLlmVectorProvider } from "./webllm";
-import { removeReasoningFromString } from "/scripts/reasoning.js";
-import { oai_settings } from "/scripts/openai.js";
+import { removeReasoningFromString } from "/scripts/reasoning";
+import { oai_settings } from "/scripts/openai";
 
 /**
  * @typedef {object} HashedMessage
@@ -1648,7 +1648,7 @@ async function onVectorizeAllFilesClick() {
 
     /**
      * Gets the chunk size for a file attachment.
-     * @param file {import("/scripts/chats.js").FileAttachment} File attachment
+     * @param file {import("/scripts/chats").FileAttachment} File attachment
      * @returns {number} Chunk size for the file
      */
     function getChunkSize(file: any) {
@@ -1670,7 +1670,7 @@ async function onVectorizeAllFilesClick() {
 
     /**
      * Gets the overlap percent for a file attachment.
-     * @param file {import("/scripts/chats.js").FileAttachment} File attachment
+     * @param file {import("/scripts/chats").FileAttachment} File attachment
      * @returns {number} Overlap percent for the file
      */
     function getOverlapPercent(file: any) {

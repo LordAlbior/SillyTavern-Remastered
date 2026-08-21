@@ -1,5 +1,5 @@
-import { Popup } from "/scripts/popup.js";
-import { getSortableDelay } from "/scripts/utils.js";
+import { Popup } from "/scripts/popup";
+import { getSortableDelay } from "/scripts/utils";
 import { log, warn } from "../../index";
 import { QuickReply } from "../QuickReply";
 import { QuickReplySet } from "../QuickReplySet";

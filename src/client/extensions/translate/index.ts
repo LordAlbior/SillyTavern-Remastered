@@ -8,21 +8,21 @@ import {
   saveSettingsDebounced,
   substituteParams,
   updateMessageBlock,
-} from "/script.js";
-import { extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions.js";
-import { POPUP_TYPE, callGenericPopup } from "/scripts/popup.js";
-import { updateReasoningUI } from "/scripts/reasoning.js";
-import { secret_state } from "/scripts/secrets.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/script";
+import { extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions";
+import { POPUP_TYPE, callGenericPopup } from "/scripts/popup";
+import { updateReasoningUI } from "/scripts/reasoning";
+import { secret_state } from "/scripts/secrets";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { enumTypes, SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { splitRecursive } from "/scripts/utils.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { splitRecursive } from "/scripts/utils";
 
 export const autoModeOptions = {
   NONE: "none",
