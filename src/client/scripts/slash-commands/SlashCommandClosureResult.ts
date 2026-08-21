@@ -1,10 +1,3 @@
-export class SlashCommandClosureResult {
-  /**@type {boolean}*/ interrupt = false;
-  /**@type {string}*/ pipe: any;
-  /**@type {boolean}*/ isBreak = false;
-  /**@type {boolean}*/ isAborted = false;
-  /**@type {boolean}*/ isQuietlyAborted = false;
-  /**@type {string}*/ abortReason: any;
-  /**@type {boolean}*/ isError = false;
-  /**@type {string}*/ errorMessage: any;
-}
+// Re-export shim for the legacy global script class.
+// Real implementation moved during client-monolith-decomposition.
+export * from "../../app/systems/slash-commands/slash-commands/SlashCommandClosureResult";
