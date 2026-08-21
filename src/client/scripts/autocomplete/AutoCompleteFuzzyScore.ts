@@ -1,13 +1,3 @@
-export class AutoCompleteFuzzyScore {
-  /**@type {number}*/ start;
-  /**@type {number}*/ longestConsecutive;
-
-  /**
-   * @param {number} start
-   * @param {number} longestConsecutive
-   */
-  constructor(start: any, longestConsecutive: any) {
-    this.start = start;
-    this.longestConsecutive = longestConsecutive;
-  }
-}
+// Re-export shim for the legacy global script.
+// Real implementation moved during client-monolith-decomposition.
+export * from "../../app/systems/autocomplete/AutoCompleteFuzzyScore.ts";
