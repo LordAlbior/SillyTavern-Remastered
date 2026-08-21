@@ -1,6 +1,3 @@
-import { AutoCompleteNameResultBase } from "./AutoCompleteNameResultBase";
-
-export class AutoCompleteSecondaryNameResult extends AutoCompleteNameResultBase {
-  /**@type {boolean}*/ isRequired = false;
-  /**@type {boolean}*/ forceMatch = true;
-}
+// Re-export shim for the legacy global script.
+// Real implementation moved during client-monolith-decomposition.
+export * from "../../app/systems/autocomplete/AutoCompleteSecondaryNameResult.ts";
