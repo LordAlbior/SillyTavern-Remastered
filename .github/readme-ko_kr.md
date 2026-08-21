@@ -9,34 +9,37 @@
 
 [English](readme.md) | [German](readme-de_de.md) | [中文](readme-zh_cn.md) | [繁體中文](readme-zh_tw.md) | [日本語](readme-ja_jp.md) | [Русский](readme-ru_ru.md) | 한국어
 
-[![GitHub Stars](https://img.shields.io/github/stars/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/forks)
-[![GitHub Issues](https://img.shields.io/github/issues/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SillyTavern/SillyTavern.svg)](https://github.com/SillyTavern/SillyTavern/pulls)
+[![GitHub Stars](https://img.shields.io/github/stars/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/forks)
+[![GitHub Issues](https://img.shields.io/github/issues/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/LordAlbior/SillyTavern-Remastered.svg)](https://github.com/LordAlbior/SillyTavern-Remastered/pulls)
 
 </div>
 
+> [!NOTE]
+> **Work in Progress.** 이 프로젝트는 현재 작업 중입니다. 개편이 완료되면 새로운 기능 목록이 추가됩니다.
+
 ---
 
-SillyTavern은 많은 LLM API(KoboldAI/CPP, Horde, NovelAI, Ooba, Tabby, OpenAI, OpenRouter, Claude, Mistral 등)에 대한 단일 통합 인터페이스, 모바일 친화적 레이아웃, 비주얼 노벨 모드, Automatic1111 & ComfyUI API 이미지 생성 통합, TTS, 월드 인포 (로어북), 커스텀 가능한 UI, 자동 번역, 필요 이상의 프롬프트 옵션, 그리고 서드파티 확장을 통한 무궁무진한 성장 가능성을 제공합니다.
+SillyTavern: Remastered은 많은 LLM API(KoboldAI/CPP, Horde, NovelAI, Ooba, Tabby, OpenAI, OpenRouter, Claude, Mistral 등)에 대한 단일 통합 인터페이스, 모바일 친화적 레이아웃, 비주얼 노벨 모드, Automatic1111 & ComfyUI API 이미지 생성 통합, TTS, 월드 인포 (로어북), 커스텀 가능한 UI, 자동 번역, 필요 이상의 프롬프트 옵션, 그리고 서드파티 확장을 통한 무궁무진한 성장 가능성을 제공합니다.
 
 또한, 자주 묻는 질문에 대한 답변과, 시작하는 데 도움을 주기 위한 [문서 웹사이트](https://docs.sillytavern.app/)가 있습니다.
 
-## SillyTavern이 무엇인가요?
+## SillyTavern: Remastered이 무엇인가요?
 
-SillyTavern(짧게는 ST)은 텍스트 생성 LLM, 이미지 생성 엔진, TTS 음성 모델 등과 상호작할 수 있는 로컬 설치형 UI 입니다.
+SillyTavern: Remastered(짧게는 ST)은 텍스트 생성 LLM, 이미지 생성 엔진, TTS 음성 모델 등과 상호작할 수 있는 로컬 설치형 UI 입니다.
 
-2023년 2월, TavernAI 1.2.8의 포크로 시작한 SillyTavern은 현재 200명이 넘는 기여자를 보유하고 있으며, 2년간의 독자적인 개발을 거쳐 숙련된 AI 애호가들을 위한 선도적인 소프트웨어로 자리매김하고 있습니다.
+2023년 2월, TavernAI 1.2.8의 포크로 시작한 SillyTavern: Remastered은 현재 200명이 넘는 기여자를 보유하고 있으며, 2년간의 독자적인 개발을 거쳐 숙련된 AI 애호가들을 위한 선도적인 소프트웨어로 자리매김하고 있습니다.
 
 ## 우리의 비전
 
 1. 저희는 사용자가 LLM 프롬프트에 대한 최대한의 유용성과 제어 능력을 갖도록 하는 것을 목표로 합니다. 빠르게 배우는 것 역시 재미의 일부입니다!
 2. 저희는 어떠한 온라인 및 호스팅 서브시도 제공하지 않으며, 프로그래밍으로 사용자의 데이터를 추적하지 않습니다.
-3. SillyTavern은 헌신적인 LLM 커뮤니티가 여러분에게 제공하는 열정적인 프로젝트이며, 언제나 무료이며 오픈소스로 제공될 것입니다.
+3. SillyTavern: Remastered은 헌신적인 LLM 커뮤니티가 여러분에게 제공하는 열정적인 프로젝트이며, 언제나 무료이며 오픈소스로 제공될 것입니다.
 
-## SillyTavern을 위해서 좋은 성능의 PC가 필요한가요?
+## SillyTavern: Remastered을 위해서 좋은 성능의 PC가 필요한가요?
 
-하드웨어 요구 사항은 거의 없습니다: NodeJS 20 이상을 실행할 수 있는 모든 환경에서 작동합니다. 다만 로컬 LLM 모델을 사용할 경우, 최소 6GB VRAM 이상의 3000번대 NVIDIA 그래픽 카드를 권장하지만, 실제 요구 사항은 사용하는 모델과 백엔드에 따라 달라질 수 있습니다.
+하드웨어 요구 사항은 거의 없습니다: Bun을 실행할 수 있는 모든 환경에서 작동합니다. 다만 로컬 LLM 모델을 사용할 경우, 최소 6GB VRAM 이상의 3000번대 NVIDIA 그래픽 카드를 권장하지만, 실제 요구 사항은 사용하는 모델과 백엔드에 따라 달라질 수 있습니다.
 
 ## 질문이나 제안이 있으신가요?
 
@@ -49,7 +52,7 @@ SillyTavern(짧게는 ST)은 텍스트 생성 LLM, 이미지 생성 엔진, TTS 
 
 * 디스코드: cohee, rossascends, wolfsblvt
 * 레딧: [/u/RossAscends](https://www.reddit.com/user/RossAscends/), [/u/sillylossy](https://www.reddit.com/user/sillylossy/), [u/Wolfsblvt](https://www.reddit.com/user/Wolfsblvt/)
-* [GitHub issue를 작성하세요](https://github.com/SillyTavern/SillyTavern/issues)
+* [GitHub issue를 작성하세요](https://github.com/LordAlbior/SillyTavern-Remastered/issues)
 
 ### 이 프로젝트가 마음에 들어요! 어떻게 기여할 수 있을까요?
 
@@ -86,7 +89,7 @@ SillyTavern(짧게는 ST)은 텍스트 생성 LLM, 이미지 생성 엔진, TTS 
 
 ## 상위 기여자
 
-[![Contributors](https://contrib.rocks/image?repo=SillyTavern/SillyTavern)](https://github.com/SillyTavern/SillyTavern/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=LordAlbior/SillyTavern-Remastered)](https://github.com/LordAlbior/SillyTavern-Remastered/graphs/contributors)
 
 <!-- LINK GROUP -->
 [cover]: https://github.com/user-attachments/assets/01a6ae9a-16aa-45f2-8bff-32b5dc587e44

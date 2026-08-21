@@ -1,4 +1,7 @@
-# SillyTavern
+# SillyTavern: Remastered
+
+> [!NOTE]
+> **Work in Progress.** This project is a work in progress. A list of brand-new features will be added once the rewrite is complete.
 
 LLM Frontend for Power Users
 

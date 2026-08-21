@@ -1,4 +1,4 @@
-# How to contribute to SillyTavern
+# How to contribute to SillyTavern: Remastered
 
 ## Setting up the dev environment
 
