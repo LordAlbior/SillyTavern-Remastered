@@ -11,7 +11,7 @@ import { MacroParser } from "./MacroParser";
 // @ts-expect-error - MacroRegistry module has implicit any types
 import { MacroRegistry } from "./MacroRegistry";
 
-import { isFalseBoolean } from "/scripts/utils.ts";
+import { isFalseBoolean } from "/scripts/utils";
 
 /**
  * @typedef {Object} MacroCall

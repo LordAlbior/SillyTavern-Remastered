@@ -1,4 +1,4 @@
-import { doExtrasFetch, getApiUrl, modules } from "/scripts/extensions.js";
+import { doExtrasFetch, getApiUrl, modules } from "/scripts/extensions";
 import { saveTtsProviderSettings } from "./index";
 
 export { XTTSTtsProvider };

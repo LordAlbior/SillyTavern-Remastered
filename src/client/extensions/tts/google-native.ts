@@ -1,6 +1,6 @@
-import { getRequestHeaders } from "/script.js";
-import { oai_settings } from "/scripts/openai.js";
-import { isValidUrl } from "/scripts/utils.js";
+import { getRequestHeaders } from "/script";
+import { oai_settings } from "/scripts/openai";
+import { isValidUrl } from "/scripts/utils";
 import { getPreviewString, saveTtsProviderSettings } from "./index";
 
 export class GoogleNativeTtsProvider {

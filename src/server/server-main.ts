@@ -275,7 +275,7 @@ app.get(/^\/(scripts(\/[A-Za-z0-9_\-]+)+\.js|\/?[A-Za-z0-9_\-]+\.js)$/, (request
     if (p.startsWith("/scripts/extensions/third-party/")) return next();
   }
   response.type("application/javascript");
-  response.send("export * from '/script.js';\nexport { default } from '/script.js';\n");
+  response.send("export * from '/script';\nexport { default } from '/script.js';\n");
 });
 
 // Public API

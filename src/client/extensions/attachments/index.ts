@@ -1,22 +1,22 @@
-import { event_types, eventSource, saveSettingsDebounced } from "/script.js";
+import { event_types, eventSource, saveSettingsDebounced } from "/script";
 import {
   deleteAttachment,
   getDataBankAttachments,
   getDataBankAttachmentsForSource,
   getFileAttachment,
   uploadFileAttachmentToServer,
-} from "/scripts/chats.js";
-import { extension_settings, renderExtensionTemplateAsync } from "/scripts/extensions.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/scripts/chats";
+import { extension_settings, renderExtensionTemplateAsync } from "/scripts/extensions";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure.js";
-import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure";
+import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
 
 /**
  * List of attachment sources

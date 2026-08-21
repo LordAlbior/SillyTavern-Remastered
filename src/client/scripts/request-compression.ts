@@ -30,7 +30,7 @@ export function setRequestCompressionConfig(config: any) {
 function gzipBuffer(input: any) {
     let terminate = /** @type {() => void} */ (() => {});
     // @ts-ignore - runtime path, no type declarations
-    const promise = import('/lib.js').then(({ gzip }) => {
+    const promise = import('/lib').then(({ gzip }) => {
         return new Promise((resolve, reject) => {
             try {
                 // @ts-ignore - fflate gzip returns void; original code stored it as the cancel fn

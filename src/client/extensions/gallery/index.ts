@@ -6,8 +6,8 @@ import {
   event_types,
   animation_duration,
   animation_easing,
-} from "/script.js";
-import { groups, selected_group } from "/scripts/group-chats.js";
+} from "/script";
+import { groups, selected_group } from "/scripts/group-chats";
 import {
   loadFileToDocument,
   delay,
@@ -17,18 +17,18 @@ import {
   getFileExtension,
   getVideoThumbnail,
   clamp,
-} from "/scripts/utils.js";
-import { loadMovingUIState } from "/scripts/power-user.js";
-import { dragElement } from "/scripts/RossAscends-mods.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
-import { ARGUMENT_TYPE, SlashCommandNamedArgument } from "/scripts/slash-commands/SlashCommandArgument.js";
-import { DragAndDropHandler } from "/scripts/dragdrop.js";
-import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { t, translate } from "/scripts/i18n.js";
-import { Popup } from "/scripts/popup.js";
-import { deleteMediaFromServer } from "/scripts/chats.js";
-import { MEDIA_REQUEST_TYPE, VIDEO_EXTENSIONS } from "/scripts/constants.js";
+} from "/scripts/utils";
+import { loadMovingUIState } from "/scripts/power-user";
+import { dragElement } from "/scripts/RossAscends-mods";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
+import { ARGUMENT_TYPE, SlashCommandNamedArgument } from "/scripts/slash-commands/SlashCommandArgument";
+import { DragAndDropHandler } from "/scripts/dragdrop";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { t, translate } from "/scripts/i18n";
+import { Popup } from "/scripts/popup";
+import { deleteMediaFromServer } from "/scripts/chats";
+import { MEDIA_REQUEST_TYPE, VIDEO_EXTENSIONS } from "/scripts/constants";
 
 const isVideo = (/** @type {string} */ url: any) => VIDEO_EXTENSIONS.some((ext: any) => new RegExp(`.${ext}$`, "i").test(url));
 const extensionName = "gallery";

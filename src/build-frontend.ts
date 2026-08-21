@@ -31,8 +31,8 @@ const shellResolve = {
     build.onResolve({ filter: /^JSZip$/ }, () => ({ path: "JSZip", external: true }));
     build.onResolve({ filter: /^\// }, (args: Bun.OnResolveArgs) => {
       const p = args.path;
-      if (p === "/lib.js" || p === "/lib.ts") return { path: "/lib.js", external: true };
-      if (p === "/script.js" || p === "/script.ts") {
+      if (p === "/lib" || p === "/lib.ts" || p === "/lib.js") return { path: "/lib.js", external: true };
+      if (p === "/script" || p === "/script.ts" || p === "/script.js") {
         return { path: path.join(publicDir, "script.ts") };
       }
       const base = path.join(publicDir, p.slice(1).replace(/\.(ts|js)$/, ""));
@@ -54,8 +54,8 @@ const extResolve = {
   setup(build: Bun.PluginBuilder) {
     build.onResolve({ filter: /^JSZip$/ }, () => ({ path: "JSZip", external: true }));
     build.onResolve({ filter: /^\// }, (args: Bun.OnResolveArgs) => {
-      if (args.path === "/lib.js" || args.path === "/lib.ts") return { path: args.path, external: true };
-      if (args.path === "/script.js" || args.path === "/script.ts") return { path: args.path, external: true };
+      if (args.path === "/lib" || args.path === "/lib.ts" || args.path === "/lib.js") return { path: "/lib.js", external: true };
+      if (args.path === "/script" || args.path === "/script.ts" || args.path === "/script.js") return { path: "/script.js", external: true };
       return undefined;
     });
   },
@@ -98,9 +98,9 @@ function rewriteExtensionImports(srcDir: string) {
     } else if (ent.name.endsWith(".ts")) {
       let src = fs.readFileSync(p, "utf8");
       // /scripts/X.js  -> /script.js   (shared monolith, single instance)
-      src = src.replace(/(["'])\/scripts\/[\w\-/]+\.js\1/g, "$1/script.js$1");
+      src = src.replace(/(["'])\/scripts\/[\w\-/]+\.?(?:js|ts)?\1/g, "$1/script$1");
       // ../lib/X (if unresolved in tree) -> /lib.js (shared)
-      src = src.replace(/(["'])\.\.\/lib(\/[\w\-/]+)?\.js\1/g, "$1/lib.js$1");
+      src = src.replace(/(["'])\.\.\/lib(?:[\w\-/]*)?\.?(?:js|ts)?\1/g, "$1/lib$1");
       fs.writeFileSync(p, src);
     }
   }
@@ -115,7 +115,7 @@ async function main() {
     format: "esm",
     minify: { identifiers: false, whitespace: true },
     plugins: [shellResolve],
-    external: [/^\/(lib|script)\.js$/],
+    external: [/^\/(lib|script)(\.js|\.ts)?$/],
   });
   console.log(`  → dist/lib.js (${(libRes.outputs[0].size / 1024).toFixed(0)} KB)`);
 
@@ -130,7 +130,7 @@ async function main() {
     format: "esm",
     minify: { identifiers: false, whitespace: true },
     plugins: [shellResolve],
-    external: [/^\/(lib|script)\.js$/],
+    external: [/^\/(lib|script)(\.js|\.ts)?$/],
   });
   console.log(`  → dist/script.js (${(scriptRes.outputs[0].size / 1024).toFixed(0)} KB)`);
 
@@ -144,7 +144,7 @@ async function main() {
       format: "esm",
       minify: { identifiers: false, whitespace: true },
       plugins: [shellResolve],
-      external: [/^\/(lib|script)\.js$/],
+    external: [/^\/(lib|script)(\.js|\.ts)?$/],
     });
     console.log("  → dist/scripts/login.js");
   }
@@ -174,7 +174,7 @@ async function main() {
       format: "esm",
       minify: { identifiers: false, whitespace: true },
       plugins: [extResolve],
-      external: [/^\/(lib|script)\.js$/],
+    external: [/^\/(lib|script)(\.js|\.ts)?$/],
     });
     copyStatic(path.join(extSrc, name), path.join(extOut, name));
     built++;

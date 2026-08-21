@@ -4,7 +4,7 @@ import {
   getFileExtension,
   isTrueBoolean,
   saveBase64AsFile,
-} from "/scripts/utils.js";
+} from "/scripts/utils";
 import {
   getContext,
   getApiUrl,
@@ -12,7 +12,7 @@ import {
   extension_settings,
   modules,
   renderExtensionTemplateAsync,
-} from "/scripts/extensions.js";
+} from "/scripts/extensions";
 import {
   appendMediaToMessage,
   chat_metadata,
@@ -22,22 +22,22 @@ import {
   saveChatConditional,
   saveSettingsDebounced,
   substituteParams,
-} from "/script.js";
-import { getMessageTimeStamp } from "/scripts/RossAscends-mods.js";
-import { SECRET_KEYS, secret_state } from "/scripts/secrets.js";
-import { oai_settings } from "/scripts/openai.js";
-import { getMultimodalCaption } from "/scripts/extensions/shared.js";
-import { textgen_types, textgenerationwebui_settings } from "/scripts/textgen-settings.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
+} from "/script";
+import { getMessageTimeStamp } from "/scripts/RossAscends-mods";
+import { SECRET_KEYS, secret_state } from "/scripts/secrets";
+import { oai_settings } from "/scripts/openai";
+import { getMultimodalCaption } from "/scripts/extensions/shared";
+import { textgen_types, textgenerationwebui_settings } from "/scripts/textgen-settings";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup.js";
-import { debounce_timeout, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR } from "/scripts/constants.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { commonEnumProviders } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/scripts/popup";
+import { debounce_timeout, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR } from "/scripts/constants";
 export { MODULE_NAME };
 
 const MODULE_NAME = "caption";

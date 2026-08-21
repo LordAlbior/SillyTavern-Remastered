@@ -1,4 +1,4 @@
-import { DOMPurify, Fuse } from "/lib.js";
+import { DOMPurify, Fuse } from "/lib";
 
 import {
   activateSendButtons,
@@ -8,22 +8,22 @@ import {
   main_api,
   online_status,
   saveSettingsDebounced,
-} from "/script.js";
-import { extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions.js";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "/scripts/popup.js";
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
-import { SlashCommandAbortController } from "/scripts/slash-commands/SlashCommandAbortController.js";
+} from "/script";
+import { extension_settings, getContext, renderExtensionTemplateAsync } from "/scripts/extensions";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "/scripts/popup";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
+import { SlashCommandAbortController } from "/scripts/slash-commands/SlashCommandAbortController";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { commonEnumProviders, enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandDebugController } from "/scripts/slash-commands/SlashCommandDebugController.js";
-import { enumTypes, SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { commonEnumProviders, enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandDebugController } from "/scripts/slash-commands/SlashCommandDebugController";
+import { enumTypes, SlashCommandEnumValue } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope";
 import {
   collapseSpaces,
   getUniqueName,
@@ -31,13 +31,13 @@ import {
   isTrueBoolean,
   uuidv4,
   waitUntilCondition,
-} from "/scripts/utils.js";
-import { t } from "/scripts/i18n.js";
-import { getSecretLabelById } from "/scripts/secrets.js";
-import { performFuzzySearch } from "/scripts/power-user.js";
-import { StreamingDisplay } from "/scripts/streaming-display.js";
-import { ConnectionManagerRequestService } from "/scripts/extensions/shared.js";
-import { formatReasoning } from "/scripts/reasoning.js";
+} from "/scripts/utils";
+import { t } from "/scripts/i18n";
+import { getSecretLabelById } from "/scripts/secrets";
+import { performFuzzySearch } from "/scripts/power-user";
+import { StreamingDisplay } from "/scripts/streaming-display";
+import { ConnectionManagerRequestService } from "/scripts/extensions/shared";
+import { formatReasoning } from "/scripts/reasoning";
 
 const MODULE_NAME = "connection-manager";
 const NONE = "<None>";
@@ -668,7 +668,7 @@ async function generateStreamCallback(args: any, value: any) {
         stream: false,
       } as any);
 
-      const extracted = /** @type {import("/scripts/custom-request.js").ExtractedData} */ (response);
+      const extracted = /** @type {import("/scripts/custom-request").ExtractedData} */ (response);
       finalText = extracted?.content || "";
       finalReasoning = extracted?.reasoning || "";
 

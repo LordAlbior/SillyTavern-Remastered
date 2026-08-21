@@ -1,17 +1,17 @@
-import { SlashCommand } from "/scripts/slash-commands/SlashCommand.js";
-import { SlashCommandAbortController } from "/scripts/slash-commands/SlashCommandAbortController.js";
+import { SlashCommand } from "/scripts/slash-commands/SlashCommand";
+import { SlashCommandAbortController } from "/scripts/slash-commands/SlashCommandAbortController";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "/scripts/slash-commands/SlashCommandArgument.js";
-import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure.js";
-import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider.js";
-import { SlashCommandDebugController } from "/scripts/slash-commands/SlashCommandDebugController.js";
-import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue.js";
-import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser.js";
-import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope.js";
-import { isTrueBoolean } from "/scripts/utils.js";
+} from "/scripts/slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "/scripts/slash-commands/SlashCommandClosure";
+import { enumIcons } from "/scripts/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandDebugController } from "/scripts/slash-commands/SlashCommandDebugController";
+import { SlashCommandEnumValue, enumTypes } from "/scripts/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/scripts/slash-commands/SlashCommandParser";
+import { SlashCommandScope } from "/scripts/slash-commands/SlashCommandScope";
+import { isTrueBoolean } from "/scripts/utils";
 import { QuickReplyApi } from "../api/QuickReplyApi";
 import { QuickReplySet } from "./QuickReplySet";
 

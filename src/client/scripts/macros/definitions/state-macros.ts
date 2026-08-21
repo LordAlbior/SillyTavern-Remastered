@@ -2,7 +2,7 @@ import { MacroCategory } from "../engine/MacroRegistry";
 const MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
 import { eventSource, event_types } from "../../events";
 
-import { findExtension } from "/scripts/extensions.ts";
+import { findExtension } from "/scripts/extensions";
 
 let lastGenerationTypeValue = "";
 let lastGenerationTypeTrackingInitialized = false;

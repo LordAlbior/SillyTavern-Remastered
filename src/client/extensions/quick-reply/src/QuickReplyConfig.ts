@@ -1,4 +1,4 @@
-import { getSortableDelay } from "/scripts/utils.js";
+import { getSortableDelay } from "/scripts/utils";
 import { QuickReplySetLink } from "./QuickReplySetLink";
 import { QuickReplySet } from "./QuickReplySet";
 

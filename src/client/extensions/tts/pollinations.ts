@@ -1,5 +1,5 @@
-import { getRequestHeaders } from "/script.js";
-import { splitRecursive } from "/scripts/utils.js";
+import { getRequestHeaders } from "/script";
+import { splitRecursive } from "/scripts/utils";
 import { getPreviewString, saveTtsProviderSettings } from "./index";
 
 export class PollinationsTtsProvider {

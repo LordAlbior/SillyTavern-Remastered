@@ -6,8 +6,8 @@ import {
   getRequestHeaders,
   this_chid,
   characters,
-} from "/script.js";
-import { extension_settings } from "/scripts/extensions.js";
+} from "/script";
+import { extension_settings } from "/scripts/extensions";
 import { QuickReplyApi } from "./api/QuickReplyApi";
 import { AutoExecuteHandler } from "./src/AutoExecuteHandler";
 import { QuickReply } from "./src/QuickReply";
@@ -17,8 +17,8 @@ import { QuickReplySettings } from "./src/QuickReplySettings";
 import { SlashCommandHandler } from "./src/SlashCommandHandler";
 import { ButtonUi } from "./src/ui/ButtonUi";
 import { SettingsUi } from "./src/ui/SettingsUi";
-import { debounceAsync } from "/scripts/utils.js";
-import { selected_group } from "/scripts/group-chats.js";
+import { debounceAsync } from "/scripts/utils";
+import { selected_group } from "/scripts/group-chats";
 export { debounceAsync };
 
 const _VERBOSE = true;

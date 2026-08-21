@@ -1,8 +1,8 @@
-import { isMobile } from "/scripts/RossAscends-mods.js";
+import { isMobile } from "/scripts/RossAscends-mods";
 import { getPreviewString } from "./index";
 import { saveTtsProviderSettings } from "./index";
 export { SystemTtsProvider };
-import { t } from "/scripts/i18n.js";
+import { t } from "/scripts/i18n";
 
 /**
  * Chunkify

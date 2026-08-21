@@ -1,5 +1,5 @@
-import { doExtrasFetch } from "/scripts/extensions.js";
-import { debounce } from "/scripts/utils.js";
+import { doExtrasFetch } from "/scripts/extensions";
+import { debounce } from "/scripts/utils";
 import { saveTtsProviderSettings } from "./index";
 
 export { AllTalkTtsProvider };
