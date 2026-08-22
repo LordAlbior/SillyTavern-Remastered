@@ -1,11 +1,11 @@
-import { lodash } from "../../../lib";
-import { addOneMessage, chat, displayVersion, setSendButtonState, system_avatar, systemUserName } from "../../../script";
-import { t } from "../../../scripts/i18n";
-import { getMessageTimeStamp } from "../../../scripts/RossAscends-mods";
-import { getSlashCommandsHelp } from "../../../scripts/slash-commands";
-import { SlashCommandBrowser } from "../../../scripts/slash-commands/SlashCommandBrowser";
-import { MacroBrowser, getMacrosHelp } from "../../../scripts/macros/engine/MacroBrowser";
-import { renderTemplateAsync } from "../../../scripts/templates";
+import { lodash } from "/lib";
+import { addOneMessage, chat, displayVersion, setSendButtonState, system_avatar, systemUserName } from "/script";
+import { t } from "/app/systems/shared/i18n";
+import { getMessageTimeStamp } from "/app/systems/shared/RossAscends-mods";
+import { getSlashCommandsHelp } from "/app/systems/slash-commands";
+import { SlashCommandBrowser } from "/app/systems/slash-commands/slash-commands/SlashCommandBrowser";
+import { MacroBrowser, getMacrosHelp } from "/app/systems/macros/engine/MacroBrowser";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
 
 /** @type {Record<string, ChatMessage>} */
 export const system_messages = {};

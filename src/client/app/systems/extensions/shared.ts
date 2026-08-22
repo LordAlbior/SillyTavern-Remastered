@@ -1,11 +1,11 @@
-import { CONNECT_API_MAP, createModelIcon, getRequestHeaders } from "../../../script";
+import { CONNECT_API_MAP, createModelIcon, getRequestHeaders } from "/script";
 import { extension_settings, openThirdPartyExtensionMenu } from "./index";
-import { t } from "../../../scripts/i18n";
-import { oai_settings, proxies, ZAI_ENDPOINT } from "../../../scripts/openai";
-import { SECRET_KEYS, secret_state } from "../../../scripts/secrets";
-import { textgen_types, textgenerationwebui_settings } from "../../../scripts/textgen-settings";
-import { getTokenCountAsync } from "../../../scripts/tokenizers";
-import { createThumbnail, isValidUrl } from "../../../scripts/utils";
+import { t } from "/app/systems/shared/i18n";
+import { oai_settings, proxies, ZAI_ENDPOINT } from "/app/systems/ai/openai";
+import { SECRET_KEYS, secret_state } from "/app/systems/shared/secrets";
+import { textgen_types, textgenerationwebui_settings } from "/app/systems/ai/textgen-settings";
+import { getTokenCountAsync } from "/app/systems/ai/tokenizers";
+import { createThumbnail, isValidUrl } from "/app/systems/shared/utils";
 
 /**
  * Generates a caption for an image using a multimodal model.
@@ -446,7 +446,7 @@ export class ConnectionManagerRequestService {
 
   /**
    * @param {string} profileId
-   * @param {string | (import('../custom-request').ChatCompletionMessage & {ignoreInstruct?: boolean})[]} prompt
+   * @param {string | (import('/app/systems/ai/custom-request').ChatCompletionMessage & {ignoreInstruct?: boolean})[]} prompt
    * @param {number} maxTokens
    * @param {Object} custom
    * @param {boolean?} [custom.stream=false]
@@ -456,7 +456,7 @@ export class ConnectionManagerRequestService {
    * @param {boolean?} [custom.includeInstruct=true]
    * @param {Partial<InstructSettings>?} [custom.instructSettings] Override instruct settings
    * @param {Record<string, any>} [overridePayload] - Override payload for the request
-   * @returns {Promise<import('../custom-request').ExtractedData | (() => AsyncGenerator<import('../custom-request').StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
+   * @returns {Promise<import('/app/systems/ai/custom-request').ExtractedData | (() => AsyncGenerator<import('/app/systems/ai/custom-request').StreamResponse>)>} If not streaming, returns extracted data; if streaming, returns a function that creates an AsyncGenerator
    */
   static async sendRequest(
     profileId: any,

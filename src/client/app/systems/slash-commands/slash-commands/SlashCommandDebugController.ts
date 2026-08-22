@@ -1,5 +1,5 @@
-import { SlashCommandClosure } from "./SlashCommandClosure";
-import { SlashCommandExecutor } from "./SlashCommandExecutor";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { SlashCommandExecutor } from "/app/systems/slash-commands/slash-commands/SlashCommandExecutor";
 
 export class SlashCommandDebugController {
   /** @type {SlashCommandClosure[]} */ stack: any[] = [];

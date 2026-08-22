@@ -1,20 +1,20 @@
-import { Fuse } from "../../../lib";
+import { Fuse } from "/lib";
 
-import { saveSettingsDebounced } from "../../../script";
-import { callGenericPopup, POPUP_TYPE } from "../../../scripts/popup";
-import { power_user } from "../../../scripts/power-user";
-import { getPresetManager } from "../../../scripts/preset-manager";
-import { SlashCommand } from "../../../scripts/slash-commands/SlashCommand";
+import { saveSettingsDebounced } from "/script";
+import { callGenericPopup, POPUP_TYPE } from "/app/systems/ui/popup";
+import { power_user } from "/app/systems/power-user";
+import { getPresetManager } from "/app/systems/shared/preset-manager";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../../scripts/slash-commands/SlashCommandArgument";
-import { commonEnumProviders, enumIcons } from "../../../scripts/slash-commands/SlashCommandCommonEnumsProvider";
-import { enumTypes, SlashCommandEnumValue } from "../../../scripts/slash-commands/SlashCommandEnumValue";
-import { SlashCommandParser } from "../../../scripts/slash-commands/SlashCommandParser";
-import { renderTemplateAsync } from "../../../scripts/templates";
-import { isTrueBoolean, resetScrollHeight } from "../../../scripts/utils";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+import { commonEnumProviders, enumIcons } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
+import { isTrueBoolean, resetScrollHeight } from "/app/systems/shared/utils";
 
 export let system_prompts: any[] = [];
 

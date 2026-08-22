@@ -1,6 +1,6 @@
 // Move chat functions here from script.js (eventually)
 
-import { Popper, css, DOMPurify } from "../../../lib";
+import { Popper, css, DOMPurify } from "/lib";
 import {
   addCopyToCodeBlocks,
   appendMediaToMessage,
@@ -28,9 +28,9 @@ import {
   getMediaIndex,
   getMediaDisplay,
   chatElement,
-} from "../../../script";
-import { selected_group } from "../../../scripts/group-chats";
-import { power_user } from "../../../scripts/power-user";
+} from "/script";
+import { selected_group } from "/app/systems/chat/group-chats";
+import { power_user } from "/app/systems/power-user";
 import {
   extractTextFromHTML,
   extractTextFromMarkdown,
@@ -47,16 +47,16 @@ import {
   convertTextToBase64,
   isSameFile,
   clamp,
-} from "../../../scripts/utils";
+} from "/app/systems/shared/utils";
 import { extension_settings, renderExtensionTemplateAsync, saveMetadataDebounced } from "../extensions";
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "../../../scripts/popup";
-import { ScraperManager } from "../../../scripts/scrapers";
-import { DragAndDropHandler } from "../../../scripts/dragdrop";
-import { renderTemplateAsync } from "../../../scripts/templates";
-import { t } from "../../../scripts/i18n";
-import { humanizedDateTime } from "../../../scripts/RossAscends-mods";
-import { accountStorage } from "../../../scripts/util/AccountStorage";
-import { MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR, SWIPE_DIRECTION } from "../../../scripts/constants";
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "/app/systems/ui/popup";
+import { ScraperManager } from "/app/systems/shared/scrapers";
+import { DragAndDropHandler } from "/app/systems/ui/dragdrop";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
+import { t } from "/app/systems/shared/i18n";
+import { humanizedDateTime } from "/app/systems/shared/RossAscends-mods";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, SCROLL_BEHAVIOR, SWIPE_DIRECTION } from "/app/systems/shared/constants";
 
 /**
  * @typedef {Object} FileAttachment

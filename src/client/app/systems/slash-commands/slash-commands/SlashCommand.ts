@@ -1,15 +1,15 @@
-import { hljs } from "../../../..//lib";
-import { t } from "../../../..//scripts/i18n";
-import { SlashCommandAbortController } from "./SlashCommandAbortController";
-import { SlashCommandArgument, SlashCommandNamedArgument } from "./SlashCommandArgument";
-import { SlashCommandClosure } from "./SlashCommandClosure";
-import { SlashCommandDebugController } from "./SlashCommandDebugController";
-import { SlashCommandScope } from "./SlashCommandScope";
+import { hljs } from "/lib";
+import { t } from "/app/systems/shared/i18n";
+import { SlashCommandAbortController } from "/app/systems/slash-commands/slash-commands/SlashCommandAbortController";
+import { SlashCommandArgument, SlashCommandNamedArgument } from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { SlashCommandDebugController } from "/app/systems/slash-commands/slash-commands/SlashCommandDebugController";
+import { SlashCommandScope } from "/app/systems/slash-commands/slash-commands/SlashCommandScope";
 
 /**
  * @typedef {NamedArgumentsCapture & {
  * _scope:SlashCommandScope,
- * _parserFlags:import('./SlashCommandParser').ParserFlags,
+ * _parserFlags:import('/app/systems/slash-commands/slash-commands/SlashCommandParser').ParserFlags,
  * _abortController:SlashCommandAbortController,
  * _debugController:SlashCommandDebugController,
  * _hasUnnamedArgument:boolean,

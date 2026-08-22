@@ -1,6 +1,6 @@
-import { MacroCategory } from "../../../../scripts/macros/engine/MacroRegistry";
-const MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
-import { power_user } from "../../../../scripts/power-user";
+import { MacroCategory } from "/app/systems/macros/engine/MacroRegistry";
+const MacroRegistry: any = (await import("/app/systems/macros/engine/MacroRegistry" as string)).MacroRegistry;
+import { power_user } from "/app/systems/power-user";
 
 /**
  * Registers instruct-mode related {{...}} macros (instruct* and system

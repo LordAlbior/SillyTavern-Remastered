@@ -1,13 +1,13 @@
-import { DiffMatchPatch, DOMPurify, localforage } from "../../../lib";
-import { chat, event_types, eventSource, getCurrentChatId, reloadCurrentChat } from "../../../script";
-import { t } from "../../../scripts/i18n";
-import { oai_settings } from "../../../scripts/openai";
-import { Popup, POPUP_TYPE } from "../../../scripts/popup";
-import { power_user, registerDebugFunction } from "../../../scripts/power-user";
-import { isMobile } from "../../../scripts/RossAscends-mods";
-import { renderTemplateAsync } from "../../../scripts/templates";
-import { getFriendlyTokenizerName, getTokenCountAsync } from "../../../scripts/tokenizers";
-import { copyText } from "../../../scripts/utils";
+import { DiffMatchPatch, DOMPurify, localforage } from "/lib";
+import { chat, event_types, eventSource, getCurrentChatId, reloadCurrentChat } from "/script";
+import { t } from "/app/systems/shared/i18n";
+import { oai_settings } from "/app/systems/ai/openai";
+import { Popup, POPUP_TYPE } from "/app/systems/ui/popup";
+import { power_user, registerDebugFunction } from "/app/systems/power-user";
+import { isMobile } from "/app/systems/shared/RossAscends-mods";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
+import { getFriendlyTokenizerName, getTokenCountAsync } from "/app/systems/ai/tokenizers";
+import { copyText } from "/app/systems/shared/utils";
 
 let PromptArrayItemForRawPromptDisplay: any;
 let priorPromptArrayItemForRawPromptDisplay: any;

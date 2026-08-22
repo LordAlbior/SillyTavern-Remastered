@@ -1,4 +1,4 @@
-import { Fuse, localforage } from "../../../lib";
+import { Fuse, localforage } from "/lib";
 import {
   characters,
   chat_metadata,
@@ -11,10 +11,10 @@ import {
   saveMetadata,
   saveSettingsDebounced,
   this_chid,
-} from "../../../script";
+} from "/script";
 import { openThirdPartyExtensionMenu, saveMetadataDebounced } from "../extensions";
-import { SlashCommand } from "../../../scripts/slash-commands/SlashCommand";
-import { SlashCommandParser } from "../../../scripts/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
 import {
   createThumbnail,
   flashHighlight,
@@ -25,13 +25,13 @@ import {
   saveBase64AsFile,
   getFileExtension,
   sortIgnoreCaseAndAccents,
-} from "../../../scripts/utils";
-import { debounce_timeout } from "../../../scripts/constants";
-import { t } from "../../../scripts/i18n";
-import { callGenericPopup, Popup, POPUP_TYPE } from "../../../scripts/popup";
-import { groups, selected_group } from "../../../scripts/group-chats";
-import { humanizedDateTime } from "../../../scripts/RossAscends-mods";
-import { deleteMediaFromServer } from "../../../scripts/chats";
+} from "/app/systems/shared/utils";
+import { debounce_timeout } from "/app/systems/shared/constants";
+import { t } from "/app/systems/shared/i18n";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/app/systems/ui/popup";
+import { groups, selected_group } from "/app/systems/chat/group-chats";
+import { humanizedDateTime } from "/app/systems/shared/RossAscends-mods";
+import { deleteMediaFromServer } from "/app/systems/chat/chats";
 
 const BG_METADATA_KEY = "custom_background";
 const LIST_METADATA_KEY = "chat_backgrounds";
@@ -78,7 +78,7 @@ const ANIMATED_BACKGROUND_EXTENSIONS = ["mp4", "webp", "gif", "apng"];
 
 /**
  * Cache for image metadata.
- * @type {Map<string, import('../../src/endpoints/image-metadata.js').ImageMetadata>}
+ * @type {Map<string, import('/app/src/endpoints/image-metadata.js').ImageMetadata>}
  */
 const METADATA_CACHE = new Map();
 
@@ -555,7 +555,7 @@ async function onDeleteBackgroundClick(this: any, e: any) {
   const url = bgToDelete.data("url");
   const isCustom = bgToDelete.attr("custom") === "true";
   const deleteFromServerId = "delete_bg_from_server";
-  /** @type {import('./popup').CustomPopupInput[]} */
+  /** @type {import('/app/systems/ui/popup').CustomPopupInput[]} */
   const customInputs = [
     {
       type: "checkbox",

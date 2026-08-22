@@ -1,7 +1,7 @@
 // Chat-completion core data structures, extracted from scripts/openai.ts.
 // Self-contained: no dependency on openai.ts module state (oai_settings, model_list,
 // promptManager, eventSource, $/toastr, etc.), so this module has zero circular coupling.
-import type { Prompt } from "../../scripts/PromptManager";
+import type { Prompt } from "/app/systems/prompts/PromptManager";
 
 class TokenHandler {
   countTokenAsyncFn: any;
@@ -156,7 +156,7 @@ class Message {
 
   /**
    * Reconstruct the message from a tool invocation.
-   * @param {import('./tool-calling').ToolInvocation[]} invocations - The tool invocations to reconstruct the message from.
+   * @param {import('/app/systems/ai/tool-calling').ToolInvocation[]} invocations - The tool invocations to reconstruct the message from.
    * @param {boolean} includeSignature Whether to include the signature in the tool calls.
    * @param {boolean} includeReasoning Whether to include plaintext reasoning fallback.
    * @returns {Promise<void>}

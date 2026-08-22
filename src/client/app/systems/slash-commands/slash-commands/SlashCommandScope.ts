@@ -1,5 +1,5 @@
-import { SlashCommandClosure } from "./SlashCommandClosure";
-import { convertValueType } from "../../../..//scripts/utils";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { convertValueType } from "/app/systems/shared/utils";
 
 export class SlashCommandScope {
   /** @type {string[]} */ variableNames = [];

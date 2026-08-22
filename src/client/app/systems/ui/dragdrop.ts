@@ -1,4 +1,4 @@
-import { debounce_timeout } from "../../../scripts/constants";
+import { debounce_timeout } from "/app/systems/shared/constants";
 
 /**
  * Drag and drop handler

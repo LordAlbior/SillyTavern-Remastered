@@ -1,5 +1,5 @@
-import { onlyUniqueJson, sortIgnoreCaseAndAccents } from "../../../..//scripts/constants";
-import { SlashCommandEnumValue, enumTypes } from "./SlashCommandEnumValue";
+import { onlyUniqueJson, sortIgnoreCaseAndAccents } from "/app/systems/shared/constants";
+import { SlashCommandEnumValue, enumTypes } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
 
 /**
  * Runtime data injected by owner modules via registerEnumData().
@@ -36,8 +36,8 @@ export function registerEnumData(data: any) {
   Object.assign(enumData, data);
 }
 
-/** @typedef {import('./SlashCommandExecutor').SlashCommandExecutor} SlashCommandExecutor */
-/** @typedef {import('./SlashCommandScope').SlashCommandScope} SlashCommandScope */
+/** @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommandExecutor').SlashCommandExecutor} SlashCommandExecutor */
+/** @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommandScope').SlashCommandScope} SlashCommandScope */
 
 /**
  * A collection of regularly used enum icons

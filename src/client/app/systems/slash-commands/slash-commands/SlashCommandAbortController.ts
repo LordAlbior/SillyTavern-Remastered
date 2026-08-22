@@ -1,4 +1,4 @@
-import { AbstractEventTarget } from "./AbstractEventTarget";
+import { AbstractEventTarget } from "/app/systems/slash-commands/slash-commands/AbstractEventTarget";
 
 export class SlashCommandAbortController extends AbstractEventTarget {
   /**@type {SlashCommandAbortSignal}*/ signal;

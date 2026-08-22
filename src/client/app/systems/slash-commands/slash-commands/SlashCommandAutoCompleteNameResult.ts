@@ -1,11 +1,11 @@
-import { AutoCompleteNameResult } from "../../../..//scripts/autocomplete/AutoCompleteNameResult";
-import { AutoCompleteSecondaryNameResult } from "../../../..//scripts/autocomplete/AutoCompleteSecondaryNameResult";
-import { SlashCommand } from "./SlashCommand";
-import { SlashCommandCommandAutoCompleteOption } from "./SlashCommandCommandAutoCompleteOption";
-import { SlashCommandEnumAutoCompleteOption } from "./SlashCommandEnumAutoCompleteOption";
-import { SlashCommandExecutor } from "./SlashCommandExecutor";
-import { SlashCommandNamedArgumentAutoCompleteOption } from "./SlashCommandNamedArgumentAutoCompleteOption";
-import { SlashCommandScope } from "./SlashCommandScope";
+import { AutoCompleteNameResult } from "/app/systems/autocomplete/AutoCompleteNameResult";
+import { AutoCompleteSecondaryNameResult } from "/app/systems/autocomplete/AutoCompleteSecondaryNameResult";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { SlashCommandCommandAutoCompleteOption } from "/app/systems/slash-commands/slash-commands/SlashCommandCommandAutoCompleteOption";
+import { SlashCommandEnumAutoCompleteOption } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumAutoCompleteOption";
+import { SlashCommandExecutor } from "/app/systems/slash-commands/slash-commands/SlashCommandExecutor";
+import { SlashCommandNamedArgumentAutoCompleteOption } from "/app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAutoCompleteOption";
+import { SlashCommandScope } from "/app/systems/slash-commands/slash-commands/SlashCommandScope";
 
 export class SlashCommandAutoCompleteNameResult extends AutoCompleteNameResult {
   /**@type {SlashCommandExecutor}*/ executor;

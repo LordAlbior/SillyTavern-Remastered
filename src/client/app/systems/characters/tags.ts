@@ -1,4 +1,4 @@
-import { DOMPurify } from '../../../lib';
+import { DOMPurify } from '/lib';
 
 import {
     characters,
@@ -12,24 +12,24 @@ import {
     event_types,
     DEFAULT_PRINT_TIMEOUT,
     printCharacters,
-} from '../../../script';
-import { FILTER_TYPES, FILTER_STATES, DEFAULT_FILTER_STATE, isFilterState, FilterHelper } from '../../../scripts/filters';
+} from '/script';
+import { FILTER_TYPES, FILTER_STATES, DEFAULT_FILTER_STATE, isFilterState, FilterHelper } from '/app/systems/shared/filters';
 
-import { groupCandidatesFilter, groupMembersFilter, groups, selected_group } from '../../../scripts/group-chats';
-import { download, onlyUnique, parseJsonFile, uuidv4, getSortableDelay, flashHighlight, equalsIgnoreCaseAndAccents, includesIgnoreCaseAndAccents, removeFromArray, getFreeName, debounce, findChar, escapeHtml } from '../../../scripts/utils';
-import { power_user } from '../../../scripts/power-user';
-import { SlashCommandParser } from '../../../scripts/slash-commands/SlashCommandParser';
-import { SlashCommand } from '../../../scripts/slash-commands/SlashCommand';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '../../../scripts/slash-commands/SlashCommandArgument';
-import { isMobile } from '../../../scripts/RossAscends-mods';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from '../../../scripts/popup';
-import { debounce_timeout } from '../../../scripts/constants';
-import { INTERACTABLE_CONTROL_CLASS } from '../../../scripts/keyboard';
-import { commonEnumProviders } from '../../../scripts/slash-commands/SlashCommandCommonEnumsProvider';
-import { renderTemplateAsync } from '../../../scripts/templates';
-import { t, translate } from '../../../scripts/i18n';
-import { accountStorage } from '../../../scripts/util/AccountStorage';
-import { enumTypes, SlashCommandEnumValue } from '../../../scripts/slash-commands/SlashCommandEnumValue';
+import { groupCandidatesFilter, groupMembersFilter, groups, selected_group } from '/app/systems/chat/group-chats';
+import { download, onlyUnique, parseJsonFile, uuidv4, getSortableDelay, flashHighlight, equalsIgnoreCaseAndAccents, includesIgnoreCaseAndAccents, removeFromArray, getFreeName, debounce, findChar, escapeHtml } from '/app/systems/shared/utils';
+import { power_user } from '/app/systems/power-user';
+import { SlashCommandParser } from '/app/systems/slash-commands/slash-commands/SlashCommandParser';
+import { SlashCommand } from '/app/systems/slash-commands/slash-commands/SlashCommand';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '/app/systems/slash-commands/slash-commands/SlashCommandArgument';
+import { isMobile } from '/app/systems/shared/RossAscends-mods';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from '/app/systems/ui/popup';
+import { debounce_timeout } from '/app/systems/shared/constants';
+import { INTERACTABLE_CONTROL_CLASS } from '/app/systems/ui/keyboard';
+import { commonEnumProviders } from '/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider';
+import { renderTemplateAsync } from '/app/systems/shared/templates';
+import { t, translate } from '/app/systems/shared/i18n';
+import { accountStorage } from '/app/systems/shared/util/AccountStorage';
+import { enumTypes, SlashCommandEnumValue } from '/app/systems/slash-commands/slash-commands/SlashCommandEnumValue';
 
 export {
     TAG_FOLDER_TYPES,
@@ -1049,7 +1049,7 @@ async function handleTagImport(character: any, { importSetting = null } = {}) {
  * @returns {Promise<string[]>} Array of strings representing the tags to import
  */
 async function showTagImportPopup(character: any, existingTags: any, newTags: any, folderTags: any) {
-    /** @type {{[key: string]: import('./popup').CustomPopupButton}} */
+    /** @type {{[key: string]: import('/app/systems/ui/popup').CustomPopupButton}} */
     const importButtons = {
         NONE: { result: 2, text: 'Import None' },
         ALL: { result: 3, text: 'Import All' },
@@ -1450,7 +1450,7 @@ function loadFilterStatesForContext(filterHelper: any, storagePrefix: any) {
  *
  * @param {JQuery<HTMLElement>} element - The jquery element representing the tag for which the state should be toggled
  * @param {object} param1 - Optional parameters
- * @param {import('./filters').FilterState|string} [param1.stateOverride] - Optional state override to which the state should be toggled to. If not set, the state will move to the next one in the chain.
+ * @param {import('/app/systems/shared/filters').FilterState|string} [param1.stateOverride] - Optional state override to which the state should be toggled to. If not set, the state will move to the next one in the chain.
  * @param {boolean} [param1.simulateClick] - Optionally specify that the state should not just be set on the html element, but actually achieved via triggering the "click" on it, which follows up with the general click handlers and reprinting
  * @returns {string} The string representing the new state
  */

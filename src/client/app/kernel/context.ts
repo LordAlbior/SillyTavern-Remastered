@@ -2,8 +2,8 @@
 // client host. The host injects its own context implementation by overriding
 // this module's export; everything else imports the context from here so the
 // seam has exactly one definition point.
-export * from "../../scripts/st-context";
-import { getContext } from "../../scripts/st-context";
+export * from "/app/systems/shared/st-context";
+import { getContext } from "/app/systems/shared/st-context";
 
 export type AppContext = ReturnType<typeof getContext>;
 

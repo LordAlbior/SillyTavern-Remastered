@@ -6,8 +6,8 @@
  * without creating runtime dependencies.
  */
 
-/** @typedef {import('./MacroRegistry').MacroHandler} MacroHandler */
-/** @typedef {import('./MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroHandler} MacroHandler */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
 
 /**
  * A dynamic macro value can be:

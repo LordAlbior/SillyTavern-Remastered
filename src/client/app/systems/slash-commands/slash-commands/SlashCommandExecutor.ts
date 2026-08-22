@@ -1,8 +1,8 @@
-import { uuidv4 } from "../../../..//scripts/utils";
-import { SlashCommand } from "./SlashCommand";
-import { SlashCommandClosure } from "./SlashCommandClosure";
-import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgumentAssignment";
-import { SlashCommandUnnamedArgumentAssignment } from "./SlashCommandUnnamedArgumentAssignment";
+import { uuidv4 } from "/app/systems/shared/utils";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { SlashCommandNamedArgumentAssignment } from "/app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAssignment";
+import { SlashCommandUnnamedArgumentAssignment } from "/app/systems/slash-commands/slash-commands/SlashCommandUnnamedArgumentAssignment";
 
 export class SlashCommandExecutor {
   /**@type {Boolean}*/ injectPipe: boolean = true;
@@ -29,7 +29,7 @@ export class SlashCommandExecutor {
   /** @type {SlashCommand} */ command!: SlashCommand;
   /** @type {SlashCommandNamedArgumentAssignment[]} */ namedArgumentList: SlashCommandNamedArgumentAssignment[] = [];
   /** @type {SlashCommandUnnamedArgumentAssignment[]} */ unnamedArgumentList: SlashCommandUnnamedArgumentAssignment[] = [];
-  /** @type {import('./SlashCommandParser').ParserFlags} */ parserFlags: any;
+  /** @type {import('/app/systems/slash-commands/slash-commands/SlashCommandParser').ParserFlags} */ parserFlags: any;
 
   get commandCount() {
     return (

@@ -1,19 +1,19 @@
 import { disableExtension, enableExtension, extensionNames, findExtension } from "./index";
-import { SlashCommand } from "../../../scripts/slash-commands/SlashCommand";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../../scripts/slash-commands/SlashCommandArgument";
-import { SlashCommandClosure } from "../../../scripts/slash-commands/SlashCommandClosure";
-import { commonEnumProviders } from "../../../scripts/slash-commands/SlashCommandCommonEnumsProvider";
-import { enumTypes, SlashCommandEnumValue } from "../../../scripts/slash-commands/SlashCommandEnumValue";
-import { SlashCommandParser } from "../../../scripts/slash-commands/SlashCommandParser";
-import { isFalseBoolean, isTrueBoolean } from "../../../scripts/utils";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { commonEnumProviders } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { enumTypes, SlashCommandEnumValue } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+import { isFalseBoolean, isTrueBoolean } from "/app/systems/shared/utils";
 
 /**
  * @param {'enable' | 'disable' | 'toggle'} action - The action to perform on the extension
- * @typedef {import('./slash-commands/SlashCommand').NamedArguments | import('./slash-commands/SlashCommand').NamedArgumentsCapture} NamedArgumentsAssignment
+ * @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments | import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArgumentsCapture} NamedArgumentsAssignment
  * @returns {(args: NamedArgumentsAssignment, extensionName: string | SlashCommandClosure) => Promise<string>}
  */
 function getExtensionActionCallback(action:any) {

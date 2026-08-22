@@ -1,4 +1,4 @@
-import { Fuse, Handlebars } from '../../../lib';
+import { Fuse, Handlebars } from '/lib';
 
 import {
     saveSettingsDebounced,
@@ -31,44 +31,44 @@ import {
     extension_prompt_roles,
     deleteMessage,
     settingsReady,
-} from '../../../script';
-import { isMobile, initMovingUI, favsToHotswap } from '../../../scripts/RossAscends-mods';
+} from '/script';
+import { isMobile, initMovingUI, favsToHotswap } from '/app/systems/shared/RossAscends-mods';
 import {
     groups,
     resetSelectedGroup,
-} from '../../../scripts/group-chats';
+} from '/app/systems/chat/group-chats';
 import {
     instruct_presets,
     loadInstructMode,
     names_behavior_types,
     selectInstructPreset,
     updateBindModelTemplatesState,
-} from '../../../scripts/instruct-mode';
+} from '/app/systems/ai/instruct-mode';
 
-import { getTagsList, tag_import_setting, tag_map, tag_sort_mode, tags } from '../../../scripts/tags';
-import { tokenizers } from '../../../scripts/tokenizers';
-import { BIAS_CACHE } from '../../../scripts/logit-bias';
-import { renderTemplateAsync } from '../../../scripts/templates';
+import { getTagsList, tag_import_setting, tag_map, tag_sort_mode, tags } from '/app/systems/characters/tags';
+import { tokenizers } from '/app/systems/ai/tokenizers';
+import { BIAS_CACHE } from '/app/systems/ai/logit-bias';
+import { renderTemplateAsync } from '/app/systems/shared/templates';
 
-import { countOccurrences, debounce, delay, download, getFileText, getSanitizedFilename, getStringHash, isOdd, isTrueBoolean, onlyUnique, resetScrollHeight, shuffle, sortMoments, stringToRange, timestampToMoment } from '../../../scripts/utils';
-import { FILTER_TYPES } from '../../../scripts/filters';
-import { PARSER_FLAG, SlashCommandParser } from '../../../scripts/slash-commands/SlashCommandParser';
-import { SlashCommand } from '../../../scripts/slash-commands/SlashCommand';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '../../../scripts/slash-commands/SlashCommandArgument';
-import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from '../../../scripts/autocomplete/AutoComplete';
-import { SlashCommandEnumValue, enumTypes } from '../../../scripts/slash-commands/SlashCommandEnumValue';
-import { commonEnumProviders, enumIcons } from '../../../scripts/slash-commands/SlashCommandCommonEnumsProvider';
-import { POPUP_TYPE, callGenericPopup, fixToastrForDialogs } from '../../../scripts/popup';
-import { loadSystemPrompts } from '../../../scripts/sysprompt';
-import { fuzzySearchCategories } from '../../../scripts/filters';
-import { accountStorage } from '../../../scripts/util/AccountStorage';
-import { extractDominantColor, generateThemePalette, deriveBackgroundName } from '../../../scripts/util/ThemeGenerator';
-import { DEFAULT_REASONING_TEMPLATE, loadReasoningTemplates } from '../../../scripts/reasoning';
-import { bindModelTemplates } from '../../../scripts/chat-templates';
-import { IMAGE_OVERSWIPE, MEDIA_DISPLAY } from '../../../scripts/constants';
-import { t } from '../../../scripts/i18n';
-import { getBackgroundPath, isCustomBackgroundUrl } from '../../../scripts/backgrounds';
-import { persona_description_positions as _persona_description_positions } from '../../../scripts/personas';
+import { countOccurrences, debounce, delay, download, getFileText, getSanitizedFilename, getStringHash, isOdd, isTrueBoolean, onlyUnique, resetScrollHeight, shuffle, sortMoments, stringToRange, timestampToMoment } from '/app/systems/shared/utils';
+import { FILTER_TYPES } from '/app/systems/shared/filters';
+import { PARSER_FLAG, SlashCommandParser } from '/app/systems/slash-commands/slash-commands/SlashCommandParser';
+import { SlashCommand } from '/app/systems/slash-commands/slash-commands/SlashCommand';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '/app/systems/slash-commands/slash-commands/SlashCommandArgument';
+import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from '/app/systems/autocomplete/AutoComplete';
+import { SlashCommandEnumValue, enumTypes } from '/app/systems/slash-commands/slash-commands/SlashCommandEnumValue';
+import { commonEnumProviders, enumIcons } from '/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider';
+import { POPUP_TYPE, callGenericPopup, fixToastrForDialogs } from '/app/systems/ui/popup';
+import { loadSystemPrompts } from '/app/systems/prompts/sysprompt';
+import { fuzzySearchCategories } from '/app/systems/shared/filters';
+import { accountStorage } from '/app/systems/shared/util/AccountStorage';
+import { extractDominantColor, generateThemePalette, deriveBackgroundName } from '/app/systems/shared/util/ThemeGenerator';
+import { DEFAULT_REASONING_TEMPLATE, loadReasoningTemplates } from '/app/systems/ai/reasoning';
+import { bindModelTemplates } from '/app/systems/prompts/chat-templates';
+import { IMAGE_OVERSWIPE, MEDIA_DISPLAY } from '/app/systems/shared/constants';
+import { t } from '/app/systems/shared/i18n';
+import { getBackgroundPath, isCustomBackgroundUrl } from '/app/systems/characters/backgrounds';
+import { persona_description_positions as _persona_description_positions } from '/app/systems/characters/personas';
 
 export const toastPositionClasses = [
     'toast-top-left',
@@ -2345,7 +2345,7 @@ const compareFunc = (first: any, second: any) => {
  * Sorts an array of entities based on the current sort settings
  * @param {any[]} entities An array of objects with an `item` property
  * @param {boolean} forceSearch Whether to force search sorting
- * @param {import('./filters').FilterHelper} [filterHelper=null] Filter helper to use
+ * @param {import('/app/systems/shared/filters').FilterHelper} [filterHelper=null] Filter helper to use
  */
 export function sortEntitiesList(entities: any, forceSearch: any, filterHelper: any = null) {
     filterHelper = filterHelper ?? entitiesFilter;

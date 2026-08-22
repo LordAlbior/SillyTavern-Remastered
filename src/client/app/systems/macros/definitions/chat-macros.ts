@@ -1,6 +1,6 @@
-import { MacroCategory, MacroValueType } from "../../../../scripts/macros/engine/MacroRegistry";
-import { chat, chat_metadata } from "../../../../script";
-const _MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
+import { MacroCategory, MacroValueType } from "/app/systems/macros/engine/MacroRegistry";
+import { chat, chat_metadata } from "/script";
+const _MacroRegistry: any = (await import("/app/systems/macros/engine/MacroRegistry" as string)).MacroRegistry;
 
 /**
  * Registers macros that inspect the current chat log and swipe state

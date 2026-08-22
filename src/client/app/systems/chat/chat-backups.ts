@@ -1,8 +1,8 @@
-import { t } from "../../../scripts/i18n";
-import { callGenericPopup, Popup, POPUP_TYPE } from "../../../scripts/popup";
-import { getFileExtension, sortMoments, timestampToMoment } from "../../../scripts/utils";
+import { t } from "/app/systems/shared/i18n";
+import { callGenericPopup, Popup, POPUP_TYPE } from "/app/systems/ui/popup";
+import { getFileExtension, sortMoments, timestampToMoment } from "/app/systems/shared/utils";
 import { displayPastChats, getRequestHeaders, importCharacterChat } from "/script";
-import { importGroupChat } from "../../../scripts/group-chats";
+import { importGroupChat } from "/app/systems/chat/group-chats";
 
 class BackupsBrowser {
   /** @type {HTMLElement} */
@@ -166,7 +166,7 @@ class BackupsBrowser {
       return;
     }
 
-    /** @type {import('../../src/endpoints/chats.js').ChatInfo[]} */
+    /** @type {import('/app/systems/chat/chats').ChatInfo[]} */
     const backupsList = await response.json();
 
     for (const backup of backupsList.sort((a: any, b: any) =>

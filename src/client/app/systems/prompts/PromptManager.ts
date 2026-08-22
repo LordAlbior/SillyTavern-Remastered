@@ -1,15 +1,15 @@
-import { DOMPurify } from "../../../lib";
+import { DOMPurify } from "/lib";
 
-import { event_types, eventSource, is_send_press, main_api, substituteParams } from "../../../script";
-import { is_group_generating } from "../../../scripts/group-chats";
-import { Message, MessageCollection, TokenHandler } from "../../../scripts/openai";
-import { power_user } from "../../../scripts/power-user";
-import { debounce, waitUntilCondition, escapeHtml, uuidv4 } from "../../../scripts/utils";
-import { debounce_timeout } from "../../../scripts/constants";
-import { renderTemplateAsync } from "../../../scripts/templates";
-import { Popup } from "../../../scripts/popup";
-import { t } from "../../../scripts/i18n";
-import { isMobile } from "../../../scripts/RossAscends-mods";
+import { event_types, eventSource, is_send_press, main_api, substituteParams } from "/script";
+import { is_group_generating } from "/app/systems/chat/group-chats";
+import { Message, MessageCollection, TokenHandler } from "/app/systems/ai/openai";
+import { power_user } from "/app/systems/power-user";
+import { debounce, waitUntilCondition, escapeHtml, uuidv4 } from "/app/systems/shared/utils";
+import { debounce_timeout } from "/app/systems/shared/constants";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
+import { Popup } from "/app/systems/ui/popup";
+import { t } from "/app/systems/shared/i18n";
+import { isMobile } from "/app/systems/shared/RossAscends-mods";
 
 function debouncePromise(func: any, delay: any) {
   let timeoutId: any;
@@ -1762,7 +1762,7 @@ class PromptManager {
   /**
    * Setter for messages property
    *
-   * @param {import('./openai').MessageCollection} messages
+   * @param {import('/app/systems/ai/openai').MessageCollection} messages
    */
   setMessages(messages: any) {
     this.messages = messages;
@@ -1771,7 +1771,7 @@ class PromptManager {
   /**
    * Set and process a finished chat completion object
    *
-   * @param {import('./openai').ChatCompletion} chatCompletion
+   * @param {import('/app/systems/ai/openai').ChatCompletion} chatCompletion
    */
   setChatCompletion(chatCompletion: any) {
     const messages = chatCompletion.getMessages();
@@ -1784,7 +1784,7 @@ class PromptManager {
   /**
    * Populates the token handler
    *
-   * @param {import('./openai').MessageCollection} messages
+   * @param {import('/app/systems/ai/openai').MessageCollection} messages
    */
   populateTokenCounts(messages: any) {
     this.tokenHandler.resetCounts();

@@ -1,6 +1,6 @@
-import { AutoCompleteOption } from "../../../..//scripts/autocomplete/AutoCompleteOption";
-import { SlashCommand } from "./SlashCommand";
-import { SlashCommandEnumValue } from "./SlashCommandEnumValue";
+import { AutoCompleteOption } from "/app/systems/autocomplete/AutoCompleteOption";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { SlashCommandEnumValue } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
 
 export class SlashCommandEnumAutoCompleteOption extends AutoCompleteOption {
   /**

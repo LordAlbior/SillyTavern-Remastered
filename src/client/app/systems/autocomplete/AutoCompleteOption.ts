@@ -1,4 +1,4 @@
-import { AutoCompleteFuzzyScore } from "../../../scripts/autocomplete/AutoCompleteFuzzyScore";
+import { AutoCompleteFuzzyScore } from "/app/systems/autocomplete/AutoCompleteFuzzyScore";
 
 export class AutoCompleteOption {
   /** @type {string} */ name;

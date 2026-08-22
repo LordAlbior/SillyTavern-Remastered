@@ -1,5 +1,5 @@
-import { chevrotain } from "../../../../lib";
-const MacroLexer: any = (await import("./MacroLexer" as string)).MacroLexer;
+import { chevrotain } from "/lib";
+const MacroLexer: any = (await import("/app/systems/macros/engine/MacroLexer" as string)).MacroLexer;
 
 const { CstParser } = chevrotain;
 

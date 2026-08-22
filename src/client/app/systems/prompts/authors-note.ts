@@ -8,20 +8,20 @@ import {
   extension_prompt_types,
   saveSettingsDebounced,
   this_chid,
-} from "../../../script";
-import { selected_group } from "../../../scripts/group-chats";
+} from "/script";
+import { selected_group } from "/app/systems/chat/group-chats";
 import { extension_settings, getContext, saveMetadataDebounced } from "../extensions";
-import { getCharaFilename, debounce, delay } from "../../../scripts/utils";
-import { getTokenCountAsync } from "../../../scripts/tokenizers";
-import { debounce_timeout } from "../../../scripts/constants";
-import { SlashCommandParser } from "../../../scripts/slash-commands/SlashCommandParser";
-import { SlashCommand } from "../../../scripts/slash-commands/SlashCommand";
-import { ARGUMENT_TYPE, SlashCommandArgument } from "../../../scripts/slash-commands/SlashCommandArgument";
+import { getCharaFilename, debounce, delay } from "/app/systems/shared/utils";
+import { getTokenCountAsync } from "/app/systems/ai/tokenizers";
+import { debounce_timeout } from "/app/systems/shared/constants";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { ARGUMENT_TYPE, SlashCommandArgument } from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
 export { MODULE_NAME as NOTE_MODULE_NAME };
-import { t } from "../../../scripts/i18n";
-import { macros, MacroCategory } from "../../../scripts/macros/macro-system";
-import { MacrosParser } from "../../../scripts/macros";
-import { power_user } from "../../../scripts/power-user";
+import { t } from "/app/systems/shared/i18n";
+import { macros, MacroCategory } from "/app/systems/macros/macro-system";
+import { MacrosParser } from "/app/systems/shared/macros";
+import { power_user } from "/app/systems/power-user";
 
 const MODULE_NAME = "2_floating_prompt"; // <= Deliberate, for sorting lower than memory
 

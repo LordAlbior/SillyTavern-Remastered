@@ -9,12 +9,12 @@ import {
   characterToEntity,
   printCharactersDebounced,
   deleteCharacter,
-} from "../../../script";
+} from "/script";
 
-import { favsToHotswap } from "../../../scripts/RossAscends-mods";
-import { loader } from "../../../scripts/action-loader";
-import { convertCharacterToPersona } from "../../../scripts/personas";
-import { callGenericPopup, POPUP_TYPE } from "../../../scripts/popup";
+import { favsToHotswap } from "/app/systems/shared/RossAscends-mods";
+import { loader } from "/app/systems/shared/action-loader";
+import { convertCharacterToPersona } from "/app/systems/characters/personas";
+import { callGenericPopup, POPUP_TYPE } from "/app/systems/ui/popup";
 import {
   createTagInput,
   getTagKeyForEntity,
@@ -25,8 +25,8 @@ import {
   removeTagFromMap,
   importTags,
   tag_import_setting,
-} from "../../../scripts/tags";
-import { t } from "../../../scripts/i18n";
+} from "/app/systems/characters/tags";
+import { t } from "/app/systems/shared/i18n";
 
 /**
  * Static object representing the actions of the

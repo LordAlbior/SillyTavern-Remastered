@@ -1,4 +1,4 @@
-import { AutoCompleteOption } from "../../../scripts/autocomplete/AutoCompleteOption";
+import { AutoCompleteOption } from "/app/systems/autocomplete/AutoCompleteOption";
 
 export class MacroAutoCompleteOption extends AutoCompleteOption {
   /**@type {string}*/ fullName;

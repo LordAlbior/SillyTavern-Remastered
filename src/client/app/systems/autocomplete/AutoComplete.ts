@@ -1,11 +1,11 @@
-import { power_user } from "../../../scripts/power-user";
-import { debounce, escapeRegex } from "../../../scripts/utils";
-import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from "../../../scripts/constants";
-import { AutoCompleteOption } from "../../../scripts/autocomplete/AutoCompleteOption";
-import { AutoCompleteFuzzyScore } from "../../../scripts/autocomplete/AutoCompleteFuzzyScore";
-import { BlankAutoCompleteOption } from "../../../scripts/autocomplete/BlankAutoCompleteOption";
-import { AutoCompleteNameResult } from "../../../scripts/autocomplete/AutoCompleteNameResult";
-import { AutoCompleteSecondaryNameResult } from "../../../scripts/autocomplete/AutoCompleteSecondaryNameResult";
+import { power_user } from "/app/systems/power-user";
+import { debounce, escapeRegex } from "/app/systems/shared/utils";
+import { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH } from "/app/systems/shared/constants";
+import { AutoCompleteOption } from "/app/systems/autocomplete/AutoCompleteOption";
+import { AutoCompleteFuzzyScore } from "/app/systems/autocomplete/AutoCompleteFuzzyScore";
+import { BlankAutoCompleteOption } from "/app/systems/autocomplete/BlankAutoCompleteOption";
+import { AutoCompleteNameResult } from "/app/systems/autocomplete/AutoCompleteNameResult";
+import { AutoCompleteSecondaryNameResult } from "/app/systems/autocomplete/AutoCompleteSecondaryNameResult";
 
 export { AUTOCOMPLETE_SELECT_KEY, AUTOCOMPLETE_STATE, AUTOCOMPLETE_WIDTH };
 

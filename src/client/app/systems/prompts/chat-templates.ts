@@ -1,4 +1,4 @@
-import { t } from "../../../scripts/i18n";
+import { t } from "/app/systems/shared/i18n";
 
 // the hash can be obtained from command line e.g. via: MODEL=path_to_model; python -c "import json, hashlib, sys; print(hashlib.sha256(json.load(open('"$MODEL"/tokenizer_config.json'))['chat_template'].encode()).hexdigest())"
 // note that chat templates must be trimmed to match the llama.cpp metadata value

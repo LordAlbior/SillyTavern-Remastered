@@ -1,21 +1,21 @@
-import { getCurrentChatId, saveSettingsDebounced, chat_metadata } from '../../../script';
+import { getCurrentChatId, saveSettingsDebounced, chat_metadata } from '/script';
 import { extension_settings, saveMetadataDebounced } from '../extensions';
-import { executeSlashCommandsWithOptions } from '../../../scripts/slash-commands';
-import { SlashCommand } from '../../../scripts/slash-commands/SlashCommand';
-import { SlashCommandAbortController } from '../../../scripts/slash-commands/SlashCommandAbortController';
-import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '../../../scripts/slash-commands/SlashCommandArgument';
-import { SlashCommandBreakController } from '../../../scripts/slash-commands/SlashCommandBreakController';
-import { SlashCommandClosure } from '../../../scripts/slash-commands/SlashCommandClosure';
-import { SlashCommandClosureResult } from '../../../scripts/slash-commands/SlashCommandClosureResult';
-import { commonEnumProviders, enumIcons } from '../../../scripts/slash-commands/SlashCommandCommonEnumsProvider';
-import { SlashCommandEnumValue, enumTypes } from '../../../scripts/slash-commands/SlashCommandEnumValue';
-import { SlashCommandParser } from '../../../scripts/slash-commands/SlashCommandParser';
-import { slashCommandReturnHelper } from '../../../scripts/slash-commands/SlashCommandReturnHelper';
-import { SlashCommandScope } from '../../../scripts/slash-commands/SlashCommandScope';
-import { isFalseBoolean, convertValueType, isTrueBoolean } from '../../../scripts/utils';
+import { executeSlashCommandsWithOptions } from '/app/systems/slash-commands';
+import { SlashCommand } from '/app/systems/slash-commands/slash-commands/SlashCommand';
+import { SlashCommandAbortController } from '/app/systems/slash-commands/slash-commands/SlashCommandAbortController';
+import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '/app/systems/slash-commands/slash-commands/SlashCommandArgument';
+import { SlashCommandBreakController } from '/app/systems/slash-commands/slash-commands/SlashCommandBreakController';
+import { SlashCommandClosure } from '/app/systems/slash-commands/slash-commands/SlashCommandClosure';
+import { SlashCommandClosureResult } from '/app/systems/slash-commands/slash-commands/SlashCommandClosureResult';
+import { commonEnumProviders, enumIcons } from '/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider';
+import { SlashCommandEnumValue, enumTypes } from '/app/systems/slash-commands/slash-commands/SlashCommandEnumValue';
+import { SlashCommandParser } from '/app/systems/slash-commands/slash-commands/SlashCommandParser';
+import { slashCommandReturnHelper } from '/app/systems/slash-commands/slash-commands/SlashCommandReturnHelper';
+import { SlashCommandScope } from '/app/systems/slash-commands/slash-commands/SlashCommandScope';
+import { isFalseBoolean, convertValueType, isTrueBoolean } from '/app/systems/shared/utils';
 
-/** @typedef {import('./slash-commands/SlashCommandParser').NamedArguments} NamedArguments */
-/** @typedef {import('./slash-commands/SlashCommand').UnnamedArguments} UnnamedArguments */
+/** @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommandParser').NamedArguments} NamedArguments */
+/** @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommand').UnnamedArguments} UnnamedArguments */
 
 const MAX_LOOPS = 100;
 
@@ -233,7 +233,7 @@ export function resolveVariable(name: any, scope: any = null) {
 
 /**
  * Returns built-in variable macros.
- * @returns {import('./macros').Macro[]}
+ * @returns {import('/app/systems/macros').Macro[]}
  */
 export function getVariableMacros() {
     return [
@@ -261,7 +261,7 @@ export function getVariableMacros() {
 }
 
 async function listVariablesCallback(args: any) {
-    /** @type {import('./slash-commands/SlashCommandReturnHelper').SlashCommandReturnType} */
+    /** @type {import('/app/systems/slash-commands/slash-commands/SlashCommandReturnHelper').SlashCommandReturnType} */
     let returnType = args.return;
 
     // Now the actual new return type handling
@@ -564,7 +564,7 @@ export function evalBoolean(rule: any, a: any, b: any) {
  * Executes a slash command from a string (may be enclosed in quotes) and returns the result.
  * @param {string} command Command to execute. May contain escaped macro and batch separators.
  * @param {SlashCommandScope} [scope] The scope to use.
- * @param {import('./slash-commands/SlashCommandParser').ParserFlags} [parserFlags] The parser flags to use.
+ * @param {import('/app/systems/slash-commands/slash-commands/SlashCommandParser').ParserFlags} [parserFlags] The parser flags to use.
  * @param {SlashCommandAbortController} [abortController] The abort controller to use.
  * @returns {Promise<SlashCommandClosureResult>} Closure execution result
  */
