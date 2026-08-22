@@ -78,7 +78,7 @@ const ANIMATED_BACKGROUND_EXTENSIONS = ["mp4", "webp", "gif", "apng"];
 
 /**
  * Cache for image metadata.
- * @type {Map<string, import('/app/src/endpoints/image-metadata.js').ImageMetadata>}
+ * @type {Map<string, import('/app/src/endpoints/image-metadata').ImageMetadata>}
  */
 const METADATA_CACHE = new Map();
 

@@ -246,7 +246,7 @@ app.use(userCssMiddleware);
 // Exact "/lib" is the external shared monolith module (dist/lib.js), not the
 // client/lib assets directory. Must precede the "/lib" static mount below so
 // the bare "/lib" import resolves to the bundled module, not a directory 404.
-app.get("/lib", (req, res, next) => {
+app.get("/lib", (_req, res, next) => {
   const libPath = path.join(rootDirectory, "src", "client", "dist", "lib.js");
   if (fs.existsSync(libPath)) return res.sendFile(libPath);
   next();

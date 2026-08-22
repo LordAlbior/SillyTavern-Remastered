@@ -1,4 +1,4 @@
-import dialogPolyfill from "/lib/dialog-polyfill.esm.js";
+import dialogPolyfill from "/lib/dialog-polyfill.esm";
 import { shouldSendOnEnter } from "/app/systems/shared/RossAscends-mods";
 import { t } from "/app/systems/shared/i18n";
 import { power_user, toastPositionClasses } from "/app/systems/power-user";
