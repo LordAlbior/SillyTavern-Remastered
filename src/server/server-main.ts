@@ -251,13 +251,14 @@ app.get("/lib", (req, res, next) => {
   if (fs.existsSync(libPath)) return res.sendFile(libPath);
   next();
 });
-// Exact "/script" is the external shell monolith (dist/script.js) imported by
-// extension bundles; esbuild preserves the bare "/script" specifier. Serves the
-// bundled module before the dist static mount (which only matches "/script.js").
-app.get("/script", (req, res, next) => {
-  const scriptPath = path.join(rootDirectory, "src", "client", "dist", "script.js");
-  if (fs.existsSync(scriptPath)) return res.sendFile(scriptPath);
-  next();
+// Bare "/script" is imported by extension bundles (esbuild preserves the bare
+// specifier). It must re-export the entry module "/script.js" — NOT serve a
+// second copy of dist/script.js — so extensions share the shell's single
+// instance. Serving a second copy double-bootstraps the shell and leaves the
+// #loader splash stuck.
+app.get("/script", (_req, res) => {
+  res.type("application/javascript");
+  res.send("export * from '/script.js';\nexport { default } from '/script.js';\n");
 });
 app.use(express.static(path.join(rootDirectory, "src", "client", "dist"), {}));
 app.use("/lib", express.static(path.join(rootDirectory, "src", "client", "lib"), {}));
