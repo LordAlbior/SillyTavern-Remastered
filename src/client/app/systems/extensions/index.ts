@@ -1,4 +1,4 @@
-import { Popper } from "../../../lib";
+import { Popper } from "/lib";
 
 import {
   eventSource,
@@ -8,9 +8,9 @@ import {
   getRequestHeaders,
   animation_duration,
   CLIENT_VERSION,
-} from "../../../script";
-import { POPUP_RESULT, POPUP_TYPE, Popup } from "../../../scripts/popup";
-import { renderTemplate, renderTemplateAsync } from "../../../scripts/templates";
+} from "/script";
+import { POPUP_RESULT, POPUP_TYPE, Popup } from "/app/systems/ui/popup";
+import { renderTemplate, renderTemplateAsync } from "/app/systems/shared/templates";
 import {
   delay,
   deleteValueByPath,
@@ -20,14 +20,14 @@ import {
   sanitizeSelector,
   setValueByPath,
   versionCompare,
-} from "../../../scripts/utils";
-import { getContext } from "../../../scripts/st-context";
-import { isAdmin } from "../../../scripts/user";
-import { addLocaleData, getCurrentLocale, t } from "../../../scripts/i18n";
-import { debounce_timeout } from "../../../scripts/constants";
-import { registerEnumData } from "../../../scripts/slash-commands/SlashCommandCommonEnumsProvider";
-import { accountStorage } from "../../../scripts/util/AccountStorage";
-import { SimpleMutex } from "../../../scripts/util/SimpleMutex";
+} from "/app/systems/shared/utils";
+import { getContext } from "/app/systems/shared/st-context";
+import { isAdmin } from "/app/systems/shared/user";
+import { addLocaleData, getCurrentLocale, t } from "/app/systems/shared/i18n";
+import { debounce_timeout } from "/app/systems/shared/constants";
+import { registerEnumData } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { SimpleMutex } from "/app/systems/shared/util/SimpleMutex";
 
 export { getContext, getApiUrl, SimpleMutex as ModuleWorkerWrapper };
 
@@ -214,7 +214,7 @@ export const extension_settings: Record<string, any> = {
     profiles: [],
   },
   dice: {},
-  /** @type {import('./char-data').RegexScriptData[]} */
+  /** @type {import('/app/systems/characters/char-data').RegexScriptData[]} */
   regex: [],
   /** @type {import('./extensions/regex/index.js').RegexPreset[]} */
   regex_presets: [],
@@ -245,11 +245,11 @@ export const extension_settings: Record<string, any> = {
     global: {},
   },
   /**
-   * @type {import('./chats').FileAttachment[]}
+   * @type {import('/app/systems/chat/chats').FileAttachment[]}
    */
   attachments: [],
   /**
-   * @type {Record<string, import('./chats').FileAttachment[]>}
+   * @type {Record<string, import('/app/systems/chat/chats').FileAttachment[]>}
    */
   character_attachments: {},
   /**
@@ -1544,7 +1544,7 @@ async function onDeleteClick(this: any) {
 
   const hasCleanHook = hasExtensionHook(extensionName, "clean");
 
-  /** @type {import('./popup').CustomPopupInput[]} */
+  /** @type {import('/app/systems/ui/popup').CustomPopupInput[]} */
   const customInputs = hasCleanHook
     ? [{ id: "extension_delete_cleanup", label: t`Also clean up extension data`, defaultState: false }]
     : null;
@@ -2387,7 +2387,7 @@ export async function openThirdPartyExtensionMenu(suggestUrl = "") {
       await popup.complete(POPUP_RESULT.AFFIRMATIVE);
     },
   };
-  /** @type {import('./popup').CustomPopupInput} */
+  /** @type {import('/app/systems/ui/popup').CustomPopupInput} */
   const branchNameInput = {
     id: "extension_branch_name",
     label: t`Branch or tag name (optional)`,

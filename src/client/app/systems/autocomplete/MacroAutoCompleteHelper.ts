@@ -6,7 +6,7 @@
  * consistent behavior across all contexts where macro autocomplete is used.
  */
 
-import { AutoCompleteNameResult } from "../../../scripts/autocomplete/AutoCompleteNameResult";
+import { AutoCompleteNameResult } from "/app/systems/autocomplete/AutoCompleteNameResult";
 import {
   EnhancedMacroAutoCompleteOption,
   MacroFlagAutoCompleteOption,
@@ -20,27 +20,27 @@ import {
   isValidVariableShorthandName,
   parseMacroContext,
   SimpleAutoCompleteOption,
-} from "../../../scripts/autocomplete/EnhancedMacroAutoCompleteOption";
-import { macros as macroSystem } from "../../../scripts/macros/macro-system";
-import { MacroFlagDefinitions, MacroFlagType } from "../../../scripts/macros/engine/MacroFlags";
+} from "/app/systems/autocomplete/EnhancedMacroAutoCompleteOption";
+import { macros as macroSystem } from "/app/systems/macros/macro-system";
+import { MacroFlagDefinitions, MacroFlagType } from "/app/systems/macros/engine/MacroFlags";
 // @ts-ignore - MacroParser has implicit any type from JS source
-import { MacroParser } from "../../../scripts/macros/engine/MacroParser";
+import { MacroParser } from "/app/systems/macros/engine/MacroParser";
 // @ts-ignore - MacroCstWalker has implicit any type from JS source
-import { MacroCstWalker } from "../../../scripts/macros/engine/MacroCstWalker";
+import { MacroCstWalker } from "/app/systems/macros/engine/MacroCstWalker";
 
 // @ts-ignore - Type assertions to suppress TS7005 errors on usage
 const MacroParserTyped = MacroParser;
 // @ts-ignore - Type assertions to suppress TS7005 errors on usage
 const MacroCstWalkerTyped = MacroCstWalker;
-import { onboardingExperimentalMacroEngine } from "../../../scripts/macros/engine/MacroDiagnostics";
+import { onboardingExperimentalMacroEngine } from "/app/systems/macros/engine/MacroDiagnostics";
 
 import { chat_metadata } from "/script";
-import { extension_settings } from "../../../scripts/extensions";
+import { extension_settings } from "/app/systems/extensions";
 
-/** @typedef {import('./EnhancedMacroAutoCompleteOption').MacroAutoCompleteContext} MacroAutoCompleteContext */
-/** @typedef {import('./EnhancedMacroAutoCompleteOption').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */
-/** @typedef {import('./AutoCompleteOption').AutoCompleteOption} AutoCompleteOption */
-/*** @typedef {import('../macros/macro-system').MacroDefinition} MacroDefinition */
+/** @typedef {import('/app/systems/autocomplete/EnhancedMacroAutoCompleteOption').MacroAutoCompleteContext} MacroAutoCompleteContext */
+/** @typedef {import('/app/systems/autocomplete/EnhancedMacroAutoCompleteOption').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */
+/** @typedef {import('/app/systems/autocomplete/AutoCompleteOption').AutoCompleteOption} AutoCompleteOption */
+/*** @typedef {import('/app/systems/macros/macro-system').MacroDefinition} MacroDefinition */
 
 /**
  * @typedef {Object} MacroInfo

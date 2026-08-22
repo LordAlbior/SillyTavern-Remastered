@@ -1,4 +1,4 @@
-import { formatTime } from "../../../scripts/utils";
+import { formatTime } from "/app/systems/shared/utils";
 
 export class AudioPlayer {
   audio: HTMLAudioElement;

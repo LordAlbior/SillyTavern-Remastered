@@ -1,4 +1,4 @@
-import { seedrandom, droll } from "../../../../lib";
+import { seedrandom, droll } from "/lib";
 import {
   chat_metadata,
   main_api,
@@ -7,17 +7,17 @@ import {
   getMaxResponseTokens,
   extension_prompts,
   getCurrentChatId,
-} from "../../../../script";
-import { getStringHash, isFalseBoolean } from "../../../../scripts/utils";
-import { textgenerationwebui_banned_in_macros } from "../../../../scripts/textgen-settings";
-import { ELSE_MARKER as _ELSE_MARKER, inject_ids } from "../../../../scripts/constants";
+} from "/script";
+import { getStringHash, isFalseBoolean } from "/app/systems/shared/utils";
+import { textgenerationwebui_banned_in_macros } from "/app/systems/ai/textgen-settings";
+import { ELSE_MARKER as _ELSE_MARKER, inject_ids } from "/app/systems/shared/constants";
 // @ts-expect-error - Source module has errors, type cannot be determined
-import { MacroRegistry, MacroCategory, MacroValueType } from "../../../../scripts/macros/engine/MacroRegistry";
-import { MACRO_VARIABLE_SHORTHAND_PATTERN } from "../../../../scripts/macros/engine/MacroLexer";
+import { MacroRegistry, MacroCategory, MacroValueType } from "/app/systems/macros/engine/MacroRegistry";
+import { MACRO_VARIABLE_SHORTHAND_PATTERN } from "/app/systems/macros/engine/MacroLexer";
 // @ts-expect-error - Source module has errors, type cannot be determined
-import { MacroParser } from "../../../../scripts/macros/engine/MacroParser";
+import { MacroParser } from "/app/systems/macros/engine/MacroParser";
 // @ts-expect-error - Source module has errors, type cannot be determined
-import { MacroCstWalker } from "../../../../scripts/macros/engine/MacroCstWalker";
+import { MacroCstWalker } from "/app/systems/macros/engine/MacroCstWalker";
 
 // Local typed aliases to avoid TS7005 at usage sites.
 // @ts-expect-error - MacroRegistry has implicit any type due to source module errors

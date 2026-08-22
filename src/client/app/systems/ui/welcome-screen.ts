@@ -27,8 +27,8 @@ import {
   this_chid,
   unshallowCharacter,
   updateRemoteChatName,
-} from "../../../script";
-import { getRegexedString, regex_placement } from "../../../scripts/regex-engine";
+} from "/script";
+import { getRegexedString, regex_placement } from "/app/systems/shared/regex-engine";
 import {
   deleteGroupChatByName,
   getGroupAvatar,
@@ -36,13 +36,13 @@ import {
   is_group_generating,
   openGroupById,
   openGroupChat,
-} from "../../../scripts/group-chats";
-import { t } from "../../../scripts/i18n";
-import { callGenericPopup, POPUP_TYPE } from "../../../scripts/popup";
-import { getMessageTimeStamp } from "../../../scripts/RossAscends-mods";
-import { renderTemplateAsync } from "../../../scripts/templates";
-import { accountStorage } from "../../../scripts/util/AccountStorage";
-import { clamp, flashHighlight, isElementInViewport, sortMoments, timestampToMoment } from "../../../scripts/utils";
+} from "/app/systems/chat/group-chats";
+import { t } from "/app/systems/shared/i18n";
+import { callGenericPopup, POPUP_TYPE } from "/app/systems/ui/popup";
+import { getMessageTimeStamp } from "/app/systems/shared/RossAscends-mods";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { clamp, flashHighlight, isElementInViewport, sortMoments, timestampToMoment } from "/app/systems/shared/utils";
 
 const assistantAvatarKey = "assistant";
 const pinnedChatsKey = "pinnedChats";
@@ -709,7 +709,7 @@ async function openRecentChatsSettingsPopup() {
   const MIN_CHATS = 1;
   const MAX_CHATS = 1000;
 
-  /** @type {import('./popup').CustomPopupInput} */
+  /** @type {import('/app/systems/ui/popup').CustomPopupInput} */
   const maxRecentChatsInput = {
     id: "maxRecentChats",
     type: "number",
@@ -721,7 +721,7 @@ async function openRecentChatsSettingsPopup() {
     step: 1,
   };
 
-  /** @type {import('./popup').CustomPopupInput} */
+  /** @type {import('/app/systems/ui/popup').CustomPopupInput} */
   const collapsedRecentChatsInput = {
     id: "collapsedRecentChats",
     type: "number",

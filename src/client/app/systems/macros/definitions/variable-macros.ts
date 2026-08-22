@@ -1,6 +1,6 @@
-import { MacroCategory, MacroValueType } from "../../../../scripts/macros/engine/MacroRegistry";
+import { MacroCategory, MacroValueType } from "/app/systems/macros/engine/MacroRegistry";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-import * as MacroRegistryModule from "../../../../scripts/macros/engine/MacroRegistry";
+import * as MacroRegistryModule from "/app/systems/macros/engine/MacroRegistry";
 const MacroRegistry: any = MacroRegistryModule.MacroRegistry;
 
 /**

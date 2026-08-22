@@ -11,10 +11,10 @@
  * - Dynamically added elements are automatically initialized via MutationObserver
  */
 
-import { power_user } from "../../../scripts/power-user";
-import { AutoComplete } from "../../../scripts/autocomplete/AutoComplete";
-import { AUTOCOMPLETE_STATE } from "../../../scripts/constants";
-import { findMacroAtCursor, findUnclosedScopes, getMacroAutoCompleteAt } from "../../../scripts/autocomplete/MacroAutoCompleteHelper";
+import { power_user } from "/app/systems/power-user";
+import { AutoComplete } from "/app/systems/autocomplete/AutoComplete";
+import { AUTOCOMPLETE_STATE } from "/app/systems/shared/constants";
+import { findMacroAtCursor, findUnclosedScopes, getMacroAutoCompleteAt } from "/app/systems/autocomplete/MacroAutoCompleteHelper";
 
 /** Custom attribute name used to mark elements that support macro autocomplete */
 export const MACRO_AUTOCOMPLETE_ATTRIBUTE = "data-macros";

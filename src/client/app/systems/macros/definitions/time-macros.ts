@@ -1,8 +1,8 @@
-import { moment } from "../../../../lib";
-import { chat } from "../../../../script";
-import { timestampToMoment } from "../../../../scripts/utils";
-import { MacroCategory, MacroValueType } from "../../../../scripts/macros/engine/MacroRegistry";
-const MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
+import { moment } from "/lib";
+import { chat } from "/script";
+import { timestampToMoment } from "/app/systems/shared/utils";
+import { MacroCategory, MacroValueType } from "/app/systems/macros/engine/MacroRegistry";
+const MacroRegistry: any = (await import("/app/systems/macros/engine/MacroRegistry" as string)).MacroRegistry;
 
 /**
  * Registers time/date related macros and utilities.

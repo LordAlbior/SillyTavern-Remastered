@@ -1,17 +1,17 @@
 /** @typedef {import('chevrotain').CstNode} CstNode */
 /** @typedef {import('chevrotain').IToken} IToken */
-/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
-/** @typedef {import('./MacroFlags').MacroFlags} MacroFlags */
+/** @typedef {import('/app/systems/macros/engine/MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('/app/systems/macros/engine/MacroFlags').MacroFlags} MacroFlags */
 
-import { logMacroInternalError, logMacroRuntimeWarning } from "../../../../scripts/macros/engine/MacroDiagnostics";
-import { MacroEngine } from "../../../../scripts/macros/engine/MacroEngine";
-import { parseFlags, createEmptyFlags, MacroFlagType } from "../../../../scripts/macros/engine/MacroFlags";
+import { logMacroInternalError, logMacroRuntimeWarning } from "/app/systems/macros/engine/MacroDiagnostics";
+import { MacroEngine } from "/app/systems/macros/engine/MacroEngine";
+import { parseFlags, createEmptyFlags, MacroFlagType } from "/app/systems/macros/engine/MacroFlags";
 // @ts-expect-error - MacroParser module has implicit any types
-import { MacroParser } from "../../../../scripts/macros/engine/MacroParser";
+import { MacroParser } from "/app/systems/macros/engine/MacroParser";
 // @ts-expect-error - MacroRegistry module has implicit any types
-import { MacroRegistry } from "../../../../scripts/macros/engine/MacroRegistry";
+import { MacroRegistry } from "/app/systems/macros/engine/MacroRegistry";
 
-import { isFalseBoolean } from "/scripts/utils";
+import { isFalseBoolean } from "/app/systems/shared/utils";
 
 /**
  * @typedef {Object} MacroCall

@@ -1,4 +1,4 @@
-import { Fuse } from '../../../lib';
+import { Fuse } from '/lib';
 
 import {
     shuffle,
@@ -18,10 +18,10 @@ import {
     paginationDropdownChangeHandler,
     waitUntilCondition,
     uuidv4,
-} from '../../../scripts/utils';
-import { RA_CountCharTokens, humanizedDateTime, dragElement, favsToHotswap, getMessageTimeStamp } from '../../../scripts/RossAscends-mods';
-import { power_user, loadMovingUIState, sortEntitiesList } from '../../../scripts/power-user';
-import { debounce_timeout } from '../../../scripts/constants';
+} from '/app/systems/shared/utils';
+import { RA_CountCharTokens, humanizedDateTime, dragElement, favsToHotswap, getMessageTimeStamp } from '/app/systems/shared/RossAscends-mods';
+import { power_user, loadMovingUIState, sortEntitiesList } from '/app/systems/power-user';
+import { debounce_timeout } from '/app/systems/shared/constants';
 
 import {
     chat,
@@ -79,14 +79,14 @@ import {
     unshallowCharacter,
     chatElement,
     ensureMessageMediaIsArray,
-} from '../../../script';
-import { printTagList, createTagMapFromList, applyTagsOnCharacterSelect, tag_map, applyTagsOnGroupSelect, printTagFilters, tag_filter_type } from '../../../scripts/tags';
-import { FILTER_TYPES, FilterHelper } from '../../../scripts/filters';
-import { isExternalMediaAllowed } from '../../../scripts/chats';
-import { POPUP_TYPE, Popup, callGenericPopup } from '../../../scripts/popup';
-import { t } from '../../../scripts/i18n';
-import { accountStorage } from '../../../scripts/util/AccountStorage';
-import { compressRequest } from '../../../scripts/request-compression';
+} from '/script';
+import { printTagList, createTagMapFromList, applyTagsOnCharacterSelect, tag_map, applyTagsOnGroupSelect, printTagFilters, tag_filter_type } from '/app/systems/characters/tags';
+import { FILTER_TYPES, FilterHelper } from '/app/systems/shared/filters';
+import { isExternalMediaAllowed } from '/app/systems/chat/chats';
+import { POPUP_TYPE, Popup, callGenericPopup } from '/app/systems/ui/popup';
+import { t } from '/app/systems/shared/i18n';
+import { accountStorage } from '/app/systems/shared/util/AccountStorage';
+import { compressRequest } from '/app/systems/shared/request-compression';
 
 export {
     selected_group,
@@ -2155,7 +2155,7 @@ export async function createNewGroupChat(groupId: any) {
 /**
  * Retrieves past chats for a specified group.
  * @param {string} groupId Group ID
- * @returns {Promise<Array<import('../../src/endpoints/chats.js').ChatInfo>>} Array of past chats
+ * @returns {Promise<Array<import('/app/systems/chat/chats').ChatInfo>>} Array of past chats
  */
 export async function getGroupPastChats(groupId: any) {
     const group = groups.find(x => x.id === groupId);

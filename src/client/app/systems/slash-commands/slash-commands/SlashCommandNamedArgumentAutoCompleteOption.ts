@@ -1,6 +1,6 @@
-import { AutoCompleteOption } from "../../../..//scripts/autocomplete/AutoCompleteOption";
-import { SlashCommand } from "./SlashCommand";
-import { SlashCommandNamedArgument } from "./SlashCommandArgument";
+import { AutoCompleteOption } from "/app/systems/autocomplete/AutoCompleteOption";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { SlashCommandNamedArgument } from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
 
 export class SlashCommandNamedArgumentAutoCompleteOption extends AutoCompleteOption {
   /** @type {SlashCommandNamedArgument} */ arg;

@@ -1,13 +1,13 @@
-/** @typedef {import('./MacroCstWalker').MacroCall} MacroCall */
-/** @typedef {import('./MacroRegistry').MacroDefinition} MacroDefinition */
+/** @typedef {import('/app/systems/macros/engine/MacroCstWalker').MacroCall} MacroCall */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroDefinition} MacroDefinition */
 /** @typedef {import('chevrotain').ILexingError} ILexingError */
 /** @typedef {import('chevrotain').IRecognitionException} IRecognitionException */
 
-import { t } from "/scripts/i18n";
-import { Popup, POPUP_RESULT } from "/scripts/popup";
-import { power_user } from "/scripts/power-user";
-import { accountStorage } from "/scripts/util/AccountStorage";
-import { SimpleMutex } from "/scripts/util/SimpleMutex";
+import { t } from "/app/systems/shared/i18n";
+import { Popup, POPUP_RESULT } from "/app/systems/ui/popup";
+import { power_user } from "/app/systems/power-user";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { SimpleMutex } from "/app/systems/shared/util/SimpleMutex";
 
 /**
  * @typedef {Object} MacroErrorContext

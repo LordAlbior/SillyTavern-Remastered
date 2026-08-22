@@ -1,28 +1,28 @@
-import { hljs } from "../../../..//lib";
-import { power_user } from "../../../..//scripts/power-user";
-import { isFalseBoolean, isTrueBoolean, uuidv4 } from "../../../..//scripts/utils";
-import { SlashCommand } from "./SlashCommand";
-import { ARGUMENT_TYPE, SlashCommandArgument } from "./SlashCommandArgument";
-import { SlashCommandClosure } from "./SlashCommandClosure";
-import { SlashCommandExecutor } from "./SlashCommandExecutor";
-import { SlashCommandParserError } from "./SlashCommandParserError";
-import { AutoCompleteNameResult } from "../../../..//scripts/autocomplete/AutoCompleteNameResult";
-import { SlashCommandQuickReplyAutoCompleteOption } from "./SlashCommandQuickReplyAutoCompleteOption";
-import { SlashCommandVariableAutoCompleteOption } from "./SlashCommandVariableAutoCompleteOption";
-import { SlashCommandNamedArgumentAssignment } from "./SlashCommandNamedArgumentAssignment";
-import { SlashCommandAutoCompleteNameResult } from "./SlashCommandAutoCompleteNameResult";
-import { SlashCommandUnnamedArgumentAssignment } from "./SlashCommandUnnamedArgumentAssignment";
-import { SlashCommandEnumValue } from "./SlashCommandEnumValue";
-import { findUnclosedScopes, buildMacroAutoCompleteResult } from "../../../..//scripts/autocomplete/MacroAutoCompleteHelper";
-import { SlashCommandBreakPoint } from "./SlashCommandBreakPoint";
-import { commonEnumProviders } from "./SlashCommandCommonEnumsProvider";
-import { SlashCommandBreak } from "./SlashCommandBreak";
-import { parseMacroContext } from "../../../..//scripts/autocomplete/EnhancedMacroAutoCompleteOption";
+import { hljs } from "/lib";
+import { power_user } from "/app/systems/power-user";
+import { isFalseBoolean, isTrueBoolean, uuidv4 } from "/app/systems/shared/utils";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { ARGUMENT_TYPE, SlashCommandArgument } from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { SlashCommandExecutor } from "/app/systems/slash-commands/slash-commands/SlashCommandExecutor";
+import { SlashCommandParserError } from "/app/systems/slash-commands/slash-commands/SlashCommandParserError";
+import { AutoCompleteNameResult } from "/app/systems/autocomplete/AutoCompleteNameResult";
+import { SlashCommandQuickReplyAutoCompleteOption } from "/app/systems/slash-commands/slash-commands/SlashCommandQuickReplyAutoCompleteOption";
+import { SlashCommandVariableAutoCompleteOption } from "/app/systems/slash-commands/slash-commands/SlashCommandVariableAutoCompleteOption";
+import { SlashCommandNamedArgumentAssignment } from "/app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAssignment";
+import { SlashCommandAutoCompleteNameResult } from "/app/systems/slash-commands/slash-commands/SlashCommandAutoCompleteNameResult";
+import { SlashCommandUnnamedArgumentAssignment } from "/app/systems/slash-commands/slash-commands/SlashCommandUnnamedArgumentAssignment";
+import { SlashCommandEnumValue } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { findUnclosedScopes, buildMacroAutoCompleteResult } from "/app/systems/autocomplete/MacroAutoCompleteHelper";
+import { SlashCommandBreakPoint } from "/app/systems/slash-commands/slash-commands/SlashCommandBreakPoint";
+import { commonEnumProviders } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandBreak } from "/app/systems/slash-commands/slash-commands/SlashCommandBreak";
+import { parseMacroContext } from "/app/systems/autocomplete/EnhancedMacroAutoCompleteOption";
 
-/** @typedef {import('./SlashCommand').NamedArgumentsCapture} NamedArgumentsCapture */
-/** @typedef {import('./SlashCommand').NamedArguments} NamedArguments */
-/** @typedef {import('../autocomplete/EnhancedMacroAutoCompleteOption').MacroAutoCompleteContext} MacroAutoCompleteContext */
-/** @typedef {import('../autocomplete/EnhancedMacroAutoCompleteOption').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */
+/** @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArgumentsCapture} NamedArgumentsCapture */
+/** @typedef {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} NamedArguments */
+/** @typedef {import('/app/systems/autocomplete/EnhancedMacroAutoCompleteOption').MacroAutoCompleteContext} MacroAutoCompleteContext */
+/** @typedef {import('/app/systems/autocomplete/EnhancedMacroAutoCompleteOption').EnhancedMacroAutoCompleteOptions} EnhancedMacroAutoCompleteOptions */
 
 /**
  * @enum {Number}

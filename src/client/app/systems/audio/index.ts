@@ -1,2 +1,2 @@
 // System public surface (barrel).
-export * from "./audio-player";
+export * from "/app/systems/audio/audio-player";

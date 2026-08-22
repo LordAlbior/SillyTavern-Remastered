@@ -21,9 +21,9 @@ import {
   saveSettingsDebounced,
   setUserName,
   this_chid,
-} from "../../../script";
-import { power_user } from "../../../scripts/power-user";
-import { getTokenCountAsync } from "../../../scripts/tokenizers";
+} from "/script";
+import { power_user } from "/app/systems/power-user";
+import { getTokenCountAsync } from "/app/systems/ai/tokenizers";
 import {
   PAGINATION_TEMPLATE,
   clearInfoBlock,
@@ -50,31 +50,31 @@ import {
   resolveAvatarData,
   findPersona,
   escapeHtml,
-} from "../../../scripts/utils";
-import { debounce_timeout } from "../../../scripts/constants";
-import { FILTER_TYPES, FilterHelper } from "../../../scripts/filters";
-import { groups, selected_group } from "../../../scripts/group-chats";
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "../../../scripts/popup";
-import { t } from "../../../scripts/i18n";
-import { openWorldInfoEditor, world_names } from "../../../scripts/world-info";
-import { renderTemplateAsync } from "../../../scripts/templates";
+} from "/app/systems/shared/utils";
+import { debounce_timeout } from "/app/systems/shared/constants";
+import { FILTER_TYPES, FilterHelper } from "/app/systems/shared/filters";
+import { groups, selected_group } from "/app/systems/chat/group-chats";
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "/app/systems/ui/popup";
+import { t } from "/app/systems/shared/i18n";
+import { openWorldInfoEditor, world_names } from "/app/systems/world-info";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
 import { saveMetadataDebounced } from "../extensions";
-import { accountStorage } from "../../../scripts/util/AccountStorage";
-import { SlashCommand } from "../../../scripts/slash-commands/SlashCommand";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
 import {
   SlashCommandNamedArgument,
   ARGUMENT_TYPE,
   SlashCommandArgument,
-} from "../../../scripts/slash-commands/SlashCommandArgument";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
 import {
   commonEnumMatchProviders,
   commonEnumProviders,
   enumIcons,
-} from "../../../scripts/slash-commands/SlashCommandCommonEnumsProvider";
-import { SlashCommandEnumValue, enumTypes } from "../../../scripts/slash-commands/SlashCommandEnumValue";
-import { SlashCommandParser } from "../../../scripts/slash-commands/SlashCommandParser";
-import { isFirefox } from "../../../scripts/browser-fixes";
-import { slashCommandReturnHelper } from "../../../scripts/slash-commands/SlashCommandReturnHelper";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandEnumValue, enumTypes } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+import { isFirefox } from "/app/systems/shared/browser-fixes";
+import { slashCommandReturnHelper } from "/app/systems/slash-commands/slash-commands/SlashCommandReturnHelper";
 
 /**
  * @typedef {object} PersonaConnection A connection between a character and a character or group entity
@@ -825,7 +825,7 @@ export async function askForPersonaSelection(
     }
   });
 
-  /** @type {import('./popup').CustomPopupButton[]} */
+  /** @type {import('/app/systems/ui/popup').CustomPopupButton[]} */
   const customButtons = [];
   if (targetedChar) {
     customButtons.push({
@@ -2192,7 +2192,7 @@ async function uploadPersonaAvatar(avatarId: any, base64Data: any, { resizePromp
 /**
  * Resolves a persona from the given argument or falls back to the currently active persona.
  * @param {string} [personaArg] Persona name or avatar key argument
- * @returns {import('./utils').PersonaViewModel|null} The resolved persona, or null if not found
+ * @returns {import('/app/systems/shared/utils').PersonaViewModel|null} The resolved persona, or null if not found
  */
 function getTargetPersona(personaArg: any) {
   if (personaArg) {

@@ -1,5 +1,5 @@
-import { Fuse, DOMPurify } from "../../../lib";
-import { canUseNegativeLookbehind, copyText, findPersona, flashHighlight, resolveAvatarData } from "../../../scripts/utils";
+import { Fuse, DOMPurify } from "/lib";
+import { canUseNegativeLookbehind, copyText, findPersona, flashHighlight, resolveAvatarData } from "/app/systems/shared/utils";
 
 import {
   Generate,
@@ -62,14 +62,14 @@ import {
   system_message_types,
   this_chid,
   updateMessageElement,
-} from "../../../script";
-import { SlashCommandParser } from "./slash-commands/SlashCommandParser";
-import { SlashCommandParserError } from "./slash-commands/SlashCommandParserError";
-import { getMessageTimeStamp, isMobile } from "../../../scripts/RossAscends-mods";
-import { hideChatMessageRange } from "../../../scripts/chats";
+} from "/script";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+import { SlashCommandParserError } from "/app/systems/slash-commands/slash-commands/SlashCommandParserError";
+import { getMessageTimeStamp, isMobile } from "/app/systems/shared/RossAscends-mods";
+import { hideChatMessageRange } from "/app/systems/chat/chats";
 import { getContext, saveMetadataDebounced } from "../extensions";
 
-import { getRegexedString, regex_placement } from "../../../scripts/regex-engine";
+import { getRegexedString, regex_placement } from "/app/systems/shared/regex-engine";
 import {
   findGroupMemberId,
   groups,
@@ -80,7 +80,7 @@ import {
   saveGroupChat,
   selected_group,
   getGroupMembers,
-} from "../../../scripts/group-chats";
+} from "/app/systems/chat/group-chats";
 import {
   chat_completion_sources,
   MINIMAX_ENDPOINT,
@@ -88,8 +88,8 @@ import {
   promptManager,
   SILICONFLOW_ENDPOINT,
   ZAI_ENDPOINT,
-} from "../../../scripts/openai";
-import { user_avatar } from "../../../scripts/personas";
+} from "/app/systems/ai/openai";
+import { user_avatar } from "/app/systems/characters/personas";
 import {
   addEphemeralStoppingString,
   chat_styles,
@@ -97,8 +97,8 @@ import {
   flushEphemeralStoppingStrings,
   playMessageSound,
   power_user,
-} from "../../../scripts/power-user";
-import { SERVER_INPUTS, textgen_types, textgenerationwebui_settings } from "../../../scripts/textgen-settings";
+} from "/app/systems/power-user";
+import { SERVER_INPUTS, textgen_types, textgenerationwebui_settings } from "/app/systems/ai/textgen-settings";
 import {
   decodeTextTokens,
   getAvailableTokenizers,
@@ -106,7 +106,7 @@ import {
   getTextTokens,
   getTokenCountAsync,
   selectTokenizer,
-} from "../../../scripts/tokenizers";
+} from "/app/systems/ai/tokenizers";
 import {
   debounce,
   delay,
@@ -122,38 +122,38 @@ import {
   trimToEndSentence,
   trimToStartSentence,
   waitUntilCondition,
-} from "../../../scripts/utils";
-import { registerVariableCommands, resolveVariable } from "../../../scripts/variables";
-import { registerActionLoaderSlashCommands } from "../../../scripts/action-loader-slashcommands";
-import { background_settings } from "../../../scripts/backgrounds";
-import { SlashCommandClosure } from "./slash-commands/SlashCommandClosure";
-import { SlashCommandClosureResult } from "./slash-commands/SlashCommandClosureResult";
+} from "/app/systems/shared/utils";
+import { registerVariableCommands, resolveVariable } from "/app/systems/characters/variables";
+import { registerActionLoaderSlashCommands } from "/app/systems/shared/action-loader-slashcommands";
+import { background_settings } from "/app/systems/characters/backgrounds";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { SlashCommandClosureResult } from "/app/systems/slash-commands/slash-commands/SlashCommandClosureResult";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "./slash-commands/SlashCommandArgument";
-import { AutoComplete } from "../../../scripts/autocomplete/AutoComplete";
-import { AUTOCOMPLETE_STATE } from "../../../scripts/constants";
-import { SlashCommand } from "./slash-commands/SlashCommand";
-import { SlashCommandAbortController } from "./slash-commands/SlashCommandAbortController";
-import { SlashCommandNamedArgumentAssignment } from "./slash-commands/SlashCommandNamedArgumentAssignment";
-import { SlashCommandEnumValue, enumTypes } from "./slash-commands/SlashCommandEnumValue";
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "../../../scripts/popup";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+import { AutoComplete } from "/app/systems/autocomplete/AutoComplete";
+import { AUTOCOMPLETE_STATE } from "/app/systems/shared/constants";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
+import { SlashCommandAbortController } from "/app/systems/slash-commands/slash-commands/SlashCommandAbortController";
+import { SlashCommandNamedArgumentAssignment } from "/app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAssignment";
+import { SlashCommandEnumValue, enumTypes } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup } from "/app/systems/ui/popup";
 import {
   commonEnumProviders,
   enumIcons,
   commonEnumMatchProviders,
-} from "./slash-commands/SlashCommandCommonEnumsProvider";
-import { SlashCommandBreakController } from "./slash-commands/SlashCommandBreakController";
-import { SlashCommandExecutionError } from "./slash-commands/SlashCommandExecutionError";
-import { slashCommandReturnHelper } from "./slash-commands/SlashCommandReturnHelper";
-import { accountStorage } from "../../../scripts/util/AccountStorage";
-import { SlashCommandScope } from "./slash-commands/SlashCommandScope";
-import { t } from "../../../scripts/i18n";
-import { kai_settings } from "../../../scripts/kai-settings";
-import { instruct_presets, selectContextPreset, selectInstructPreset } from "../../../scripts/instruct-mode";
-import { debounce_timeout, SWIPE_DIRECTION, SWIPE_SOURCE } from "../../../scripts/constants";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandBreakController } from "/app/systems/slash-commands/slash-commands/SlashCommandBreakController";
+import { SlashCommandExecutionError } from "/app/systems/slash-commands/slash-commands/SlashCommandExecutionError";
+import { slashCommandReturnHelper } from "/app/systems/slash-commands/slash-commands/SlashCommandReturnHelper";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { SlashCommandScope } from "/app/systems/slash-commands/slash-commands/SlashCommandScope";
+import { t } from "/app/systems/shared/i18n";
+import { kai_settings } from "/app/systems/ai/kai-settings";
+import { instruct_presets, selectContextPreset, selectInstructPreset } from "/app/systems/ai/instruct-mode";
+import { debounce_timeout, SWIPE_DIRECTION, SWIPE_SOURCE } from "/app/systems/shared/constants";
 export { executeSlashCommands, executeSlashCommandsWithOptions, getSlashCommandsHelp, registerSlashCommand };
 
 // Lazy initialization to avoid circular dependency TDZ error:
@@ -4175,8 +4175,8 @@ const SCRIPT_PROMPT_KEY = "script_inject_";
 
 /**
  * Adds a new script injection to the chat.
- * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
- * @param {import('./slash-commands/SlashCommand').UnnamedArguments} value Unnamed argument
+ * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} args Named arguments
+ * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').UnnamedArguments} value Unnamed argument
  */
 function injectCallback(args: any, value: any) {
   const positions: Record<string, any> = {
@@ -4249,7 +4249,7 @@ function injectCallback(args: any, value: any) {
 }
 
 async function listInjectsCallback(args: any) {
-  /** @type {import('./slash-commands/SlashCommandReturnHelper').SlashCommandReturnType} */
+  /** @type {import('/app/systems/slash-commands/slash-commands/SlashCommandReturnHelper').SlashCommandReturnType} */
   const returnType = args.return;
 
   // Now the actual new return type handling
@@ -4271,7 +4271,7 @@ async function listInjectsCallback(args: any) {
 
 /**
  * Flushes script injections for the current chat.
- * @param {import('./slash-commands/SlashCommand').NamedArguments} _ Named arguments
+ * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} _ Named arguments
  * @param {string} value Unnamed argument
  * @returns {string} Empty string
  */
@@ -4554,7 +4554,7 @@ async function popupCallback(args: any, value: any) {
   const safeHeader = args?.header && typeof args?.header === "string" ? DOMPurify.sanitize(args.header) : null;
   const requestedResult = isTrueBoolean(args?.result);
 
-  /** @type {import('./popup').PopupOptions} */
+  /** @type {import('/app/systems/ui/popup').PopupOptions} */
   const popupOptions = {
     allowVerticalScrolling: !isFalseBoolean(args?.scroll),
     large: isTrueBoolean(args?.large),
@@ -4685,7 +4685,7 @@ async function runCallback(args: any, name: any) {
 
 /**
  *
- * @param {import('./slash-commands/SlashCommand').NamedArguments} param0
+ * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} param0
  * @param {string} [reason]
  */
 function abortCallback({ _abortController, quiet }: any, reason: any) {
@@ -4882,7 +4882,7 @@ async function generateRawCallback(args: any, value: any) {
     }
 
     setEphemeralStopStrings(resolveVariable(args?.stop));
-    /** @type {import('../script').GenerateRawParams} */
+    /** @type {import('/script').GenerateRawParams} */
     const params = {
       prompt: value,
       instructOverride: isFalseBoolean(args?.instruct),
@@ -4931,7 +4931,7 @@ async function generateCallback(args: any, value: any) {
     setEphemeralStopStrings(resolveVariable(args?.stop));
     const name = args?.name;
     const char = name ? findChar({ name: name }) : null;
-    /** @type {import('../script').GenerateQuietPromptParams} */
+    /** @type {import('/script').GenerateQuietPromptParams} */
     const params = {
       quietPrompt: value,
       quietToLoud: quietToLoud,
@@ -7282,7 +7282,7 @@ async function selectTokenizerCallback(_: any, name: any) {
     return "";
   }
 
-  /** @type {import('./tokenizers').Tokenizer} */
+  /** @type {import('/app/systems/ai/tokenizers').Tokenizer} */
   const foundTokenizer = result[0].item;
   selectTokenizer(foundTokenizer.tokenizerId);
 
@@ -7360,7 +7360,7 @@ const clearCommandProgressDebounced = debounce(clearCommandProgress);
  * @prop {boolean} [handleParserErrors] (true) Whether to handle parser errors (show toast on error) or throw.
  * @prop {SlashCommandScope} [scope] (null) The scope to be used when executing the commands.
  * @prop {boolean} [handleExecutionErrors] (false) Whether to handle execution errors (show toast on error) or throw
- * @prop {import('./slash-commands/SlashCommandParser').ParserFlags} [parserFlags] (null) Parser flags to apply
+ * @prop {import('/app/systems/slash-commands/slash-commands/SlashCommandParser').ParserFlags} [parserFlags] (null) Parser flags to apply
  * @prop {SlashCommandAbortController} [abortController] (null) Controller used to abort or pause command execution
  * @prop {SlashCommandDebugController} [debugController] (null) Controller used to control debug execution
  * @prop {(done:number, total:number)=>void} [onProgress] (null) Callback to handle progress events
@@ -7370,7 +7370,7 @@ const clearCommandProgressDebounced = debounce(clearCommandProgress);
 /**
  * @typedef ExecuteSlashCommandsOnChatInputOptions
  * @prop {SlashCommandScope} [scope] (null) The scope to be used when executing the commands.
- * @prop {import('./slash-commands/SlashCommandParser').ParserFlags} [parserFlags] (null) Parser flags to apply
+ * @prop {import('/app/systems/slash-commands/slash-commands/SlashCommandParser').ParserFlags} [parserFlags] (null) Parser flags to apply
  * @prop {boolean} [clearChatInput] (false) Whether to clear the chat input textarea
  * @prop {string} [source] (null) String indicating where the code come from (e.g., QR name)
  */
@@ -7581,7 +7581,7 @@ async function executeSlashCommandsWithOptions(text: string, options: Record<str
  * @param {boolean} handleParserErrors Whether to handle parser errors (show toast on error) or throw
  * @param {SlashCommandScope} scope The scope to be used when executing the commands.
  * @param {boolean} handleExecutionErrors Whether to handle execution errors (show toast on error) or throw
- * @param {{[id:import('./slash-commands/SlashCommandParser').PARSER_FLAG]:boolean}} parserFlags Parser flags to apply
+ * @param {{[id:import('/app/systems/slash-commands/slash-commands/SlashCommandParser').PARSER_FLAG]:boolean}} parserFlags Parser flags to apply
  * @param {SlashCommandAbortController} abortController Controller used to abort or pause command execution
  * @param {(done:number, total:number)=>void} onProgress Callback to handle progress events
  * @returns {Promise<SlashCommandClosureResult>}

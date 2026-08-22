@@ -5,4 +5,4 @@
 // no UI handlers. `firstLoadInit` is the kernel-side bootstrap (CSRF token,
 // client version, settings, macros) and is exposed here so the shell and the
 // unified-extension-system host share one bootstrap entry point.
-export { firstLoadInit } from "../../script";
+export { firstLoadInit } from "/script";

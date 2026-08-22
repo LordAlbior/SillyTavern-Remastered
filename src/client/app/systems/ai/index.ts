@@ -1,2 +1,2 @@
 // System public surface (barrel).
-export * from "./openai";
+export * from "/app/systems/ai/openai";

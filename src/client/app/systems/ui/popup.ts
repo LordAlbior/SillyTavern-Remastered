@@ -1,8 +1,8 @@
-import dialogPolyfill from "../../../lib/dialog-polyfill.esm.js";
-import { shouldSendOnEnter } from "../../../scripts/RossAscends-mods";
-import { t } from "../../../scripts/i18n";
-import { power_user, toastPositionClasses } from "../../../scripts/power-user";
-import { clamp, removeFromArray, runAfterAnimation, uuidv4 } from "../../../scripts/utils";
+import dialogPolyfill from "/lib/dialog-polyfill.esm.js";
+import { shouldSendOnEnter } from "/app/systems/shared/RossAscends-mods";
+import { t } from "/app/systems/shared/i18n";
+import { power_user, toastPositionClasses } from "/app/systems/power-user";
+import { clamp, removeFromArray, runAfterAnimation, uuidv4 } from "/app/systems/shared/utils";
 
 /** @readonly */
 /** @enum {Number} */

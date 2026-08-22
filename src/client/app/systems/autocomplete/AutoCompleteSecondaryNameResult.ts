@@ -1,4 +1,4 @@
-import { AutoCompleteNameResultBase } from "../../../scripts/autocomplete/AutoCompleteNameResultBase";
+import { AutoCompleteNameResultBase } from "/app/systems/autocomplete/AutoCompleteNameResultBase";
 
 export class AutoCompleteSecondaryNameResult extends AutoCompleteNameResultBase {
   /**@type {boolean}*/ isRequired = false;

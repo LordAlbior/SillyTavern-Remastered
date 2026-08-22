@@ -1,5 +1,5 @@
-import { AutoCompleteNameResultBase } from "../../../scripts/autocomplete/AutoCompleteNameResultBase";
-import { AutoCompleteSecondaryNameResult } from "../../../scripts/autocomplete/AutoCompleteSecondaryNameResult";
+import { AutoCompleteNameResultBase } from "/app/systems/autocomplete/AutoCompleteNameResultBase";
+import { AutoCompleteSecondaryNameResult } from "/app/systems/autocomplete/AutoCompleteSecondaryNameResult";
 
 export class AutoCompleteNameResult extends AutoCompleteNameResultBase {
   /**

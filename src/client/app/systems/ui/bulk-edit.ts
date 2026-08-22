@@ -1,6 +1,6 @@
-import { characterGroupOverlay } from "../../../script";
-import { BulkEditOverlay, BulkEditOverlayState, CharacterContextMenu } from "../../../scripts/BulkEditOverlay";
-import { event_types, eventSource } from "../../../scripts/events";
+import { characterGroupOverlay } from "/script";
+import { BulkEditOverlay, BulkEditOverlayState, CharacterContextMenu } from "/app/systems/ui/BulkEditOverlay";
+import { event_types, eventSource } from "/app/systems/shared/events";
 
 let is_bulk_edit = false;
 

@@ -1,4 +1,4 @@
-import { Fuse } from "../../../lib";
+import { Fuse } from "/lib";
 
 import {
   saveSettings,
@@ -20,7 +20,7 @@ import {
   name1,
   getOneCharacter,
   select_selected_character,
-} from "../../../script";
+} from "/script";
 import {
   download,
   debounce,
@@ -58,33 +58,33 @@ import {
   logSlashCommandWarn,
   addLongPressEvent,
   escapeHtml,
-} from "../../../scripts/utils";
+} from "/app/systems/shared/utils";
 import { extension_settings, getContext } from "../extensions/index";
-import { NOTE_MODULE_NAME, metadata_keys, shouldWIAddPrompt } from "../../../scripts/authors-note";
-import { isMobile } from "../../../scripts/RossAscends-mods";
-import { FILTER_TYPES, FilterHelper } from "../../../scripts/filters";
-import { getTokenCountAsync } from "../../../scripts/tokenizers";
-import { power_user } from "../../../scripts/power-user";
-import { getTagKeyForEntity } from "../../../scripts/tags";
-import { debounce_timeout, GENERATION_TYPE_TRIGGERS } from "../../../scripts/constants";
+import { NOTE_MODULE_NAME, metadata_keys, shouldWIAddPrompt } from "/app/systems/prompts/authors-note";
+import { isMobile } from "/app/systems/shared/RossAscends-mods";
+import { FILTER_TYPES, FilterHelper } from "/app/systems/shared/filters";
+import { getTokenCountAsync } from "/app/systems/ai/tokenizers";
+import { power_user } from "/app/systems/power-user";
+import { getTagKeyForEntity } from "/app/systems/characters/tags";
+import { debounce_timeout, GENERATION_TYPE_TRIGGERS } from "/app/systems/shared/constants";
 
-import { getRegexedString, regex_placement } from "../../../scripts/regex-engine";
-import { SlashCommandParser } from "../../../scripts/slash-commands/SlashCommandParser";
-import { SlashCommand } from "../../../scripts/slash-commands/SlashCommand";
+import { getRegexedString, regex_placement } from "/app/systems/shared/regex-engine";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+import { SlashCommand } from "/app/systems/slash-commands/slash-commands/SlashCommand";
 import {
   ARGUMENT_TYPE,
   SlashCommandArgument,
   SlashCommandNamedArgument,
-} from "../../../scripts/slash-commands/SlashCommandArgument";
-import { SlashCommandEnumValue, enumTypes } from "../../../scripts/slash-commands/SlashCommandEnumValue";
-import { commonEnumProviders, enumIcons, registerEnumData } from "../../../scripts/slash-commands/SlashCommandCommonEnumsProvider";
-import { SlashCommandClosure } from "../../../scripts/slash-commands/SlashCommandClosure";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "../../../scripts/popup";
-import { StructuredCloneMap } from "../../../scripts/util/StructuredCloneMap";
-import { renderTemplateAsync } from "../../../scripts/templates";
-import { t } from "../../../scripts/i18n";
-import { accountStorage } from "../../../scripts/util/AccountStorage";
-import { getOrCreatePersonaDescriptor, setPersonaDescription, user_avatar } from "../../../scripts/personas";
+} from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+import { SlashCommandEnumValue, enumTypes } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { commonEnumProviders, enumIcons, registerEnumData } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "/app/systems/ui/popup";
+import { StructuredCloneMap } from "/app/systems/shared/util/StructuredCloneMap";
+import { renderTemplateAsync } from "/app/systems/shared/templates";
+import { t } from "/app/systems/shared/i18n";
+import { accountStorage } from "/app/systems/shared/util/AccountStorage";
+import { getOrCreatePersonaDescriptor, setPersonaDescription, user_avatar } from "/app/systems/characters/personas";
 
 export const world_info_insertion_strategy = {
   evenly: 0,
@@ -1169,7 +1169,7 @@ function registerWorldInfoSlashCommands() {
 
   /**
    * Gets the name of the persona-bound lorebook.
-   * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
+   * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} args Named arguments
    * @param {string} _unnamedArg not used
    * @returns {Promise<string>} The name of the persona-bound lorebook
    */
@@ -1198,7 +1198,7 @@ function registerWorldInfoSlashCommands() {
 
   /**
    * Gets the name of the character-bound lorebook.
-   * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
+   * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} args Named arguments
    * @param {string} characterIdentifier Character name
    * @returns {Promise<string>} The name of the character-bound lorebook, a JSON string of the character's lorebooks, or an empty string
    */
@@ -1253,7 +1253,7 @@ function registerWorldInfoSlashCommands() {
 
   /**
    * Gets the name of the chat-bound lorebook. Creates a new one if it doesn't exist.
-   * @param {import('./slash-commands/SlashCommand').NamedArguments} args Named arguments
+   * @param {import('/app/systems/slash-commands/slash-commands/SlashCommand').NamedArguments} args Named arguments
    * @returns {Promise<string>} The name of the chat-bound lorebook
    */
   async function getChatBookCallback(args: any) {
@@ -1688,7 +1688,7 @@ function registerWorldInfoSlashCommands() {
       ),
 
     /** All existing UIDs based on the file argument as world name */
-    wiUids: (/** @type {import('./slash-commands/SlashCommandExecutor').SlashCommandExecutor} */ executor: any) => {
+    wiUids: (/** @type {import('/app/systems/slash-commands/slash-commands/SlashCommandExecutor').SlashCommandExecutor} */ executor: any) => {
       const file = executor.namedArgumentList.find((it: any) => it.name == "file")?.value;
       if (file instanceof SlashCommandClosure) throw new Error("Argument 'file' does not support closures");
       // Try find world from cache
@@ -2892,7 +2892,7 @@ export function deleteWIOriginalDataValue(data: any, uid: any) {
   }
 }
 
-/** @typedef {import('./utils').Select2Option} Select2Option */
+/** @typedef {import('/app/systems/shared/utils').Select2Option} Select2Option */
 
 /**
  * Splits a given input string that contains one or more keywords or regexes, separated by commas.

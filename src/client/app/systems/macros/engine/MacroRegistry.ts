@@ -1,18 +1,18 @@
 /** @typedef {import('chevrotain').CstNode} CstNode */
-/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
-/** @typedef {import('./MacroCstWalker').MacroCall} MacroCall */
-/** @typedef {import('./MacroFlags').MacroFlags} MacroFlags */
+/** @typedef {import('/app/systems/macros/engine/MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('/app/systems/macros/engine/MacroCstWalker').MacroCall} MacroCall */
+/** @typedef {import('/app/systems/macros/engine/MacroFlags').MacroFlags} MacroFlags */
 
-import { MACRO_IDENTIFIER_PATTERN } from "../../../../scripts/macros/engine/MacroLexer";
+import { MACRO_IDENTIFIER_PATTERN } from "/app/systems/macros/engine/MacroLexer";
 
-import { isFalseBoolean, isTrueBoolean } from "../../../../scripts/utils";
-import { MacroEngine } from "../../../../scripts/macros/engine/MacroEngine";
+import { isFalseBoolean, isTrueBoolean } from "/app/systems/shared/utils";
+import { MacroEngine } from "/app/systems/macros/engine/MacroEngine";
 import {
   createMacroRuntimeError,
   logMacroRegisterError,
   logMacroRegisterWarning,
   logMacroRuntimeWarning,
-} from "../../../../scripts/macros/engine/MacroDiagnostics";
+} from "/app/systems/macros/engine/MacroDiagnostics";
 
 /**
  * Enum of standard macro categories for grouping in documentation and autocomplete.

@@ -3,19 +3,19 @@
  * Reuses rendering logic from MacroBrowser for consistency and DRY.
  */
 
-import { AutoCompleteOption } from "../../../scripts/autocomplete/AutoCompleteOption";
+import { AutoCompleteOption } from "/app/systems/autocomplete/AutoCompleteOption";
 import {
   formatMacroSignature,
   createSourceIndicator,
   createAliasIndicator,
   renderMacroDetails,
-} from "../../../scripts/macros/engine/MacroBrowser";
-import { enumIcons } from "../../../scripts/slash-commands/SlashCommandCommonEnumsProvider";
-import { ValidFlagSymbols } from "../../../scripts/macros/engine/MacroFlags";
-import { MACRO_VARIABLE_SHORTHAND_PATTERN } from "../../../scripts/macros/engine/MacroLexer";
-import { onboardingExperimentalMacroEngine } from "../../../scripts/macros/engine/MacroDiagnostics";
+} from "/app/systems/macros/engine/MacroBrowser";
+import { enumIcons } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { ValidFlagSymbols } from "/app/systems/macros/engine/MacroFlags";
+import { MACRO_VARIABLE_SHORTHAND_PATTERN } from "/app/systems/macros/engine/MacroLexer";
+import { onboardingExperimentalMacroEngine } from "/app/systems/macros/engine/MacroDiagnostics";
 
-/** @typedef {import('../macros/engine/MacroRegistry').MacroDefinition} MacroDefinition */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroDefinition} MacroDefinition */
 
 /**
  * Macro context passed from the parser to provide cursor position info.
@@ -447,11 +447,11 @@ export class EnhancedMacroAutoCompleteOption extends AutoCompleteOption {
  * Uses default AutoCompleteOption rendering for consistent styling.
  */
 export class MacroFlagAutoCompleteOption extends AutoCompleteOption {
-  /** @type {import('../macros/engine/MacroFlags').MacroFlagDefinition} */
+  /** @type {import('/app/systems/macros/engine/MacroFlags').MacroFlagDefinition} */
   #flagDef;
 
   /**
-   * @param {import('../macros/engine/MacroFlags').MacroFlagDefinition} flagDef - The flag definition.
+   * @param {import('/app/systems/macros/engine/MacroFlags').MacroFlagDefinition} flagDef - The flag definition.
    */
   constructor(flagDef: any) {
     // Use the flag symbol as the name, with a flag icon
@@ -460,7 +460,7 @@ export class MacroFlagAutoCompleteOption extends AutoCompleteOption {
     this.#flagDef = flagDef;
   }
 
-  /** @returns {import('../macros/engine/MacroFlags').MacroFlagDefinition} */
+  /** @returns {import('/app/systems/macros/engine/MacroFlags').MacroFlagDefinition} */
   get flagDefinition() {
     return this.#flagDef;
   }

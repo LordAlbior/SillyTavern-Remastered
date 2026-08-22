@@ -9,10 +9,10 @@ import {
     initLibraryShims,
     default as libs,
     lodash,
-} from './lib';
+} from '/lib';
 
-import { humanizedDateTime, favsToHotswap, getMessageTimeStamp, dragElement, isMobile, initRossMods } from './scripts/RossAscends-mods';
-import { userStatsHandler, statMesProcess, initStats } from './scripts/stats';
+import { humanizedDateTime, favsToHotswap, getMessageTimeStamp, dragElement, isMobile, initRossMods } from '/app/systems/shared/RossAscends-mods';
+import { userStatsHandler, statMesProcess, initStats } from '/app/systems/shared/stats';
 import {
     generateKoboldWithStreaming,
     kai_settings,
@@ -22,7 +22,7 @@ import {
     koboldai_settings,
     koboldai_setting_names,
     initKoboldSettings,
-} from './scripts/kai-settings';
+} from '/app/systems/ai/kai-settings';
 
 import {
     textgenerationwebui_settings as textgen_settings,
@@ -33,7 +33,7 @@ import {
     parseTextgenLogprobs,
     parseTabbyLogprobs,
     initTextGenSettings,
-} from './scripts/textgen-settings';
+} from '/app/systems/ai/textgen-settings';
 
 import {
     world_info,
@@ -49,7 +49,7 @@ import {
     initWorldInfo,
     charUpdatePrimaryWorld,
     charSetAuxWorlds,
-} from './scripts/world-info';
+} from '/app/systems/world-info';
 
 import {
     groups,
@@ -72,7 +72,7 @@ import {
     getGroupBlock,
     getGroupCharacterCardsLazy,
     getGroupDepthPrompts,
-} from './scripts/group-chats';
+} from '/app/systems/chat/group-chats';
 
 import {
     collapseNewlines,
@@ -94,7 +94,7 @@ import {
     applyPowerUserSettings,
     generatedTextFiltered,
     applyStylePins,
-} from './scripts/power-user';
+} from '/app/systems/power-user';
 
 import {
     setOpenAIMessageExamples,
@@ -111,7 +111,7 @@ import {
     loadProxyPresets,
     selected_proxy,
     initOpenAI,
-} from './scripts/openai';
+} from '/app/systems/ai/openai';
 
 import {
     generateNovelWithStreaming,
@@ -124,13 +124,13 @@ import {
     novelai_settings,
     novelai_setting_names,
     initNovelAISettings,
-} from './scripts/nai-settings';
+} from '/app/systems/ai/nai-settings';
 
 import {
     initBookmarks,
     showBookmarksButtons,
     updateBookmarkDisplay,
-} from './scripts/bookmarks';
+} from '/app/systems/shared/bookmarks';
 
 import {
     horde_settings,
@@ -142,7 +142,7 @@ import {
     isHordeGenerationNotAllowed,
     MIN_LENGTH,
     initHorde,
-} from './scripts/horde';
+} from '/app/systems/ai/horde';
 
 import {
     debounce,
@@ -184,12 +184,12 @@ import {
     clamp,
     shakeElement,
     createTimeout,
-} from './scripts/utils';
-import { debounce_timeout, GENERATION_TYPE_TRIGGERS, IGNORE_SYMBOL, inject_ids, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, OVERSWIPE_BEHAVIOR, SCROLL_BEHAVIOR, SWIPE_DIRECTION, SWIPE_SOURCE, SWIPE_STATE } from './scripts/constants';
+} from '/app/systems/shared/utils';
+import { debounce_timeout, GENERATION_TYPE_TRIGGERS, IGNORE_SYMBOL, inject_ids, MEDIA_DISPLAY, MEDIA_SOURCE, MEDIA_TYPE, OVERSWIPE_BEHAVIOR, SCROLL_BEHAVIOR, SWIPE_DIRECTION, SWIPE_SOURCE, SWIPE_STATE } from '/app/systems/shared/constants';
 
-import { cancelDebouncedMetadataSave, doDailyExtensionUpdatesCheck, extension_settings, initExtensions, loadExtensionSettings, runGenerationInterceptors } from './scripts/extensions';
-import { COMMENT_NAME_DEFAULT, CONNECT_API_MAP, executeSlashCommandsOnChatInput, initDefaultSlashCommands, initSlashCommandAutoComplete, isExecutingCommandsFromChatInput, pauseScriptExecution, stopScriptExecution, UNIQUE_APIS } from './scripts/slash-commands';
-import { initMacroAutoComplete } from './scripts/autocomplete/MacroAutoComplete';
+import { cancelDebouncedMetadataSave, doDailyExtensionUpdatesCheck, extension_settings, initExtensions, loadExtensionSettings, runGenerationInterceptors } from '/app/systems/extensions';
+import { COMMENT_NAME_DEFAULT, CONNECT_API_MAP, executeSlashCommandsOnChatInput, initDefaultSlashCommands, initSlashCommandAutoComplete, isExecutingCommandsFromChatInput, pauseScriptExecution, stopScriptExecution, UNIQUE_APIS } from '/app/systems/slash-commands';
+import { initMacroAutoComplete } from '/app/systems/autocomplete/MacroAutoComplete';
 import {
     tag_map,
     tags,
@@ -212,16 +212,16 @@ import {
     applyTagsOnGroupSelect,
     tag_import_setting,
     applyCharacterTagsToMessageDivs,
-} from './scripts/tags';
-import { checkOpenRouterAuth, initSecrets, readSecretState } from './scripts/secrets';
-import { markdownExclusionExt } from './scripts/showdown-exclusion';
-import { markdownUnderscoreExt } from './scripts/showdown-underscore';
-import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from './scripts/authors-note';
-import { registerPromptManagerMigration } from './scripts/PromptManager';
-import { getRegexedString, regex_placement } from './scripts/regex-engine';
-import { initLogprobs, saveLogprobsForActiveMessage } from './scripts/logprobs';
-import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from './scripts/filters';
-import { getCfgPrompt, getGuidanceScale, initCfg } from './scripts/cfg-scale';
+} from '/app/systems/characters/tags';
+import { checkOpenRouterAuth, initSecrets, readSecretState } from '/app/systems/shared/secrets';
+import { markdownExclusionExt } from '/app/systems/shared/showdown-exclusion';
+import { markdownUnderscoreExt } from '/app/systems/shared/showdown-underscore';
+import { NOTE_MODULE_NAME, initAuthorsNote, metadata_keys, setFloatingPrompt, shouldWIAddPrompt } from '/app/systems/prompts/authors-note';
+import { registerPromptManagerMigration } from '/app/systems/prompts/PromptManager';
+import { getRegexedString, regex_placement } from '/app/systems/shared/regex-engine';
+import { initLogprobs, saveLogprobsForActiveMessage } from '/app/systems/shared/logprobs';
+import { FILTER_STATES, FILTER_TYPES, FilterHelper, isFilterState } from '/app/systems/shared/filters';
+import { getCfgPrompt, getGuidanceScale, initCfg } from '/app/systems/shared/cfg-scale';
 import {
     force_output_sequence,
     formatInstructModeChat,
@@ -229,9 +229,9 @@ import {
     formatInstructModeExamples,
     formatInstructModeStoryString,
     getInstructStoppingSequences,
-} from './scripts/instruct-mode';
-import { initLocales, t } from './scripts/i18n';
-import { getFriendlyTokenizerName, getTokenCount, getTokenCountAsync, initTokenizers, saveTokenCache } from './scripts/tokenizers';
+} from '/app/systems/ai/instruct-mode';
+import { initLocales, t } from '/app/systems/shared/i18n';
+import { getFriendlyTokenizerName, getTokenCount, getTokenCountAsync, initTokenizers, saveTokenCache } from '/app/systems/ai/tokenizers';
 import {
     user_avatar,
     getUserAvatars,
@@ -242,51 +242,51 @@ import {
     initUserAvatar,
     updatePersonaConnectionsAvatarList,
     isPersonaPanelOpen,
-} from './scripts/personas';
-import { getBackgrounds, initBackgrounds, loadBackgroundSettings, background_settings } from './scripts/backgrounds';
-import { loader } from './scripts/action-loader';
-import { BulkEditOverlay } from './scripts/BulkEditOverlay';
-import { initTextGenModels } from './scripts/textgen-models';
-import { appendFileContent, hasPendingFileAttachment, populateFileAttachment, decodeStyleTags, encodeStyleTags, isExternalMediaAllowed, preserveNeutralChat, restoreNeutralChat, formatCreatorNotes, initChatUtilities, addDOMPurifyHooks } from './scripts/chats';
-import { getPresetManager, initPresetManager } from './scripts/preset-manager';
-import { evaluateMacros, getLastMessageId, initMacros } from './scripts/macros';
-import { currentUser, setUserControls } from './scripts/user';
-import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup, fixToastrForDialogs } from './scripts/popup';
-import { renderTemplate, renderTemplateAsync } from './scripts/templates';
-import { initScrapers } from './scripts/scrapers';
-import { initCustomSelectedSamplers, validateDisabledSamplers } from './scripts/samplerSelect';
-import { DragAndDropHandler } from './scripts/dragdrop';
-import { INTERACTABLE_CONTROL_CLASS, initKeyboard } from './scripts/keyboard';
-import { initDynamicStyles } from './scripts/dynamic-styles';
-import { initInputMarkdown } from './scripts/input-md-formatting';
-import { AbortReason } from './scripts/util/AbortReason';
-import { initSystemPrompts } from './scripts/sysprompt';
-import { registerExtensionSlashCommands as initExtensionSlashCommands } from './scripts/extensions-slashcommands';
-import { ToolManager } from './scripts/tool-calling';
-import { addShowdownPatch } from './scripts/util/showdown-patch';
-import { applyBrowserFixes } from './scripts/browser-fixes';
-import { initServerHistory } from './scripts/server-history';
-import { initSettingsSearch } from './scripts/setting-search';
-import { initBulkEdit } from './scripts/bulk-edit';
-import { getContext } from './scripts/st-context';
-import { extractReasoningFromData, extractReasoningSignatureFromData, initReasoning, parseReasoningInSwipes, PromptReasoning, ReasoningHandler, removeReasoningFromString, updateReasoningUI } from './scripts/reasoning';
-import { accountStorage } from './scripts/util/AccountStorage';
-import { initWelcomeScreen, openPermanentAssistantChat, openPermanentAssistantCard, getPermanentAssistantAvatar } from './scripts/welcome-screen';
-import { initDataMaid } from './scripts/data-maid';
-import { clearItemizedPrompts, deleteItemizedPromptForMessage, deleteItemizedPrompts, findItemizedPromptSet, initItemizedPrompts, itemizedParams, itemizedPrompts, loadItemizedPrompts, promptItemize, replaceItemizedPromptText, saveItemizedPrompts, swapItemizedPrompts } from './scripts/itemized-prompts';
-import { getSystemMessageByType, initSystemMessages, SAFETY_CHAT, sendSystemMessage, system_message_types, system_messages } from './scripts/system-messages';
-import { event_types, eventSource } from './scripts/events';
-import { initAccessibility } from './scripts/a11y';
-import { applyStreamFadeIn } from './scripts/util/stream-fadein';
-import { initDomHandlers } from './scripts/dom-handlers';
-import { SimpleMutex } from './scripts/util/SimpleMutex';
-import { AudioPlayer } from './scripts/audio-player';
-import { MacroEnvBuilder } from './scripts/macros/engine/MacroEnvBuilder';
-import { MacroEngine } from './scripts/macros/engine/MacroEngine';
-import { addChatBackupsBrowser } from './scripts/chat-backups';
-import { onboardingExperimentalMacroEngine } from './scripts/macros/engine/MacroDiagnostics';
-import { compressRequest, setRequestCompressionConfig } from './scripts/request-compression';
-import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker } from './scripts/swipe-picker';
+} from '/app/systems/characters/personas';
+import { getBackgrounds, initBackgrounds, loadBackgroundSettings, background_settings } from '/app/systems/characters/backgrounds';
+import { loader } from '/app/systems/shared/action-loader';
+import { BulkEditOverlay } from '/app/systems/ui/BulkEditOverlay';
+import { initTextGenModels } from '/app/systems/ai/textgen-models';
+import { appendFileContent, hasPendingFileAttachment, populateFileAttachment, decodeStyleTags, encodeStyleTags, isExternalMediaAllowed, preserveNeutralChat, restoreNeutralChat, formatCreatorNotes, initChatUtilities, addDOMPurifyHooks } from '/app/systems/chat/chats';
+import { getPresetManager, initPresetManager } from '/app/systems/shared/preset-manager';
+import { evaluateMacros, getLastMessageId, initMacros } from '/app/systems/shared/macros';
+import { currentUser, setUserControls } from '/app/systems/shared/user';
+import { POPUP_RESULT, POPUP_TYPE, Popup, callGenericPopup, fixToastrForDialogs } from '/app/systems/ui/popup';
+import { renderTemplate, renderTemplateAsync } from '/app/systems/shared/templates';
+import { initScrapers } from '/app/systems/shared/scrapers';
+import { initCustomSelectedSamplers, validateDisabledSamplers } from '/app/systems/ai/samplerSelect';
+import { DragAndDropHandler } from '/app/systems/ui/dragdrop';
+import { INTERACTABLE_CONTROL_CLASS, initKeyboard } from '/app/systems/ui/keyboard';
+import { initDynamicStyles } from '/app/systems/ui/dynamic-styles';
+import { initInputMarkdown } from '/app/systems/chat/input-md-formatting';
+import { AbortReason } from '/app/systems/shared/util/AbortReason';
+import { initSystemPrompts } from '/app/systems/prompts/sysprompt';
+import { registerExtensionSlashCommands as initExtensionSlashCommands } from '/app/systems/extensions/slashcommands';
+import { ToolManager } from '/app/systems/ai/tool-calling';
+import { addShowdownPatch } from '/app/systems/shared/util/showdown-patch';
+import { applyBrowserFixes } from '/app/systems/shared/browser-fixes';
+import { initServerHistory } from '/app/systems/shared/server-history';
+import { initSettingsSearch } from '/app/systems/shared/setting-search';
+import { initBulkEdit } from '/app/systems/ui/bulk-edit';
+import { getContext } from '/app/systems/shared/st-context';
+import { extractReasoningFromData, extractReasoningSignatureFromData, initReasoning, parseReasoningInSwipes, PromptReasoning, ReasoningHandler, removeReasoningFromString, updateReasoningUI } from '/app/systems/ai/reasoning';
+import { accountStorage } from '/app/systems/shared/util/AccountStorage';
+import { initWelcomeScreen, openPermanentAssistantChat, openPermanentAssistantCard, getPermanentAssistantAvatar } from '/app/systems/ui/welcome-screen';
+import { initDataMaid } from '/app/systems/shared/data-maid';
+import { clearItemizedPrompts, deleteItemizedPromptForMessage, deleteItemizedPrompts, findItemizedPromptSet, initItemizedPrompts, itemizedParams, itemizedPrompts, loadItemizedPrompts, promptItemize, replaceItemizedPromptText, saveItemizedPrompts, swapItemizedPrompts } from '/app/systems/prompts/itemized-prompts';
+import { getSystemMessageByType, initSystemMessages, SAFETY_CHAT, sendSystemMessage, system_message_types, system_messages } from '/app/systems/prompts/system-messages';
+import { event_types, eventSource } from '/app/systems/shared/events';
+import { initAccessibility } from '/app/systems/shared/a11y';
+import { applyStreamFadeIn } from '/app/systems/shared/util/stream-fadein';
+import { initDomHandlers } from '/app/systems/shared/dom-handlers';
+import { SimpleMutex } from '/app/systems/shared/util/SimpleMutex';
+import { AudioPlayer } from '/app/systems/audio/audio-player';
+import { MacroEnvBuilder } from '/app/systems/macros/engine/MacroEnvBuilder';
+import { MacroEngine } from '/app/systems/macros/engine/MacroEngine';
+import { addChatBackupsBrowser } from '/app/systems/chat/chat-backups';
+import { onboardingExperimentalMacroEngine } from '/app/systems/macros/engine/MacroDiagnostics';
+import { compressRequest, setRequestCompressionConfig } from '/app/systems/shared/request-compression';
+import { canJumpToSwipeForMessage, canOpenSwipePickerForMessage, initSwipePicker } from '/app/systems/chat/swipe-picker';
 
 // API OBJECT FOR EXTERNAL WIRING
 globalThis.SillyTavern = {
@@ -396,7 +396,7 @@ export const characterGroupOverlay = new BulkEditOverlay();
 
 // Markdown converter
 export let mesForShowdownParse: any; //intended to be used as a context to compare showdown strings against
-/** @type {import('showdown').Converter} */
+/** @type {import('/showdown').Converter} */
 export let converter: any;
 
 // array for prompt token calculations
@@ -410,7 +410,7 @@ export let name2 = systemUserName;
 export let chat: any[] = [];
 
 /**
- * @type {import('./scripts/constants').SWIPE_STATE}
+ * @type {import('/app/systems/shared/constants').SWIPE_STATE}
  */
 export let swipeState = SWIPE_STATE.NONE;
 let chatSaveTimeout: any;
@@ -1102,7 +1102,7 @@ function verifyCharactersSearchSortRule() {
 
 /**
  * @typedef {object} Entity - Object representing a display entity
- * @property {Character|Group|import('./scripts/tags').Tag|*} item - The item
+ * @property {Character|Group|import('/app/systems/characters/tags').Tag|*} item - The item
  * @property {string|number} id - The id
  * @property {'character'|'group'|'tag'} type - The type of this entity (character, group, tag)
  * @property {Entity[]?} [entities=null] - An optional list of entities relevant for this item
@@ -1134,7 +1134,7 @@ export function groupToEntity(group: any) {
 /**
  * Converts the given tag to its entity representation
  *
- * @param {import('./scripts/tags').Tag} tag - The tag
+ * @param {import('/app/systems/characters/tags').Tag} tag - The tag
  * @returns {Entity} The entity for this tag
  */
 export function tagToEntity(tag: any) {
@@ -2902,7 +2902,7 @@ export function substituteParamsLegacy(content: string, _name1: any, _name2: any
     return evaluateMacros(content, environment, postProcessFn);
 }
 
-/** @typedef {import('./scripts/macros/engine/MacroRegistry').MacroHandler} MacroHandler */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroHandler} MacroHandler */
 
 /**
  * Substitutes {{macros}} in a string using the new macro engine.
@@ -2916,7 +2916,7 @@ export function substituteParamsLegacy(content: string, _name1: any, _name2: any
  * @param {string} [options.original] - The original message for {{original}} substitution.
  * @param {string} [options.groupOverride] - The group members list for {{group}} substitution.
  * @param {boolean} [options.replaceCharacterCard=true] - Whether to replace character card macros.
- * @param {Record<string, import('./scripts/macros/engine/MacroEnv.types').DynamicMacroValue>} [options.dynamicMacros={}] - Additional environment variables as dynamic macros for substitution. Registered as macro functions.
+ * @param {Record<string, import('/app/systems/macros/engine/MacroEnv.types').DynamicMacroValue>} [options.dynamicMacros={}] - Additional environment variables as dynamic macros for substitution. Registered as macro functions.
  * @param {(x: string) => string} [options.postProcessFn=(x) => x] - Post-processing function for each substituted macro.
  * @returns {string} The string with substituted parameters.
  */
@@ -2940,7 +2940,7 @@ export function substituteParams(this: any, content: any, options: any = {}) {
         return substituteParamsLegacy(content, options.name1Override, options.name2Override, options.original, options.groupOverride, options.replaceCharacterCard, options.dynamicMacros, options.postProcessFn);
     }
 
-    const ctx = /** @type {import('./scripts/macros/engine/MacroEnvBuilder').MacroEnvRawContext} */ ({
+    const ctx = /** @type {import('/app/systems/macros/engine/MacroEnvBuilder').MacroEnvRawContext} */ ({
         content,
         name1Override: options.name1Override,
         name2Override: options.name2Override,
@@ -3533,7 +3533,7 @@ class StreamingProcessor {
         this.createdAt = new Date();
         this.continueMessage = type === 'continue' ? continueMessage : '';
         this.swipes = [];
-        /** @type {import('./scripts/logprobs').TokenLogprobs[]} */
+        /** @type {import('/app/systems/shared/logprobs').TokenLogprobs[]} */
         this.messageLogprobs = [];
         this.toolCalls = [];
         // Initialize reasoning in its own handler
@@ -3811,7 +3811,7 @@ class StreamingProcessor {
     }
 
     /**
-     * @returns {AsyncGenerator<{ text: string, swipes: string[], logprobs: import('./scripts/logprobs').TokenLogprobs, toolCalls: any[], state: any }, void, void>}
+     * @returns {AsyncGenerator<{ text: string, swipes: string[], logprobs: import('/app/systems/shared/logprobs').TokenLogprobs, toolCalls: any[], state: any }, void, void>}
      */
     async* nullStreamingGeneration() {
         throw new Error('Generation function for streaming is not hooked up');
@@ -4581,7 +4581,7 @@ export async function Generate(type: string, { automatic_trigger, force_name2, q
     // Make quiet prompt available for WIAN
     setExtensionPrompt(inject_ids.QUIET_PROMPT, quiet_prompt || '', extension_prompt_types.IN_PROMPT, 0, true);
     const chatForWI = coreChat.map(x => world_info_include_names ? `${x.name}: ${x.mes}` : x.mes).reverse();
-    /** @type {import('./scripts/world-info').WIGlobalScanData} */
+    /** @type {import('/app/systems/world-info').WIGlobalScanData} */
     const globalScanData = {
         personaDescription: persona,
         characterDescription: description,
@@ -6192,7 +6192,7 @@ function extractImagesFromData(data: any, { mainApi = null, chatCompletionSource
  * @param {string} continueFrom - for 'continue' generations, the prompt
  *  */
 function parseAndSaveLogprobs(data: any, continueFrom: string) {
-    /** @type {import('./scripts/logprobs').TokenLogprobs[] | null} */
+    /** @type {import('/app/systems/shared/logprobs').TokenLogprobs[] | null} */
     let logprobs = null;
 
     switch (main_api) {
@@ -9903,7 +9903,7 @@ function formatSwipeCounter(current: any, total: any) {
  * @param {SwipeEvent} event Event.
  * @param {SWIPE_DIRECTION} direction The direction to swipe.
  * @param {object} params Additional parameters.
- * @param {import('./scripts/constants').SWIPE_SOURCE} [params.source]  The source of the swipe event.
+ * @param {import('/app/systems/shared/constants').SWIPE_SOURCE} [params.source]  The source of the swipe event.
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {ChatMessage} [params.message=chat[chat.length - 1]] The chat message to swipe.
  * @param {number} [params.forceMesId] The message id to swipe.
@@ -10389,7 +10389,7 @@ export async function swipe(event: any, direction: any, { source, repeated, mess
  * Handles the swipe to the left event.
  * @param {SwipeEvent} [event] Event.
  * @param {object} params Additional parameters.
- * @param {import('./scripts/constants').SWIPE_SOURCE} [params.source]  The source of the swipe event.
+ * @param {import('/app/systems/shared/constants').SWIPE_SOURCE} [params.source]  The source of the swipe event.
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {object} [params.message] The chat message to swipe.
  */
@@ -10402,7 +10402,7 @@ export async function swipe_left(this: any, event: any, { source, repeated, mess
  * Handles the swipe to the right event.
  * @param {SwipeEvent} [event] Event.
  * @param {object} params Additional parameters.
- * @param {import('./scripts/constants').SWIPE_SOURCE} [params.source] The source of the swipe event.
+ * @param {import('/app/systems/shared/constants').SWIPE_SOURCE} [params.source] The source of the swipe event.
  * @param {boolean} [params.repeated] Is the swipe event repeated.
  * @param {object} [params.message] The chat message to swipe.
  */
@@ -12556,159 +12556,159 @@ const avatarFileNames: string[] = [];
 // === AUTO: re-export every /scripts module so the shell monolith (/script.js)
 // is the single source of truth. Extensions import shared state from /script.js.
 // 139 modules; explicit lines resolve names two modules both export.
-export * from "./scripts/a11y";
-export * from "./scripts/action-loader-slashcommands";
-export * from "./scripts/action-loader";
+export * from "/app/systems/shared/a11y";
+export * from "/app/systems/shared/action-loader-slashcommands";
+export * from "/app/systems/shared/action-loader";
 export * from "./app/systems/audio";
-export * from "./app/systems/prompts/authors-note";
-export * from "./app/systems/autocomplete/AutoComplete";
-export * from "./app/systems/autocomplete/AutoCompleteFuzzyScore";
-export * from "./app/systems/autocomplete/AutoCompleteNameResult";
-export * from "./app/systems/autocomplete/AutoCompleteNameResultBase";
-export * from "./app/systems/autocomplete/AutoCompleteOption";
-export * from "./app/systems/autocomplete/AutoCompleteSecondaryNameResult";
-export * from "./app/systems/autocomplete/BlankAutoCompleteOption";
-export * from "./app/systems/autocomplete/EnhancedMacroAutoCompleteOption";
-export * from "./app/systems/autocomplete/MacroAutoComplete";
-export * from "./app/systems/autocomplete/MacroAutoCompleteHelper";
-export * from "./app/systems/autocomplete/MacroAutoCompleteOption";
-export * from "./app/systems/characters/backgrounds";
-export * from "./scripts/bookmarks";
-export * from "./scripts/browser-fixes";
-export * from "./app/systems/ui/bulk-edit";
-export * from "./app/systems/ui/BulkEditOverlay";
-export * from "./scripts/cfg-scale";
-export * from "./app/systems/characters/char-data";
-export * from "./app/systems/chat/chat-backups";
-export * from "./app/systems/prompts/chat-templates";
-export * from "./app/systems/chat/chats";
-export * from "./scripts/constants";
-export * from "./scripts/custom-request";
-export * from "./scripts/data-maid";
-export * from "./scripts/dom-handlers";
-export * from "./app/systems/ui/dragdrop";
-export * from "./app/systems/ui/dynamic-styles";
-export * from "./scripts/events";
-export * from "./app/systems/extensions/shared";
-export * from "./app/systems/extensions/slashcommands";
+export * from "/app/systems/prompts/authors-note";
+export * from "/app/systems/autocomplete/AutoComplete";
+export * from "/app/systems/autocomplete/AutoCompleteFuzzyScore";
+export * from "/app/systems/autocomplete/AutoCompleteNameResult";
+export * from "/app/systems/autocomplete/AutoCompleteNameResultBase";
+export * from "/app/systems/autocomplete/AutoCompleteOption";
+export * from "/app/systems/autocomplete/AutoCompleteSecondaryNameResult";
+export * from "/app/systems/autocomplete/BlankAutoCompleteOption";
+export * from "/app/systems/autocomplete/EnhancedMacroAutoCompleteOption";
+export * from "/app/systems/autocomplete/MacroAutoComplete";
+export * from "/app/systems/autocomplete/MacroAutoCompleteHelper";
+export * from "/app/systems/autocomplete/MacroAutoCompleteOption";
+export * from "/app/systems/characters/backgrounds";
+export * from "/app/systems/shared/bookmarks";
+export * from "/app/systems/shared/browser-fixes";
+export * from "/app/systems/ui/bulk-edit";
+export * from "/app/systems/ui/BulkEditOverlay";
+export * from "/app/systems/shared/cfg-scale";
+export * from "/app/systems/characters/char-data";
+export * from "/app/systems/chat/chat-backups";
+export * from "/app/systems/prompts/chat-templates";
+export * from "/app/systems/chat/chats";
+export * from "/app/systems/shared/constants";
+export * from "/app/systems/ai/custom-request";
+export * from "/app/systems/shared/data-maid";
+export * from "/app/systems/shared/dom-handlers";
+export * from "/app/systems/ui/dragdrop";
+export * from "/app/systems/ui/dynamic-styles";
+export * from "/app/systems/shared/events";
+export * from "/app/systems/extensions/shared";
+export * from "/app/systems/extensions/slashcommands";
 export * from "./app/systems/extensions";
-export * from "./scripts/f-localStorage";
-export * from "./scripts/filters";
-export * from "./app/systems/chat/group-chats";
-export * from "./scripts/horde";
-export * from "./scripts/i18n";
-export * from "./app/systems/chat/input-md-formatting";
-export * from "./scripts/instruct-mode";
-export * from "./app/systems/prompts/itemized-prompts";
-export * from "./scripts/kai-settings";
-export * from "./app/systems/ui/keyboard";
-export * from "./scripts/loader";
-export * from "./scripts/logit-bias";
-export * from "./scripts/logprobs";
-export * from "./app/systems/macros/definitions/chat-macros";
-export * from "./app/systems/macros/definitions/core-macros";
-export * from "./app/systems/macros/definitions/env-macros";
-export * from "./app/systems/macros/definitions/instruct-macros";
-export * from "./app/systems/macros/definitions/state-macros";
-export * from "./app/systems/macros/definitions/time-macros";
-export * from "./app/systems/macros/definitions/variable-macros";
-export * from "./app/systems/macros/engine/MacroBrowser";
-export * from "./app/systems/macros/engine/MacroCstWalker";
-export * from "./app/systems/macros/engine/MacroDiagnostics";
-export * from "./app/systems/macros/engine/MacroEngine";
-export * from "./app/systems/macros/engine/MacroEnv.types";
-export * from "./app/systems/macros/engine/MacroEnvBuilder";
-export * from "./app/systems/macros/engine/MacroFlags";
-export * from "./app/systems/macros/engine/MacroLexer";
-export * from "./app/systems/macros/engine/MacroParser";
-export * from "./app/systems/macros/engine/MacroRegistry";
-export * from "./app/systems/macros/macro-system";
-export * from "./scripts/macros";
-export * from "./scripts/nai-settings";
+export * from "/app/systems/shared/f-localStorage";
+export * from "/app/systems/shared/filters";
+export * from "/app/systems/chat/group-chats";
+export * from "/app/systems/ai/horde";
+export * from "/app/systems/shared/i18n";
+export * from "/app/systems/chat/input-md-formatting";
+export * from "/app/systems/ai/instruct-mode";
+export * from "/app/systems/prompts/itemized-prompts";
+export * from "/app/systems/ai/kai-settings";
+export * from "/app/systems/ui/keyboard";
+export * from "/app/systems/shared/loader";
+export * from "/app/systems/ai/logit-bias";
+export * from "/app/systems/shared/logprobs";
+export * from "/app/systems/macros/definitions/chat-macros";
+export * from "/app/systems/macros/definitions/core-macros";
+export * from "/app/systems/macros/definitions/env-macros";
+export * from "/app/systems/macros/definitions/instruct-macros";
+export * from "/app/systems/macros/definitions/state-macros";
+export * from "/app/systems/macros/definitions/time-macros";
+export * from "/app/systems/macros/definitions/variable-macros";
+export * from "/app/systems/macros/engine/MacroBrowser";
+export * from "/app/systems/macros/engine/MacroCstWalker";
+export * from "/app/systems/macros/engine/MacroDiagnostics";
+export * from "/app/systems/macros/engine/MacroEngine";
+export * from "/app/systems/macros/engine/MacroEnv.types";
+export * from "/app/systems/macros/engine/MacroEnvBuilder";
+export * from "/app/systems/macros/engine/MacroFlags";
+export * from "/app/systems/macros/engine/MacroLexer";
+export * from "/app/systems/macros/engine/MacroParser";
+export * from "/app/systems/macros/engine/MacroRegistry";
+export * from "/app/systems/macros/macro-system";
+export * from "/app/systems/shared/macros";
+export * from "/app/systems/ai/nai-settings";
 export * from "./app/systems/ai";
-export * from "./app/systems/characters/personas";
-export * from "./app/systems/ui/popup";
+export * from "/app/systems/characters/personas";
+export * from "/app/systems/ui/popup";
 export * from "./app/systems/power-user";
-export * from "./scripts/preset-manager";
-export * from "./app/systems/prompts/PromptManager";
-export * from "./scripts/reasoning";
-export * from "./scripts/regex-engine";
-export * from "./scripts/request-compression";
-export * from "./scripts/RossAscends-mods";
-export * from "./scripts/samplerSelect";
-export * from "./scripts/scrapers";
-export * from "./scripts/secrets";
-export * from "./scripts/server-history";
-export * from "./scripts/setting-search";
-export * from "./scripts/showdown-exclusion";
-export * from "./scripts/showdown-underscore";
-export * from "./app/systems/slash-commands/slash-commands/AbstractEventTarget";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommand";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandAbortController";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandArgument";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandAutoCompleteNameResult";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandBreak";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandBreakController";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandBreakPoint";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandBrowser";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandClosure";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandClosureResult";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandCommandAutoCompleteOption";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandDebugController";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandEnumAutoCompleteOption";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandExecutionError";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandExecutor";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAssignment";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAutoCompleteOption";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandParser";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandParserError";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandQuickReplyAutoCompleteOption";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandReturnHelper";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandScope";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandUnnamedArgumentAssignment";
-export * from "./app/systems/slash-commands/slash-commands/SlashCommandVariableAutoCompleteOption";
+export * from "/app/systems/shared/preset-manager";
+export * from "/app/systems/prompts/PromptManager";
+export * from "/app/systems/ai/reasoning";
+export * from "/app/systems/shared/regex-engine";
+export * from "/app/systems/shared/request-compression";
+export * from "/app/systems/shared/RossAscends-mods";
+export * from "/app/systems/ai/samplerSelect";
+export * from "/app/systems/shared/scrapers";
+export * from "/app/systems/shared/secrets";
+export * from "/app/systems/shared/server-history";
+export * from "/app/systems/shared/setting-search";
+export * from "/app/systems/shared/showdown-exclusion";
+export * from "/app/systems/shared/showdown-underscore";
+export * from "/app/systems/slash-commands/slash-commands/AbstractEventTarget";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommand";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandAbortController";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandArgument";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandAutoCompleteNameResult";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandBreak";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandBreakController";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandBreakPoint";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandBrowser";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandClosureResult";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandCommandAutoCompleteOption";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandDebugController";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandEnumAutoCompleteOption";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandExecutionError";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandExecutor";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAssignment";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandNamedArgumentAutoCompleteOption";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandParserError";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandQuickReplyAutoCompleteOption";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandReturnHelper";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandScope";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandUnnamedArgumentAssignment";
+export * from "/app/systems/slash-commands/slash-commands/SlashCommandVariableAutoCompleteOption";
 export * from "./app/systems/slash-commands";
-export * from "./scripts/sse-stream";
+export * from "/app/systems/shared/sse-stream";
 // Third-party extensions import /scripts/sse-stream.js as a default export;
 // `export *` above drops the default, so re-export it explicitly.
-export { default } from "./scripts/sse-stream";
-export * from "./app/kernel/context";
-export * from "./scripts/stats";
-export * from "./scripts/streaming-display";
-export * from "./app/systems/chat/swipe-picker";
-export * from "./app/systems/prompts/sysprompt";
-export * from "./app/systems/prompts/system-messages";
-export * from "./app/systems/characters/tags";
-export * from "./scripts/templates";
-export * from "./scripts/textgen-models";
-export * from "./scripts/textgen-settings";
-export * from "./scripts/tokenizers";
-export * from "./scripts/tool-calling";
-export * from "./scripts/user";
-export * from "./scripts/util/AbortReason";
-export * from "./scripts/util/AccountStorage";
-export * from "./scripts/util/showdown-patch";
-export * from "./scripts/util/SimpleMutex";
-export * from "./scripts/util/stream-fadein";
-export * from "./scripts/util/StructuredCloneMap";
-export * from "./scripts/util/ThemeGenerator";
-export * from "./scripts/utils";
-export * from "./app/systems/characters/variables";
-export * from "./app/systems/ui/welcome-screen";
+export { default } from "/app/systems/shared/sse-stream";
+export * from "/app/kernel/context";
+export * from "/app/systems/shared/stats";
+export * from "/app/systems/shared/streaming-display";
+export * from "/app/systems/chat/swipe-picker";
+export * from "/app/systems/prompts/sysprompt";
+export * from "/app/systems/prompts/system-messages";
+export * from "/app/systems/characters/tags";
+export * from "/app/systems/shared/templates";
+export * from "/app/systems/ai/textgen-models";
+export * from "/app/systems/ai/textgen-settings";
+export * from "/app/systems/ai/tokenizers";
+export * from "/app/systems/ai/tool-calling";
+export * from "/app/systems/shared/user";
+export * from "/app/systems/shared/util/AbortReason";
+export * from "/app/systems/shared/util/AccountStorage";
+export * from "/app/systems/shared/util/showdown-patch";
+export * from "/app/systems/shared/util/SimpleMutex";
+export * from "/app/systems/shared/util/stream-fadein";
+export * from "/app/systems/shared/util/StructuredCloneMap";
+export * from "/app/systems/shared/util/ThemeGenerator";
+export * from "/app/systems/shared/utils";
+export * from "/app/systems/characters/variables";
+export * from "/app/systems/ui/welcome-screen";
 export * from "./app/systems/world-info";
-export { AUTOCOMPLETE_SELECT_KEY } from "./scripts/constants";
-export { AUTOCOMPLETE_STATE } from "./scripts/constants";
-export { AUTOCOMPLETE_WIDTH } from "./scripts/constants";
-export { ELSE_MARKER } from "./scripts/constants";
-export { onlyUniqueJson } from "./scripts/constants";
-export { compareIgnoreCaseAndAccents } from "./scripts/constants";
-export { sortIgnoreCaseAndAccents } from "./scripts/constants";
-export { SimpleMutex } from "./scripts/util/SimpleMutex";
-export { MacroCategory } from "./scripts/macros/engine/MacroRegistry";
-export { MacroValueType } from "./scripts/macros/engine/MacroRegistry";
-export { persona_description_positions } from "./scripts/personas";
-export { BYTES_PER_TOKEN } from "./scripts/tokenizers";
-export * from "./app/kernel/app";
+export { AUTOCOMPLETE_SELECT_KEY } from "/app/systems/shared/constants";
+export { AUTOCOMPLETE_STATE } from "/app/systems/shared/constants";
+export { AUTOCOMPLETE_WIDTH } from "/app/systems/shared/constants";
+export { ELSE_MARKER } from "/app/systems/shared/constants";
+export { onlyUniqueJson } from "/app/systems/shared/constants";
+export { compareIgnoreCaseAndAccents } from "/app/systems/shared/constants";
+export { sortIgnoreCaseAndAccents } from "/app/systems/shared/constants";
+export { SimpleMutex } from "/app/systems/shared/util/SimpleMutex";
+export { MacroCategory } from "/app/systems/macros/engine/MacroRegistry";
+export { MacroValueType } from "/app/systems/macros/engine/MacroRegistry";
+export { persona_description_positions } from "/app/systems/characters/personas";
+export { BYTES_PER_TOKEN } from "/app/systems/ai/tokenizers";
+export * from "/app/kernel/app";
 

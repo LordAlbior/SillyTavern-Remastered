@@ -1,9 +1,9 @@
 // @ts-ignore - module has its own strict-mode errors that prevent type resolution
-import { MacroParser as _MacroParser } from "../../../../scripts/macros/engine/MacroParser";
+import { MacroParser as _MacroParser } from "/app/systems/macros/engine/MacroParser";
 // @ts-ignore - module has its own strict-mode errors that prevent type resolution
-import { MacroCstWalker as _MacroCstWalker } from "../../../../scripts/macros/engine/MacroCstWalker";
+import { MacroCstWalker as _MacroCstWalker } from "/app/systems/macros/engine/MacroCstWalker";
 // @ts-ignore - module has its own strict-mode errors that prevent type resolution
-import { MacroRegistry as _MacroRegistry, MacroValueType } from "../../../../scripts/macros/engine/MacroRegistry";
+import { MacroRegistry as _MacroRegistry, MacroValueType } from "/app/systems/macros/engine/MacroRegistry";
 // @ts-ignore - implicit any from unresolved module
 const MacroParser: any = _MacroParser;
 // @ts-ignore - implicit any from unresolved module
@@ -15,13 +15,13 @@ import {
   logMacroInternalError,
   logMacroRuntimeWarning,
   logMacroSyntaxWarning,
-} from "../../../../scripts/macros/engine/MacroDiagnostics";
-import { ELSE_MARKER } from "../../../../scripts/constants";
+} from "/app/systems/macros/engine/MacroDiagnostics";
+import { ELSE_MARKER } from "/app/systems/shared/constants";
 
-/** @typedef {import('./MacroCstWalker').MacroCall} MacroCall */
-/** @typedef {import('./MacroEnv.types').MacroEnv} MacroEnv */
-/** @typedef {import('./MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
-/** @typedef {import('./MacroRegistry').MacroDefinition} MacroDefinition */
+/** @typedef {import('/app/systems/macros/engine/MacroCstWalker').MacroCall} MacroCall */
+/** @typedef {import('/app/systems/macros/engine/MacroEnv.types').MacroEnv} MacroEnv */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroDefinitionOptions} MacroDefinitionOptions */
+/** @typedef {import('/app/systems/macros/engine/MacroRegistry').MacroDefinition} MacroDefinition */
 
 /**
  * A processor function that transforms text before or after macro evaluation.

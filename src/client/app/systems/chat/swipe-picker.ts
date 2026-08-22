@@ -1,11 +1,11 @@
-import { branchChat } from "../../../scripts/bookmarks";
-import { SWIPE_DIRECTION, SWIPE_SOURCE } from "../../../scripts/constants";
-import { t } from "../../../scripts/i18n";
-import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "../../../scripts/popup";
-import { power_user } from "../../../scripts/power-user";
-import { isMobile } from "../../../scripts/RossAscends-mods";
-import { getTokenCountAsync } from "../../../scripts/tokenizers";
-import { addLongPressEvent, clamp, copyText, timestampToMoment } from "../../../scripts/utils";
+import { branchChat } from "/app/systems/shared/bookmarks";
+import { SWIPE_DIRECTION, SWIPE_SOURCE } from "/app/systems/shared/constants";
+import { t } from "/app/systems/shared/i18n";
+import { callGenericPopup, Popup, POPUP_RESULT, POPUP_TYPE } from "/app/systems/ui/popup";
+import { power_user } from "/app/systems/power-user";
+import { isMobile } from "/app/systems/shared/RossAscends-mods";
+import { getTokenCountAsync } from "/app/systems/ai/tokenizers";
+import { addLongPressEvent, clamp, copyText, timestampToMoment } from "/app/systems/shared/utils";
 import {
   chat,
   deleteSwipe,

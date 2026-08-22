@@ -1,5 +1,5 @@
-import { escapeRegex } from "../../../..//scripts/utils";
-import { SlashCommandParser } from "./SlashCommandParser";
+import { escapeRegex } from "/app/systems/shared/utils";
+import { SlashCommandParser } from "/app/systems/slash-commands/slash-commands/SlashCommandParser";
 
 export class SlashCommandBrowser {
   /**@type {SlashCommand[]}*/ cmdList: any;

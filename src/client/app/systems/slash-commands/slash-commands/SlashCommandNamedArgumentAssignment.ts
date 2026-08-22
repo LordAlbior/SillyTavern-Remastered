@@ -1,4 +1,4 @@
-import { SlashCommandClosure } from "./SlashCommandClosure";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
 
 export class SlashCommandNamedArgumentAssignment {
   /** @type {number} */ start: any;

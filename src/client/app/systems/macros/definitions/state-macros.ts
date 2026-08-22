@@ -1,8 +1,8 @@
-import { MacroCategory } from "../../../../scripts/macros/engine/MacroRegistry";
-const MacroRegistry: any = (await import("../engine/MacroRegistry" as string)).MacroRegistry;
-import { eventSource, event_types } from "../../../../scripts/events";
+import { MacroCategory } from "/app/systems/macros/engine/MacroRegistry";
+const MacroRegistry: any = (await import("/app/systems/macros/engine/MacroRegistry" as string)).MacroRegistry;
+import { eventSource, event_types } from "/app/systems/shared/events";
 
-import { findExtension } from "/scripts/extensions";
+import { findExtension } from "/app/systems/extensions";
 
 let lastGenerationTypeValue = "";
 let lastGenerationTypeTrackingInitialized = false;

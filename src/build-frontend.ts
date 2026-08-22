@@ -40,6 +40,11 @@ const shellResolve = {
       if (fs.existsSync(tsPath)) return { path: tsPath };
       const jsPath = `${base}.js`;
       if (fs.existsSync(jsPath)) return { path: jsPath };
+      const idxTs = path.join(base, "index.ts");
+      if (fs.existsSync(idxTs)) return { path: idxTs };
+      const idxJs = path.join(base, "index.js");
+      if (fs.existsSync(idxJs)) return { path: idxJs };
+      if (fs.existsSync(base)) return { path: base };
       return undefined;
     });
   },

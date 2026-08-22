@@ -1,8 +1,8 @@
-import { SlashCommandClosure } from "./SlashCommandClosure";
-import { commonEnumProviders } from "./SlashCommandCommonEnumsProvider";
-import { SlashCommandEnumValue } from "./SlashCommandEnumValue";
-import { SlashCommandExecutor } from "./SlashCommandExecutor";
-import { SlashCommandScope } from "./SlashCommandScope";
+import { SlashCommandClosure } from "/app/systems/slash-commands/slash-commands/SlashCommandClosure";
+import { commonEnumProviders } from "/app/systems/slash-commands/slash-commands/SlashCommandCommonEnumsProvider";
+import { SlashCommandEnumValue } from "/app/systems/slash-commands/slash-commands/SlashCommandEnumValue";
+import { SlashCommandExecutor } from "/app/systems/slash-commands/slash-commands/SlashCommandExecutor";
+import { SlashCommandScope } from "/app/systems/slash-commands/slash-commands/SlashCommandScope";
 
 /**@readonly*/
 /**@enum {string}*/
