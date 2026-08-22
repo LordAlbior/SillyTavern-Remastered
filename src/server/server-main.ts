@@ -243,6 +243,22 @@ app.get("/login", loginPageMiddleware);
 // Host frontend assets
 app.use(userCssMiddleware);
 // Transpiled frontend (dist/) takes priority
+// Exact "/lib" is the external shared monolith module (dist/lib.js), not the
+// client/lib assets directory. Must precede the "/lib" static mount below so
+// the bare "/lib" import resolves to the bundled module, not a directory 404.
+app.get("/lib", (req, res, next) => {
+  const libPath = path.join(rootDirectory, "src", "client", "dist", "lib.js");
+  if (fs.existsSync(libPath)) return res.sendFile(libPath);
+  next();
+});
+// Exact "/script" is the external shell monolith (dist/script.js) imported by
+// extension bundles; esbuild preserves the bare "/script" specifier. Serves the
+// bundled module before the dist static mount (which only matches "/script.js").
+app.get("/script", (req, res, next) => {
+  const scriptPath = path.join(rootDirectory, "src", "client", "dist", "script.js");
+  if (fs.existsSync(scriptPath)) return res.sendFile(scriptPath);
+  next();
+});
 app.use(express.static(path.join(rootDirectory, "src", "client", "dist"), {}));
 app.use("/lib", express.static(path.join(rootDirectory, "src", "client", "lib"), {}));
 // Top-level extensions/ workspace members served at the legacy /scripts/extensions URL.
@@ -275,7 +291,7 @@ app.get(/^\/(scripts(\/[A-Za-z0-9_\-]+)+\.js|\/?[A-Za-z0-9_\-]+\.js)$/, (request
     if (p.startsWith("/scripts/extensions/third-party/")) return next();
   }
   response.type("application/javascript");
-  response.send("export * from '/script';\nexport { default } from '/script.js';\n");
+  response.send("export * from '/script.js';\nexport { default } from '/script.js';\n");
 });
 
 // Public API
