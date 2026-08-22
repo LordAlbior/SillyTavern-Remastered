@@ -1,4 +1,4 @@
-import { EventEmitter } from "/lib/eventemitter.js";
+import { EventEmitter } from "/lib/eventemitter";
 
 export const event_types = {
   APP_INITIALIZED: "app_initialized",

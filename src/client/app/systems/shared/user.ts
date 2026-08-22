@@ -5,7 +5,7 @@ import { renderTemplateAsync } from "/app/systems/shared/templates";
 import { ensureImageFormatSupported, getBase64Async, humanFileSize } from "/app/systems/shared/utils";
 
 /**
- * @type {import('/app/src/users.js').UserViewModel} Logged in user
+ * @type {import('/app/src/users').UserViewModel} Logged in user
  */
 export let currentUser = null;
 export let accountsEnabled = false;
@@ -78,7 +78,7 @@ async function getCurrentUser() {
 
 /**
  * Get a list of all users.
- * @returns {Promise<import('/app/src/users.js').UserViewModel[]>} Users
+ * @returns {Promise<import('/app/src/users').UserViewModel[]>} Users
  */
 async function getUsers() {
   try {
